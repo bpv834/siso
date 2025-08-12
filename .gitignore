@@ -13,3 +13,36 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Build outputs for all modules
+**/build/
+
+# Android profiling & captures
+/captures/
+*.hprof
+
+# Keystore files (보안상 Git에 절대 올리면 안 됨)
+*.jks
+*.keystore
+
+# Gradle 관련
+gradle-app.setting
+gradle.properties
+
+# Android Studio settings
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/.name
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/jarRepositories.xml
+.idea/kotlinScripting.xml
+.idea/other.xml
+
+# Generated files
+output.json
+navigation.json
+
+# OS-specific
+Thumbs.db
+ehthumbs.db
