@@ -34,7 +34,8 @@ fun CommonActiveButton(
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.GrayScale90,
+            modifier= modifier.padding(vertical = (15.5).dp)
         )
     }
 }
