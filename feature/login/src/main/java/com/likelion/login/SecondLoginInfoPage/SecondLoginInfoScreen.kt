@@ -1,4 +1,4 @@
-package com.likelion.login
+package com.likelion.login.SecondLoginInfoPage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,13 +7,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
+import com.likelion.ui.component.button.CommonButtonWithState
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
@@ -21,7 +27,10 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun SecondLoginInfoScreen(
+    viewModel: SecondLoginInfoScreenViewModelType // 기본값 제거
 ) {
+    val selectedInterests by viewModel.selectedInterests.collectAsStateWithLifecycle()
+    val isPossibleNextState by viewModel.isPossibleNextState.collectAsStateWithLifecycle()
     val interests = mapOf(
         "문화 & 예술" to listOf("음악감상", "사진촬영", "서예", "글쓰기", "악기연주", "노래부르기", "댄스"),
         "운동 & 야외활동" to listOf("등산", "낚시", "골프", "자전거 타기", "캠핑", "수영"),
@@ -32,12 +41,13 @@ fun SecondLoginInfoScreen(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState()) // 이 부분을 추가
     ) {
         Spacer(modifier = Modifier.size(size = 8.dp))
 
         // Step indicator
         AsyncImage(
-            model = com.likelion.ui.R.drawable.img_circle_bar_login2,
+            model = R.drawable.img_circle_bar_login2,
             contentDescription = ""
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
@@ -53,32 +63,43 @@ fun SecondLoginInfoScreen(
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(text = "문화&예술", style = SisoTypoTokens.SubTitle1)
         Spacer(modifier = Modifier.size(size = 12.dp))
-        ChipRowExample(
+        ChipRow(
             chips = interests["문화 & 예술"]!!,
-            onClick = {}
+            onClick = { chipText -> // 람다의 인자로 클릭된 텍스트를 받음
+                viewModel.onClickToggle(chipText) // 받은 텍스트를 viewModel 함수에 전달
+            }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
         Text(text = "운동 & 야외활동", style = SisoTypoTokens.SubTitle1)
         Spacer(modifier = Modifier.size(size = 12.dp))
-        ChipRowExample(
+        ChipRow(
             chips = interests["운동 & 야외활동"]!!,
-            onClick = {}
+            onClick = { chipText -> // 람다의 인자로 클릭된 텍스트를 받음
+                viewModel.onClickToggle(chipText) // 받은 텍스트를 viewModel 함수에 전달
+            }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
         Text(text = "여가 & 취미", style = SisoTypoTokens.SubTitle1)
-        ChipRowExample(
+        ChipRow(
             chips = interests["여가 & 취미"]!!,
-            onClick = {}
+            onClick = { chipText -> // 람다의 인자로 클릭된 텍스트를 받음
+                viewModel.onClickToggle(chipText) // 받은 텍스트를 viewModel 함수에 전달
+            }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 6.dp))
-        CommonActiveButton("계속하기", modifier = Modifier.fillMaxWidth(), onClick = {})
+        CommonButtonWithState(text = "계속하기",{},isPossibleNextState)
 
 
     }
 }
 
 @Composable
-fun ChipRowExample(chips: List<String>, onClick: (String) -> Unit) {
+fun ChipRow(
+    chips: List<String>,
+    selectedInterests: Set<String>,
+    onClick: (String) -> Unit,
+
+    ) {
     FlowRow(
         modifier = Modifier.padding(0.dp),
         maxItemsInEachRow = 3,     // 한 줄에 최대 3개
@@ -90,7 +111,8 @@ fun ChipRowExample(chips: List<String>, onClick: (String) -> Unit) {
         chips.forEach { chipText ->
             CommonChip(
                 text = chipText,
-                onClick = {}
+                isSelected = selectedInterests.contains(chipText),
+                onClick = onClick
             )
         }
     }
@@ -99,6 +121,8 @@ fun ChipRowExample(chips: List<String>, onClick: (String) -> Unit) {
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 fun SecondLoginInfoScreenPreview() {
-    SecondLoginInfoScreen()
+    SecondLoginInfoScreen(
+        viewModel = FakeSecondLoginInfoScreenViewModel()
+    )
 }
 
