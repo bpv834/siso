@@ -1,4 +1,4 @@
-package com.likelion.login.LoginStartScreen
+package com.likelion.login.login_start_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.likelion.login.FirstLoginInfoScreen.FontText
-import com.likelion.login.LoginStartScreen.LoginStartScreenViewModel
+import com.likelion.login.first_loginInfo_screen.FontText
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens

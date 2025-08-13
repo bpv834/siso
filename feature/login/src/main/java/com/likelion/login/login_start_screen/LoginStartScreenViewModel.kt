@@ -1,4 +1,4 @@
-package com.likelion.login.LoginStartScreen
+package com.likelion.login.login_start_screen
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
