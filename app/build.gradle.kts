@@ -57,7 +57,7 @@ dependencies {
 
     // Hilt
     implementation(libs.dagger.hilt.android)
-    implementation(libs.dagger.hilt.android.compiler)
+    // implementation(libs.dagger.hilt.android.compiler) 컴파일러(annotation processor)**이기 때문에 implementation으로 넣는 건 잘못된 사용입니다. 이미 ksp(...)로 추가하고 있으므로, implementation(...)은 반드시 제거해야 합니다.
     implementation(libs.androidx.navigation)
     ksp(libs.dagger.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
