@@ -1,6 +1,6 @@
-package com.likelion.login
+package com.likelion.login.FourthLoginInfoPage
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,25 +9,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonDisableButton
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
@@ -39,16 +34,23 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class) // rememberNavController()와 관련된 경고를 없애기 위해 추가
 @Composable
 fun FourthLoginInfoScreen(
-    viewModel: FourthLoginInfoScreenViewModel = hiltViewModel()
+    viewModel: FourthLoginInfoScreenViewModelType = if (LocalInspectionMode.current) {
+        // LocalInspectionMode -> Jetpack Compose Preview 환경에서만 true가 되는 값
+        FakeFourthLoginInfoScreenViewModel()
+    } else {
+        hiltViewModel<FourthLoginInfoScreenViewModel>()
+    }
 ) {
     // state 구독
     val bioText by viewModel.bioText.collectAsStateWithLifecycle()
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.size(8.dp))
         AsyncImage(
-            model = com.likelion.ui.R.drawable.img_circle_bar_login4,
+            model = R.drawable.img_circle_bar_login4,
             contentDescription = ""
         )
         Spacer(Modifier.size(24.dp))
@@ -79,13 +81,12 @@ fun FourthLoginInfoScreen(
             modifier = Modifier.fillMaxWidth(), // Row가 전체 너비를 차지하도록 설정
             horizontalArrangement = Arrangement.End // 자식들을 Row의 끝(오른쪽)에 정렬
         ) {
-            Text("(${bioText.length}/50)",) // Todo 텍스트 스타일, 컬러 지정
+            Text("(${bioText.length}/50)") // Todo 텍스트 스타일, 컬러 지정
         }
         Spacer(Modifier.size(112.dp))
-        if(bioText.length in 5..50) CommonActiveButton("완료하기",{})
-        else CommonDisableButton("완료하기",{})
+        if (bioText.length in 5..50) CommonActiveButton("완료하기", {})
+        else CommonDisableButton("완료하기", {})
         Spacer(Modifier.size(72.dp))
-
 
 
     }
