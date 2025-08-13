@@ -1,7 +1,9 @@
 package com.likelion.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.likelion.ui.component.button.CommonActiveButton
+import com.likelion.ui.component.button.CommonDisableButton
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -71,8 +74,16 @@ fun FourthLoginInfoScreen(
                 viewModel.onBioTextChanged(newText)
             }
         )
+        Spacer(Modifier.size(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(), // Row가 전체 너비를 차지하도록 설정
+            horizontalArrangement = Arrangement.End // 자식들을 Row의 끝(오른쪽)에 정렬
+        ) {
+            Text("(${bioText.length}/50)",) // Todo 텍스트 스타일, 컬러 지정
+        }
         Spacer(Modifier.size(112.dp))
-        CommonActiveButton("완료하기",{})
+        if(bioText.length in 5..50) CommonActiveButton("완료하기",{})
+        else CommonDisableButton("완료하기",{})
         Spacer(Modifier.size(72.dp))
 
 
