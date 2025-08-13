@@ -19,14 +19,8 @@ class AgreeToTermsScreenViewModel @Inject constructor(
 
     fun agreeContinueBooleanUpdate() = _agreeContinueBoolean.update { requiredTermsAgreeBoolean&&receptionAgreeBoolean }
 
-    fun receptionAgreeBooleanUpdate(input: Boolean) = _agreeContinueBoolean.update { input }
+    fun requiredTermsAgreeBooleanUpdate() = _agreeContinueBoolean.update { !it }
 
-    fun requiredTermsAgreeBooleanUpdate(input: Boolean) = _agreeContinueBoolean.update { input }
+    fun receptionAgreeBooleanUpdate() = _agreeContinueBoolean.update { !it }
 
-    fun requiredTermsAgree(){
-
-    }
-    fun receptionAgree(){
-
-    }
 }

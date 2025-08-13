@@ -72,32 +72,19 @@ fun AgreeToTermsScreen(
                     text = "(필수) 이용약관 동의", style = SisoTypoTokens.Body4,
                     textColor = SisoColorTokens.GrayScale90,
                     padding = 0.dp, onClick = {
-                        viewModel.requiredTermsAgreeBooleanUpdate(
-                            !viewModel.requiredTermsAgreeBoolean
-                        )
+                        viewModel.requiredTermsAgreeBooleanUpdate()
                     }
                 )
                 AsyncImage(
                     modifier = Modifier.clickable(
                         onClick = {
-
+                            viewModel.requiredTermsAgreeBooleanUpdate()
                         }
                     ),
-                    model = R.drawable.select,
+                    model = if (viewModel.requiredTermsAgreeBoolean) R.drawable.select
+                    else R.drawable.unselect,
                     contentDescription = ""
                 )
-//                AsyncImage(
-//                    modifier = Modifier.clickable(
-//                        onClick = {
-//                            viewModel.requiredTermsAgreeBooleanUpdate(
-//                                !viewModel.requiredTermsAgreeBoolean
-//                            )
-//                        }
-//                    ),
-//                    model = if (viewModel.requiredTermsAgreeBoolean) R.drawable.select
-//                    else R.drawable.unselect,
-//                    contentDescription = ""
-//                )
 
             }
             Spacer(Modifier.padding(35.dp))
@@ -109,32 +96,19 @@ fun AgreeToTermsScreen(
                     text = "(선택) 마케팅 정보 수신", style = SisoTypoTokens.Body4,
                     textColor = SisoColorTokens.GrayScale90,
                     padding = 0.dp, onClick = {
-                        viewModel.receptionAgreeBooleanUpdate(
-                            !viewModel.receptionAgreeBoolean
-                        )
+                        viewModel.receptionAgreeBooleanUpdate()
                     }
                 )
                 AsyncImage(
                     modifier = Modifier.clickable(
                         onClick = {
-
-                        }
-                    ),
-                    model = R.drawable.select,
-                    contentDescription = ""
-                )
-/*                AsyncImage(
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            viewModel.receptionAgreeBooleanUpdate(
-                                !viewModel.receptionAgreeBoolean
-                            )
+                            viewModel.receptionAgreeBooleanUpdate()
                         }
                     ),
                     model = if (viewModel.receptionAgreeBoolean) R.drawable.select
                     else R.drawable.unselect,
                     contentDescription = ""
-                )*/
+                )
 
             }
 
