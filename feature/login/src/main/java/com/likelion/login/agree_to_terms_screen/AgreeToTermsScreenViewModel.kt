@@ -1,4 +1,4 @@
-package com.likelion.login.AgreeToTermsScreen
+package com.likelion.login.agree_to_terms_screen
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
