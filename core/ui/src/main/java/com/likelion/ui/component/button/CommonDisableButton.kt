@@ -26,6 +26,7 @@ fun CommonDisableButton(
         border = BorderStroke(1.dp, SisoColorTokens.GrayScale40),
         colors = ButtonDefaults.buttonColors(
             containerColor = SisoColorTokens.GrayScale30,
+            contentColor = SisoColorTokens.GrayScale50
         ),
         // ✨ 받은 modifier를 적용하고, padding을 추가합니다.
         modifier = modifier.fillMaxWidth() // <-- 이 부분이 버튼의 너비를 최대로 늘려줍니다.
@@ -38,6 +39,7 @@ fun CommonDisableButton(
         )
     }
 }
+
 // 프리뷰
 @Preview(showBackground = true)
 @Composable
