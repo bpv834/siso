@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
 import com.likelion.ui.theme.SisoTypoTokens
@@ -49,7 +50,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstLoginInfoScreen(
-    viewModel: FirstLoginInfoViewModel = FirstLoginInfoViewModel()
+    viewModel: FirstLoginInfoScreenViewModel = FirstLoginInfoScreenViewModel()
 ){
     val sideDp = 16.dp
 
@@ -61,18 +62,16 @@ fun FirstLoginInfoScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = AbsoluteAlignment.Left
     ) {
-        Spacer(Modifier.padding(30.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            FontText(text = "내 정보 입력", style = SisoTypoTokens.Title2, padding = 0.dp,)
-        }
-        Spacer(Modifier.padding(22.dp))
+        Spacer(modifier = Modifier.size(size = 8.dp))
+        AsyncImage(
+            model = com.likelion.ui.R.drawable.img_circle_bar_login1,
+            contentDescription = ""
+        )
 
-        FontText(text = "기본정보를 제공해주세요", style = SisoTypoTokens.Title1, padding = 52.dp,)
-        FontText(text = "닉네임", style = SisoTypoTokens.Label1, padding = 32.dp,
+        FontText(text = "기본정보를 제공해주세요", style = SisoTypoTokens.Title1,
+            padding = 12.dp,)
+        FontText(text = "닉네임", style = SisoTypoTokens.Label1,
+            padding = 12.dp,
             textColor = SisoColorTokens.GrayScale50
         )
         Spacer(Modifier.padding(12.dp))
@@ -123,7 +122,8 @@ fun FirstLoginInfoScreen(
 
             }
         )
-        FontText(text = "나이", style = SisoTypoTokens.Label1, padding = 32.dp,
+        FontText(text = "나이", style = SisoTypoTokens.Label1,
+            padding = 12.dp,
             textColor = SisoColorTokens.GrayScale50
         )
         Spacer(Modifier.padding(12.dp))
@@ -174,27 +174,30 @@ fun FirstLoginInfoScreen(
 
             }
         )
-        FontText(text = "내 성별", SisoTypoTokens.Label1, padding = 32.dp)
+        FontText(text = "내 성별", SisoTypoTokens.Label1,
+            textColor = SisoColorTokens.GrayScale50,padding = 12.dp)
 
         Row {
             RepeatRadioButton(viewModel.myRadioButtons)
         }
-        FontText(text = "매칭 성별", SisoTypoTokens.Label1)
+        FontText(text = "매칭 성별", SisoTypoTokens.Label1,
+            textColor = SisoColorTokens.GrayScale50,padding = 12.dp)
+        FontText(text = "동성선택시 동성친구 이성선택시 이성친구를\n추천해 드려요.", SisoTypoTokens.Label1,
+            textColor = SisoColorTokens.GrayScale50,padding = 0.dp)
 
         Row {
             RepeatRadioButton(viewModel.pairRadioButtons)
         }
-//        FontText(text = "나이", SisoTypoTokens.Label1,)
-//        FontText(text = "키", SisoTypoTokens.Label1,)
-//        FontText(text = "키", SisoTypoTokens.Label1,)
-        Spacer(modifier = Modifier.padding(16.dp))
+
+        Spacer(modifier = Modifier.padding(12.dp))
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(65.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = SisoColorTokens.GrayScale30,
-                disabledContainerColor = SisoColorTokens.White
+                containerColor = SisoColorTokens.Orange30,
+                disabledContainerColor = SisoColorTokens.GrayScale50
             ),
             onClick = {
                 viewModel.fistContinueBooleanUpdate(true)
@@ -204,7 +207,7 @@ fun FirstLoginInfoScreen(
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.Black
+                color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.GrayScale90
                 else SisoColorTokens.GrayScale50,
                 fontSize = 22.sp
             )
@@ -248,7 +251,7 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
             RadioButton(
                 selected = info.second,
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = SisoColorTokens.Black,
+                    selectedColor = SisoColorTokens.GrayScale90,
                     unselectedColor = SisoColorTokens.GrayScale30
                 ),
                 onClick = {
