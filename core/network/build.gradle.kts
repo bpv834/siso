@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.likelion.util"
+    namespace = "com.likelion.network"
     compileSdk = 35
 
     defaultConfig {
