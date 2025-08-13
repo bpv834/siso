@@ -55,4 +55,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    val camerax_version = "1.4.2"
+
+    implementation("androidx.camera:camera-core:$camerax_version")
+    implementation("androidx.camera:camera-camera2:$camerax_version")
+    implementation("androidx.camera:camera-lifecycle:$camerax_version") // 라이프사이클 안전하게 관리
+    implementation("androidx.camera:camera-view:$camerax_version")      // PreviewView로 화면에 카메라 미리보기
 }
