@@ -1,4 +1,4 @@
-package com.likelion.login.FirstLoginInfoScreen
+package com.likelion.login.first_loginInfo_screen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.likelion.login.FirstLoginInfoScreen.FirstLoginInfoScreenViewModel
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
