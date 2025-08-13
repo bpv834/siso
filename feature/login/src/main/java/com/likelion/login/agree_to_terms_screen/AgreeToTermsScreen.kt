@@ -1,4 +1,4 @@
-package com.likelion.login.AgreeToTermsScreen
+package com.likelion.login.agree_to_terms_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.likelion.login.FirstLoginInfoScreen.FontText
+import com.likelion.login.first_loginInfo_screen.FontText
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
