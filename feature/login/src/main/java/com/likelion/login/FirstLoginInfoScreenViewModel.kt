@@ -4,9 +4,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class FirstLoginInfoViewModel(
-
+class FirstLoginInfoScreenViewModel @Inject constructor(
+    // usecase자리
 ): ViewModel() {
     private val _nameState = MutableStateFlow("")
     val nameState : String get() = _nameState.value
@@ -21,8 +22,8 @@ class FirstLoginInfoViewModel(
     val myRadioButtons : MutableList<Pair<String, Boolean>> get() = _myRadioButtons.value
     private val _pairRadioButtons = MutableStateFlow(
         mutableStateListOf(
-            Pair(first = "남성", second = true),
-            Pair(first = "여성", second = false),
+            Pair(first = "동성", second = true),
+            Pair(first = "이성", second = false),
         )
     )
     val pairRadioButtons : MutableList<Pair<String, Boolean>> get() = _pairRadioButtons.value
