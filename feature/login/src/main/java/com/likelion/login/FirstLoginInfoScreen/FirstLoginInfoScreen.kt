@@ -1,4 +1,4 @@
-package com.likelion.login
+package com.likelion.login.FirstLoginInfoScreen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.likelion.login.FirstLoginInfoScreen.FirstLoginInfoScreenViewModel
+import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
 import com.likelion.ui.theme.SisoTypoTokens
@@ -63,7 +65,7 @@ fun FirstLoginInfoScreen(
     ) {
         Spacer(modifier = Modifier.size(size = 8.dp))
         AsyncImage(
-            model = com.likelion.ui.R.drawable.img_circle_bar_login1,
+            model = R.drawable.img_circle_bar_login1,
             contentDescription = ""
         )
 
@@ -215,8 +217,21 @@ fun FirstLoginInfoScreen(
 }
 
 @Composable
-fun FontText(text: String, style: TextStyle, textColor: Color = Color.Unspecified, padding: Dp = 16.dp){
-    Column {
+fun FontText(
+    text: String,
+    style: TextStyle,
+    textColor: Color = Color.Unspecified,
+    padding: Dp = 16.dp,
+    onClick:(()->Unit)? = null,
+    fillMaxFloat: Float = 1F,
+){
+    Column(
+        modifier = if (onClick == null) Modifier.fillMaxWidth(fillMaxFloat)
+        else Modifier.fillMaxWidth(fillMaxFloat).clickable(onClick = {
+                    onClick()
+                }
+            )
+    ) {
         Spacer(Modifier.padding(padding))
         Text(
             text = text,
