@@ -1,5 +1,6 @@
 package com.likelion.login.first_loginInfo_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,12 +31,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,21 +51,26 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstLoginInfoScreen(
-    viewModel: FirstLoginInfoScreenViewModel = FirstLoginInfoScreenViewModel()
+    viewModel: FirstLoginInfoScreenViewModelType
 ){
     val sideDp = 16.dp
-
+    var nameText by rememberSaveable { mutableStateOf("") }
+    val nameInteractionSource = MutableInteractionSource()
+    var ageText by rememberSaveable { mutableStateOf("") }
+    val ageInteractionSource = MutableInteractionSource()
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier
+        modifier = Modifier.fillMaxSize()
             .padding(start = sideDp, end = sideDp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
@@ -81,17 +95,18 @@ fun FirstLoginInfoScreen(
                 .fillMaxWidth()
                 .border(width = 0.dp, color = SisoColorTokens.White)
                 .clip(RoundedCornerShape(25.dp)),
-            value = viewModel.nameState,
+            value = nameText,
             onValueChange = {input->
+                nameText = input
                 viewModel.nameUpdate(input)
             },
-            decorationBox = @Composable{innerTextField->
+            decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
 
                     value = viewModel.nameState,
                     placeholder = {
                         Text(
-                            text= "이것은 닉네임입니다.",
+                            text = "이것은 닉네임입니다.",
                             fontSize = SisoFontSizeTokens.Body2
                         )
                     },
@@ -99,28 +114,26 @@ fun FirstLoginInfoScreen(
                     singleLine = true,
                     enabled = true,
                     visualTransformation = VisualTransformation.None,
-                    interactionSource = MutableInteractionSource(),
+                    interactionSource = nameInteractionSource,
                     container = {
-                        Box(modifier = Modifier.drawBehind{
+
+                        Box(modifier = Modifier.drawBehind {
                             drawRect(SisoColorTokens.GrayScale20)
                         })
+
                     },
                     trailingIcon = {
-                        IconButton(
-                            modifier = Modifier,
-                            onClick = {
-
-                            }) {
-                            Icon(
-                                modifier = Modifier.size(46.dp),
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = ""
-                            )
-                        }
+                        Icon(
+                            modifier = Modifier.size(46.dp),
+                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            contentDescription = ""
+                        )
                     }
                 )
 
-            }
+            },
+
+
         )
         FontText(text = "나이", style = SisoTypoTokens.Label1,
             padding = 12.dp,
@@ -133,14 +146,15 @@ fun FirstLoginInfoScreen(
                 .fillMaxWidth()
                 .border(width = 0.dp, color = SisoColorTokens.White)
                 .clip(RoundedCornerShape(25.dp)),
-            value = viewModel.nameState,
+            value = ageText,
             onValueChange = {input->
-                viewModel.nameUpdate(input)
+                ageText = input
+                viewModel.ageUpdate(input)
             },
             decorationBox = @Composable{innerTextField->
                 TextFieldDefaults.DecorationBox(
 
-                    value = viewModel.nameState,
+                    value = viewModel.ageState,
                     placeholder = {
                         Text(
                             text= "나이를 입력해주세요",
@@ -151,24 +165,18 @@ fun FirstLoginInfoScreen(
                     singleLine = true,
                     enabled = true,
                     visualTransformation = VisualTransformation.None,
-                    interactionSource = MutableInteractionSource(),
+                    interactionSource = ageInteractionSource,
                     container = {
                         Box(modifier = Modifier.drawBehind{
                             drawRect(SisoColorTokens.GrayScale20)
                         })
                     },
                     trailingIcon = {
-                        IconButton(
-                            modifier = Modifier,
-                            onClick = {
-
-                            }) {
-                            Icon(
-                                modifier = Modifier.size(46.dp),
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = ""
-                            )
-                        }
+                        Icon(
+                            modifier = Modifier.size(46.dp),
+                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            contentDescription = ""
+                        )
                     }
                 )
 
@@ -284,7 +292,7 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
 @Preview
 fun FirstLoginInfoPreview(){
     Surface(color = SisoColorTokens.White) {
-        FirstLoginInfoScreen()
+        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel())
     }
 
 }
