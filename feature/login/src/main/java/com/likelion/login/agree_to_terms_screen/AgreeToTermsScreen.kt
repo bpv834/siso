@@ -1,5 +1,6 @@
 package com.likelion.login.agree_to_terms_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.likelion.login.first_loginInfo_screen.FontText
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AgreeToTermsScreen(
     viewModel: AgreeToTermsScreenViewModel = AgreeToTermsScreenViewModel()
@@ -63,54 +69,19 @@ fun AgreeToTermsScreen(
             )
 
             Spacer(Modifier.padding(35.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-
-            ) {
-                FontText(
-                    fillMaxFloat = 0.9F,
-                    text = "(필수) 이용약관 동의", style = SisoTypoTokens.Body4,
-                    textColor = SisoColorTokens.GrayScale90,
-                    padding = 0.dp, onClick = {
-                        viewModel.requiredTermsAgreeBooleanUpdate()
-                    }
-                )
-                AsyncImage(
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            viewModel.requiredTermsAgreeBooleanUpdate()
-                        }
-                    ),
-                    model = if (viewModel.requiredTermsAgreeBoolean) R.drawable.select
-                    else R.drawable.unselect,
-                    contentDescription = ""
-                )
-
-            }
-            Spacer(Modifier.padding(35.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                FontText(
-                    fillMaxFloat = 0.9F,
-                    text = "(선택) 마케팅 정보 수신", style = SisoTypoTokens.Body4,
-                    textColor = SisoColorTokens.GrayScale90,
-                    padding = 0.dp, onClick = {
-                        viewModel.receptionAgreeBooleanUpdate()
-                    }
-                )
-                AsyncImage(
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            viewModel.receptionAgreeBooleanUpdate()
-                        }
-                    ),
-                    model = if (viewModel.receptionAgreeBoolean) R.drawable.select
-                    else R.drawable.unselect,
-                    contentDescription = ""
-                )
-
-            }
+            AgreeRepeatRadioButton(
+                radios = viewModel.agreesBoolean.value,
+            )
+//                AsyncImage(
+//                    modifier = Modifier.clickable(
+//                        onClick = {
+//                            viewModel.requiredTermsAgreeContinue()
+//                        }
+//                    ),
+//                    model = if (viewModel.requiredTermsAgreeBoolean.value) R.drawable.select
+//                    else R.drawable.unselect,
+//                    contentDescription = ""
+//                )
 
 
             Spacer(Modifier.padding(150.dp))
@@ -127,13 +98,13 @@ fun AgreeToTermsScreen(
             onClick = {
                 viewModel.agreeContinueBooleanUpdate()
             },
-            enabled = viewModel.agreeContinueBoolean
+            enabled = viewModel.agreeContinueBoolean.value
         ) {
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if(viewModel.agreeContinueBoolean == true)SisoColorTokens.GrayScale90
-                else SisoColorTokens.GrayScale50,
+                color = if(viewModel.agreeContinueBoolean.value == true)SisoColorTokens.GrayScale90
+                else SisoColorTokens.GrayScale60,
                 fontSize = 22.sp
             )
         }
@@ -143,7 +114,34 @@ fun AgreeToTermsScreen(
 
 }
 
-
+@Composable
+fun AgreeRepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
+    radios.forEachIndexed { index, info ->
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FontText(
+                fillMaxFloat = 0.9F,
+                text = info.first, style = SisoTypoTokens.Body4,
+                textColor = SisoColorTokens.GrayScale90,
+                padding = 0.dp, onClick = {
+                    radios[index] = info.copy(info.first,!info.second)
+                }
+            )
+            RadioButton(
+                selected = info.second,
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = SisoColorTokens.GrayScale90,
+                    unselectedColor = SisoColorTokens.GrayScale30
+                ),
+                onClick = {
+                    radios[index] = info.copy(info.first,!info.second)
+                }
+            )
+            Spacer(Modifier.padding(35.dp))
+        }
+    }
+}
 
 @Composable
 @Preview
