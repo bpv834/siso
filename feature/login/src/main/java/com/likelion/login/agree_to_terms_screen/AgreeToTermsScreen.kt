@@ -118,15 +118,16 @@ fun AgreeToTermsScreen(
 fun AgreeRepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
     radios.forEachIndexed { index, info ->
         Row(
+            modifier = Modifier.clickable{
+                radios[index] = info.copy(info.first,!info.second)
+            }.padding(start = 22.dp, end = 22.dp),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
             FontText(
                 fillMaxFloat = 0.9F,
-                text = info.first, style = SisoTypoTokens.Body4,
+                text = info.first, style = SisoTypoTokens.Body4, padding = 0.dp,
                 textColor = SisoColorTokens.GrayScale90,
-                padding = 0.dp, onClick = {
-                    radios[index] = info.copy(info.first,!info.second)
-                }
             )
             RadioButton(
                 selected = info.second,
@@ -138,7 +139,6 @@ fun AgreeRepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
                     radios[index] = info.copy(info.first,!info.second)
                 }
             )
-            Spacer(Modifier.padding(35.dp))
         }
     }
 }
