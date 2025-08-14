@@ -18,29 +18,36 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 
 @Composable
-    fun CommonChip(
-        text: String,
-        onClick: () -> Unit,
+fun CommonChip(
+    text: String,
+    isSelected: Boolean, // 토글여부
+    onClick: (String) -> Unit, // 콜백
+) {
+    // 선택 상태에 따라 배경색, 텍스트색, 테두리색을 동적으로 결정
+    val backgroundColor =
+        if (isSelected) SisoColorTokens.Gold40 else SisoColorTokens.GrayScale20
+    val textColor = SisoColorTokens.GrayScale90
+    val borderColor = if (isSelected) SisoColorTokens.Primary100 else Color.Gray
+
+    Surface(
+        modifier = Modifier
+            .clickable(onClick = {onClick(text)}), // 클릭 가능하게 만듦
+        shape = RoundedCornerShape(999.dp), // 둥근 모서리 모양
+        border = BorderStroke(1.dp, borderColor), // 동적으로 변경되는 테두리 색상 적용
+        color = backgroundColor // 동적으로 변경되는 배경색 적용
     ) {
-        Surface(
-            modifier = Modifier
-                .clickable(onClick = onClick),
-            shape = RoundedCornerShape(999.dp),
-            border = BorderStroke(1.dp, Color.Gray),
-            color = SisoColorTokens.GrayScale20
-        ) {
-            Text(
-                text = text,
-                modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                color = SisoColorTokens.GrayScale90,
-                style = SisoTypoTokens.SubTitle1
-            )
-        }
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+            color = textColor, // 동적으로 변경되는 텍스트 색상 적용
+            style = SisoTypoTokens.SubTitle1
+        )
     }
+}
 
 @Preview
 @Composable
 fun CommonChipPreview(
-){
-    CommonChip("음악감상",{})
+) {
+    CommonChip("음악감상",false, {})
 }
