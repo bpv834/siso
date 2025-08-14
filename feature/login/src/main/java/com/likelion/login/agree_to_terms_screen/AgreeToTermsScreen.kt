@@ -1,5 +1,7 @@
 package com.likelion.login.agree_to_terms_screen
 
+import android.R.attr.contentDescription
+import android.R.attr.onClick
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,9 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.likelion.login.first_loginInfo_screen.FontText
+import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
+import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -66,18 +72,12 @@ fun AgreeToTermsScreen(
 
             Spacer(Modifier.padding(35.dp))
             AgreeRepeatRadioButton(
-                radios = viewModel.agreesBoolean.value,
+                radio = viewModel.agreesBoolean,
+                onClick = {index->
+                    viewModel.agreeContinueBooleanUpdate(index = index)
+                },
             )
-//                AsyncImage(
-//                    modifier = Modifier.clickable(
-//                        onClick = {
-//                            viewModel.requiredTermsAgreeContinue()
-//                        }
-//                    ),
-//                    model = if (viewModel.requiredTermsAgreeBoolean.value) R.drawable.select
-//                    else R.drawable.unselect,
-//                    contentDescription = ""
-//                )
+
 
 
             Spacer(Modifier.padding(150.dp))
@@ -92,14 +92,14 @@ fun AgreeToTermsScreen(
                 disabledContainerColor = SisoColorTokens.GrayScale50
             ),
             onClick = {
-                viewModel.agreeContinueBooleanUpdate()
+
             },
-            enabled = viewModel.agreeContinueBoolean.value
+            enabled = viewModel.agreeContinueBoolean
         ) {
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if(viewModel.agreeContinueBoolean.value == true)SisoColorTokens.GrayScale90
+                color = if(viewModel.agreeContinueBoolean == true)SisoColorTokens.GrayScale90
                 else SisoColorTokens.GrayScale60,
                 fontSize = 22.sp
             )
@@ -110,13 +110,17 @@ fun AgreeToTermsScreen(
 
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun AgreeRepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
-    radios.forEachIndexed { index, info ->
+fun AgreeRepeatRadioButton(
+    radio: MutableList<Pair<String, Boolean>>,
+    onClick:(Int)->Unit = {}
+){
+    radio.forEachIndexed { index, info ->
         Row(
             modifier = Modifier.clickable{
-                radios[index] = info.copy(info.first,!info.second)
-            }.padding(start = 22.dp, end = 22.dp),
+                onClick(index)
+            }.padding(top = 22.dp, bottom = 22.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -125,7 +129,17 @@ fun AgreeRepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
                 text = info.first, style = SisoTypoTokens.Body4, padding = 0.dp,
                 textColor = SisoColorTokens.GrayScale90,
             )
-            RadioButton(
+            AsyncImage(
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            onClick(index)
+                        }
+                    ),
+                    model = if (info.second) R.drawable.select
+                    else R.drawable.unselect,
+                    contentDescription = ""
+                )
+/*            RadioButton(
                 selected = info.second,
                 colors = RadioButtonDefaults.colors(
                     selectedColor = SisoColorTokens.GrayScale90,
@@ -133,8 +147,10 @@ fun AgreeRepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
                 ),
                 onClick = {
                     radios[index] = info.copy(info.first,!info.second)
+                    onClick()
                 }
-            )
+
+            )*/
         }
     }
 }
