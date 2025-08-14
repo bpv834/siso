@@ -11,37 +11,28 @@ import javax.inject.Inject
 @HiltViewModel
 class AgreeToTermsScreenViewModel @Inject constructor(
     // usecase자리
-): ViewModel() {
+): ViewModel(), AgreeToTermsScreenViewModelType {
     private val _agreeContinueBoolean = MutableStateFlow(false)
-    val agreeContinueBoolean : StateFlow<Boolean> get() = _agreeContinueBoolean.asStateFlow()
+    override val agreeContinueBoolean : Boolean get() = _agreeContinueBoolean.value
     private val _agreesBoolean = MutableStateFlow(
         mutableListOf(
             Pair("(필수) 이용약관 동의",false),
             Pair("(선택) 마케팅 정보 수신",false),
         )
     )
-    val agreesBoolean : StateFlow<MutableList<Pair<String, Boolean>>> get() = _agreesBoolean.asStateFlow()
+    override val agreesBoolean : MutableList<Pair<String, Boolean>> get() = _agreesBoolean.value
 
-    fun agreeContinueBooleanUpdate() = _agreeContinueBoolean.update {
+    override fun agreeContinueBooleanUpdate(index:Int) = _agreeContinueBoolean.update {
+        val term = agreesBoolean[index]
+        agreesBoolean[index] = term.copy(
+            term.first,!term.second
+        )
         var agree = true
-        agreesBoolean.value.forEach {
+        agreesBoolean.forEach {
             agree = agree&&it.second
         }
         agree
     }
 
-    fun requiredTermsAgreeBooleanUpdate() = _agreeContinueBoolean.update { !it }
-
-    fun receptionAgreeBooleanUpdate() = _agreeContinueBoolean.update { !it }
-
-    fun requiredTermsAgreeContinue() = {
-        requiredTermsAgreeBooleanUpdate()
-        agreeContinueBooleanUpdate()
-    }
-
-    fun receptionAgreeContinue() = {
-        receptionAgreeBooleanUpdate()
-        agreeContinueBooleanUpdate()
-    }
 
 }
