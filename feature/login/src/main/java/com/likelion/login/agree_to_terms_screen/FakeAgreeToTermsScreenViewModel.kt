@@ -1,6 +1,5 @@
 package com.likelion.login.agree_to_terms_screen
 
-import androidx.compose.runtime.mutableStateListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
