@@ -92,6 +92,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Retrofit (최신 안정 버전)
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+
+    // Gson 컨버터
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // Gson 라이브러리
+    implementation("com.google.code.gson:gson:2.10.1")
+
     // 카카오
     implementation(libs.v2.user) // 카카오 로그인 API 모듈
 }

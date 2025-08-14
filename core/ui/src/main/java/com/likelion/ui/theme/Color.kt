@@ -91,4 +91,8 @@ object SisoColorTokens {
     val Green80 = Color(0xFF237804)
     val Green90 = Color(0xFF135200)
     val Green100 = Color(0xFF092B00)
+
+    // Gold
+    val Gold40 = Color(0xFFFFD666)
+    val Gold80 = Color((0xFF997000))
 }
