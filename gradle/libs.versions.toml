@@ -20,6 +20,7 @@ jetbrainsKotlinJvm = "2.0.21"
 appcompat = "1.7.1"
 lifecycleViewmodelCompose = "2.9.2"
 material = "1.12.0"
+roomKtx = "2.7.2"
 
 [libraries]
 androidx-compose-material3-material3 = { module = "androidx.compose.material3:material3" }
@@ -52,6 +53,7 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
 dagger-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
