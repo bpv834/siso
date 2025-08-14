@@ -5,7 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.navigateToHome
+import com.likelion.login.navigation.inputNavigation
 import com.likelion.login.navigation.loginNavigation
+import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
 
@@ -25,8 +27,15 @@ fun MainNavHost(
         homeNavigation {
             appState.navController.navigateToHome()
         }
-        loginNavigation {
+        loginNavigation(
+            navController = appState.navController
+        ) {
             appState.navController.navigateToLogin()
+        }
+        inputNavigation (
+            navController = appState.navController
+        ){
+            appState.navController.navigateToInput()
         }
         /*
         *
