@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -20,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.likelion.login.first_loginInfo_screen.FontText
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
@@ -30,9 +30,9 @@ import com.likelion.ui.theme.SisoTypoTokens
 fun LoginStartScreen(
     viewModel: LoginStartScreenViewModel = LoginStartScreenViewModel()
 ){
-    val sideDp = 16.dp
     val scrollState = rememberScrollState()
     val introductionFontStyle = SisoTypoTokens.Body1
+    val textBoxSize = 99
     Column {
         Column(
             modifier = Modifier
@@ -40,29 +40,41 @@ fun LoginStartScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = AbsoluteAlignment.Left
         ) {
-            Spacer(Modifier.padding(50.dp))
+            Spacer(Modifier.size(size = 61.dp))
             Column (
-                Modifier.padding(start = sideDp, end = sideDp)
+                Modifier.padding(start = 16.dp, end = 60.dp)
             ){
-                FontText(text = "시팅가입을 환영합니다", style = introductionFontStyle, padding = 0.dp,)
-                FontText(text = "내 정보를 입력하면", style = introductionFontStyle, padding = 0.dp,)
-                FontText(
+                Text(
+                    modifier = Modifier.height( height = (textBoxSize/3).dp),
+                    text = "시팅가입을 환영합니다",
+                    style = introductionFontStyle,
+                    color = SisoColorTokens.GrayScale90
+                )
+                Text(
+                    modifier = Modifier.height( height = (textBoxSize/3).dp),
+                    text = "내 정보를 입력하면",
+                    style = introductionFontStyle,
+                    color = SisoColorTokens.GrayScale90
+                )
+                Text(
+                    modifier = Modifier.height( height = (textBoxSize/3).dp),
                     text = "좋은 인연을 만날 확률이 높아져요",
                     style = introductionFontStyle,
-                    padding = 0.dp,
+                    color = SisoColorTokens.GrayScale90
                 )
 
             }
-            Spacer(Modifier.padding(35.dp))
+            Spacer(modifier = Modifier.size(size = 78.11.dp))
             AsyncImage(
                 model = R.drawable.start_lock,
                 contentDescription = ""
             )
-            Spacer(Modifier.padding(30.dp))
+            Spacer(Modifier.size(size = 59.1.dp))
 
         }
+
         Button(
-            modifier = Modifier.padding(start = sideDp, end = sideDp)
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                 .fillMaxWidth()
                 .height(65.dp),
             colors = ButtonDefaults.buttonColors(
@@ -82,7 +94,7 @@ fun LoginStartScreen(
                 fontSize = 22.sp
             )
         }
-        Spacer(Modifier.padding(12.dp))
+        Spacer(Modifier.size(size = 56.dp))
     }
 
 
