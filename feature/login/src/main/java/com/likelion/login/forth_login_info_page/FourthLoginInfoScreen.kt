@@ -89,7 +89,7 @@ fun FourthLoginInfoScreen(
                 "${bioText.length}/50",
                 style = SisoTypoTokens.Label1,
                 color = SisoColorTokens.GrayScale50
-            ) // Todo 텍스트 스타일, 컬러 지정
+            )
         }
         Spacer(Modifier.size(112.dp))
         if (bioText.length in 5..50) CommonActiveButton("완료하기", {})
