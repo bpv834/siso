@@ -1,5 +1,7 @@
 package com.likelion.login.first_loginInfo_screen
 
+import android.R.attr.text
+import android.R.attr.textColor
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -70,25 +73,30 @@ fun FirstLoginInfoScreen(
     val ageInteractionSource = MutableInteractionSource()
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
             .padding(start = sideDp, end = sideDp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = AbsoluteAlignment.Left
     ) {
-        Spacer(modifier = Modifier.size(size = 8.dp))
+        Spacer(modifier = Modifier.size(size = 24.dp))
         AsyncImage(
             model = R.drawable.img_circle_bar_login1,
             contentDescription = ""
         )
-
-        FontText(text = "기본정보를 제공해주세요", style = SisoTypoTokens.Title1,
-            padding = 12.dp,)
-        FontText(text = "닉네임", style = SisoTypoTokens.Label1,
-            padding = 12.dp,
-            textColor = SisoColorTokens.GrayScale50
+        Spacer(modifier = Modifier.size(size = 24.dp))
+        Text(
+            text = "기본정보를 제공해주세요",
+            style = SisoTypoTokens.Title1,
+            color = SisoColorTokens.GrayScale90
         )
-        Spacer(Modifier.padding(12.dp))
+        Spacer(modifier = Modifier.size(size = 24.dp))
+        Text(
+            text = "닉네임",
+            style = SisoTypoTokens.SubTitle1,
+            color = SisoColorTokens.GrayScale50
+        )
+        Spacer(modifier = Modifier.size(size = 12.dp))
 
         BasicTextField(
             modifier = Modifier
@@ -106,8 +114,9 @@ fun FirstLoginInfoScreen(
                     value = viewModel.nameState,
                     placeholder = {
                         Text(
+                            modifier = Modifier.height(23.dp),
                             text = "이것은 닉네임입니다.",
-                            fontSize = SisoFontSizeTokens.Body2
+                            fontSize = SisoFontSizeTokens.Label1
                         )
                     },
                     innerTextField = innerTextField,
@@ -124,7 +133,7 @@ fun FirstLoginInfoScreen(
                     },
                     trailingIcon = {
                         Icon(
-                            modifier = Modifier.size(46.dp),
+                            modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
                             contentDescription = ""
                         )
@@ -135,11 +144,13 @@ fun FirstLoginInfoScreen(
 
 
         )
-        FontText(text = "나이", style = SisoTypoTokens.Label1,
-            padding = 12.dp,
-            textColor = SisoColorTokens.GrayScale50
+        Spacer(modifier = Modifier.size(size = 28.dp))
+        Text(
+            text = "나이",
+            style = SisoTypoTokens.SubTitle1,
+            color = SisoColorTokens.GrayScale50
         )
-        Spacer(Modifier.padding(12.dp))
+        Spacer(modifier = Modifier.size(size = 12.dp))
 
         BasicTextField(
             modifier = Modifier
@@ -157,8 +168,9 @@ fun FirstLoginInfoScreen(
                     value = viewModel.ageState,
                     placeholder = {
                         Text(
+                            modifier = Modifier.height(23.dp),
                             text= "나이를 입력해주세요",
-                            fontSize = SisoFontSizeTokens.Body2
+                            fontSize = SisoFontSizeTokens.Label1
                         )
                     },
                     innerTextField = innerTextField,
@@ -173,7 +185,7 @@ fun FirstLoginInfoScreen(
                     },
                     trailingIcon = {
                         Icon(
-                            modifier = Modifier.size(46.dp),
+                            modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
                             contentDescription = ""
                         )
@@ -182,22 +194,36 @@ fun FirstLoginInfoScreen(
 
             }
         )
-        FontText(text = "내 성별", SisoTypoTokens.Label1,
-            textColor = SisoColorTokens.GrayScale50,padding = 12.dp)
+        Spacer(modifier = Modifier.size(size = 28.dp))
+        Text(
+            text = "내 성별",
+            style = SisoTypoTokens.SubTitle1,
+            color = SisoColorTokens.GrayScale50
+        )
+        Spacer(modifier = Modifier.size(size = 12.dp))
 
         Row {
             RepeatRadioButton(viewModel.myRadioButtons)
         }
-        FontText(text = "매칭 성별", SisoTypoTokens.Label1,
-            textColor = SisoColorTokens.GrayScale50,padding = 12.dp)
-        FontText(text = "동성선택시 동성친구 이성선택시 이성친구를\n추천해 드려요.", SisoTypoTokens.Label1,
-            textColor = SisoColorTokens.GrayScale50,padding = 0.dp)
+        Spacer(modifier = Modifier.size(size = 28.dp))
+        Text(
+            text = "매칭 성별",
+            style = SisoTypoTokens.SubTitle1,
+            color = SisoColorTokens.GrayScale50
+        )
+        Spacer(modifier = Modifier.size(size = 6.dp))
+        Text(
+            text = "동성선택시 동성친구 이성선택시 이성친구를\n추천해 드려요.",
+            style = SisoTypoTokens.Label1,
+            color = SisoColorTokens.GrayScale50
+        )
+        Spacer(modifier = Modifier.size(size = 12.dp))
 
         Row {
             RepeatRadioButton(viewModel.pairRadioButtons)
         }
 
-        Spacer(modifier = Modifier.padding(12.dp))
+        Spacer(modifier = Modifier.size(size = 30.dp))
 
         Button(
             modifier = Modifier
@@ -220,41 +246,19 @@ fun FirstLoginInfoScreen(
                 fontSize = 22.sp
             )
         }
+        Spacer(modifier = Modifier.size(size = 58.dp))
     }
 }
 
-@Composable
-fun FontText(
-    text: String,
-    style: TextStyle,
-    textColor: Color = Color.Unspecified,
-    padding: Dp = 16.dp,
-    onClick:(()->Unit)? = null,
-    fillMaxFloat: Float = 1F,
-){
-    Column(
-        modifier = if (onClick == null) Modifier.fillMaxWidth(fillMaxFloat)
-        else Modifier.fillMaxWidth(fillMaxFloat).clickable(onClick = {
-                    onClick()
-                }
-            )
-    ) {
-        Spacer(Modifier.padding(padding))
-        Text(
-            text = text,
-            style = style,
-            color = textColor
-        )
-    }
 
-}
 
 @Composable
 fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
     radios.forEachIndexed { index, info ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.size(width = 85.dp, height = 24.dp)
                 .clickable {
                     radios.replaceAll {
                         it.copy(
@@ -262,13 +266,14 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
                         )
                     }
                 }
-                .padding(end = 16.dp)
+                .padding(end = 24.dp)
         ) {
             Text(
                 text = info.first,
                 style = SisoTypoTokens.Body1,
                 fontSize = 21.sp
             )
+            Spacer(modifier = Modifier.size(size = 2.dp))
             RadioButton(
                 selected = info.second,
                 colors = RadioButtonDefaults.colors(
