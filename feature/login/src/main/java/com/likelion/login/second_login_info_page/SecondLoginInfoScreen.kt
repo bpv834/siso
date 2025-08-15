@@ -1,4 +1,4 @@
-package com.likelion.login.SecondLoginInfoPage
+package com.likelion.login.second_login_info_page
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.likelion.ui.R
-import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonButtonWithState
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.theme.SisoColorTokens
