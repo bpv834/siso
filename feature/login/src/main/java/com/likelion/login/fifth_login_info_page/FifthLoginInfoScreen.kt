@@ -36,7 +36,7 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun LastLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
+fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
 
     // 녹음 시간 상태 변수
     val minuteState by viewModel.secondsState.collectAsStateWithLifecycle()
@@ -194,12 +194,12 @@ fun LastLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
 
 @Preview(showBackground = true)
 @Composable
-fun LastLoginInfoScreenPreview() {
+fun FifthLoginInfoScreenPreview() {
     SisoTheme {
         // Preview Context를 사용해 AudioRecorder를 생성
         val context = LocalContext.current
         val fakeAudioRecorder = AudioRecorderClass(context)
         val fakeViewModel = FakeFifthLoginInfoScreenViewModel(fakeAudioRecorder)
-        LastLoginInfoScreen(fakeViewModel)
+        FifthLoginInfoScreen(fakeViewModel)
     }
 }
