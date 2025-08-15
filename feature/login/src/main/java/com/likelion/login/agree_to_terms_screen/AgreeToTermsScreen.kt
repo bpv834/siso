@@ -34,6 +34,7 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 import kotlin.collections.forEachIndexed
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun AgreeToTermsScreen(
     viewModel: AgreeToTermsScreenViewModelType
