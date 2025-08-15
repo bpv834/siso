@@ -1,0 +1,25 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias (libs.plugins.ksp)
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+dependencies {
+    implementation(project(":domain"))
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.hilt.core)
+    ksp(libs.hilt.compiler)
+    testImplementation(libs.junit)
+
+    // Gson 임포트
+    implementation(libs.gson)
+}
+
