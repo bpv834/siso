@@ -60,4 +60,8 @@ dependencies {
     implementation(libs.junit)
     debugImplementation(libs.androidx.ui.tooling)
 
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
 }

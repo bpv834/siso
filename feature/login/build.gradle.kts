@@ -68,4 +68,7 @@ dependencies {
 
     // 카카오
     implementation(libs.v2.user)
+
+    // 로티 애니메이션
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
 }
