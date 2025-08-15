@@ -11,16 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,8 +30,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
-import com.likelion.ui.component.button.CommonButtonWithState
-import com.likelion.ui.component.button.CommonDisableButton
 import com.likelion.ui.component.color_circle.RecordingCircle
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -43,7 +39,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 fun LastLoginInfoScreen(viewModel: LastLoginInfoScreenViewModelType) {
 
     // 녹음 시간 상태 변수
-    val minuteState by viewModel.minuteState.collectAsStateWithLifecycle()
+    val minuteState by viewModel.secondsState.collectAsStateWithLifecycle()
     // 녹음 상태변수 (enum 상태값 받음)
     val isRecording by viewModel.recordingState.collectAsStateWithLifecycle()
     // 1. Lottie 파일을 불러와 composition 객체를 생성합니다.
@@ -200,6 +196,10 @@ fun LastLoginInfoScreen(viewModel: LastLoginInfoScreenViewModelType) {
 @Composable
 fun LastLoginInfoScreenPreview() {
     SisoTheme {
-        LastLoginInfoScreen(FakeLastLoginInfoScreenViewModel())
+        // Preview Context를 사용해 AudioRecorder를 생성
+        val context = LocalContext.current
+        val fakeAudioRecorder = AudioRecorderClass(context)
+        val fakeViewModel = FakeLastLoginInfoScreenViewModel(fakeAudioRecorder)
+        LastLoginInfoScreen(fakeViewModel)
     }
 }
