@@ -1,4 +1,4 @@
-package com.likelion.login.ThirdLoginInfoPage
+package com.likelion.login.third_login_info_page
 
 import android.content.Context
 import android.graphics.Bitmap

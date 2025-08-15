@@ -1,4 +1,4 @@
-package com.likelion.login.ThirdLoginInfoPage
+package com.likelion.login.third_login_info_page
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,7 +7,6 @@ import android.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import javax.inject.Inject
 
 
 class FakeThirdLoginScreenViewModel(
