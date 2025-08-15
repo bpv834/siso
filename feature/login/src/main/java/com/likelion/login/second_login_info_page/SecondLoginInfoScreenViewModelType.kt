@@ -1,4 +1,4 @@
-package com.likelion.login.SecondLoginInfoPage
+package com.likelion.login.second_login_info_page
 
 import kotlinx.coroutines.flow.StateFlow
 

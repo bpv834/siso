@@ -27,7 +27,7 @@ fun CommonChip(
     val backgroundColor =
         if (isSelected) SisoColorTokens.Gold40 else SisoColorTokens.GrayScale20
     val textColor = SisoColorTokens.GrayScale90
-    val borderColor = if (isSelected) SisoColorTokens.Primary100 else Color.Gray
+    val borderColor = if (isSelected) SisoColorTokens.Gold40 else Color.Gray
 
     Surface(
         modifier = Modifier
@@ -49,5 +49,5 @@ fun CommonChip(
 @Composable
 fun CommonChipPreview(
 ) {
-    CommonChip("음악감상",false, {})
+    CommonChip("음악감상",true, {})
 }

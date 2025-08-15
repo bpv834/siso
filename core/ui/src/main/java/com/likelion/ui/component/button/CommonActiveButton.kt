@@ -23,7 +23,7 @@ fun CommonActiveButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        border = BorderStroke(1.dp, SisoColorTokens.Gold80),
+        border = BorderStroke(1.dp, SisoColorTokens.Gold40),
         colors = ButtonDefaults.buttonColors(
             containerColor = SisoColorTokens.Gold40,
             contentColor = SisoColorTokens.GrayScale90
