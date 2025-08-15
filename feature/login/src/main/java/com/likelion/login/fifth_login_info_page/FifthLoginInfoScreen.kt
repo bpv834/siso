@@ -1,4 +1,4 @@
-package com.likelion.login.last_login_info_page
+package com.likelion.login.fifth_login_info_page
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,7 +36,7 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun LastLoginInfoScreen(viewModel: LastLoginInfoScreenViewModelType) {
+fun LastLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
 
     // 녹음 시간 상태 변수
     val minuteState by viewModel.secondsState.collectAsStateWithLifecycle()
@@ -55,7 +55,7 @@ fun LastLoginInfoScreen(viewModel: LastLoginInfoScreenViewModelType) {
     DisposableEffect(Unit) {
         onDispose {
             // 전달받은 viewModel이 FakeViewModel인지 확인
-            if (viewModel is FakeLastLoginInfoScreenViewModel) {
+            if (viewModel is FakeFifthLoginInfoScreenViewModel) {
                 // FakeViewModel일 경우에만 clear() 메서드를 호출
                 viewModel.clear()
             }
@@ -199,7 +199,7 @@ fun LastLoginInfoScreenPreview() {
         // Preview Context를 사용해 AudioRecorder를 생성
         val context = LocalContext.current
         val fakeAudioRecorder = AudioRecorderClass(context)
-        val fakeViewModel = FakeLastLoginInfoScreenViewModel(fakeAudioRecorder)
+        val fakeViewModel = FakeFifthLoginInfoScreenViewModel(fakeAudioRecorder)
         LastLoginInfoScreen(fakeViewModel)
     }
 }

@@ -1,4 +1,4 @@
-package com.likelion.login.last_login_info_page
+package com.likelion.login.fifth_login_info_page
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class FakeLastLoginInfoScreenViewModel(
+class FakeFifthLoginInfoScreenViewModel(
     // usecase
     private val audioRecorder: AudioRecorderClass // ✨ FakeViewModel도 AudioRecorder를 받음
-) : LastLoginInfoScreenViewModelType {
+) : FifthLoginInfoScreenViewModelType {
 
     // 1. 뷰모델의 수명주기에 맞춰 하나의 CoroutineScope를 생성합니다.
     // + 연산자는 두 개의 CoroutineContext 요소를 결합하는 역할을 합니다.

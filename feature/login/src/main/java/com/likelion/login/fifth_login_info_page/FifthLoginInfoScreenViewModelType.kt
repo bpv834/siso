@@ -1,8 +1,8 @@
-package com.likelion.login.last_login_info_page
+package com.likelion.login.fifth_login_info_page
 
 import kotlinx.coroutines.flow.StateFlow
 
-interface LastLoginInfoScreenViewModelType {
+interface FifthLoginInfoScreenViewModelType {
 
     val recordingState: StateFlow<RecordingState> // 녹음 상태를 노출하는 StateFlow 추가
     val secondsState : StateFlow<Int> // 초 상태 변수

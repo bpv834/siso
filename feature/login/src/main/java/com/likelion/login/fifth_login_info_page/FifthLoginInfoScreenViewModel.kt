@@ -1,4 +1,4 @@
-package com.likelion.login.last_login_info_page
+package com.likelion.login.fifth_login_info_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,10 +12,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LastLoginInfoScreenViewModel @Inject constructor(
+class FifthLoginInfoScreenViewModel @Inject constructor(
     private val audioRecorder: AudioRecorderClass, // Hilt로 AudioRecorder 인스턴스를 주입받음
     // usecase
-) : ViewModel(), LastLoginInfoScreenViewModelType {
+) : ViewModel(), FifthLoginInfoScreenViewModelType {
     // 초기 상태는 녹음 전상태
     private val _recordingState = MutableStateFlow(RecordingState.IDLE)
     override val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
