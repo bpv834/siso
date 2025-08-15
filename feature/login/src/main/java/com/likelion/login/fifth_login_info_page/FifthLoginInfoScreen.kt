@@ -30,6 +30,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
+import com.likelion.ui.component.button.CommonDisableButton
 import com.likelion.ui.component.color_circle.RecordingCircle
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -156,6 +157,7 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                             color = SisoColorTokens.GrayScale90
                         )
                         Spacer(Modifier.size(158.dp))
+                        CommonDisableButton(text = "완료하기", onClick = {})
                     }
                 }
                 // 녹음 완료
