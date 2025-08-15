@@ -77,10 +77,10 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.size(24.dp))
-        Text("내 목소리를 들려주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
+        Text(text = "내 목소리를 들려주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
         Spacer(Modifier.size(8.dp))
         Text(
-            "여러분의 진솔한 생각과 경험을 담아, 상대방이 \n" +
+            text = "여러분의 진솔한 생각과 경험을 담아, 상대방이 \n" +
                     "당신을 더 잘 이해할 수 있도록 \n" +
                     "15초 이내의 간단한 인삿말을 담아보세요.",
             style = SisoTypoTokens.Body4,
@@ -102,15 +102,15 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                     )
                     Spacer(Modifier.size(24.dp))
                     Text(
-                        "00:00",
+                        text = "00:00",
                         style = SisoTypoTokens.Body1,
                         color = SisoColorTokens.GrayScale90
                     )
                     Spacer(Modifier.size(158.dp))
-                    CommonActiveButton("녹음시작", { viewModel.startRecording() })
+                    CommonActiveButton(text = "녹음시작", onClick =  { viewModel.startRecording() })
                     Spacer(Modifier.size(8.dp))
                     Text(
-                        "건너뛰기",
+                        text = "건너뛰기",
                         style = SisoTypoTokens.Button2,
                         color = SisoColorTokens.GrayScale50
                     )
@@ -180,9 +180,9 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                     )
 
                     Spacer(Modifier.size(158.dp))
-                    CommonActiveButton("완료하기", {})
+                    CommonActiveButton(text = "완료하기", onClick =  {})
                     Spacer(Modifier.size(8.dp))
-                    CommonActiveButton("다시 녹음하기", { viewModel.startRecording() })
+                    CommonActiveButton(text = "다시 녹음하기", onClick =  { viewModel.startRecording() })
                 }
             }
         }
@@ -198,8 +198,8 @@ fun FifthLoginInfoScreenPreview() {
     SisoTheme {
         // Preview Context를 사용해 AudioRecorder를 생성
         val context = LocalContext.current
-        val fakeAudioRecorder = AudioRecorderClass(context)
-        val fakeViewModel = FakeFifthLoginInfoScreenViewModel(fakeAudioRecorder)
-        FifthLoginInfoScreen(fakeViewModel)
+        val fakeAudioRecorder = AudioRecorderClass(context = context)
+        val fakeViewModel = FakeFifthLoginInfoScreenViewModel(audioRecorder = fakeAudioRecorder)
+        FifthLoginInfoScreen(viewModel = fakeViewModel)
     }
 }

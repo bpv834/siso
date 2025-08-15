@@ -85,7 +85,7 @@ fun ThirdLoginInfoScreen(
         if (uri != null) {
             val bitmap = uri.getBitmap(context) // 확장 함수 사용
             if (capturedImages.size < 5 && bitmap != null) {
-                viewModel.addImageFromAlbum(bitmap)
+                viewModel.addImageFromAlbum(newImage = bitmap)
             }
         }
     }
@@ -102,10 +102,10 @@ fun ThirdLoginInfoScreen(
             contentDescription = "Step indicator",
         )
         Spacer(modifier = Modifier.size(size = 27.dp))
-        Text("나를 표현하는 사진을 보여주세요", style = SisoTypoTokens.Title2)
+        Text(text = "나를 표현하는 사진을 보여주세요", style = SisoTypoTokens.Title2)
         Spacer(modifier = Modifier.size(size = 8.dp))
         Text(
-            "최소 1장 이상 선택해주세요\n정보는 나중에 수정할 수 있어요",
+            text = "최소 1장 이상 선택해주세요\n정보는 나중에 수정할 수 있어요",
             style = SisoTypoTokens.Body4,
             color = SisoColorTokens.GrayScale60
         )
@@ -183,7 +183,7 @@ fun ThirdLoginInfoScreen(
         CameraPreview(
             onImageCaptured = { bitmap ->
                 if (capturedImages.size < 5) {
-                    viewModel.addImageFromAlbum(bitmap)
+                    viewModel.addImageFromAlbum(newImage = bitmap)
                 }
                 isCameraVisible = false
             }

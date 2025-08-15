@@ -58,7 +58,7 @@ fun FourthLoginInfoScreen(
             contentDescription = ""
         )
         Spacer(Modifier.size(24.dp))
-        Text("간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
+        Text(text = "간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
         Spacer(Modifier.size(8.dp))
         Text(
             text = "여러분의 진솔한 생각과 경험을 담아, 상대방이 \n" +
@@ -86,14 +86,14 @@ fun FourthLoginInfoScreen(
             horizontalArrangement = Arrangement.End // 자식들을 Row의 끝(오른쪽)에 정렬
         ) {
             Text(
-                "${bioText.length}/50",
+               text =  "${bioText.length}/50",
                 style = SisoTypoTokens.Label1,
                 color = SisoColorTokens.GrayScale50
             )
         }
         Spacer(Modifier.size(112.dp))
-        if (bioText.length in 5..50) CommonActiveButton("완료하기", {})
-        else CommonDisableButton("완료하기", {})
+        if (bioText.length in 5..50) CommonActiveButton(text = "완료하기", onClick = {})
+        else CommonDisableButton(text = "완료하기", onClick =  {})
         Spacer(Modifier.size(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),

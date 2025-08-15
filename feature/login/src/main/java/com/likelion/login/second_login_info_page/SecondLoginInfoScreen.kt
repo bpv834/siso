@@ -57,7 +57,7 @@ fun SecondLoginInfoScreen(
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
-            "나의 관심을 선택해주세요", style = SisoTypoTokens.Title2
+            text = "나의 관심을 선택해주세요", style = SisoTypoTokens.Title2
         )
         Spacer(modifier = Modifier.size(size = 8.dp))
         Text(
