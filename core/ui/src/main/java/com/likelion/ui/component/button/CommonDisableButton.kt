@@ -2,6 +2,7 @@ package com.likelion.ui.component.button
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -23,19 +24,19 @@ fun CommonDisableButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        border = BorderStroke(1.dp, SisoColorTokens.GrayScale40),
         colors = ButtonDefaults.buttonColors(
             containerColor = SisoColorTokens.GrayScale30,
             contentColor = SisoColorTokens.GrayScale50
         ),
-        // ✨ 받은 modifier를 적용하고, padding을 추가합니다.
-        modifier = modifier.fillMaxWidth() // <-- 이 부분이 버튼의 너비를 최대로 늘려줍니다.
+        border = null,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(54.dp),
     ) {
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
             color = SisoColorTokens.GrayScale50,
-            modifier= modifier.padding(vertical = (15.5).dp)
         )
     }
 }
