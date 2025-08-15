@@ -4,6 +4,9 @@ sealed class NavigationRoute(val route: String) {
     object OnBoardingScreen : NavigationRoute("onboarding")
     object LoginScreen : NavigationRoute("login")
     object HomeScreen : NavigationRoute("home")
+    object InputScreen : NavigationRoute("input") {
+        // 자식 화면
+    }
     /*
     * object 보여줄화면: NavigationRoute("보여줄화면")
     *

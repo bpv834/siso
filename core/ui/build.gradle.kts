@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -22,11 +22,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
 
@@ -39,27 +39,29 @@ android {
 dependencies {
     // Compose
 
-
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.material3.material3)
-    implementation(libs.androidx.compose.ui.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.ui.tooling)
-    androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.ui.test.manifest)
-    implementation(libs.androidx.lifecycle.viewmodel.compose.v285)
-
-
-
     implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
     val camerax_version = "1.4.2"
 
     implementation("androidx.camera:camera-core:$camerax_version")
     implementation("androidx.camera:camera-camera2:$camerax_version")
     implementation("androidx.camera:camera-lifecycle:$camerax_version") // 라이프사이클 안전하게 관리
     implementation("androidx.camera:camera-view:$camerax_version")      // PreviewView로 화면에 카메라 미리보기
+
+    implementation(libs.junit)
+    debugImplementation(libs.androidx.ui.tooling)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
 }

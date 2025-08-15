@@ -51,6 +51,7 @@ class SisoAppState(
         return when (currentDestination?.route) {
             NavigationRoute.HomeScreen.route -> true
             NavigationRoute.LoginScreen.route -> false
+            NavigationRoute.InputScreen.route -> false
             else -> false
         }
     }
