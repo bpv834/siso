@@ -1,6 +1,5 @@
-package com.likelion.login.FourthLoginInfoPage
+package com.likelion.login.forth_login_info_page
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

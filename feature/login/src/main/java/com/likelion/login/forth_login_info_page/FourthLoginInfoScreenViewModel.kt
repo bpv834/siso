@@ -1,4 +1,4 @@
-package com.likelion.login.FourthLoginInfoPage
+package com.likelion.login.forth_login_info_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
