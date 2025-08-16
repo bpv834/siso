@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
     // Compose
 
     implementation(libs.androidx.core.ktx)
@@ -50,6 +51,7 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.junit.ktx)
     val camerax_version = "1.4.2"
 
     implementation("androidx.camera:camera-core:$camerax_version")
