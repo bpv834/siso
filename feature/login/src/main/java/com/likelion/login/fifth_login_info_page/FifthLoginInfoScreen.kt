@@ -87,27 +87,28 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
             style = SisoTypoTokens.Body4,
             color = SisoColorTokens.GrayScale60
         )
-        Spacer(Modifier.size(113.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally // 이 부분을 추가
         ) {
             when (isRecording) {
+
                 // 녹음 전
                 RecordingState.IDLE -> {
+                    Spacer(Modifier.size(97.dp))
                     AsyncImage(
                         model = com.likelion.ui.R.drawable.img_mic,
                         contentDescription = "",
                         modifier = Modifier.size(98.dp)
                     )
-                    Spacer(Modifier.size(24.dp))
+                    Spacer(Modifier.size(40.dp))
                     Text(
                         text = "00:00",
                         style = SisoTypoTokens.Body1,
                         color = SisoColorTokens.GrayScale90
                     )
-                    Spacer(Modifier.size(158.dp))
+                    Spacer(Modifier.size(74.dp))
                     CommonActiveButton(text = "녹음시작", onClick =  { viewModel.startRecording() })
                     Spacer(Modifier.size(8.dp))
                     Text(
@@ -122,9 +123,9 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Spacer(Modifier.size(24.dp))
+                        Spacer(Modifier.size(81.dp))
                         Box(
-                            modifier = Modifier.size(98.dp),
+                            modifier = Modifier.size(130.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             // Lottie Animation
@@ -132,7 +133,6 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                                 composition = composition,
                                 progress = { progress },
                                 modifier = Modifier
-                                    .fillMaxSize()
                                     // graphicsLayer =렌더링 시점에서 확대/축소
                                     // 따라서 버튼이나 다른 위젯이 밀리지않음
                                     .graphicsLayer {
@@ -145,19 +145,20 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                                 model = R.drawable.ic_mic_stop,
                                 contentDescription = "",
                                 modifier = Modifier
-                                    .size(24.dp)
+                                    .size(40.dp)
                                     .clickable {
                                         viewModel.stopRecording()
                                     }
                             )
-                            Spacer(Modifier.size(8.dp))
                         }
+                        Spacer(Modifier.size(24.dp))
+
                         Text(
                             text = "00:${minuteState.toString().padStart(2, '0')}",
                             style = SisoTypoTokens.Body1,
                             color = SisoColorTokens.GrayScale90
                         )
-                        Spacer(Modifier.size(158.dp))
+                        Spacer(Modifier.size(74.dp))
                         CommonDisableButton(text = "완료하기", onClick = {})
                     }
                 }
@@ -167,22 +168,25 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Spacer(Modifier.size(97.dp))
                         // Lottie Animation
-                        RecordingCircle() {
+                        RecordingCircle(
+                        ) {
                             AsyncImage(
                                 model = R.drawable.ic_mic_start,
                                 contentDescription = "", modifier = Modifier.size(24.dp)
                             )
                         }
-                        Spacer(Modifier.size(8.dp))
+                        Spacer(Modifier.size(40.dp))
+                        Text(
+                            text = "00:${minuteState.toString().padStart(2, '0')}",
+                            style = SisoTypoTokens.Body1,
+                            color = SisoColorTokens.GrayScale90
+                        )
                     }
-                    Text(
-                        text = "00:${minuteState.toString().padStart(2, '0')}",
-                        style = SisoTypoTokens.Body1,
-                        color = SisoColorTokens.GrayScale90
-                    )
 
-                    Spacer(Modifier.size(158.dp))
+
+                    Spacer(Modifier.size(43.dp))
                     CommonActiveButton(text = "완료하기", onClick =  {})
                     Spacer(Modifier.size(8.dp))
                     CommonActiveButton(text = "다시 녹음하기", onClick =  { viewModel.startRecording() })
