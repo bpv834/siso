@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -48,7 +49,9 @@ fun AgreeToTermsScreen(
     )
     val agreeContinueBoolean = viewModel.agreeContinueBoolean.collectAsStateWithLifecycle()
 
-
+    Box(
+        modifier = Modifier.fillMaxHeight()
+    ){
         Column(
             modifier = Modifier
                 .padding(start = sideDp, end = sideDp)
@@ -66,16 +69,22 @@ fun AgreeToTermsScreen(
             )
             Spacer(modifier = Modifier.size(size = 68.dp))
 
-                AgreeRepeatRadioButton(
-                    termsList = agreeList,
-                    onClick = {continueBoolean->
-                        viewModel.agreeContinueBooleanUpdate(continueBoolean)
-                        Log.d("radioRemember", "[agreeContinueBoolean]")
-                        Log.d("radioRemember", viewModel.agreeContinueBoolean.toString())
-                    },
-                )
+            AgreeRepeatRadioButton(
+                termsList = agreeList,
+                onClick = {continueBoolean->
+                    viewModel.agreeContinueBooleanUpdate(continueBoolean)
+                    Log.d("radioRemember", "[agreeContinueBoolean]")
+                    Log.d("radioRemember", viewModel.agreeContinueBoolean.toString())
+                },
+            )
 
             Spacer(modifier = Modifier.size(size = 286.dp))
+
+
+        }
+        Column(
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,8 +107,10 @@ fun AgreeToTermsScreen(
                 )
             }
             Spacer(modifier = Modifier.size(size = 56.dp))
+        }
 
     }
+
 
 
 }
