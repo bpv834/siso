@@ -122,6 +122,7 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Spacer(Modifier.size(24.dp))
                         Box(
                             modifier = Modifier.size(98.dp),
                             contentAlignment = Alignment.Center
