@@ -1,4 +1,4 @@
-package com.likelion.login.first_loginInfo_screen
+package com.likelion.login.first_login_info_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border
@@ -56,9 +56,7 @@ fun FirstLoginInfoScreen(
 ){
     val sideDp = 16.dp
     var nameText by rememberSaveable { mutableStateOf("") }
-    val nameInteractionSource = MutableInteractionSource()
     var ageText by rememberSaveable { mutableStateOf("") }
-    val ageInteractionSource = MutableInteractionSource()
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -112,7 +110,7 @@ fun FirstLoginInfoScreen(
                     singleLine = true,
                     enabled = true,
                     visualTransformation = VisualTransformation.None,
-                    interactionSource = nameInteractionSource,
+                    interactionSource = MutableInteractionSource(),
                     container = {
 
                         Box(modifier = Modifier.drawBehind {
@@ -124,6 +122,7 @@ fun FirstLoginInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
                     }
@@ -166,7 +165,7 @@ fun FirstLoginInfoScreen(
                     singleLine = true,
                     enabled = true,
                     visualTransformation = VisualTransformation.None,
-                    interactionSource = ageInteractionSource,
+                    interactionSource = MutableInteractionSource(),
                     container = {
                         Box(modifier = Modifier.drawBehind{
                             drawRect(SisoColorTokens.GrayScale20)
@@ -176,6 +175,7 @@ fun FirstLoginInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
                     }

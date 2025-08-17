@@ -1,4 +1,4 @@
-package com.likelion.login.first_loginInfo_screen
+package com.likelion.login.first_login_info_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
