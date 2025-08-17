@@ -34,7 +34,6 @@ import coil3.compose.AsyncImage
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
-import com.lion.mypage.setting_screen.SettingText
 
 @Composable
 fun MyPageScreen()  {
@@ -58,34 +57,40 @@ fun MyPageScreen()  {
             )
             Column(
                 modifier = Modifier.offset(x = ((-2).dp))
-                    .padding(end = 10.dp)
+                    .padding(start = 14.dp, end = 10.dp)
             ) {
                 Spacer(modifier = Modifier.size(size = 6.dp))
                 Text(
-                    modifier = Modifier.padding(start = 18.dp),
                     text = "따뜻한 봄날",
                     style = SisoTypoTokens.Title2,
                     color = SisoColorTokens.GrayScale90,
                 )
                 Spacer(modifier = Modifier.size(size = 2.dp))
                 Text(
-                    modifier = Modifier.padding(start = 18.dp),
                     text = "56세",
                     style = SisoTypoTokens.Title3,
                     color = SisoColorTokens.GrayScale70,
                 )
                 Spacer(modifier = Modifier.size(size = 10.dp))
-                Text(
-                    modifier = Modifier.padding(start = 18.dp),
-                    text = "서울 중구",
-                    style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale90,
-                )
+                Row {
+                    AsyncImage(
+                        modifier = Modifier.size(width = 24.dp, height = 24.dp),
+                        model = com.likelion.ui.R.drawable.rocation_icon,
+                        contentDescription = ""
+                    )
+                    Spacer(modifier = Modifier.size(size = 2.dp))
+                    Text(
+                        text = "서울 중구",
+                        style = SisoTypoTokens.Label1,
+                        color = SisoColorTokens.GrayScale90,
+                    )
+                }
+
                 Spacer(modifier = Modifier.size(size = 11.dp))
                 AsyncImage(
                     modifier = Modifier
-                        .size(width = 190.dp, height = 49.dp)
-                        .offset(x = (-6).dp)
+                        .size(width = 190.dp, height = 48.dp)
+                        .offset(x = (-18).dp)
                         .clickable{
                             d("test","click")
                         },
