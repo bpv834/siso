@@ -24,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17 // ⭐️ 여기를 17로 수정
+        targetCompatibility = JavaVersion.VERSION_17 // ⭐️ 여기를 17로 수정
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -33,7 +33,9 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":domain"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:ui"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
