@@ -14,12 +14,12 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import repository_impl.UserRepositoryImpl
+import repository_impl.UserRepository2Impl2
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserRepositoryImplTest {
 
-    private lateinit var userRepository: UserRepositoryImpl
+    private lateinit var userRepository: UserRepository2Impl2
     private val testDispatcher = StandardTestDispatcher()
 
     private val fakeUserApi = FakeUserApi()
@@ -31,7 +31,7 @@ class UserRepositoryImplTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        userRepository = UserRepositoryImpl(
+        userRepository = UserRepository2Impl2(
             userApi = fakeUserApi,
             profileApi = fakeProfileApi,
             imagesApi = fakeImagesApi,

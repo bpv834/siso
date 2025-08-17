@@ -2,7 +2,7 @@ package com.likelion.domain.repository
 
 import com.likelion.domain.model.UsersModel
 
-class FakeUsersRepositoryImpl : UsersRepository {
+class FakeUsersRepository2Impl : UsersRepository2 {
     override suspend fun getAllUsers(): List<UsersModel> {
         return fakeUsers.toList()
     }
