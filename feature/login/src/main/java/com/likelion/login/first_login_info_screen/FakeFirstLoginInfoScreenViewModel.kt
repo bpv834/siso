@@ -1,8 +1,7 @@
-package com.likelion.login.first_loginInfo_screen
+package com.likelion.login.first_login_info_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 class FakeFirstLoginInfoScreenViewModel(
