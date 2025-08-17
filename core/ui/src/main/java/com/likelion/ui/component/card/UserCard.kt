@@ -1,11 +1,13 @@
 package com.likelion.ui.component.card
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,12 +35,18 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun UserCard(user: UsersModel) {
+fun UserCard(
+    user: UsersModel,
+    onImageClick: (imageUrl: String) -> Unit,
+) {
     Card(
-        modifier = Modifier
-            .width(328.dp),
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent // 배경 투명
+            , contentColor = Color.Unspecified  // 내용물 색상 유지
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -74,11 +82,12 @@ fun UserCard(user: UsersModel) {
                     items(user.userImages) { imageUrl ->
                         Box {
                             AsyncImage(
-                                model = com.likelion.ui.R.drawable.img_flower,
+                                model = imageUrl,
                                 contentDescription = "",
                                 modifier = Modifier
-                                    .width(328.dp)
+                                    .fillMaxWidth()
                                     .height(242.dp)
+                                    .clickable { onImageClick(imageUrl) }
                                     .clip(RoundedCornerShape(24.dp)),
                                 contentScale = ContentScale.Crop // ⭐️ 비율을 유지하며 공간을 채움
                             )
@@ -155,23 +164,27 @@ fun UserCard(user: UsersModel) {
             Spacer(Modifier.size(15.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
+                    .fillMaxWidth() // ✅ Row가 전체 너비를 차지하도록 설정
+                ,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.img_message_button,
-                    contentDescription = ""
+                    contentDescription = "",
+                    modifier = Modifier.weight(1f),
+                    contentScale = ContentScale.FillWidth
                 )
-
+                Spacer(Modifier.size(16.dp))
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.img_call_button,
-                    contentDescription = ""
+                    contentDescription = "",
+                    modifier = Modifier.weight(1f),
+                    contentScale = ContentScale.FillWidth
                 )
 
+
             }
-            Spacer(Modifier.size(20.dp))
         }
     }
 }
@@ -190,5 +203,5 @@ fun UserCardPreview() {
         interests = listOf("독서", "영화", "헬스"),
         introduce = "안녕하세요. 자기소개입니다. 저는 영화와 독서를 좋아합니다."
     )
-    UserCard(user = sampleUser)
+    //UserCard(user = sampleUser)
 }
