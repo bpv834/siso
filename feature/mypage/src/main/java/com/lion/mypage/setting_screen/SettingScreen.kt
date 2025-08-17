@@ -2,6 +2,7 @@ package com.lion.mypage.setting_screen
 
 import android.R.attr.text
 import android.annotation.SuppressLint
+import android.util.Log.d
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -66,12 +67,15 @@ fun SettingText(
             },
         text = input,
         style = SisoTypoTokens.Body2,
-        color = SisoColorTokens.Black,
+        color = if (input =="회원탈퇴") SisoColorTokens.GrayScale40
+            else SisoColorTokens.Black,
     )
-    HorizontalDivider(
-        thickness = 1.dp,
-        color = SisoColorTokens.GrayScale30
-    )
+    if (input != "회원탈퇴") {
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = SisoColorTokens.GrayScale30
+        )
+    }
 }
 
 @Preview
