@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,10 +53,10 @@ fun AgreeToTermsScreen(
 
     Box(
         modifier = Modifier.fillMaxHeight()
+            .padding(start = sideDp, end = sideDp)
     ){
         Column(
             modifier = Modifier
-                .padding(start = sideDp, end = sideDp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = AbsoluteAlignment.Left
@@ -84,6 +86,7 @@ fun AgreeToTermsScreen(
         }
         Column(
             modifier = Modifier.align(Alignment.BottomCenter)
+
         ) {
             Button(
                 modifier = Modifier
@@ -133,6 +136,7 @@ fun AgreeRepeatRadioButton(
                     if (checkIdList.contains(id)) {
                         checkIdList.remove(id)
                     } else {
+                        // 비텀 바 표시
                         checkIdList.add(id)
                     }
 
@@ -150,11 +154,13 @@ fun AgreeRepeatRadioButton(
             AsyncImage(
                     modifier = Modifier.size(24.dp)
                         .align(Alignment.CenterEnd)
+                        .clip(RoundedCornerShape(5.dp))
                         .clickable(
                         onClick = {
                             if (checkIdList.contains(id)) {
                                 checkIdList.remove(id)
                             } else {
+                                // 비텀 바 표시
                                 checkIdList.add(id)
                             }
 
