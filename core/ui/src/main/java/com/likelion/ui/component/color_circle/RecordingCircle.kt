@@ -1,6 +1,7 @@
 package com.likelion.ui.component.color_circle
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,15 +18,15 @@ import com.likelion.ui.theme.SisoColorTokens
 fun RecordingCircle(
     size: Dp = 98.dp,
     color: Color = Color(0xFFFF4D4F),
-    icon: @Composable () -> Unit,
+    iconWidget: @Composable () -> Unit,
+    onClickIcon : ()->Unit,
 ) {
     Box(
         modifier = Modifier
-            .size(size)
-            .clip(CircleShape)
+            .clip(CircleShape).size(size)
             .background(color),
         contentAlignment = Alignment.Center
     ) {
-        icon()
+        iconWidget()
     }
 }
