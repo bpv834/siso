@@ -16,7 +16,7 @@ class AudioRecorderClass @Inject constructor(
 
     // 녹음 시작
     fun startRecording(fileName: String) {
-        val outputDir = context.cacheDir
+        val outputDir = context.cacheDir // 캐시 저장
         outputFile = File(outputDir, fileName)
 
         mediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
