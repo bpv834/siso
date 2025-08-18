@@ -2,6 +2,8 @@ package com.likelion.login.first_login_info_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class FakeFirstLoginInfoScreenViewModel(
@@ -12,7 +14,7 @@ class FakeFirstLoginInfoScreenViewModel(
     private val _ageState = MutableStateFlow("")
     override val ageState: String get() = _ageState.value
     private val _firstContinueBoolean = MutableStateFlow(false)
-    override val fistContinueBoolean : Boolean get() = _firstContinueBoolean.value
+    override val fistContinueBoolean : StateFlow<Boolean> get() = _firstContinueBoolean.asStateFlow()
     private val _myRadioButtons = MutableStateFlow(
         mutableStateListOf(
             Pair(first = "여성", second = false),

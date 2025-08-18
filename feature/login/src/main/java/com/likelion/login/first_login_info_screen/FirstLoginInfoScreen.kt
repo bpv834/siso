@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.login.first_login_info_screen.FakeFirstLoginInfoScreenViewModel
@@ -49,6 +50,7 @@ import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
 import com.likelion.ui.theme.SisoTypoTokens
+import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("UnrememberedMutableInteractionSource")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +62,7 @@ fun FirstLoginInfoScreen(
     val sideDp = 16.dp
     var nameText by rememberSaveable { mutableStateOf("") }
     var ageText by rememberSaveable { mutableStateOf("") }
+    val fistContinueBoolean = viewModel.fistContinueBoolean.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -110,7 +113,7 @@ fun FirstLoginInfoScreen(
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
-                            text = "이것은 닉네임입니다.",
+                            text = "닉네임을 입력해주세요",
                             fontSize = SisoFontSizeTokens.Label1,
                             color = SisoColorTokens.GrayScale50
                         )
@@ -238,7 +241,7 @@ fun FirstLoginInfoScreen(
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(65.dp),
+                .height(54.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SisoColorTokens.Gold40,
                 disabledContainerColor = SisoColorTokens.GrayScale30
@@ -246,14 +249,13 @@ fun FirstLoginInfoScreen(
             onClick = {
                 onNavigateNext()
             },
-            enabled = viewModel.fistContinueBoolean
+            enabled = fistContinueBoolean.value
         ) {
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.GrayScale90
+                color = if(fistContinueBoolean.value == true)SisoColorTokens.GrayScale90
                 else SisoColorTokens.GrayScale50,
-                fontSize = 22.sp
             )
         }
         Spacer(modifier = Modifier.size(size = 58.dp))
