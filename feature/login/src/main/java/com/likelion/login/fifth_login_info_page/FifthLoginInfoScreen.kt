@@ -37,7 +37,10 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
+fun FifthLoginInfoScreen(
+    viewModel: FifthLoginInfoScreenViewModelType,
+    onNavigateNext: () -> Unit
+) {
 
     // 녹음 시간 상태 변수
     val minuteState by viewModel.secondsState.collectAsStateWithLifecycle()
@@ -109,12 +112,17 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                         color = SisoColorTokens.GrayScale90
                     )
                     Spacer(Modifier.size(74.dp))
-                    CommonActiveButton(text = "녹음시작", onClick =  { viewModel.startRecording() })
+                    CommonActiveButton(text = "녹음시작", onClick = {
+                        viewModel.startRecording()
+                    })
                     Spacer(Modifier.size(8.dp))
                     Text(
                         text = "건너뛰기",
                         style = SisoTypoTokens.Button2,
-                        color = SisoColorTokens.GrayScale50
+                        color = SisoColorTokens.GrayScale50,
+                        modifier = Modifier.clickable{
+                            onNavigateNext()
+                        }
                     )
                 }
                 // 녹음중
@@ -159,7 +167,9 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
                             color = SisoColorTokens.GrayScale90
                         )
                         Spacer(Modifier.size(74.dp))
-                        CommonDisableButton(text = "완료하기", onClick = {})
+                        CommonDisableButton(text = "완료하기", onClick = {
+
+                        })
                     }
                 }
                 // 녹음 완료
@@ -187,9 +197,11 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
 
 
                     Spacer(Modifier.size(43.dp))
-                    CommonActiveButton(text = "완료하기", onClick =  {})
+                    CommonActiveButton(text = "완료하기", onClick = {
+                        onNavigateNext()
+                    })
                     Spacer(Modifier.size(8.dp))
-                    CommonActiveButton(text = "다시 녹음하기", onClick =  { viewModel.startRecording() })
+                    CommonActiveButton(text = "다시 녹음하기", onClick = { viewModel.startRecording() })
                 }
             }
         }
@@ -197,6 +209,11 @@ fun FifthLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
     }
 
 }
+
+//@Composable
+//fun LottieAnimation(composition: ERROR, progress: () -> ERROR, modifier: Modifier) {
+//    TODO("Not yet implemented")
+//}
 
 
 @Preview(showBackground = true)
@@ -207,6 +224,6 @@ fun FifthLoginInfoScreenPreview() {
         val context = LocalContext.current
         val fakeAudioRecorder = AudioRecorderClass(context = context)
         val fakeViewModel = FakeFifthLoginInfoScreenViewModel(audioRecorder = fakeAudioRecorder)
-        FifthLoginInfoScreen(viewModel = fakeViewModel)
+        FifthLoginInfoScreen(viewModel = fakeViewModel,{})
     }
 }

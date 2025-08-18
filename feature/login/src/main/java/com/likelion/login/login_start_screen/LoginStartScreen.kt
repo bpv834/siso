@@ -31,8 +31,11 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginStartScreen(
-    viewModel: LoginStartScreenViewModel = LoginStartScreenViewModel()
-){
+    viewModel: LoginStartScreenViewModel = LoginStartScreenViewModel(),
+    onNavigateNext: () -> Unit
+) {
+    //val viewModel : LoginStartScreenViewModel = hiltViewModel()
+    val sideDp = 16.dp
     val scrollState = rememberScrollState()
     val introductionFontStyle = SisoTypoTokens.Body1
     val textBoxSize = 99
@@ -90,6 +93,7 @@ fun LoginStartScreen(
                 ),
                 onClick = {
                     viewModel.fistContinueBooleanUpdate(true)
+                    onNavigateNext()
                 },
                 enabled = viewModel.fistContinueBoolean
             ) {
@@ -111,9 +115,9 @@ fun LoginStartScreen(
 
 @Composable
 @Preview
-fun LoginStartScreenPreview(){
+fun LoginStartScreenPreview() {
     Surface(color = SisoColorTokens.White) {
-        LoginStartScreen()
+        LoginStartScreen(onNavigateNext = {})
     }
 
 }

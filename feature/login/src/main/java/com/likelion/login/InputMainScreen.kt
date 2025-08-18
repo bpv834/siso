@@ -13,12 +13,29 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.likelion.login.agree_to_terms_screen.AgreeToTermsScreen
+import com.likelion.login.agree_to_terms_screen.FakeAgreeToTermsScreenViewModel
+import com.likelion.login.fifth_login_info_page.FakeFifthLoginInfoScreenViewModel
+import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreen
+import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreenViewModel
+import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreenViewModelType
+import com.likelion.login.first_loginInfo_screen.FirstLoginInfoScreen
+import com.likelion.login.first_login_info_screen.FakeFirstLoginInfoScreenViewModel
+import com.likelion.login.forth_login_info_page.FourthLoginInfoScreen
+import com.likelion.login.last_login_info_page.LastLoginInfoScreen
+import com.likelion.login.login_start_screen.LoginStartScreen
+import com.likelion.login.second_login_info_page.FakeSecondLoginInfoScreenViewModel
+import com.likelion.login.second_login_info_page.SecondLoginInfoScreen
+import com.likelion.login.third_login_info_page.FakeThirdLoginScreenViewModel
+import com.likelion.login.third_login_info_page.ThirdLoginInfoScreen
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -70,28 +87,63 @@ fun InputMainScreen(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "main",
+            startDestination = "login1", // 약관동의
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("main") {
-                Column {
-                    Text("Main")
-                    Button(onClick = {
-                        navController.navigate("screen1")
-                    }) {
-                        Text("go First")
-                    }
-                }
-            }
-            composable("screen1") {
-                InputScreen1(
+            composable("login1") {
+                AgreeToTermsScreen(
+                    FakeAgreeToTermsScreenViewModel(),
                     onNavigateNext = {
-                        navController.navigate("screen2")
+                        navController.navigate("login2")
+                    })
+            }
+            composable("login2") { // 가입화면
+                LoginStartScreen(
+                    onNavigateNext = {
+                        navController.navigate("screen1")
                     }
                 )
             }
+            composable("screen1") {
+                FirstLoginInfoScreen(
+                    FakeFirstLoginInfoScreenViewModel(),
+                    onNavigateNext = {
+                        navController.navigate("screen2")
+                    })
+            }
             composable("screen2") {
-                InputScreen2()
+                SecondLoginInfoScreen(
+                    FakeSecondLoginInfoScreenViewModel(),
+                    onNavigateNext = {
+                        navController.navigate("screen3")
+                    })
+            }
+            composable("screen3") {
+                ThirdLoginInfoScreen(
+                    FakeThirdLoginScreenViewModel(LocalContext.current),
+                    onNavigateNext = {
+                        navController.navigate("screen4")
+                    })
+            }
+            composable("screen4") {
+                FourthLoginInfoScreen(
+                    onNavigateNext = {
+                        navController.navigate("screen5")
+                    })
+            }
+            composable("screen5") {
+                FifthLoginInfoScreen(
+                    viewModel = hiltViewModel<FifthLoginInfoScreenViewModel>(),
+                    onNavigateNext = { navController.navigate("screen6") }
+                )
+            }
+            composable("screen6") {
+                LastLoginInfoScreen(
+                    onNavigation = {
+                        
+                    }
+                )
+
             }
         }
     }
@@ -109,15 +161,6 @@ fun InputScreen1(
     }
 }
 
-@Composable
-fun InputScreen2() {
-    Column {
-        Text("second")
-        Button(onClick = {}) {
-            Text("go third")
-        }
-    }
-}
 
 @Composable
 @Preview

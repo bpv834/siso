@@ -1,19 +1,14 @@
 package com.likelion.domain.auth.usecase
 
 import com.likelion.domain.auth.model.KakaoTokenResult
-import com.likelion.domain.auth.provider.KakaoTokenProvider
+import com.likelion.domain.auth.repository.KakaoAuthRepository
 import javax.inject.Inject
 
+// 카카오 토큰 가져오는 유스케이스
 class FetchKakaoTokenUseCase @Inject constructor(
-    private val provider: KakaoTokenProvider
+    private val repository: KakaoAuthRepository
 ) {
-    suspend operator fun invoke(): String? {
-        return when (val result = provider.fetchKakaoToken()) {
-            is KakaoTokenResult.Success -> result.token
-            is KakaoTokenResult.Canceled -> null
-            is KakaoTokenResult.Error -> {
-                throw result.cause
-            }
-        }
+    suspend operator fun invoke(): KakaoTokenResult {
+        return repository.fetchKakaoAccessToken()
     }
 }

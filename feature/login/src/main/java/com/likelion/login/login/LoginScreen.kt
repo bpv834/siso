@@ -1,12 +1,14 @@
-package com.likelion.login
+package com.likelion.login.login
 
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.webkit.WebView
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,8 +21,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import coil3.compose.AsyncImage
 import com.likelion.login.state.LoginUiState
 import com.likelion.ui.R
@@ -37,15 +39,34 @@ fun LoginRoute(
 ) {
     val viewModel: LoginScreenViewModel = hiltViewModel()
     val uiState = viewModel.uiState.collectAsState()
-
+//    LoginScreen2(
+//
+//    )
 
     LoginScreen(
         uiState = uiState.value,
         onLogin = { viewModel.login() },
         onLoggedIn = onLoggedIn
     )
-
 }
+
+// ㅅ테스트
+@Composable
+fun LoginScreen2(
+) {
+    val url = "https://589b7097c070.ngrok-free.app/oauth2/authorization/kakao"
+    AndroidView(factory = { context ->
+        WebView(context).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            settings.javaScriptEnabled = true
+            loadUrl(url)
+        }
+    })
+}
+
 
 @Composable
 fun LoginScreen(
@@ -55,9 +76,8 @@ fun LoginScreen(
 ) {
     LaunchedEffect(uiState.kakaoToken) {
         if (!uiState.kakaoToken.isNullOrEmpty()) {
-            Log.d("LoginS",uiState.kakaoToken)
+            Log.d("LoginS", uiState.kakaoToken)
             onLoggedIn()
-
         }
     }
     //val loginStatusInfoTitle = if (isLoggedIn.value) "로그인 상태" else "로그아웃 상태"
@@ -87,18 +107,18 @@ fun LoginScreen(
                     color = SisoColorTokens.Orange100
                 )
             }
-            Button(
-                onClick = onLogin,
+            AsyncImage(
+                model = R.drawable.kakao_login,
+                contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 145.dp, top = 601.dp)
                     .align(Alignment.BottomCenter)
-            ) {
-                // 추후 카카오 이미지로 변경
-                Text("카카오로 로그인")
-                // Text("카카오: $loginStatusInfoTitle")
-            }
+                    .clickable {
+                        onLogin()
+                    }
+            )
         }
     }
 }
