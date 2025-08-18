@@ -68,4 +68,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // 권한 관리를 위한 최신 Accompanist 라이브러리 추가
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+
 }
