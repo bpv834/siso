@@ -88,7 +88,7 @@ fun LoginStartScreen(
                     .fillMaxWidth()
                     .height(65.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = SisoColorTokens.Orange30,
+                    containerColor = SisoColorTokens.Gold40,
                     disabledContainerColor = SisoColorTokens.GrayScale50
                 ),
                 onClick = {
