@@ -75,7 +75,7 @@ fun FourthLoginInfoScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(206.dp),
-            placeholderText = "안녕하세요. 인생의 황혼기에 접어들었지만, 늘 새로운 경험과 사랑을 찾아 나아가고 있습니다. 서로를 이해하며 함께할 수 있는 분을 기다립니다.",
+            placeholderText = "예시) 안녕하세요. 인생의 황혼기에 접어들었지만, 늘 새로운 경험과 사랑을 찾아 나아가고 있습니다.",
             value = bioText, // collect된 실시간 변경된 스트링 값을 넣는다.
             onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
                 viewModel.onBioTextChanged(newText)
