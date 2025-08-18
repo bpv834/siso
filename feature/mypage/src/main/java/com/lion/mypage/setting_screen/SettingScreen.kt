@@ -59,22 +59,28 @@ fun SettingText(
     input: String,
     option: () -> Unit
 ){
-    Text(
-        modifier = Modifier.fillMaxWidth()
-            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+    Column (
+        modifier = Modifier
             .clickable{
                 option()
-            },
-        text = input,
-        style = SisoTypoTokens.Body2,
-        color = if (input =="회원탈퇴") SisoColorTokens.GrayScale40
+            }
+    ){
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 16.dp),
+            text = input,
+            style = SisoTypoTokens.Body2,
+            color = if (input =="회원탈퇴") SisoColorTokens.GrayScale40
             else SisoColorTokens.Black,
-    )
-    if (input != "회원탈퇴") {
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = SisoColorTokens.GrayScale30
         )
+        Spacer(modifier = Modifier.size(16.dp))
+        if (input != "회원탈퇴") {
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = SisoColorTokens.GrayScale30
+            )
+        }
     }
 }
 
