@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
+    implementation(project(":core:util"))
 
 
     implementation(libs.androidx.core.ktx)
@@ -71,4 +72,6 @@ dependencies {
 
     // 로티 애니메이션
     implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+
 }
