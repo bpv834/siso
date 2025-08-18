@@ -96,5 +96,6 @@ object SisoColorTokens {
 
     // Gold
     val Gold40 = Color(0xFFFFD666)
+    val Gold50 = Color(0xFFFFC833)
     val Gold80 = Color((0xFF997000))
 }

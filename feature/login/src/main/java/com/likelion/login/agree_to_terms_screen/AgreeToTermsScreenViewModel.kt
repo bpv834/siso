@@ -14,10 +14,9 @@ class AgreeToTermsScreenViewModel @Inject constructor(
 ): ViewModel(), AgreeToTermsScreenViewModelType {
     private val _agreeContinueBoolean = MutableStateFlow(false)
     override val agreeContinueBoolean : StateFlow<Boolean> get() = _agreeContinueBoolean.asStateFlow()
+    private val _isShowBottomSheet = MutableStateFlow(false)
 
     override fun agreeContinueBooleanUpdate(agreeStates: Boolean) = _agreeContinueBoolean.update {
         agreeStates
     }
-
-
 }

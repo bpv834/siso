@@ -1,4 +1,4 @@
-package com.likelion.login.first_loginInfo_screen
+package com.lion.mypage.first_edit_info_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class FirstLoginInfoScreenViewModel @Inject constructor(
+class FirstEditInfoScreenViewModel @Inject constructor(
 
     // usecase자리
-): ViewModel(), FirstLoginInfoScreenViewModelType {
+): ViewModel(), FirstEditInfoScreenViewModelType {
     private val _nameState = MutableStateFlow("")
     override val nameState : String get() = _nameState.value
     private val _ageState = MutableStateFlow("")
