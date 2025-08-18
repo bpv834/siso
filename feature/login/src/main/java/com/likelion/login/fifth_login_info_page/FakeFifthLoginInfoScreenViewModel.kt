@@ -58,7 +58,7 @@ class FakeFifthLoginInfoScreenViewModel(
             while (true) {
                 delay(1000L)
                 _secondsState.value++
-                if(_secondsState.value >=15) {
+                if(_secondsState.value >15) {
                     stopRecording()
                 }
             }
