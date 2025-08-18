@@ -107,7 +107,7 @@ fun MyPageScreen()  {
                         Box(
                             modifier = Modifier
                                 .size(width = 190.dp, height = 48.dp)
-                                .clip(RoundedCornerShape(15.dp))
+                                .clip(RoundedCornerShape(12.dp))
                                 .offset(x= 14.dp)
                                 .clickable {
                                     d("test", "click")
