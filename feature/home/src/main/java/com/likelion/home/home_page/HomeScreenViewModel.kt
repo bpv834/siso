@@ -1,4 +1,4 @@
-package com.likelion.main.main_page
+package com.likelion.home.home_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,9 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(
+class HomeScreenViewModel @Inject constructor(
     val getAllUsersUseCase: GetAllUsersUseCase
-) : ViewModel(), MainScreenViewModelType {
+) : ViewModel(), HomeScreenViewModelType {
     val _userList = MutableStateFlow<List<UsersModel>>(emptyList())
     override val userList : StateFlow<List<UsersModel>> = _userList.asStateFlow()
 
