@@ -40,7 +40,7 @@ class FifthLoginInfoScreenViewModel @Inject constructor(
 
         // ⭐️ 실제 녹음 시작
         val fileName = "record_${System.currentTimeMillis()}.m4a"
-        audioRecorder.startRecording(fileName)
+       // audioRecorder.startRecording(fileName)
 
 
         runRecordingTimer()
@@ -50,7 +50,7 @@ class FifthLoginInfoScreenViewModel @Inject constructor(
     override fun runRecordingTimer() {
         // 기존 Job이 있다면 취소
         recordingJob?.cancel()
-        viewModelScope.launch {
+        recordingJob =  viewModelScope.launch {
             while (true) {
                 delay(1000L)
                 _secondsState.value++
@@ -67,12 +67,14 @@ class FifthLoginInfoScreenViewModel @Inject constructor(
         //  타이머 취소
         recordingJob?.cancel()
 
+        // ✨ 실제 오디오 녹음 중지 로직 대신 상태만 변경
+        _recordingState.value = RecordingState.FINISHED
         //  실제 녹음 중지
-        audioRecorder.stopRecording()
+      //  audioRecorder.stopRecording()
 
         //  녹음이 끝난 후 파일 경로를 저장
-        _recordedFilePath.value = audioRecorder.getFilePath()
-        _recordingState.value = RecordingState.FINISHED
+      //  _recordedFilePath.value = audioRecorder.getFilePath()
+       // _recordingState.value = RecordingState.FINISHED
     }
 
 
