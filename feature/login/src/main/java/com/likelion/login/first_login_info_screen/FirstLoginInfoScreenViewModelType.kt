@@ -8,5 +8,5 @@ interface FirstLoginInfoScreenViewModelType {
     val pairRadioButtons : MutableList<Pair<String, Boolean>>
     fun nameUpdate(input: String)
     fun ageUpdate(input: String)
-    fun fistContinueBooleanUpdate(input: Boolean)
+    fun fistContinueBooleanUpdate()
 }

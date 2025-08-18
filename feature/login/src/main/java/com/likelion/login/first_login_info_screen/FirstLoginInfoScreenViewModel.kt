@@ -16,18 +16,18 @@ class FirstLoginInfoScreenViewModel @Inject constructor(
     override val nameState : String get() = _nameState.value
     private val _ageState = MutableStateFlow("")
     override val ageState: String get() = _ageState.value
-    private val _firstContinueBoolean = MutableStateFlow(true)
+    private val _firstContinueBoolean = MutableStateFlow(false)
     override val fistContinueBoolean : Boolean get() = _firstContinueBoolean.value
     private val _myRadioButtons = MutableStateFlow(
         mutableStateListOf(
-            Pair(first = "남성", second = true),
             Pair(first = "여성", second = false),
+            Pair(first = "남성", second = false),
         )
     )
     override val myRadioButtons : MutableList<Pair<String, Boolean>> get() = _myRadioButtons.value
     private val _pairRadioButtons = MutableStateFlow(
         mutableStateListOf(
-            Pair(first = "동성", second = true),
+            Pair(first = "동성", second = false),
             Pair(first = "이성", second = false),
         )
     )
@@ -40,5 +40,13 @@ class FirstLoginInfoScreenViewModel @Inject constructor(
         it + input
     }
 
-    override fun fistContinueBooleanUpdate(input: Boolean) = _firstContinueBoolean.update { input }
+    override fun fistContinueBooleanUpdate() = _firstContinueBoolean.update {
+        val textBoolean = nameState.isNotBlank() && ageState.isNotBlank()
+        val tempBoolean = myRadioButtons.reduce { acc, pair ->
+            acc.copy(second = pair.second || textBoolean)
+        }.second
+        pairRadioButtons.reduce { acc, pair ->
+            acc.copy(second = pair.second || tempBoolean)
+        }.second
+    }
 }
