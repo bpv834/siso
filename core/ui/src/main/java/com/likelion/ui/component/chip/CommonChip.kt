@@ -42,7 +42,7 @@ fun CommonChip(
             text = text,
             modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
             color = textColor, // 동적으로 변경되는 텍스트 색상 적용
-            style = SisoTypoTokens.SubTitle1
+            style = SisoTypoTokens.Button1
         )
     }
 }
