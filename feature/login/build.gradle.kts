@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    // 이미지 처리
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 

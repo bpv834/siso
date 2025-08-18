@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class FakeFourthLoginInfoScreenViewModel : FourthLoginInfoScreenViewModelType {
 
-    private val _bioText = MutableStateFlow("홍길ㅇㅇㅇㅇㅇㅇㅇㅇ")
+    private val _bioText = MutableStateFlow("")
     override val bioText: StateFlow<String> = _bioText.asStateFlow()
 
     private val _isButtonEnabled = MutableStateFlow(true)

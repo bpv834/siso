@@ -38,6 +38,13 @@ class ThirdLoginInfoScreenViewModel @Inject constructor(
         _capturedImages.value = _capturedImages.value + newImage
     }
 
+    // 사진 삭제 메서드
+    override fun deleteBitMap(delete: Bitmap) {
+        val mutableList = _capturedImages.value.toMutableList()
+        mutableList.remove(delete)
+        _capturedImages.value = mutableList
+    }
+
     override fun createMockBitmapList(context: Context): List<coil3.Bitmap> {
         TODO("Not yet implemented")
     }
