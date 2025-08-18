@@ -3,10 +3,14 @@ package com.likelion.login.fifth_login_info_page
 import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.IOException
+import javax.inject.Inject
 
-class AudioRecorderClass(private val context: Context) {
+class AudioRecorderClass @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     private var mediaRecorder: MediaRecorder? = null
     private var outputFile: File? = null
 
