@@ -1,25 +1,45 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias (libs.plugins.ksp)
+    id("com.android.library")
+    kotlin("android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+
+android {
+    namespace = "com.likelion.data"
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.hilt.core)
+    implementation(project(":local"))   // ✅ 이제 정상 매칭
+    implementation(project(":remote"))  // ✅
+    // Hilt, Coroutine 등 필요한 공통 의존성들…
+
+
+    // Retrofit (최신 안정 버전)
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+
+    // Gson 컨버터
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // Gson 라이브러리
+    implementation("com.google.code.gson:gson:2.10.1")
+
+
+    // DI
+    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    testImplementation(libs.junit)
-
-    // Gson 임포트
-    implementation(libs.gson)
 }
-

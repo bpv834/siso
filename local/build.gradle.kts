@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -30,6 +32,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":core:datastore"))
+
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    // DI
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
