@@ -24,7 +24,7 @@ class FakeThirdLoginScreenViewModel(
 
     init {
         // ViewModel이 생성될 때 더미 비트맵 리스트를 초기화
-       // _capturedImages.value = createMockBitmapList(context)
+        _capturedImages.value = createMockBitmapList(context)
     }
     // 바텀 시트 여는 메서드
     override fun showPhotoUploadBottomSheet() {
@@ -39,13 +39,19 @@ class FakeThirdLoginScreenViewModel(
     override fun addImageFromAlbum(newImage: Bitmap) {
         _capturedImages.value = _capturedImages.value + newImage
     }
+    // 사진 삭제 메서드
+    override fun deleteBitMap(delete: Bitmap) {
+        val mutableList = _capturedImages.value.toMutableList()
+        mutableList.remove(delete)
+        _capturedImages.value = mutableList
+    }
 
 
     override fun createMockBitmapList(context: Context): List<Bitmap> {
         return listOf(
             createDummyBitmap(100, 100, Color.RED), // 첫 번째 인자에 색상 추가
             createDummyBitmap(100, 100, Color.GREEN),
-            createDummyBitmap(100, 100, Color.BLUE)
+            // createDummyBitmap(100, 100, Color.BLUE)
         )
     }
 

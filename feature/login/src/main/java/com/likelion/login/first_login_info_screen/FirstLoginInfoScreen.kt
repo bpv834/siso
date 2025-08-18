@@ -1,4 +1,4 @@
-package com.likelion.login.first_login_info_screen
+package com.likelion.login.first_loginInfo_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border
@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import com.likelion.login.first_login_info_screen.FakeFirstLoginInfoScreenViewModel
+import com.likelion.login.first_login_info_screen.FirstLoginInfoScreenViewModelType
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
@@ -52,11 +54,14 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstLoginInfoScreen(
-    viewModel: FirstLoginInfoScreenViewModelType
-){
+    viewModel: FirstLoginInfoScreenViewModelType,
+    onNavigateNext: () -> Unit,
+) {
     val sideDp = 16.dp
     var nameText by rememberSaveable { mutableStateOf("") }
+    val nameInteractionSource = MutableInteractionSource()
     var ageText by rememberSaveable { mutableStateOf("") }
+    val ageInteractionSource = MutableInteractionSource()
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -224,6 +229,7 @@ fun FirstLoginInfoScreen(
             ),
             onClick = {
                 viewModel.fistContinueBooleanUpdate(true)
+                onNavigateNext()
             },
             enabled = viewModel.fistContinueBoolean
         ) {
@@ -286,7 +292,7 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
 @Preview
 fun FirstLoginInfoPreview(){
     Surface(color = SisoColorTokens.White) {
-        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel())
+        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel(),{})
     }
 
 }

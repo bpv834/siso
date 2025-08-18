@@ -1,5 +1,6 @@
 package com.likelion.login.forth_login_info_page
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +15,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +28,7 @@ import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonDisableButton
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
+import com.likelion.ui.component.text_button.CommonTextButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
@@ -38,12 +42,14 @@ fun FourthLoginInfoScreen(
         FakeFourthLoginInfoScreenViewModel()
     } else {
         hiltViewModel<FourthLoginInfoScreenViewModel>()
-    }
+    },
+    onNavigateNext: () -> Unit
 ) {
     // state 구독
     val bioText by viewModel.bioText.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
+            .background(Color.White)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -53,7 +59,7 @@ fun FourthLoginInfoScreen(
             contentDescription = ""
         )
         Spacer(Modifier.size(24.dp))
-        Text("간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
+        Text(text = "간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
         Spacer(Modifier.size(8.dp))
         Text(
             text = "여러분의 진솔한 생각과 경험을 담아, 상대방이 \n" +
@@ -80,13 +86,32 @@ fun FourthLoginInfoScreen(
             modifier = Modifier.fillMaxWidth(), // Row가 전체 너비를 차지하도록 설정
             horizontalArrangement = Arrangement.End // 자식들을 Row의 끝(오른쪽)에 정렬
         ) {
-            Text("(${bioText.length}/50)") // Todo 텍스트 스타일, 컬러 지정
+            Text(
+                text = "${bioText.length}/50",
+                style = SisoTypoTokens.Label1,
+                color = SisoColorTokens.GrayScale50
+            )
         }
         Spacer(Modifier.size(112.dp))
-        if (bioText.length in 5..50) CommonActiveButton("완료하기", {})
-        else CommonDisableButton("완료하기", {})
-        Spacer(Modifier.size(72.dp))
+        if (bioText.length in 5..50) CommonActiveButton(text = "완료하기", onClick = {
+            onNavigateNext()
+        })
+        else CommonDisableButton(text = "완료하기", onClick = {
 
+        })
+        Spacer(Modifier.size(8.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CommonTextButton(
+                text = "건너뛰기",
+                style = SisoTypoTokens.Button2,
+                color = SisoColorTokens.GrayScale50,
+                onClick = { onNavigateNext() }
+            )
+
+        }
 
     }
 }
@@ -95,6 +120,6 @@ fun FourthLoginInfoScreen(
 @Composable
 fun FourthLoginInfoScreenPreview() {
     SisoTheme {
-        FourthLoginInfoScreen()
+        FourthLoginInfoScreen(onNavigateNext = {})
     }
 }
