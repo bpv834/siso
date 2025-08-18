@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
+import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
@@ -38,6 +41,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun MyPageScreen()  {
 
+    val progressValue by remember { mutableFloatStateOf(.36F) }
 
     val profileOption = listOf(
         "통화 기록" to {},
@@ -53,7 +57,7 @@ fun MyPageScreen()  {
         Row {
             ProfileCircle(
                 padding = 8.dp,
-                processFloat = .36F
+                processFloat = progressValue
             )
             Column(
                 modifier = Modifier.offset(x = ((-2).dp))
@@ -87,6 +91,7 @@ fun MyPageScreen()  {
                 }
 
                 Spacer(modifier = Modifier.size(size = 11.dp))
+                if (progressValue != 1F)
                 AsyncImage(
                     modifier = Modifier
                         .size(width = 190.dp, height = 48.dp)
@@ -97,6 +102,8 @@ fun MyPageScreen()  {
                     model = com.likelion.ui.R.drawable.profile_edit,
                     contentDescription = ""
                 )
+                else
+                    Spacer(modifier = Modifier.size(width = 190.dp, height = 48.dp))
 /*                Box(
                     modifier = Modifier.size(194.dp, 48.dp)
                         .padding(end = 10.dp)
@@ -178,7 +185,8 @@ fun MyPageScreen()  {
 @Composable
 fun ProfileCircle(
     padding: Dp,
-    processFloat: Float
+    processFloat: Float,
+    completeEdit: ()->Unit = {}
 ) {
     var progress by remember { mutableFloatStateOf(processFloat) }
     Box(
@@ -202,19 +210,61 @@ fun ProfileCircle(
             strokeCap = StrokeCap.Round,
         )
 
+        if (processFloat != 1F)
         Box(
             modifier = Modifier.align(Alignment.BottomCenter)
                 .size(96.dp, 43.dp)
                 .border(2.dp, SisoColorTokens.Gold40, RoundedCornerShape(99.dp))
                 .background(SisoColorTokens.GrayScale5, RoundedCornerShape(99.dp))
+
         ){
-            Text(
-                text = "36% 완성",
-                style = SisoTypoTokens.SubTitle1,
+            Row(
                 modifier = Modifier.align(Alignment.Center)
-                    .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 8.dp),
-            )
+            ) {
+                Spacer(Modifier.size(12.dp))
+                Text(
+                    text = "36%",
+                    style = SisoTypoTokens.SubTitle1,
+                    color = SisoColorTokens.Black,
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 8.dp),
+                )
+                Text(
+                    text = "완성",
+                    style = SisoTypoTokens.SubTitle1,
+                    color = SisoColorTokens.Black,
+                    modifier = Modifier
+                        .padding( top = 8.dp, bottom = 8.dp),
+                )
+                Spacer(Modifier.size(12.dp))
+            }
+
         }
+        else
+                Row(
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                        .size(117.dp, 44.dp)
+                        .border(2.dp, SisoColorTokens.Gold40, RoundedCornerShape(99.dp))
+                        .background(SisoColorTokens.GrayScale5, RoundedCornerShape(99.dp))
+                        .clickable{
+                            completeEdit()
+                        }
+                ) {
+                    Text(
+                        text = "수정하기",
+                        style = SisoTypoTokens.SubTitle1,
+                        color = SisoColorTokens.Black,
+                        modifier = Modifier.size(width = 61.dp, height = 23.dp)
+                            .padding(start = 12.dp, top = 8.dp, bottom = 8.dp),
+                    )
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                        tint = SisoColorTokens.GrayScale70,
+                        contentDescription = ""
+                    )
+                }
+
 
     }
 
