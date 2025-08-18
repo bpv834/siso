@@ -191,6 +191,11 @@ fun LastLoginInfoScreen(viewModel: FifthLoginInfoScreenViewModelType) {
 
 }
 
+//@Composable
+//fun LottieAnimation(composition: ERROR, progress: () -> ERROR, modifier: Modifier) {
+//    TODO("Not yet implemented")
+//}
+
 
 @Preview(showBackground = true)
 @Composable

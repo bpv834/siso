@@ -38,7 +38,8 @@ fun FourthLoginInfoScreen(
         FakeFourthLoginInfoScreenViewModel()
     } else {
         hiltViewModel<FourthLoginInfoScreenViewModel>()
-    }
+    },
+    onNavigateNext: () -> Unit
 ) {
     // state 구독
     val bioText by viewModel.bioText.collectAsStateWithLifecycle()
@@ -83,8 +84,13 @@ fun FourthLoginInfoScreen(
             Text("(${bioText.length}/50)") // Todo 텍스트 스타일, 컬러 지정
         }
         Spacer(Modifier.size(112.dp))
-        if (bioText.length in 5..50) CommonActiveButton("완료하기", {})
-        else CommonDisableButton("완료하기", {})
+        if (bioText.length in 5..50) {
+            CommonActiveButton(
+                text = "완료하기",
+                onClick = {onNavigateNext()}
+            )
+        }
+        else CommonDisableButton("완료ff하기", {})
         Spacer(Modifier.size(72.dp))
 
 
@@ -95,6 +101,6 @@ fun FourthLoginInfoScreen(
 @Composable
 fun FourthLoginInfoScreenPreview() {
     SisoTheme {
-        FourthLoginInfoScreen()
+        FourthLoginInfoScreen(onNavigateNext = {})
     }
 }
