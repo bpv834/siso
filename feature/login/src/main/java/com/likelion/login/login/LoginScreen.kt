@@ -2,8 +2,6 @@ package com.likelion.login.login
 
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.webkit.WebView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +19,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.likelion.login.state.LoginUiState
@@ -39,34 +36,13 @@ fun LoginRoute(
 ) {
     val viewModel: LoginScreenViewModel = hiltViewModel()
     val uiState = viewModel.uiState.collectAsState()
-//    LoginScreen2(
-//
-//    )
 
     LoginScreen(
         uiState = uiState.value,
-        onLogin = { viewModel.login() },
+        onLogin = { viewModel.fetchKakaoToken() },
         onLoggedIn = onLoggedIn
     )
 }
-
-// ㅅ테스트
-@Composable
-fun LoginScreen2(
-) {
-    val url = "https://589b7097c070.ngrok-free.app/oauth2/authorization/kakao"
-    AndroidView(factory = { context ->
-        WebView(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            settings.javaScriptEnabled = true
-            loadUrl(url)
-        }
-    })
-}
-
 
 @Composable
 fun LoginScreen(
