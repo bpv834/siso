@@ -3,6 +3,7 @@ package com.likelion.ui.component.photo_layout
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,8 @@ fun PhotoLayoutWith1Main4Sub(
                 Image(
                     bitmap = mainPhoto.asImageBitmap(),
                     contentDescription = "Main Photo",
-                    modifier = Modifier.height(206.dp)
+                    modifier = Modifier
+                        .height(206.dp)
                         .fillMaxSize()
                         .clip(RoundedCornerShape(24.dp)),
                     contentScale = ContentScale.Crop
@@ -66,7 +68,8 @@ fun PhotoLayoutWith1Main4Sub(
                         model = cameraHolder,
                         contentDescription = "Main Photo Placeholder",
                         modifier = Modifier
-                            .fillMaxSize().height(206.dp)
+                            .fillMaxSize()
+                            .height(206.dp)
                             .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop
                     )
@@ -89,18 +92,18 @@ fun PhotoLayoutWith1Main4Sub(
         if (subPhotos.isNotEmpty()) {
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = if (subPhotos.size != 4) Arrangement.spacedBy(8.dp)
+                else Arrangement.SpaceBetween,
             ) {
                 items(subPhotos) { bitmap ->
                     Box(
                         modifier = Modifier
-                            .size(subWith, subHeight)
                     ) {
                         Image(
                             bitmap = bitmap.asImageBitmap(),
                             contentDescription = "Sub Photo",
                             modifier = Modifier
-                                .fillMaxSize()
+                                .size(subWith, subHeight)
                                 .clip(
                                     RoundedCornerShape(16.dp)
                                 ),
@@ -117,7 +120,7 @@ fun PhotoLayoutWith1Main4Sub(
             }
         } else {
             // 서브 포토가 널일때
-            if (mainPhoto == null) Column{
+            if (mainPhoto == null) Column {
                 AsyncImage(
                     model = subCameraHolder,
                     contentDescription = "Sub Photo Placeholder",
@@ -126,7 +129,7 @@ fun PhotoLayoutWith1Main4Sub(
                         .height(subHeight), // 서브 사진의 높이에 맞춰 홀더 이미지 높이 지정
                     contentScale = ContentScale.Crop
                 )
-            }else{
+            } else {
                 Spacer(modifier = Modifier.height(72.dp)) // 모든 경우에 동일한 간격 유지
             }
         }
