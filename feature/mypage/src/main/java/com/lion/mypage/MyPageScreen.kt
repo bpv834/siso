@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -241,13 +242,16 @@ fun ProfileCircle(
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.Black,
                     modifier = Modifier
+                        .width(38.dp)
                         .padding(top = 8.dp, bottom = 8.dp),
                 )
+                Spacer(Modifier.size(1.2.dp))
                 Text(
                     text = "완성",
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.Black,
                     modifier = Modifier
+                        .width(31.dp)
                         .padding( top = 8.dp, bottom = 8.dp),
                 )
                 Spacer(Modifier.size(12.dp))
