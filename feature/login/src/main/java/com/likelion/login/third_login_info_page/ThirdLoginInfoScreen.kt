@@ -50,7 +50,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 @ExperimentalMaterial3Api
 fun ThirdLoginInfoScreen(
-    viewModel: ThirdLoginInfoScreenViewModelType
+    viewModel: ThirdLoginInfoScreenViewModelType,
+    onNavigateNext: () -> Unit
 ) {
     val showBottomSheet by viewModel.showBottomSheet.collectAsStateWithLifecycle()
     // 💡 바텀 시트 상태 수정:
@@ -91,7 +92,9 @@ fun ThirdLoginInfoScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp).verticalScroll(rememberScrollState()).background(SisoColorTokens.White)
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+            .background(SisoColorTokens.White)
     ) {
         Spacer(modifier = Modifier.size(size = 8.dp))
         AsyncImage(
@@ -109,13 +112,14 @@ fun ThirdLoginInfoScreen(
 
         Spacer(modifier = Modifier.size(size = 44.dp))
         // 불러온 비트맵 보여주는 리스트
-        PhotoLayoutWith1Main4Sub(mainWith = null, mainHeight = 206.dp, subWith = 76.dp, subHeight = 72.dp, capturedImages = capturedImages, )
+        PhotoLayoutWith1Main4Sub(mainWith = null, mainHeight = 206.dp, subWith = 76.dp, subHeight = 72.dp, capturedImages = capturedImages)
         Spacer(modifier = Modifier.size(size = 72.dp))
         CommonActiveButton(
             text = "사진 추가하기",
             onClick = {
                 if (capturedImages.size < 5) {
                     viewModel.showPhotoUploadBottomSheet()
+                    //onNavigateNext()
                 } else {
                     // 5장 초과 시 처리 로직
                 }
@@ -173,7 +177,10 @@ fun ThirdLoginInfoScreenPreview() {
     SisoTheme {
         // 프리뷰를 위한 가상의 ViewModel
         val viewModel = FakeThirdLoginScreenViewModel(LocalContext.current)
-        ThirdLoginInfoScreen(viewModel = viewModel)
+        ThirdLoginInfoScreen(
+            viewModel = viewModel,
+            onNavigateNext = {}
+        )
     }
 }
 
