@@ -59,9 +59,7 @@ fun FirstLoginInfoScreen(
 ) {
     val sideDp = 16.dp
     var nameText by rememberSaveable { mutableStateOf("") }
-    val nameInteractionSource = MutableInteractionSource()
     var ageText by rememberSaveable { mutableStateOf("") }
-    val ageInteractionSource = MutableInteractionSource()
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -97,18 +95,24 @@ fun FirstLoginInfoScreen(
                 .clip(RoundedCornerShape(25.dp)),
             value = nameText,
             onValueChange = {input->
-                nameText = input
-                viewModel.nameUpdate(input)
+                nameText = if(input.length >= 10){
+                    input.substring(0 until 10)
+                }else{
+                    input
+                }
+                viewModel.nameUpdate(nameText)
+                viewModel.fistContinueBooleanUpdate()
             },
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
 
-                    value = viewModel.nameState,
+                    value = nameText,
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
                             text = "이것은 닉네임입니다.",
-                            fontSize = SisoFontSizeTokens.Label1
+                            fontSize = SisoFontSizeTokens.Label1,
+                            color = SisoColorTokens.GrayScale50
                         )
                     },
                     innerTextField = innerTextField,
@@ -152,18 +156,26 @@ fun FirstLoginInfoScreen(
                 .clip(RoundedCornerShape(25.dp)),
             value = ageText,
             onValueChange = {input->
-                ageText = input
-                viewModel.ageUpdate(input)
+                // 숫자만 입력
+                val tempText = if(input.length >= 3){
+                    input.substring(0 until 3)
+                }else{
+                    input
+                }
+                ageText = tempText.replace(Regex("[^0-9]"),"")
+                viewModel.ageUpdate(ageText)
+                viewModel.fistContinueBooleanUpdate()
             },
             decorationBox = @Composable{innerTextField->
                 TextFieldDefaults.DecorationBox(
 
-                    value = viewModel.ageState,
+                    value = ageText,
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
                             text= "나이를 입력해주세요",
-                            fontSize = SisoFontSizeTokens.Label1
+                            fontSize = SisoFontSizeTokens.Label1,
+                            color = SisoColorTokens.GrayScale50
                         )
                     },
                     innerTextField = innerTextField,
@@ -197,7 +209,9 @@ fun FirstLoginInfoScreen(
         Spacer(modifier = Modifier.size(size = 12.dp))
 
         Row {
-            RepeatRadioButton(viewModel.myRadioButtons)
+            RepeatRadioButton(viewModel.myRadioButtons){
+                viewModel.fistContinueBooleanUpdate()
+            }
         }
         Spacer(modifier = Modifier.size(size = 28.dp))
         Text(
@@ -214,7 +228,9 @@ fun FirstLoginInfoScreen(
         Spacer(modifier = Modifier.size(size = 12.dp))
 
         Row {
-            RepeatRadioButton(viewModel.pairRadioButtons)
+            RepeatRadioButton(viewModel.pairRadioButtons){
+                viewModel.fistContinueBooleanUpdate()
+            }
         }
 
         Spacer(modifier = Modifier.size(size = 30.dp))
@@ -224,11 +240,10 @@ fun FirstLoginInfoScreen(
                 .fillMaxWidth()
                 .height(65.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = SisoColorTokens.Orange30,
-                disabledContainerColor = SisoColorTokens.GrayScale50
+                containerColor = SisoColorTokens.Gold40,
+                disabledContainerColor = SisoColorTokens.GrayScale30
             ),
             onClick = {
-                viewModel.fistContinueBooleanUpdate(true)
                 onNavigateNext()
             },
             enabled = viewModel.fistContinueBoolean
@@ -248,7 +263,10 @@ fun FirstLoginInfoScreen(
 
 
 @Composable
-fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
+fun RepeatRadioButton(
+    radios: MutableList<Pair<String, Boolean>>,
+    click: () -> Unit = {}
+){
     radios.forEachIndexed { index, info ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -260,6 +278,7 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
                             second = (it.first == info.first)
                         )
                     }
+                    click()
                 }
                 .padding(end = 24.dp)
         ) {

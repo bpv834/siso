@@ -6,7 +6,9 @@ import android.content.Context
 import android.util.Log
 import android.util.Log.d
 import android.widget.TextView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,12 +46,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.likelion.ui.R
@@ -153,6 +157,7 @@ fun AgreeToTermsScreen(
 
             ModalBottomSheet(
                 modifier = Modifier.systemBarsPadding(),
+                containerColor = SisoColorTokens.White,
                 sheetState = sheetState,
                 onDismissRequest = {
                     bottomId = 0L
@@ -216,7 +221,10 @@ fun AgreeRepeatRadioButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(27.dp)
-                .clickable {
+                .clickable (
+                    indication = null,
+                    interactionSource = remember{ MutableInteractionSource() },
+                ){
                     if (checkIdList.contains(id)) {
                         checkIdList.remove(id)
                     } else {
@@ -225,7 +233,7 @@ fun AgreeRepeatRadioButton(
                         checkIdList.add(id)
                     }
 
-                    onClick(checkIdList.size == termsList.size)
+                    onClick(checkIdList.contains(termsList.first().first))
                 },
         ) {
             Text(
@@ -239,22 +247,7 @@ fun AgreeRepeatRadioButton(
             AsyncImage(
                     modifier = Modifier
                         .size(24.dp)
-                        .align(Alignment.CenterEnd)
-                        .clip(RoundedCornerShape(5.dp))
-                        .clickable(
-                            onClick = {
-                                if (checkIdList.contains(id)) {
-                                    checkIdList.remove(id)
-                                } else {
-                                    // 비텀 바 표시
-                                    showBottom(id)
-                                    checkIdList.add(id)
-                                }
-
-                                onClick(checkIdList.size == termsList.size)
-
-                            }
-                        ),
+                        .align(Alignment.CenterEnd),
                     model =  if (checkIdList.contains(id))R.drawable.select
                     else R.drawable.unselect,
                     contentDescription = ""
@@ -284,6 +277,7 @@ fun DocumentScreen(
 
     Column(
         modifier = Modifier.padding(start = sideDp, end = sideDp)
+            .verticalScroll(rememberScrollState())
     ) {
         AndroidView(
             factory = {

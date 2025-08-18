@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -80,7 +81,7 @@ fun MyPageScreen()  {
                 Row {
                     AsyncImage(
                         modifier = Modifier.size(width = 24.dp, height = 24.dp),
-                        model = com.likelion.ui.R.drawable.rocation_icon,
+                        model = R.drawable.rocation_icon,
                         contentDescription = ""
                     )
                     Spacer(modifier = Modifier.size(size = 2.dp))
@@ -101,7 +102,7 @@ fun MyPageScreen()  {
                         AsyncImage(
                             modifier = Modifier
                                 .size(width = 190.dp, height = 48.dp),
-                            model = com.likelion.ui.R.drawable.profile_edit,
+                            model = R.drawable.profile_edit,
                             contentDescription = ""
                         )
                         Box(
@@ -210,7 +211,7 @@ fun ProfileCircle(
         // 2 이미지가 다음으로 그러졈
         AsyncImage(
             modifier = Modifier.size(120.dp, 120.dp),
-            model = com.likelion.ui.R.drawable.example_profile,
+            model = R.drawable.example_profile,
             contentDescription = ""
         )
         // 1 서클이 먼저 그려짐
@@ -241,13 +242,16 @@ fun ProfileCircle(
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.Black,
                     modifier = Modifier
+                        .width(38.dp)
                         .padding(top = 8.dp, bottom = 8.dp),
                 )
+                Spacer(Modifier.size(1.2.dp))
                 Text(
                     text = "완성",
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.Black,
                     modifier = Modifier
+                        .width(31.dp)
                         .padding( top = 8.dp, bottom = 8.dp),
                 )
                 Spacer(Modifier.size(12.dp))

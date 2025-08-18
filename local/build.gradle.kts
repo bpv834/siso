@@ -38,6 +38,7 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.7")
     // DI
     implementation(libs.hilt.android)
+    implementation(libs.datastore.core)
     ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
