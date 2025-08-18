@@ -1,13 +1,12 @@
-package com.likelion.login.first_loginInfo_screen
+package com.lion.mypage.first_edit_info_screen
 
 import androidx.compose.runtime.mutableStateListOf
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class FakeFirstLoginInfoScreenViewModel(
+class FakeFirstEditInfoScreenViewModel(
     // usecase자리
-): FirstLoginInfoScreenViewModelType {
+): FirstEditInfoScreenViewModelType {
     private val _nameState = MutableStateFlow("")
     override val nameState : String get() = _nameState.value
     private val _ageState = MutableStateFlow("")

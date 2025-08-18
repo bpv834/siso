@@ -32,6 +32,7 @@ datastore = "1.1.7"
 protobufPlugin = "0.9.5"
 protobuf = "4.26.1"
 v2User = "2.21.6"
+graphicsShapes = "1.0.1"
 
 [libraries]
 # AndroidX
@@ -100,6 +101,7 @@ coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp"
 # Kotlinx Serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 v2-user = { module = "com.kakao.sdk:v2-user", version.ref = "v2User" }
+androidx-graphics-shapes = { group = "androidx.graphics", name = "graphics-shapes", version.ref = "graphicsShapes" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
