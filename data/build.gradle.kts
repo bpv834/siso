@@ -24,10 +24,8 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":local"))   // ✅ 이제 정상 매칭
-    implementation(project(":remote"))  // ✅
-    // Hilt, Coroutine 등 필요한 공통 의존성들…
-
+    implementation(project(":local"))
+    implementation(project(":remote"))
 
     // Retrofit (최신 안정 버전)
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
