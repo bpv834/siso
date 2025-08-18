@@ -64,6 +64,7 @@ class LoginScreenViewModel @Inject constructor(
                         )
                     }
                     Log.d("viewModel", "Error")
+                    Log.d("viewModel", "${_uiState.value.error}")
                 }
             }
 
