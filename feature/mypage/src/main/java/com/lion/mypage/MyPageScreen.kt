@@ -81,7 +81,7 @@ fun MyPageScreen()  {
                 Row {
                     AsyncImage(
                         modifier = Modifier.size(width = 24.dp, height = 24.dp),
-                        model = com.likelion.ui.R.drawable.rocation_icon,
+                        model = R.drawable.rocation_icon,
                         contentDescription = ""
                     )
                     Spacer(modifier = Modifier.size(size = 2.dp))
@@ -102,7 +102,7 @@ fun MyPageScreen()  {
                         AsyncImage(
                             modifier = Modifier
                                 .size(width = 190.dp, height = 48.dp),
-                            model = com.likelion.ui.R.drawable.profile_edit,
+                            model = R.drawable.profile_edit,
                             contentDescription = ""
                         )
                         Box(
@@ -211,7 +211,7 @@ fun ProfileCircle(
         // 2 이미지가 다음으로 그러졈
         AsyncImage(
             modifier = Modifier.size(120.dp, 120.dp),
-            model = com.likelion.ui.R.drawable.example_profile,
+            model = R.drawable.example_profile,
             contentDescription = ""
         )
         // 1 서클이 먼저 그려짐
