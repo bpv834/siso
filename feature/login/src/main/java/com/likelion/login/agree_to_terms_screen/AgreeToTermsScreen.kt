@@ -52,12 +52,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.likelion.login.first_loginInfo_screen.FontText
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import kotlin.collections.forEachIndexed
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
 @Composable
 fun AgreeToTermsScreen(
@@ -70,7 +73,6 @@ fun AgreeToTermsScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
-    val introductionFontStyle = SisoTypoTokens.Body1
 
     val agreeList = listOf(
             1L to "(필수) 이용약관 동의",
@@ -91,14 +93,15 @@ fun AgreeToTermsScreen(
             modifier = Modifier
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = AbsoluteAlignment.Left
+            horizontalAlignment = AbsoluteAlignment.Left,
+
         ) {
             Spacer(modifier = Modifier.size(size = 60.dp))
             Text(
                 text = "시팅에 어서오세요" +
                         "\n새로운 인연을 만나기전에"+
                         "\n동의가 필요해요",
-                style = introductionFontStyle,
+                style = SisoTypoTokens.Body1,
                 color = SisoColorTokens.GrayScale90,
             )
             Spacer(modifier = Modifier.size(size = 68.dp))
@@ -133,7 +136,7 @@ fun AgreeToTermsScreen(
                     disabledContainerColor = SisoColorTokens.GrayScale30
                 ),
                 onClick = {
-
+                    onNavigateNext()
                 },
                 enabled = agreeContinueBoolean.value
             ) {
@@ -142,7 +145,6 @@ fun AgreeToTermsScreen(
                     style = SisoTypoTokens.Button1,
                     color = if(agreeContinueBoolean.value == true)SisoColorTokens.GrayScale90
                     else SisoColorTokens.GrayScale50,
-                    fontSize = 22.sp
                 )
             }
             Spacer(modifier = Modifier.size(size = 56.dp))
@@ -326,7 +328,7 @@ fun AgreeToTermsScreenPreview(){
     Surface(
         color = SisoColorTokens.White
     ){
-        AgreeToTermsScreen(FakeAgreeToTermsScreenViewModel())
+        AgreeToTermsScreen(FakeAgreeToTermsScreenViewModel(),{})
     }
 
 }

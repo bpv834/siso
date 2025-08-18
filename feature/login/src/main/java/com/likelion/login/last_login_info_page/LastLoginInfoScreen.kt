@@ -21,9 +21,11 @@ import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
+import kotlin.contracts.contract
 
 @Composable
 fun LastLoginInfoScreen(
+    onNavigation: () -> Unit
     // viewModel : LastLoginInfoScreenViewModel = hiltViewModel()
 ) {
     Column(
@@ -47,6 +49,7 @@ fun LastLoginInfoScreen(
             modifier = Modifier
                 .height(302.dp)
                 .fillMaxWidth(),
+            contentScale = ContentScale.FillBounds
         )
         Spacer(Modifier.size(80.dp))
         CommonActiveButton(
@@ -63,6 +66,6 @@ fun LastLoginInfoScreen(
 @Composable
 fun LastLoginInfoScreenPreview() {
     SisoTheme {
-        LastLoginInfoScreen()
+        LastLoginInfoScreen({})
     }
 }

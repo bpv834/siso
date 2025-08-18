@@ -17,14 +17,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.likelion.login.agree_to_terms_screen.AgreeToTermsScreen
 import com.likelion.login.agree_to_terms_screen.FakeAgreeToTermsScreenViewModel
-import com.likelion.login.first_loginInfo_screen.FakeFirstLoginInfoScreenViewModel
+import com.likelion.login.fifth_login_info_page.FakeFifthLoginInfoScreenViewModel
+import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreen
+import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreenViewModel
+import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreenViewModelType
 import com.likelion.login.first_loginInfo_screen.FirstLoginInfoScreen
+import com.likelion.login.first_login_info_screen.FakeFirstLoginInfoScreenViewModel
 import com.likelion.login.forth_login_info_page.FourthLoginInfoScreen
+import com.likelion.login.last_login_info_page.LastLoginInfoScreen
 import com.likelion.login.login_start_screen.LoginStartScreen
 import com.likelion.login.second_login_info_page.FakeSecondLoginInfoScreenViewModel
 import com.likelion.login.second_login_info_page.SecondLoginInfoScreen
@@ -124,6 +130,20 @@ fun InputMainScreen(
                     onNavigateNext = {
                         navController.navigate("screen5")
                     })
+            }
+            composable("screen5") {
+                FifthLoginInfoScreen(
+                    viewModel = hiltViewModel<FifthLoginInfoScreenViewModel>(),
+                    onNavigateNext = { navController.navigate("screen6") }
+                )
+            }
+            composable("screen6") {
+                LastLoginInfoScreen(
+                    onNavigation = {
+                        
+                    }
+                )
+
             }
         }
     }

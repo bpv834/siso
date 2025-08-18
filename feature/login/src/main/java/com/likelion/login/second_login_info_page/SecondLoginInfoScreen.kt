@@ -104,7 +104,7 @@ fun SecondLoginInfoScreen(
             }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 43.dp))
-        CommonButtonWithState(text = "계속하기", {}, isPossibleNextState)
+        CommonButtonWithState(text = "계속하기", onClick = {onNavigateNext()}, isPossibleNextState)
         Spacer(Modifier.size(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),

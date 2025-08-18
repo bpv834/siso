@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import com.likelion.login.first_login_info_screen.FakeFirstLoginInfoScreenViewModel
+import com.likelion.login.first_login_info_screen.FirstLoginInfoScreenViewModelType
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
@@ -290,7 +292,7 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>){
 @Preview
 fun FirstLoginInfoPreview(){
     Surface(color = SisoColorTokens.White) {
-        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel())
+        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel(),{})
     }
 
 }

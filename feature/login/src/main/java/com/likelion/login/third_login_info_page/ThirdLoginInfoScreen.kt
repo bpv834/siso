@@ -149,7 +149,7 @@ fun ThirdLoginInfoScreen(
             }
         // 사진이 한개라도 있다면 다음으로 버튼 노출
         if (capturedImages.isNotEmpty())
-            CommonActiveButton(text = "다음으로", onClick = {})
+            CommonActiveButton(text = "다음으로", onClick = {onNavigateNext()})
     }
 
     if (showBottomSheet) {

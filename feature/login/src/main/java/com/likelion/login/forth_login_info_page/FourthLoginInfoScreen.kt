@@ -87,14 +87,18 @@ fun FourthLoginInfoScreen(
             horizontalArrangement = Arrangement.End // 자식들을 Row의 끝(오른쪽)에 정렬
         ) {
             Text(
-               text =  "${bioText.length}/50",
+                text = "${bioText.length}/50",
                 style = SisoTypoTokens.Label1,
                 color = SisoColorTokens.GrayScale50
             )
         }
         Spacer(Modifier.size(112.dp))
-        if (bioText.length in 5..50) CommonActiveButton(text = "완료하기", onClick = {})
-        else CommonDisableButton(text = "완료하기", onClick =  {})
+        if (bioText.length in 5..50) CommonActiveButton(text = "완료하기", onClick = {
+            onNavigateNext()
+        })
+        else CommonDisableButton(text = "완료하기", onClick = {
+
+        })
         Spacer(Modifier.size(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -104,7 +108,8 @@ fun FourthLoginInfoScreen(
                 text = "건너뛰기",
                 style = SisoTypoTokens.Button2,
                 color = SisoColorTokens.GrayScale50,
-                {})
+                onClick = { onNavigateNext() }
+            )
 
         }
 
@@ -115,6 +120,6 @@ fun FourthLoginInfoScreen(
 @Composable
 fun FourthLoginInfoScreenPreview() {
     SisoTheme {
-        FourthLoginInfoScreen()
+        FourthLoginInfoScreen(onNavigateNext = {})
     }
 }

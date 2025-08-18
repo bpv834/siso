@@ -93,6 +93,7 @@ fun LoginStartScreen(
                 ),
                 onClick = {
                     viewModel.fistContinueBooleanUpdate(true)
+                    onNavigateNext()
                 },
                 enabled = viewModel.fistContinueBoolean
             ) {
