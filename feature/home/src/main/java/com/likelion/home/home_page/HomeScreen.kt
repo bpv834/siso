@@ -1,4 +1,8 @@
-package com.likelion.main.main_page
+package com.likelion.home.home_page
+
+import android.view.View
+import androidx.compose.ui.platform.LocalView
+
 
 import android.annotation.SuppressLint
 import android.graphics.RenderEffect
@@ -38,13 +42,24 @@ import coil3.compose.AsyncImage
 import com.likelion.domain.repository.FakeUsersRepository2Impl
 import com.likelion.domain.usecase.GetAllUsersUseCase
 import com.likelion.ui.component.card.UserCard
+import com.likelion.ui.component.full_screen.FullScreenImageDialog
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import kotlin.math.abs
 
+@Composable
+fun HomeRoute(
+    modifier: Modifier = Modifier,
+    view: View = LocalView.current,
+    actionSnackbar: () -> Unit = {},
+) {
+
+}
+
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModel: MainScreenViewModelType) {
+fun HomeScreen(viewModel: HomeScreenViewModelType) {
     val userList by viewModel.userList.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
@@ -154,41 +169,14 @@ fun MainScreen(viewModel: MainScreenViewModelType) {
             )
         }
     }
-
-
-
-}
-
-@Composable
-fun FullScreenImageDialog(
-    imageUrl: String,
-    onDismissRequest: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        // ✅ 이 속성으로 기본 너비를 무시하고 전체 화면 사용 가능
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Box(
-            modifier = Modifier
-                .width(328.dp).height(578.dp)
-        ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = "확대된 이미지",
-                modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(24.dp)),
-                contentScale = ContentScale.FillBounds,
-
-            )
-        }
-    }
 }
 
 @Preview
 @Composable
-fun MainScreenPreview() {
+fun HomeScreenPreview() {
     SisoTheme {
         val usecase = GetAllUsersUseCase(FakeUsersRepository2Impl())
-        MainScreen(viewModel = FakeMainScreenViewModel(usecase))
+        HomeScreen(viewModel = FakeHomeScreenViewModel(usecase))
     }
 }
+
