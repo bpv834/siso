@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.likelion.login.first_loginInfo_screen.FontText
@@ -37,14 +38,15 @@ import kotlin.collections.forEachIndexed
 @SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
 @Composable
 fun AgreeToTermsScreen(
-    viewModel: AgreeToTermsScreenViewModelType
+    viewModel: AgreeToTermsScreenViewModelType,
+    onNavigateNext: () -> Unit
 ) {
     val sideDp = 16.dp
     val scrollState = rememberScrollState()
     val introductionFontStyle = SisoTypoTokens.Body1
     val agreeList = listOf(
-            1L to "(필수) 이용약관 동의",
-            2L to "(선택) 마케팅 정보 수신",
+        1L to "(필수) 이용약관 동의",
+        2L to "(선택) 마케팅 정보 수신",
     )
     val agreeContinueBoolean by viewModel.agreeContinueBoolean.collectAsStateWithLifecycle()
 
@@ -89,7 +91,7 @@ fun AgreeToTermsScreen(
             ) {
                 AgreeRepeatRadioButton(
                     termsList = agreeList,
-                    onClick = {continueBoolean->
+                    onClick = { continueBoolean ->
                         viewModel.agreeContinueBooleanUpdate(continueBoolean)
                         Log.d("radioRemember", "[agreeContinueBoolean]")
                         Log.d("radioRemember", viewModel.agreeContinueBoolean.toString())
@@ -113,14 +115,14 @@ fun AgreeToTermsScreen(
                 disabledContainerColor = SisoColorTokens.GrayScale50
             ),
             onClick = {
-
+                onNavigateNext()
             },
             enabled = agreeContinueBoolean
         ) {
             Text(
                 text = "모두 동의",
                 style = SisoTypoTokens.Button1,
-                color = if(agreeContinueBoolean == true)SisoColorTokens.GrayScale90
+                color = if (agreeContinueBoolean == true) SisoColorTokens.GrayScale90
                 else SisoColorTokens.GrayScale60,
                 fontSize = 22.sp
             )
@@ -135,9 +137,9 @@ fun AgreeToTermsScreen(
 @Composable
 fun AgreeRepeatRadioButton(
     termsList: List<Pair<Long, String>>,
-    onClick:(Boolean)->Unit = {}
-){
-    val checkIdList  = remember {
+    onClick: (Boolean) -> Unit = {}
+) {
+    val checkIdList = remember {
         mutableStateListOf<Long>()
     }
 
@@ -168,24 +170,24 @@ fun AgreeRepeatRadioButton(
             )
 
             AsyncImage(
-                    modifier = Modifier.clickable(
-                        onClick = {
-                            if (checkIdList.contains(id)) {
-                                checkIdList.remove(id)
-                            } else {
-                                checkIdList.add(id)
-                            }
-
-                            onClick(checkIdList.size == termsList.size)
-                            Log.d("radioRemember", "[onClick]")
-                            Log.d("radioRemember", "[checkIdList]")
-                            Log.d("radioRemember", checkIdList.toString())
+                modifier = Modifier.clickable(
+                    onClick = {
+                        if (checkIdList.contains(id)) {
+                            checkIdList.remove(id)
+                        } else {
+                            checkIdList.add(id)
                         }
-                    ),
-                    model =  if (checkIdList.contains(id))R.drawable.select
-                    else R.drawable.unselect,
-                    contentDescription = ""
-                )
+
+                        onClick(checkIdList.size == termsList.size)
+                        Log.d("radioRemember", "[onClick]")
+                        Log.d("radioRemember", "[checkIdList]")
+                        Log.d("radioRemember", checkIdList.toString())
+                    }
+                ),
+                model = if (checkIdList.contains(id)) R.drawable.select
+                else R.drawable.unselect,
+                contentDescription = ""
+            )
 
         }
     }
@@ -195,11 +197,11 @@ fun AgreeRepeatRadioButton(
 
 @Composable
 @Preview
-fun AgreeToTermsScreenPreview(){
+fun AgreeToTermsScreenPreview() {
     Surface(
         color = SisoColorTokens.White
-    ){
-        AgreeToTermsScreen(FakeAgreeToTermsScreenViewModel())
+    ) {
+        AgreeToTermsScreen(FakeAgreeToTermsScreenViewModel(), {})
     }
 
 }
