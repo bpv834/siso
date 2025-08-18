@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +30,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun SecondLoginInfoScreen(
-    viewModel: SecondLoginInfoScreenViewModelType // 기본값 제거
+    viewModel: SecondLoginInfoScreenViewModelType,  // 기본값 제거
+    onNavigateNext: () -> Unit,
 ) {
     val selectedInterests by viewModel.selectedInterests.collectAsStateWithLifecycle()
     val isPossibleNextState by viewModel.isPossibleNextState.collectAsStateWithLifecycle()
@@ -87,9 +91,23 @@ fun SecondLoginInfoScreen(
             }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 6.dp))
-        CommonButtonWithState(text = "계속하기",{},isPossibleNextState)
-
-
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = SisoColorTokens.Gold40,
+                contentColor = SisoColorTokens.GrayScale90
+            )
+        ) {
+            Text("계속하기", style = SisoTypoTokens.Button1)
+        }
+        CommonButtonWithState(
+            text = "계속하기",
+            onClick = onNavigateNext,
+            isActive = isPossibleNextState
+        )
     }
 }
 
@@ -123,7 +141,7 @@ fun ChipRow(
 @Composable
 fun SecondLoginInfoScreenPreview() {
     SecondLoginInfoScreen(
-        viewModel = FakeSecondLoginInfoScreenViewModel()
+        viewModel = FakeSecondLoginInfoScreenViewModel(), {}
     )
 }
 
