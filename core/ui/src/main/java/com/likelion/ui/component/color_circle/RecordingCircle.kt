@@ -17,7 +17,7 @@ import com.likelion.ui.theme.SisoColorTokens
 fun RecordingCircle(
     size: Dp = 98.dp,
     color: Color = Color(0xFFFF4D4F),
-    icon: @Composable () -> Unit
+    icon: @Composable () -> Unit,
 ) {
     Box(
         modifier = Modifier

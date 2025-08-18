@@ -1,5 +1,6 @@
 package com.likelion.login.second_login_info_page
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -16,7 +17,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,6 +27,7 @@ import coil3.compose.AsyncImage
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonButtonWithState
 import com.likelion.ui.component.chip.CommonChip
+import com.likelion.ui.component.text_button.CommonTextButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
@@ -44,6 +48,7 @@ fun SecondLoginInfoScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(Color.White)
             .padding(16.dp)
             .verticalScroll(rememberScrollState()) // 이 부분을 추가
     ) {
@@ -56,7 +61,7 @@ fun SecondLoginInfoScreen(
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
-            "나의 관심을 선택해주세요", style = SisoTypoTokens.Title2
+            text = "나의 관심을 선택해주세요", style = SisoTypoTokens.Title2
         )
         Spacer(modifier = Modifier.size(size = 8.dp))
         Text(
@@ -65,7 +70,10 @@ fun SecondLoginInfoScreen(
             color = SisoColorTokens.GrayScale60
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
-        Text(text = "문화&예술", style = SisoTypoTokens.SubTitle1)
+        Text(
+            text = "문화&예술", style = SisoTypoTokens.SubTitle1,
+            color = SisoColorTokens.GrayScale50
+        )
         Spacer(modifier = Modifier.size(size = 12.dp))
         ChipRow(
             chips = interests["문화 & 예술"]!!,
@@ -83,31 +91,34 @@ fun SecondLoginInfoScreen(
             }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
-        Text(text = "여가 & 취미", style = SisoTypoTokens.SubTitle1)
+        Text(
+            text = "여가 & 취미",
+            style = SisoTypoTokens.SubTitle1,
+            color = SisoColorTokens.GrayScale50
+        )
+        Spacer(modifier = Modifier.size(size = 12.dp))
         ChipRow(
             chips = interests["여가 & 취미"]!!,
             onClick = { chipText -> // 람다의 인자로 클릭된 텍스트를 받음
                 viewModel.onClickToggle(chipText) // 받은 텍스트를 viewModel 함수에 전달
             }, selectedInterests = selectedInterests
         )
-        Spacer(modifier = Modifier.size(size = 6.dp))
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = SisoColorTokens.Gold40,
-                contentColor = SisoColorTokens.GrayScale90
-            )
+        Spacer(modifier = Modifier.size(size = 43.dp))
+        CommonButtonWithState(text = "계속하기", {}, isPossibleNextState)
+        Spacer(Modifier.size(8.dp))
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("계속하기", style = SisoTypoTokens.Button1)
+            CommonTextButton(
+                text = "건너뛰기",
+                style = SisoTypoTokens.Button2,
+                color = SisoColorTokens.GrayScale50,
+                onClick = {})
         }
-        CommonButtonWithState(
-            text = "계속하기",
-            onClick = onNavigateNext,
-            isActive = isPossibleNextState
-        )
+        Spacer(Modifier.size(39.dp))
+
+
     }
 }
 

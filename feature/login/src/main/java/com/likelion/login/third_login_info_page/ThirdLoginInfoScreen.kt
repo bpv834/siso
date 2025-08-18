@@ -42,6 +42,7 @@ import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.camera.CameraPreview
 import com.likelion.ui.component.photo_layout.PhotoLayoutWith1Main4Sub
+import com.likelion.ui.component.text_button.CommonTextButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
@@ -85,7 +86,7 @@ fun ThirdLoginInfoScreen(
         if (uri != null) {
             val bitmap = uri.getBitmap(context) // 확장 함수 사용
             if (capturedImages.size < 5 && bitmap != null) {
-                viewModel.addImageFromAlbum(bitmap)
+                viewModel.addImageFromAlbum(newImage = bitmap)
             }
         }
     }
@@ -102,20 +103,28 @@ fun ThirdLoginInfoScreen(
             contentDescription = "Step indicator",
         )
         Spacer(modifier = Modifier.size(size = 27.dp))
-        Text("나를 표현하는 사진을 보여주세요", style = SisoTypoTokens.Title2)
+        Text(text = "나를 표현하는 사진을 보여주세요", style = SisoTypoTokens.Title2)
         Spacer(modifier = Modifier.size(size = 8.dp))
         Text(
-            "최소 1장 이상 선택해주세요\n정보는 나중에 수정할 수 있어요",
+            text = "최소 1장 이상 선택해주세요\n정보는 나중에 수정할 수 있어요",
             style = SisoTypoTokens.Body4,
             color = SisoColorTokens.GrayScale60
         )
-
-        Spacer(modifier = Modifier.size(size = 44.dp))
+        Spacer(modifier = Modifier.size(size = 12.dp))
+        Text(text = "대표사진", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.GrayScale55)
+        Spacer(modifier = Modifier.size(size = 9.dp))
         // 불러온 비트맵 보여주는 리스트
-        PhotoLayoutWith1Main4Sub(mainWith = null, mainHeight = 206.dp, subWith = 76.dp, subHeight = 72.dp, capturedImages = capturedImages)
-        Spacer(modifier = Modifier.size(size = 72.dp))
+        PhotoLayoutWith1Main4Sub(
+            mainWith = null,
+            mainHeight = 206.dp,
+            subWith = 76.dp,
+            subHeight = 72.dp,
+            capturedImages = capturedImages,
+            onClickDelete = { bitmap -> viewModel.deleteBitMap(bitmap) }
+        )
+        Spacer(modifier = Modifier.size(size = 68.dp))
         CommonActiveButton(
-            text = "사진 추가하기",
+            text = "사진 추가하기 (${capturedImages.size}/5)",
             onClick = {
                 if (capturedImages.size < 5) {
                     viewModel.showPhotoUploadBottomSheet()
@@ -125,6 +134,22 @@ fun ThirdLoginInfoScreen(
                 }
             }
         )
+        Spacer(Modifier.size(8.dp))
+        if (capturedImages.isEmpty()) // 이미지가 없을때만 건너뛰기를 노출
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CommonTextButton(
+                    text = "건너뛰기",
+                    style = SisoTypoTokens.Button2,
+                    color = SisoColorTokens.GrayScale50,
+                    onClick = {}
+                )
+            }
+        // 사진이 한개라도 있다면 다음으로 버튼 노출
+        if (capturedImages.isNotEmpty())
+            CommonActiveButton(text = "다음으로", onClick = {})
     }
 
     if (showBottomSheet) {
@@ -160,7 +185,7 @@ fun ThirdLoginInfoScreen(
         CameraPreview(
             onImageCaptured = { bitmap ->
                 if (capturedImages.size < 5) {
-                    viewModel.addImageFromAlbum(bitmap)
+                    viewModel.addImageFromAlbum(newImage = bitmap)
                 }
                 isCameraVisible = false
             }

@@ -9,11 +9,10 @@ class FakeAgreeToTermsScreenViewModel (
     // usecase자리
 ):AgreeToTermsScreenViewModelType {
     private val _agreeContinueBoolean = MutableStateFlow(false)
-    override val agreeContinueBoolean: StateFlow<Boolean> get() = _agreeContinueBoolean.asStateFlow()
+    override val agreeContinueBoolean : StateFlow<Boolean> get() = _agreeContinueBoolean.asStateFlow()
+    private val _isShowBottomSheet = MutableStateFlow(false)
 
     override fun agreeContinueBooleanUpdate(agreeStates: Boolean) = _agreeContinueBoolean.update {
         agreeStates
     }
-
-
 }

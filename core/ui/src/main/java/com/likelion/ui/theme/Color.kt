@@ -21,12 +21,14 @@ object SisoColorTokens {
     val Primary100 = Color(0xFF332500)
 
     // Gray Scale
+
     val GrayScale5 = Color(0xFFFAFAFA)
     val GrayScale10 = Color(0xFFF5F5F5)
     val GrayScale20 = Color(0xFFF0F0F0)
     val GrayScale30 = Color(0xFFD9D9D9)
     val GrayScale40 = Color(0xFFBFBFBF)
     val GrayScale50 = Color(0xFF8C8C8C)
+    val GrayScale55 = Color(0xFF9B9B9B) // R:155, G:155, B:155
     val GrayScale60 = Color(0xFF595959)
     val GrayScale70 = Color(0xFF434343)
     val GrayScale80 = Color(0xFF262626)
@@ -94,5 +96,6 @@ object SisoColorTokens {
 
     // Gold
     val Gold40 = Color(0xFFFFD666)
+    val Gold50 = Color(0xFFFFC833)
     val Gold80 = Color((0xFF997000))
 }
