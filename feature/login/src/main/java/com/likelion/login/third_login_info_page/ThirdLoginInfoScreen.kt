@@ -25,6 +25,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
+import com.likelion.ui.component.button.CommonButtonWithState
 import com.likelion.ui.component.camera.CameraPreview
 import com.likelion.ui.component.photo_layout.PhotoLayoutWith1Main4Sub
 import com.likelion.ui.component.text_button.CommonTextButton
@@ -123,8 +125,9 @@ fun ThirdLoginInfoScreen(
             onClickDelete = { bitmap -> viewModel.deleteBitMap(bitmap) }
         )
         Spacer(modifier = Modifier.size(size = 68.dp))
-        CommonActiveButton(
-            text = "사진 추가하기 (${capturedImages.size}/5)",
+        // derivedStateOf는 다른 상태에서 파생된 값을 안전하고 효율적으로 계산하고 싶을 때 쓰는 도구예요.
+        val isAddCapture by remember { derivedStateOf { capturedImages.size < 5 } }
+        CommonButtonWithState (text = "사진 추가하기 (${capturedImages.size}/5)",
             onClick = {
                 if (capturedImages.size < 5) {
                     viewModel.showPhotoUploadBottomSheet()
@@ -132,7 +135,8 @@ fun ThirdLoginInfoScreen(
                 } else {
                     // 5장 초과 시 처리 로직
                 }
-            }
+            },
+            isActive = isAddCapture
         )
         Spacer(Modifier.size(8.dp))
         if (capturedImages.isEmpty()) // 이미지가 없을때만 건너뛰기를 노출
