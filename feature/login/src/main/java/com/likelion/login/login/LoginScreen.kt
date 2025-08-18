@@ -9,15 +9,20 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -78,7 +83,9 @@ fun LoginScreen(
         )
 
         Box(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Column {
                 Text(
@@ -88,7 +95,7 @@ fun LoginScreen(
                     color = SisoColorTokens.Orange100
                 )
                 Text(
-                    modifier = Modifier.padding(start = 24.dp, end = 207.dp, top = 8.dp),
+                    modifier = Modifier.padding(start = 24.dp, top = 8.dp),
                     text = "시팅",
                     style = SisoTypoTokens.H1,
                     fontSize = 72.sp,
@@ -100,10 +107,14 @@ fun LoginScreen(
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 145.dp, top = 601.dp)
                     .align(Alignment.BottomCenter)
-                    .clickable {
+                    .padding(horizontal = 16.dp)
+                    .navigationBarsPadding()
+                    .padding(bottom = 50.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
                         onLogin()
                     }
             )
