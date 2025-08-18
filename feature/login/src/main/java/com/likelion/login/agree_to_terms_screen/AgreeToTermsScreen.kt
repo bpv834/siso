@@ -233,7 +233,7 @@ fun AgreeRepeatRadioButton(
                         checkIdList.add(id)
                     }
 
-                    onClick(checkIdList.size == termsList.size)
+                    onClick(checkIdList.contains(termsList.first().first))
                 },
         ) {
             Text(
