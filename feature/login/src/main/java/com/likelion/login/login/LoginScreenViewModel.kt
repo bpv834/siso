@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.likelion.domain.auth.model.KakaoTokenResult
 import com.likelion.domain.auth.usecase.FetchKakaoTokenUseCase
 import com.likelion.domain.login.usecase.GetAuthTokenUseCase
+import com.likelion.domain.login.usecase.PostAuthTokenUseCase
 import com.likelion.domain.login.usecase.SaveAuthTokenUseCase
 import com.likelion.login.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,19 +22,20 @@ import javax.inject.Inject
 class LoginScreenViewModel @Inject constructor(
     private val fetchKakaoTokenUseCase: FetchKakaoTokenUseCase,
     private val saveAuthTokenUseCase: SaveAuthTokenUseCase,
-    private val getAuthTokenUseCase: GetAuthTokenUseCase
+    private val getAuthTokenUseCase: GetAuthTokenUseCase,
+    private val postAuthTokenUseCase: PostAuthTokenUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
 
-    fun login() {
+    fun fetchKakaoToken() {
         viewModelScope.launch {
             when (val result = fetchKakaoTokenUseCase()) {
                 is KakaoTokenResult.Success -> {
                     _uiState.update { current ->
                         current.copy(
-                            isLoggedIn = true,
+                            isLoggedIn = false,
                             kakaoToken = result.token,
                             error = null
                         )
@@ -42,6 +44,7 @@ class LoginScreenViewModel @Inject constructor(
                     Log.d("viewModel", result.token)
                     val a = getAuthTokenUseCase().firstOrNull()
                     Log.d("Token", a ?: "없음")
+                    exchangeWithServer(codeVerifier = result.token)
                 }
 
                 KakaoTokenResult.Canceled -> {
@@ -68,6 +71,36 @@ class LoginScreenViewModel @Inject constructor(
                 }
             }
 
+        }
+    }
+
+    fun exchangeWithServer(codeVerifier: String) {
+        val kakaoToken = _uiState.value.kakaoToken ?: run {
+            _uiState.update { it.copy(error = "카카오 토큰이 없습니다.") }
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoggedIn = true, error = null) }
+            runCatching {
+                postAuthTokenUseCase(
+                    kakaoAccessToken = kakaoToken,
+                    codeVerifier = codeVerifier
+                )
+            }.onSuccess { pair ->
+                saveAuthTokenUseCase(pair.accessToken)
+                Log.d("LoginScreenView", "SERVER_ACCESS = ${pair.accessToken}")
+                Log.d("LoginScreenView", "SERVER_REFRESH = ${pair.refreshToken}")
+                _uiState.update {
+                    it.copy(
+                        isLoggedIn = true,
+                        error = null
+                    )
+                }
+            }.onFailure { e ->
+                _uiState.update { it.copy(isLoggedIn = false, error = e.message) }
+                Log.d("LoginScreenView","SERVER_ERROR = ${e.message}")
+            }
         }
     }
 }
