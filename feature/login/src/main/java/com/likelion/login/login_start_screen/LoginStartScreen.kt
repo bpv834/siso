@@ -28,8 +28,10 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginStartScreen(
-    viewModel: LoginStartScreenViewModel = LoginStartScreenViewModel()
-){
+    viewModel: LoginStartScreenViewModel = LoginStartScreenViewModel(),
+    onNavigateNext: () -> Unit
+) {
+    //val viewModel : LoginStartScreenViewModel = hiltViewModel()
     val sideDp = 16.dp
     val scrollState = rememberScrollState()
     val introductionFontStyle = SisoTypoTokens.Body1
@@ -41,11 +43,11 @@ fun LoginStartScreen(
             horizontalAlignment = AbsoluteAlignment.Left
         ) {
             Spacer(Modifier.padding(50.dp))
-            Column (
+            Column(
                 Modifier.padding(start = sideDp, end = sideDp)
-            ){
-                FontText(text = "시팅가입을 환영합니다", style = introductionFontStyle, padding = 0.dp,)
-                FontText(text = "내 정보를 입력하면", style = introductionFontStyle, padding = 0.dp,)
+            ) {
+                FontText(text = "시팅가입을 환영합니다", style = introductionFontStyle, padding = 0.dp)
+                FontText(text = "내 정보를 입력하면", style = introductionFontStyle, padding = 0.dp)
                 FontText(
                     text = "좋은 인연을 만날 확률이 높아져요",
                     style = introductionFontStyle,
@@ -62,7 +64,8 @@ fun LoginStartScreen(
 
         }
         Button(
-            modifier = Modifier.padding(start = sideDp, end = sideDp)
+            modifier = Modifier
+                .padding(start = sideDp, end = sideDp)
                 .fillMaxWidth()
                 .height(65.dp),
             colors = ButtonDefaults.buttonColors(
@@ -71,13 +74,14 @@ fun LoginStartScreen(
             ),
             onClick = {
                 viewModel.fistContinueBooleanUpdate(true)
+                onNavigateNext()
             },
             enabled = viewModel.fistContinueBoolean
         ) {
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.GrayScale90
+                color = if (viewModel.fistContinueBoolean == true) SisoColorTokens.GrayScale90
                 else SisoColorTokens.GrayScale50,
                 fontSize = 22.sp
             )
@@ -90,9 +94,9 @@ fun LoginStartScreen(
 
 @Composable
 @Preview
-fun LoginStartScreenPreview(){
+fun LoginStartScreenPreview() {
     Surface(color = SisoColorTokens.White) {
-        LoginStartScreen()
+        LoginStartScreen(onNavigateNext = {})
     }
 
 }
