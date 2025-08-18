@@ -12,4 +12,6 @@ interface FifthLoginInfoScreenViewModelType {
     fun startRecording() // 녹음 시작 메서드
     fun stopRecording() // 녹음 중지 메서드
     fun runRecordingTimer() // 타이머 시작 메서드
+    fun playAudio(filePath: String) // 녹음 시작 메서드
+    fun getAudioBytes(): ByteArray? // 녹음된 파일 읽는 메서드
 }

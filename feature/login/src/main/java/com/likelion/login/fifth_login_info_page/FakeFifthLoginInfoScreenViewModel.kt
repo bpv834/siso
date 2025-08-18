@@ -1,5 +1,6 @@
 package com.likelion.login.fifth_login_info_page
 
+import android.media.MediaPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -9,6 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.io.File
 
 class FakeFifthLoginInfoScreenViewModel(
     // usecase
@@ -84,4 +87,44 @@ class FakeFifthLoginInfoScreenViewModel(
     fun clear() {
         fakeViewModelScope.cancel()
     }
+    // 오디오 재생 로직을 담당하는 별도의 클래스나 파일
+    override fun playAudio(filePath: String) {
+        try {
+            val mediaPlayer = MediaPlayer().apply {
+                setDataSource(filePath)
+                prepare() // 파일을 불러올 준비를 합니다.
+                start() // 재생 시작
+            }
+            // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+        } catch (e: Exception) {
+            // 오류 처리
+            e.printStackTrace()
+        }
+    }
+
+    override  fun getAudioBytes(): ByteArray? {
+        // recordedFilePath Flow에서 현재 값을 가져옵니다.
+        val path = recordedFilePath.value ?: return null
+
+        // 파일 경로가 유효한지 확인합니다.
+        val file = File(path)
+        if (!file.exists() || !file.canRead()) {
+            // 파일이 존재하지 않거나 읽을 수 없으면 null 반환
+            Timber.d("파일이 존재하지 않음: $path")
+            return null
+        }
+
+        // 파일의 내용을 바이트 배열로 읽어옵니다.
+        return try {
+            Timber.e("배열로 변환 : ${file.readBytes()}")
+            file.readBytes()
+        } catch (e: Exception) {
+            Timber.e("배열로 변환 에러: $e")
+            null
+        }
+    }
+
 }
