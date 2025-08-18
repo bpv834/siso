@@ -92,17 +92,32 @@ fun MyPageScreen()  {
                 }
 
                 Spacer(modifier = Modifier.size(size = 11.dp))
-                if (progressValue != 1F)
-                AsyncImage(
-                    modifier = Modifier
-                        .size(width = 190.dp, height = 48.dp)
-                        .offset(x = (-18).dp)
-                        .clickable{
-                            d("test","click")
-                        },
-                    model = com.likelion.ui.R.drawable.profile_edit,
-                    contentDescription = ""
-                )
+                if (progressValue != 1F) {
+                    Box(
+                        modifier = Modifier
+                            .size(width = 190.dp, height = 48.dp)
+                            .offset(x = (-18).dp)
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier
+                                .size(width = 190.dp, height = 48.dp),
+                            model = com.likelion.ui.R.drawable.profile_edit,
+                            contentDescription = ""
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(width = 177.dp, height = 48.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                                .offset(x= 13.dp)
+                                .clickable {
+                                    d("test", "click")
+                                },
+                        ){
+
+                        }
+                    }
+
+                }
                 else
                     Spacer(modifier = Modifier.size(width = 190.dp, height = 48.dp))
 /*                Box(
