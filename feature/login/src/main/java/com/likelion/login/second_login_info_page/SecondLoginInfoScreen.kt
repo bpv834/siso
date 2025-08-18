@@ -82,7 +82,7 @@ fun SecondLoginInfoScreen(
             }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
-        Text(text = "운동 & 야외활동", style = SisoTypoTokens.SubTitle1)
+        Text(text = "운동 & 야외활동", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.GrayScale50)
         Spacer(modifier = Modifier.size(size = 12.dp))
         ChipRow(
             chips = interests["운동 & 야외활동"]!!,
