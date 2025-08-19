@@ -103,7 +103,7 @@ object SisoTypoTokens {
     )
     val Body2 = TextStyle(
         fontFamily = pretendardFontFamily,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.W600,
         fontSize = SisoFontSizeTokens.Body2,
         lineHeight = SisoLineHeightTokens.Body2,
         letterSpacing = SisoLetterSpaceTokens.Spacing1
