@@ -288,8 +288,7 @@ fun RepeatRadioButton(
         ) {
             Text(
                 text = info.first,
-                style = SisoTypoTokens.Body1,
-                fontSize = 21.sp
+                style = SisoTypoTokens.Body2,
             )
             Spacer(modifier = Modifier.size(size = 2.dp))
             RadioButton(
