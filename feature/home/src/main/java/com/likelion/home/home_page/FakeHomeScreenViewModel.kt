@@ -1,20 +1,18 @@
-package com.likelion.main.main_page
+package com.likelion.home.home_page
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.likelion.domain.model.UsersModel
 import com.likelion.domain.usecase.GetAllUsersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class FakeMainScreenViewModel(val getAllUsersUseCase: GetAllUsersUseCase) : MainScreenViewModelType {
+class FakeHomeScreenViewModel(val getAllUsersUseCase: GetAllUsersUseCase) : HomeScreenViewModelType {
     val _userList = MutableStateFlow(emptyList<UsersModel>())
     override val userList : StateFlow<List<UsersModel>> = _userList.asStateFlow()
 

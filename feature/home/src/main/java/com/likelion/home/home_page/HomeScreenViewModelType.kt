@@ -1,10 +1,9 @@
-package com.likelion.main.main_page
+package com.likelion.home.home_page
 
 import com.likelion.domain.model.UsersModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-interface MainScreenViewModelType {
+interface HomeScreenViewModelType {
     val userList: StateFlow<List<UsersModel>>
     fun getUserList()
 }
