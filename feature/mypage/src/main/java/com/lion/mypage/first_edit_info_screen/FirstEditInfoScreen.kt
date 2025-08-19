@@ -1,5 +1,7 @@
 package com.lion.mypage.first_edit_info_screen
 
+import android.R.id.input
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,12 +25,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
@@ -37,15 +42,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.ui.R
+import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
+import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstEditInfoScreen(
@@ -54,6 +64,10 @@ fun FirstEditInfoScreen(
     val sideDp = 16.dp
     var nameText by rememberSaveable { mutableStateOf("") }
     var ageText by rememberSaveable { mutableStateOf("") }
+    var introduceText by rememberSaveable { mutableStateOf("") }
+    val introduceTextEnd = 50
+    val textPlaceholderColor = SisoColorTokens.GrayScale50
+    val fistContinueBoolean by  viewModel.fistContinueBoolean.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -67,13 +81,13 @@ fun FirstEditInfoScreen(
         Text(
             text = "기본정보를 제공해주세요",
             style = SisoTypoTokens.Title1,
-            color = SisoColorTokens.Gray90
+            color = SisoColorTokens.GrayScale90
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
             text = "닉네임",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50
+            color = SisoColorTokens.GrayScale50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -85,17 +99,21 @@ fun FirstEditInfoScreen(
             value = nameText,
             onValueChange = { input ->
                 nameText = input
-                viewModel.nameUpdate(input)
+                viewModel.nameUpdate(nameText)
+                viewModel.fistContinueBooleanUpdate(
+                    nameNotBlank = nameText.isNotBlank(), ageNotBlank = ageText.isNotBlank()
+                )
             },
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
 
-                    value = viewModel.nameState,
+                    value = nameText,
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
                             text = "이것은 닉네임입니다.",
-                            fontSize = SisoFontSizeTokens.Label1
+                            fontSize = SisoFontSizeTokens.Label1,
+                            color = textPlaceholderColor
                         )
                     },
                     innerTextField = innerTextField,
@@ -106,7 +124,7 @@ fun FirstEditInfoScreen(
                     container = {
 
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.Gray20)
+                            drawRect(SisoColorTokens.GrayScale20)
                         })
 
                     },
@@ -114,7 +132,7 @@ fun FirstEditInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
-                            tint = SisoColorTokens.Gray40,
+                            tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
                     }
@@ -128,7 +146,7 @@ fun FirstEditInfoScreen(
         Text(
             text = "나이",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50
+            color = SisoColorTokens.GrayScale50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -140,17 +158,21 @@ fun FirstEditInfoScreen(
             value = ageText,
             onValueChange = { input ->
                 ageText = input
-                viewModel.ageUpdate(input)
+                viewModel.ageUpdate(ageText)
+                viewModel.fistContinueBooleanUpdate(
+                    nameNotBlank = nameText.isNotBlank(), ageNotBlank = ageText.isNotBlank()
+                )
             },
             decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
 
-                    value = viewModel.ageState,
+                    value = ageText,
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
                             text = "나이를 입력해주세요",
-                            fontSize = SisoFontSizeTokens.Label1
+                            fontSize = SisoFontSizeTokens.Label1,
+                            color = textPlaceholderColor
                         )
                     },
                     innerTextField = innerTextField,
@@ -160,14 +182,14 @@ fun FirstEditInfoScreen(
                     interactionSource = MutableInteractionSource(),
                     container = {
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.Gray20)
+                            drawRect(SisoColorTokens.GrayScale20)
                         })
                     },
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
-                            tint = SisoColorTokens.Gray40,
+                            tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
                     }
@@ -176,54 +198,56 @@ fun FirstEditInfoScreen(
             }
         )
         Spacer(modifier = Modifier.size(size = 28.dp))
+
         Text(
-            text = "내 성별",
+            text = "자기소개",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50
+            color = SisoColorTokens.GrayScale50
         )
-        Spacer(modifier = Modifier.size(size = 12.dp))
-
-        Row {
-            RepeatRadioButton(viewModel.myRadioButtons)
-        }
-        Spacer(modifier = Modifier.size(size = 28.dp))
+        Spacer(modifier = Modifier.size(size = 8.dp))
+        // 여기에 EditText(텍스트 필드) 추가
+        CommonOutlinedTextFiled(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(206.dp),
+            placeholderText = "안녕하세요. 인생의 황혼기에 접어들었지만, 늘 새로운 경험과 사랑을 찾아 나아가고 있습니다. 서로를 이해하며 함께할 수 있는 분을 기다립니다.",
+            value = introduceText, // collect된 실시간 변경된 스트링 값을 넣는다.
+            onValueChange = { input -> // 새롭게 변경된 문자를 넘겨줌
+                introduceText = if(input.length>=introduceTextEnd)
+                    input.substring(0,introduceTextEnd)
+                else input
+                viewModel.introduceUpdate(input = introduceText)
+            }
+        )
+        Spacer(modifier = Modifier.size(size = 8.dp))
         Text(
-            text = "매칭 성별",
-            style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50
+            modifier = Modifier.fillMaxWidth(),
+            text = "${introduceText.length}/$introduceTextEnd",
+            fontSize = SisoFontSizeTokens.Label1,
+            textAlign = TextAlign.End,
+            color = textPlaceholderColor
         )
-        Spacer(modifier = Modifier.size(size = 6.dp))
-        Text(
-            text = "동성선택시 동성친구 이성선택시 이성친구를\n추천해 드려요.",
-            style = SisoTypoTokens.Label1,
-            color = SisoColorTokens.Gray50
-        )
-        Spacer(modifier = Modifier.size(size = 12.dp))
-
-        Row {
-            RepeatRadioButton(viewModel.pairRadioButtons)
-        }
-
-        Spacer(modifier = Modifier.size(size = 30.dp))
-
+        Spacer(modifier = Modifier.size(size = 75.dp))
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(65.dp),
+                .height(54.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SisoColorTokens.Orange30,
-                disabledContainerColor = SisoColorTokens.Gray50
+                disabledContainerColor = SisoColorTokens.GrayScale30
             ),
             onClick = {
-                viewModel.fistContinueBooleanUpdate(true)
+                viewModel.fistContinueBooleanUpdate(
+                    nameNotBlank = nameText.isNotBlank(), ageNotBlank = ageText.isNotBlank()
+                )
             },
-            enabled = viewModel.fistContinueBoolean
+            enabled = fistContinueBoolean
         ) {
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if (viewModel.fistContinueBoolean == true) SisoColorTokens.Gray90
-                else SisoColorTokens.Gray50,
+                color = if (fistContinueBoolean == true) SisoColorTokens.GrayScale90
+                else SisoColorTokens.GrayScale50,
                 fontSize = 22.sp
             )
         }
@@ -231,55 +255,14 @@ fun FirstEditInfoScreen(
     }
 }
 
-
-@Composable
-fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>) {
-    radios.forEachIndexed { index, info ->
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .size(width = 85.dp, height = 24.dp)
-                .clickable {
-                    radios.replaceAll {
-                        it.copy(
-                            second = (it.first == info.first)
-                        )
-                    }
-                }
-                .padding(end = 24.dp)
-        ) {
-            Text(
-                text = info.first,
-                style = SisoTypoTokens.Body1,
-                fontSize = 21.sp
-            )
-            Spacer(modifier = Modifier.size(size = 2.dp))
-            RadioButton(
-                selected = info.second,
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = SisoColorTokens.Gray90,
-                    unselectedColor = SisoColorTokens.Gray30
-                ),
-                onClick = {
-                    radios.replaceAll {
-                        it.copy(
-                            second = (it.first == info.first)
-                        )
-                    }
-                }
-            )
-
-        }
-    }
-}
-
 @Preview
 @Composable
 fun FirstEditInfoScreenPreview(){
-    Surface(
-        color = SisoColorTokens.White
-    ){
-        FirstEditInfoScreen(FakeFirstEditInfoScreenViewModel())
+
+    SisoTheme{
+        Scaffold {
+            it
+            FirstEditInfoScreen(FakeFirstEditInfoScreenViewModel())
+        }
     }
 }
