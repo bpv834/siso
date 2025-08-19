@@ -8,17 +8,19 @@ import com.likelion.login.InputRoute
 import com.likelion.navigation.NavigationRoute
 
 fun NavController.navigateToInput(navOptions: NavOptions? = null) =
-    navigate(NavigationRoute.LoginScreen.route, navOptions)
+    navigate(NavigationRoute.InputScreen.route, navOptions)
 
 fun NavGraphBuilder.inputNavigation(
     navController: NavController,
+    onNavigateToHome: () -> Unit,
     action: () -> Unit
 ) {
     composable(
-        route = NavigationRoute.InputScreen.route
+        route = NavigationRoute.InputScreen.route,
     ) {
         InputRoute(
-            onNavigateUp = {navController.navigateUp()},
+            onNavigateUp = { navController.navigateUp() },
+            onNavigateToHome = onNavigateToHome,
             actionSnackbar = action
         )
     }

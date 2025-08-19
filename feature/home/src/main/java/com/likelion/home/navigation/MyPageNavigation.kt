@@ -4,18 +4,19 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.likelion.home.chat.ChatRoute
 import com.likelion.home.home.HomeRoute
-
+import com.likelion.home.mypage.MyPageRoute
 import com.likelion.navigation.NavigationRoute
 
-fun NavController.navigateToHome(navOptions: NavOptions? = null) =
-    navigate(NavigationRoute.HomeScreen.route, navOptions)
+fun NavController.navigateToMyPage(navOptions: NavOptions? = null) =
+    navigate(NavigationRoute.MyPageScreen.route, navOptions)
 
-fun NavGraphBuilder.homeNavigation(action: () -> Unit) {
+fun NavGraphBuilder.myPageNavigation(action: () -> Unit) {
     composable(
-        route = NavigationRoute.HomeScreen.route
+        route = NavigationRoute.MyPageScreen.route
     ) {
-        HomeRoute(
+        MyPageRoute(
             actionSnackbar = action
         )
     }
