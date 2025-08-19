@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:util"))
 
 
     implementation(libs.androidx.core.ktx)
@@ -55,4 +56,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation ("com.squareup.moshi:moshi-kotlin:1.12.0")
+    // 아고라 인앱전화
+    implementation("io.agora.rtc:voice-sdk:4.5.0")
 }
