@@ -8,7 +8,8 @@ import androidx.compose.runtime.Composable
 fun SisoTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = lightColorScheme(
-            background = SisoColorTokens.White
+            background = SisoColorTokens.White,
+            surface = SisoColorTokens.White
         ),
     ) {
         content()
