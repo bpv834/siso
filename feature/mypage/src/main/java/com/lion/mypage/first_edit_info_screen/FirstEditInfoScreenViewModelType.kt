@@ -1,12 +1,14 @@
 package com.lion.mypage.first_edit_info_screen
 
+import kotlinx.coroutines.flow.StateFlow
+
 interface FirstEditInfoScreenViewModelType {
-    val nameState : String
-    val ageState: String
-    val fistContinueBoolean : Boolean
-    val myRadioButtons : MutableList<Pair<String, Boolean>>
-    val pairRadioButtons : MutableList<Pair<String, Boolean>>
+    val nameState : StateFlow<String>
+    val ageState: StateFlow<String>
+    val introduceState: StateFlow<String>
+    val fistContinueBoolean : StateFlow<Boolean>
     fun nameUpdate(input: String)
     fun ageUpdate(input: String)
-    fun fistContinueBooleanUpdate(input: Boolean)
+    fun introduceUpdate(input:String)
+    fun fistContinueBooleanUpdate(nameNotBlank:Boolean,ageNotBlank: Boolean)
 }
