@@ -302,6 +302,7 @@ fun RepeatRadioButton(
                             second = (it.first == info.first)
                         )
                     }
+                    click()
                 }
             )
 
