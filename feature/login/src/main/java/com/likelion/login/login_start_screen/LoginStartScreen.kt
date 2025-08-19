@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
@@ -86,7 +85,7 @@ fun LoginStartScreen(
             Button(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                     .fillMaxWidth()
-                    .height(65.dp),
+                    .height(54.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SisoColorTokens.Gold40,
                     disabledContainerColor = SisoColorTokens.GrayScale50
@@ -102,7 +101,6 @@ fun LoginStartScreen(
                     style = SisoTypoTokens.Button1,
                     color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.GrayScale90
                     else SisoColorTokens.GrayScale50,
-                    fontSize = 22.sp
                 )
             }
             Spacer(Modifier.size(size = 56.dp))
