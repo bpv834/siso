@@ -104,7 +104,7 @@ fun SecondLoginInfoScreen(
             }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 43.dp))
-        CommonButtonWithState(text = "계속하기", onClick = {onNavigateNext()}, isPossibleNextState)
+        CommonButtonWithState(text = "계속하기", onClick = { onNavigateNext() }, isPossibleNextState)
         Spacer(Modifier.size(8.dp))
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -114,7 +114,7 @@ fun SecondLoginInfoScreen(
                 text = "건너뛰기",
                 style = SisoTypoTokens.Button2,
                 color = SisoColorTokens.GrayScale50,
-                onClick = {})
+                onClick = { onNavigateNext() })
         }
         Spacer(Modifier.size(39.dp))
 

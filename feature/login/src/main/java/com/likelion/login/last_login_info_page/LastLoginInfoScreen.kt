@@ -53,7 +53,9 @@ fun LastLoginInfoScreen(
         )
         Spacer(Modifier.size(80.dp))
         CommonActiveButton(
-            "인연 만나기", {}, modifier = Modifier
+            text = "인연 만나기",
+            onClick = { onNavigation() },
+            modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
         Spacer(Modifier.size(72.dp))

@@ -3,10 +3,11 @@ package com.likelion.navigation
 sealed class NavigationRoute(val route: String) {
     object OnBoardingScreen : NavigationRoute("onboarding")
     object LoginScreen : NavigationRoute("login")
+    object InputScreen : NavigationRoute("input")
     object HomeScreen : NavigationRoute("home")
-    object InputScreen : NavigationRoute("input") {
-        // 자식 화면
-    }
+    object FindScreen : NavigationRoute("find")
+    object ChatScreen : NavigationRoute("chat")
+    object MyPageScreen : NavigationRoute("myPage")
     /*
     * object 보여줄화면: NavigationRoute("보여줄화면")
     *

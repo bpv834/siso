@@ -4,17 +4,18 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.likelion.home.home.HomeRoute
+import com.likelion.home.find.FindRoute
 import com.likelion.navigation.NavigationRoute
 
-fun NavController.navigateToHome(navOptions: NavOptions? = null) =
-    navigate(NavigationRoute.HomeScreen.route, navOptions)
+fun NavController.navigateToFind(navOptions: NavOptions? = null) =
+    navigate(NavigationRoute.FindScreen.route, navOptions)
 
-fun NavGraphBuilder.homeNavigation(action: () -> Unit) {
+
+fun NavGraphBuilder.findNavigation(action: () -> Unit) {
     composable(
-        route = NavigationRoute.HomeScreen.route
+        route = NavigationRoute.FindScreen.route
     ) {
-        HomeRoute(
+        FindRoute(
             actionSnackbar = action
         )
     }

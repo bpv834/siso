@@ -1,17 +1,21 @@
-package com.likelion.home
+package com.likelion.home.mypage
 
 import android.view.View
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
-import com.google.android.material.snackbar.Snackbar
-
 
 @Composable
-fun HomeRoute(
+fun MyPageRoute(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
-    actionSnackbar: () -> Unit = {},
+    actionSnackbar: () -> Unit = {}
 ) {
+    MyPageScreen()
+}
 
+@Composable
+fun MyPageScreen() {
+    Text(text = "MyPage")
 }

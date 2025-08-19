@@ -97,10 +97,10 @@ fun FirstLoginInfoScreen(
                 .border(width = 0.dp, color = SisoColorTokens.White)
                 .clip(RoundedCornerShape(25.dp)),
             value = nameText,
-            onValueChange = {input->
-                nameText = if(input.length >= 10){
+            onValueChange = { input ->
+                nameText = if (input.length >= 10) {
                     input.substring(0 until 10)
-                }else{
+                } else {
                     input
                 }
                 viewModel.nameUpdate(nameText)
@@ -143,7 +143,7 @@ fun FirstLoginInfoScreen(
             },
 
 
-        )
+            )
         Spacer(modifier = Modifier.size(size = 28.dp))
         Text(
             text = "나이",
@@ -158,25 +158,25 @@ fun FirstLoginInfoScreen(
                 .border(width = 0.dp, color = SisoColorTokens.White)
                 .clip(RoundedCornerShape(25.dp)),
             value = ageText,
-            onValueChange = {input->
+            onValueChange = { input ->
                 // 숫자만 입력
-                val tempText = if(input.length >= 3){
+                val tempText = if (input.length >= 3) {
                     input.substring(0 until 3)
-                }else{
+                } else {
                     input
                 }
-                ageText = tempText.replace(Regex("[^0-9]"),"")
+                ageText = tempText.replace(Regex("[^0-9]"), "")
                 viewModel.ageUpdate(ageText)
                 viewModel.fistContinueBooleanUpdate()
             },
-            decorationBox = @Composable{innerTextField->
+            decorationBox = @Composable { innerTextField ->
                 TextFieldDefaults.DecorationBox(
 
                     value = ageText,
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
-                            text= "나이를 입력해주세요",
+                            text = "나이를 입력해주세요",
                             fontSize = SisoFontSizeTokens.Label1,
                             color = SisoColorTokens.GrayScale50
                         )
@@ -187,7 +187,7 @@ fun FirstLoginInfoScreen(
                     visualTransformation = VisualTransformation.None,
                     interactionSource = MutableInteractionSource(),
                     container = {
-                        Box(modifier = Modifier.drawBehind{
+                        Box(modifier = Modifier.drawBehind {
                             drawRect(SisoColorTokens.GrayScale20)
                         })
                     },
@@ -212,7 +212,7 @@ fun FirstLoginInfoScreen(
         Spacer(modifier = Modifier.size(size = 12.dp))
 
         Row {
-            RepeatRadioButton(viewModel.myRadioButtons){
+            RepeatRadioButton(viewModel.myRadioButtons) {
                 viewModel.fistContinueBooleanUpdate()
             }
         }
@@ -231,7 +231,7 @@ fun FirstLoginInfoScreen(
         Spacer(modifier = Modifier.size(size = 12.dp))
 
         Row {
-            RepeatRadioButton(viewModel.pairRadioButtons){
+            RepeatRadioButton(viewModel.pairRadioButtons) {
                 viewModel.fistContinueBooleanUpdate()
             }
         }
@@ -249,11 +249,13 @@ fun FirstLoginInfoScreen(
             onClick = {
                 onNavigateNext()
             },
+
             enabled = fistContinueBoolean.value
         ) {
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
+
                 color = if(fistContinueBoolean.value == true)SisoColorTokens.GrayScale90
                 else SisoColorTokens.GrayScale50,
             )
@@ -263,17 +265,17 @@ fun FirstLoginInfoScreen(
 }
 
 
-
 @Composable
 fun RepeatRadioButton(
     radios: MutableList<Pair<String, Boolean>>,
     click: () -> Unit = {}
-){
+) {
     radios.forEachIndexed { index, info ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.size(width = 85.dp, height = 24.dp)
+            modifier = Modifier
+                .size(width = 85.dp, height = 24.dp)
                 .clickable {
                     radios.replaceAll {
                         it.copy(
@@ -312,9 +314,9 @@ fun RepeatRadioButton(
 
 @Composable
 @Preview
-fun FirstLoginInfoPreview(){
+fun FirstLoginInfoPreview() {
     Surface(color = SisoColorTokens.White) {
-        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel(),{})
+        FirstLoginInfoScreen(FakeFirstLoginInfoScreenViewModel(), {})
     }
 
 }
