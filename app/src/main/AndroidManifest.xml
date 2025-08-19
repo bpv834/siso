@@ -10,10 +10,15 @@
 	<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 <!--	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />-->
 <!--	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />-->
-	<uses-permission android:name="android.permission.INTERNET" />
+
+	<!-- 앱이 인터넷에 접속할 수 있도록 허용 -->
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<!-- 앱이 마이크를 사용하여 음성을 녹음할 수 있도록 허용 -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<!-- 앱이 오디오 설정(볼륨, 라우팅 등)을 변경할 수 있도록 허용 -->
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 	<application
 		android:name=".App"
 		android:allowBackup="true"
