@@ -45,15 +45,20 @@ fun InputRoute(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
-    onNavigateUp: () -> Unit = {}
+    onNavigateUp: () -> Unit = {},
+    onNavigateToHome: () -> Unit = {}
 ) {
-    InputMainScreen(onNavigateUp = onNavigateUp)
+    InputMainScreen(
+        onNavigateUp = onNavigateUp,
+        onNavigateToHome = onNavigateToHome
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputMainScreen(
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
+    onNavigateToHome: () -> Unit
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -140,9 +145,11 @@ fun InputMainScreen(
             composable("screen6") {
                 LastLoginInfoScreen(
                     onNavigation = {
-                        
+                        onNavigateToHome()
                     }
                 )
+            }
+            composable("mainScreen") {
 
             }
         }
@@ -166,6 +173,6 @@ fun InputScreen1(
 @Preview
 fun InputScreenPreview() {
     SisoTheme {
-        InputMainScreen(onNavigateUp = {})
+        InputMainScreen(onNavigateUp = {}, {})
     }
 }
