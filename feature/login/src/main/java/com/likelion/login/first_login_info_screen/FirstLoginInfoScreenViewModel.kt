@@ -1,9 +1,12 @@
 package com.likelion.login.first_login_info_screen
 
+import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -17,7 +20,7 @@ class FirstLoginInfoScreenViewModel @Inject constructor(
     private val _ageState = MutableStateFlow("")
     override val ageState: String get() = _ageState.value
     private val _firstContinueBoolean = MutableStateFlow(false)
-    override val fistContinueBoolean : Boolean get() = _firstContinueBoolean.value
+    override val fistContinueBoolean : StateFlow<Boolean> get() = _firstContinueBoolean.asStateFlow()
     private val _myRadioButtons = MutableStateFlow(
         mutableStateListOf(
             Pair(first = "여성", second = false),
@@ -33,20 +36,30 @@ class FirstLoginInfoScreenViewModel @Inject constructor(
     )
     override val pairRadioButtons : MutableList<Pair<String, Boolean>> get() = _pairRadioButtons.value
     override fun nameUpdate(input: String) = _nameState.update {
-        it + input
+        input
     }
 
-    override fun ageUpdate(input: String) = _nameState.update {
-        it + input
+    override fun ageUpdate(input: String) = _ageState.update {
+        input
     }
 
     override fun fistContinueBooleanUpdate() = _firstContinueBoolean.update {
         val textBoolean = nameState.isNotBlank() && ageState.isNotBlank()
+        d("boolean","text $ageState")
+        d("boolean","text $nameState")
+        d("boolean","text $textBoolean")
+
         val tempBoolean = myRadioButtons.reduce { acc, pair ->
-            acc.copy(second = pair.second || textBoolean)
-        }.second
-        pairRadioButtons.reduce { acc, pair ->
-            acc.copy(second = pair.second || tempBoolean)
-        }.second
+            val boolean = acc.copy(second = pair.second || acc.second)
+            d("boolean","tempBoolean $pair")
+            boolean
+        }.second && textBoolean
+        val continueBoolean = pairRadioButtons.reduce { acc, pair ->
+            val boolean = acc.copy(second = pair.second || acc.second)
+            d("boolean","continueBoolean $pair")
+            boolean
+        }.second && tempBoolean
+        d("boolean","continueBoolean $continueBoolean")
+        continueBoolean
     }
 }
