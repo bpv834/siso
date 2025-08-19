@@ -1,9 +1,6 @@
-package com.lion.mypage.first_edit_info_screen
+package com.lion.mypage.essential_edit_info_screen
 
-import android.R
-import android.R.id.input
 import android.util.Log.d
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +10,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class FirstEditInfoScreenViewModel @Inject constructor(
+class EssentialEditInfoScreenViewModel @Inject constructor(
     // usecase자리
-): ViewModel(), FirstEditInfoScreenViewModelType {
+): ViewModel(), EssentialEditInfoScreenViewModelType {
     private val _nameState = MutableStateFlow("")
     override val nameState : StateFlow<String> get() = _nameState.asStateFlow()
     private val _ageState = MutableStateFlow("")

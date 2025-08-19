@@ -1,15 +1,14 @@
-package com.lion.mypage.first_edit_info_screen
+package com.lion.mypage.essential_edit_info_screen
 
 import android.util.Log.d
-import androidx.compose.runtime.mutableStateListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class FakeFirstEditInfoScreenViewModel(
+class FakeEssentialEditInfoScreenViewModel(
     // usecase자리
-): FirstEditInfoScreenViewModelType {
+): EssentialEditInfoScreenViewModelType {
     private val _nameState = MutableStateFlow("")
     override val nameState : StateFlow<String> get() = _nameState.asStateFlow()
     private val _ageState = MutableStateFlow("")

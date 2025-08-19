@@ -1,8 +1,8 @@
-package com.lion.mypage.first_edit_info_screen
+package com.lion.mypage.essential_edit_info_screen
 
 import kotlinx.coroutines.flow.StateFlow
 
-interface FirstEditInfoScreenViewModelType {
+interface EssentialEditInfoScreenViewModelType {
     val nameState : StateFlow<String>
     val ageState: StateFlow<String>
     val introduceState: StateFlow<String>
