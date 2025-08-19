@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.likelion.home.HomeRoute
+import com.likelion.home.home.HomeRoute
 import com.likelion.navigation.NavigationRoute
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) =
