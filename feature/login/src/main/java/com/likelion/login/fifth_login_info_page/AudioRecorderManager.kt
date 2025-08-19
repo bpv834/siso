@@ -8,7 +8,7 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-class AudioRecorderClass @Inject constructor(
+class AudioRecorderManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private var mediaRecorder: MediaRecorder? = null
