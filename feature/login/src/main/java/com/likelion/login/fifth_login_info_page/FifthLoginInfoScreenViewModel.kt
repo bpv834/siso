@@ -1,7 +1,6 @@
 package com.likelion.login.fifth_login_info_page
 
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FifthLoginInfoScreenViewModel @Inject constructor(
-    private val audioRecorder: AudioRecorderClass, // Hilt로 AudioRecorder 인스턴스를 주입받음
+    private val audioRecorder: AudioRecorderManager, // Hilt로 AudioRecorder 인스턴스를 주입받음
     // usecase
 ) : ViewModel(), FifthLoginInfoScreenViewModelType {
     // 초기 상태는 녹음 전상태

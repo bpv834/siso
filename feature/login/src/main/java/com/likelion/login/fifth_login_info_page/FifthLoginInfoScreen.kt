@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -238,7 +237,7 @@ fun FifthLoginInfoScreenPreview() {
     SisoTheme {
         // Preview Context를 사용해 AudioRecorder를 생성
         val context = LocalContext.current
-        val fakeAudioRecorder = AudioRecorderClass(context = context)
+        val fakeAudioRecorder = AudioRecorderManager(context = context)
         val fakeViewModel = FakeFifthLoginInfoScreenViewModel(audioRecorder = fakeAudioRecorder)
         FifthLoginInfoScreen(viewModel = fakeViewModel, {})
     }

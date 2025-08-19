@@ -15,7 +15,7 @@ import java.io.File
 
 class FakeFifthLoginInfoScreenViewModel(
     // usecase
-    private val audioRecorder: AudioRecorderClass // ✨ FakeViewModel도 AudioRecorder를 받음
+    private val audioRecorder: AudioRecorderManager // ✨ FakeViewModel도 AudioRecorder를 받음
 ) : FifthLoginInfoScreenViewModelType {
 
     // 1. 뷰모델의 수명주기에 맞춰 하나의 CoroutineScope를 생성합니다.
