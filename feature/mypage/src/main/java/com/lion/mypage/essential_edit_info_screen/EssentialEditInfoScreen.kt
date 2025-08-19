@@ -1,14 +1,11 @@
-package com.lion.mypage.first_edit_info_screen
+package com.lion.mypage.essential_edit_info_screen
 
-import android.R.id.input
 import android.annotation.SuppressLint
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,21 +20,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -59,7 +50,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstEditInfoScreen(
-    viewModel: FirstEditInfoScreenViewModelType
+    viewModel: EssentialEditInfoScreenViewModelType
 ){
     val sideDp = 16.dp
     var nameText by rememberSaveable { mutableStateOf("") }
@@ -111,7 +102,7 @@ fun FirstEditInfoScreen(
                     placeholder = {
                         Text(
                             modifier = Modifier.height(23.dp),
-                            text = "이것은 닉네임입니다.",
+                            text = "닉네임을 입력해주세요",
                             fontSize = SisoFontSizeTokens.Label1,
                             color = textPlaceholderColor
                         )
@@ -262,7 +253,7 @@ fun FirstEditInfoScreenPreview(){
     SisoTheme{
         Scaffold {
             it
-            FirstEditInfoScreen(FakeFirstEditInfoScreenViewModel())
+            FirstEditInfoScreen(FakeEssentialEditInfoScreenViewModel())
         }
     }
 }
