@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.likelion.ui.theme.SisoColorTokens
+import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
@@ -71,19 +72,21 @@ fun RowScope.BottomNavigationItems(
 @Composable
 fun PreviewBottomNavigation() {
     val destinations = BottomNavigationDestination.values()
-    SisoBottomNavigation {
-        destinations.forEach { destination ->
-            BottomNavigationItems(
-                selected = true,
-                onClick = {},
-                icon = {
-                    Icon(
-                        painter = painterResource(id = destination.icon),
-                        contentDescription = null,
-                    )
-                },
-                label = destination.routeName
-            )
+    SisoTheme {
+        SisoBottomNavigation {
+            destinations.forEach { destination ->
+                BottomNavigationItems(
+                    selected = true,
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = destination.icon),
+                            contentDescription = null,
+                        )
+                    },
+                    label = destination.routeName
+                )
+            }
         }
     }
 }
