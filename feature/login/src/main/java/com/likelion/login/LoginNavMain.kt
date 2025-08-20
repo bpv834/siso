@@ -21,21 +21,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.likelion.login.agree_to_terms_screen.AgreeToTermsScreen
-import com.likelion.login.agree_to_terms_screen.FakeAgreeToTermsScreenViewModel
-import com.likelion.login.fifth_login_info_page.FakeFifthLoginInfoScreenViewModel
-import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreen
-import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreenViewModel
-import com.likelion.login.fifth_login_info_page.FifthLoginInfoScreenViewModelType
+import com.likelion.login.login_agree.AgreeToTermsScreen
+import com.likelion.login.login_agree.FakeAgreeToTermsScreenViewModel
+import com.likelion.login.login_input_record.FifthLoginInfoScreen
+import com.likelion.login.login_input_record.FifthLoginInfoScreenViewModel
 import com.likelion.login.first_loginInfo_screen.FirstLoginInfoScreen
-import com.likelion.login.first_login_info_screen.FakeFirstLoginInfoScreenViewModel
-import com.likelion.login.forth_login_info_page.FourthLoginInfoScreen
-import com.likelion.login.last_login_info_page.LastLoginInfoScreen
-import com.likelion.login.login_start_screen.LoginStartScreen
-import com.likelion.login.second_login_info_page.FakeSecondLoginInfoScreenViewModel
-import com.likelion.login.second_login_info_page.SecondLoginInfoScreen
-import com.likelion.login.third_login_info_page.FakeThirdLoginScreenViewModel
-import com.likelion.login.third_login_info_page.ThirdLoginInfoScreen
+import com.likelion.login.login_input_info.FakeFirstLoginInfoScreenViewModel
+import com.likelion.login.login_input_introduce.FourthLoginInfoScreen
+import com.likelion.login.login_end.LastLoginInfoScreen
+import com.likelion.login.login_agree2.LoginStartScreen
+import com.likelion.login.login_input_hobby.FakeSecondLoginInfoScreenViewModel
+import com.likelion.login.login_input_hobby.SecondLoginInfoScreen
+import com.likelion.login.login_input_photo.FakeThirdLoginScreenViewModel
+import com.likelion.login.login_input_photo.ThirdLoginInfoScreen
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -48,7 +46,7 @@ fun InputRoute(
     onNavigateUp: () -> Unit = {},
     onNavigateToHome: () -> Unit = {}
 ) {
-    InputMainScreen(
+    LoginMainScreen(
         onNavigateUp = onNavigateUp,
         onNavigateToHome = onNavigateToHome
     )
@@ -56,7 +54,7 @@ fun InputRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputMainScreen(
+fun LoginMainScreen(
     onNavigateUp: () -> Unit,
     onNavigateToHome: () -> Unit
 ) {
@@ -173,6 +171,6 @@ fun InputScreen1(
 @Preview
 fun InputScreenPreview() {
     SisoTheme {
-        InputMainScreen(onNavigateUp = {}, {})
+        LoginMainScreen(onNavigateUp = {}, {})
     }
 }
