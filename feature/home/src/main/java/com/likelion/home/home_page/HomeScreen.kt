@@ -87,13 +87,10 @@ fun HomeScreen(viewModel: HomeScreenViewModelType) {
     }
     val currentUser = userList.getOrNull(currentIndex)
 
-    Scaffold(
-        bottomBar = {}
-    ) { innerPadding ->  // ✅ Scaffold가 제공하는 paddingValues
+    Scaffold { innerPadding ->  // ✅ Scaffold가 제공하는 paddingValues
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding) // ✅ 여기서 적용
         ) {
             // 배경 이미지
             currentUser?.userImages?.firstOrNull()?.let { imageUrl ->
@@ -138,7 +135,7 @@ fun HomeScreen(viewModel: HomeScreenViewModelType) {
                     .padding(top = 73.dp)
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally, // 이 부분을 추가하세요,
-                flingBehavior = flingBehavior
+                flingBehavior = flingBehavior,
             ) {
                 items(userList) { user ->
                     UserCard(
