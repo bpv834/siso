@@ -53,7 +53,7 @@ fun HomeScreen(viewModel: HomeScreenViewModelType) {
         state = pagerState,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 73.dp)
+            .padding(top = 20.dp)
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) { page ->
@@ -64,6 +64,7 @@ fun HomeScreen(viewModel: HomeScreenViewModelType) {
                 selectedImageUrl = imageUrl
                 showImageDialog = true
             },
+            onClickButtonCall = {receiverIdId->viewModel.onClickCallButton(0L,receiverIdId)}
         )
     }
 

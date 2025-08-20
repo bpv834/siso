@@ -40,7 +40,8 @@ class FakeHomeScreenViewModel(val getAllUsersUseCase: GetAllUsersUseCase) : Home
         }
     }
 
-    override fun onClickCallButton() {
+    override fun onClickCallButton(callerId: Long, receiverId: Long) {
         TODO("Not yet implemented")
     }
+
 }
