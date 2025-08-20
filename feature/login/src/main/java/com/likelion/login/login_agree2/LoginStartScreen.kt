@@ -1,4 +1,4 @@
-package com.likelion.login.login_start_screen
+package com.likelion.login.login_agree2
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
