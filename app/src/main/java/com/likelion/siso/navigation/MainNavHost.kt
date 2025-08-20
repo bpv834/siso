@@ -24,7 +24,8 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
     //startDestination: String = NavigationRoute.OnBoardingScreen.route
-    startDestination: String = NavigationRoute.LoginScreen.route
+  //  startDestination: String = NavigationRoute.LoginScreen.route
+    startDestination: String = NavigationRoute.HomeScreen.route
 ) {
     NavHost(
         modifier = modifier,
