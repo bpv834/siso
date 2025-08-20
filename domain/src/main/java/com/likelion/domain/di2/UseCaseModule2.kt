@@ -1,7 +1,7 @@
 package com.likelion.domain.di2
 
-import com.likelion.domain.repository.UsersRepository2
-import com.likelion.domain.usecase.GetAllUsersUseCase
+import com.likelion.domain.home.repository.UsersRepository2
+import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

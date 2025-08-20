@@ -5,7 +5,7 @@ import api.test.FakeInterestApi
 import api.test.FakeProfileApi
 import api.test.FakeUserApi
 import api.test.FakeVoiceApi
-import com.likelion.domain.repository.UsersRepository2
+import com.likelion.domain.home.repository.UsersRepository2
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

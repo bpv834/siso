@@ -1,4 +1,4 @@
-package com.likelion.data.di
+package com.likelion.data.login.repository.di
 
 import com.likelion.data.login.repository.LoginRepositoryImpl
 import com.likelion.data.login.repository.TokenRepositoryImpl

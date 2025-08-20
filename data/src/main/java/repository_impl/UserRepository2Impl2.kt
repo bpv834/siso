@@ -5,8 +5,8 @@ import api.test.FakeInterestApi
 import api.test.FakeProfileApi
 import api.test.FakeUserApi
 import api.test.FakeVoiceApi
-import com.likelion.domain.model.UsersModel
-import com.likelion.domain.repository.UsersRepository2
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.home.repository.UsersRepository2
 
 class UserRepository2Impl2(
     private val userApi: FakeUserApi,

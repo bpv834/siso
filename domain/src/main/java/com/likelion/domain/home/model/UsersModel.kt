@@ -1,6 +1,4 @@
-package com.likelion.domain.model
-
-
+package com.likelion.domain.home.model
 
 data class UsersModel(
     val id: Long,
