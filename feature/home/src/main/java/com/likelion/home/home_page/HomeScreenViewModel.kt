@@ -2,24 +2,29 @@ package com.likelion.home.home_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.likelion.domain.model.UsersModel
-import com.likelion.domain.usecase.GetAllUsersUseCase
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.home.usecase.GetAllUsersUseCase
+import com.likelion.network.util.AgoraVoiceManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    val getAllUsersUseCase: GetAllUsersUseCase
+    private val getAllUsersUseCase: GetAllUsersUseCase,
+    private val agoraVoiceManager: AgoraVoiceManager
 ) : ViewModel(), HomeScreenViewModelType {
     val _userList = MutableStateFlow<List<UsersModel>>(emptyList())
     override val userList : StateFlow<List<UsersModel>> = _userList.asStateFlow()
 
     init {
         getUserList()
+        Timber.d("_users : ${_userList.value}")
+
     }
 
    @Override
@@ -27,5 +32,9 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _userList.value = getAllUsersUseCase.execute()
         }
+    }
+
+    override fun onClickCallButton() {
+        TODO("Not yet implemented")
     }
 }
