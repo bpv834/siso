@@ -1,5 +1,7 @@
 package com.likelion.ui.component.card
 
+import android.Manifest
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,20 +28,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun UserCard(
     user: UsersModel,
     onImageClick: (imageUrl: String) -> Unit,
+    onClickButtonCall: (receiverId: Long) -> Unit, // 상대 유저 uid를 얻어오는 메서드
 ) {
+
+    val context = LocalContext.current // Toast 메시지를 띄우기 위한 Context
+
+    // ⭐️ Accompanist Permissions - RECORD_AUDIO 권한 상태 관리
+    val recordAudioPermissionState = rememberPermissionState(Manifest.permission.RECORD_AUDIO)
+
+
     Card(
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
@@ -76,7 +92,7 @@ fun UserCard(
             Spacer(Modifier.size(19.dp))
 
             // 사용자 사진 목록
-            if (user.userImages.isNotEmpty()) {
+        /*    if (user.userImages.isNotEmpty()) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
@@ -115,7 +131,7 @@ fun UserCard(
                         }
                     }
                 }
-            }
+            }*/
             Spacer(Modifier.size(16.dp))
 
 
@@ -175,26 +191,48 @@ fun UserCard(
             Spacer(Modifier.size(15.dp))
 
             Row(
-                modifier = Modifier
-                ,
+                modifier = Modifier.height(80.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp) // ✅ 12dp 간격
             ) {
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.ic_message_button,
                     contentDescription = "",
-                  //  modifier = Modifier.weight(1f)
-                    modifier = Modifier.size(80.dp)
+                   // modifier = Modifier.weight(1f)
+                      modifier = Modifier.size(80.dp)
                 )
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.ic_call_button,
                     contentDescription = "",
-                   // modifier = Modifier.weight(3f)\
-                    modifier = Modifier.width(236.dp).height(80.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable {
+                            // ⭐️ 통화 버튼 클릭 시 권한 확인 및 요청
+                            when {
+                                recordAudioPermissionState.status.isGranted -> {
+                                    // 권한이 이미 허용된 경우, 통화 시작 콜백 호출
+                                    onClickButtonCall(user.id)
+                                    Toast.makeText(context, "통화를 시작합니다.", Toast.LENGTH_SHORT).show()
+                                }
 
+                                recordAudioPermissionState.status.shouldShowRationale -> {
+                                    // 권한 요청을 거부했지만, 다시 요청해야 함을 사용자에게 설명해야 하는 경우
+                                    Toast.makeText(
+                                        context,
+                                        "통화 기능을 사용하려면 마이크 권한이 필요합니다. 권한 요청 팝업에서 '허용'을 눌러주세요.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    recordAudioPermissionState.launchPermissionRequest() // 권한 요청 팝업 다시 띄우기
+                                }
+
+                                else -> {
+                                    // 권한이 영구적으로 거부되었거나 처음 요청하는 경우
+                                    recordAudioPermissionState.launchPermissionRequest() // 권한 요청 팝업 띄우기
+                                }
+                            }
+                        }
+                    // modifier = Modifier.width(236.dp).height(80.dp)
                 )
-
-
             }
         }
     }
