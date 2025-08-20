@@ -1,4 +1,4 @@
-package com.likelion.login.fifth_login_info_page
+package com.likelion.login.login_input_record
 
 import android.content.Context
 import android.media.MediaRecorder
