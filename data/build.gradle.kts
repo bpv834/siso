@@ -26,6 +26,9 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":local"))
     implementation(project(":remote"))
+    implementation(project(":core:network"))
+    implementation(project(":core:util"))
+
 
     // Retrofit (최신 안정 버전)
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
