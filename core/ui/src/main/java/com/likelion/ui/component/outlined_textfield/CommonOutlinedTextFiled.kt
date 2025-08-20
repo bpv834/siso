@@ -21,14 +21,16 @@ fun CommonOutlinedTextFiled(
     value: String, // 텍스트 필드의 현재 값
     onValueChange: (String) -> Unit, // 텍스트 변경 시 호출될 콜백
     modifier: Modifier = Modifier, // 외부에서 Modifier를 받을 수 있도록 추가
-    placeholderText: String // 외부에서 placeholder 텍스트를 받을 수 있도록 추가
+    placeholderText: String, // 외부에서 placeholder 텍스트를 받을 수 있도록 추가
+    placeholderColor: Color = SisoColorTokens.GrayScale50,
+    fieldBackColor :Color = SisoColorTokens.GrayScale20,
 ) {
     OutlinedTextField(
         value = value,
         colors = OutlinedTextFieldDefaults.colors(
             // SisoColorTokens에 있는 원하는 색상을 사용하거나, 직접 Color를 지정합니다.
-            unfocusedContainerColor = SisoColorTokens.GrayScale20, // 포커스 없을 때 배경색
-            focusedContainerColor = SisoColorTokens.GrayScale20,   // 포커스 있을 때 배경색
+            unfocusedContainerColor = fieldBackColor, // 포커스 없을 때 배경색
+            focusedContainerColor = fieldBackColor,   // 포커스 있을 때 배경색
 
             // ✨ 테두리 색상을 투명하게 설정하여 없애기
             focusedBorderColor = Color.Transparent,
@@ -39,7 +41,7 @@ fun CommonOutlinedTextFiled(
             Text(
                 text = placeholderText,
                 style = SisoTypoTokens.Label1, // placeholder 텍스트 스타일
-                color = SisoColorTokens.GrayScale50
+                color = placeholderColor
             )
         },
         modifier = modifier,
