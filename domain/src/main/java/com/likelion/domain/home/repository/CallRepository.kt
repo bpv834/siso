@@ -1,7 +1,7 @@
 package com.likelion.domain.home.repository
 
 interface CallRepository {
-    fun call() : String
-    fun endCall()
+    suspend fun startCall(callerId : Long,receiverId:Long): String
+    suspend fun endCall()
 
 }
