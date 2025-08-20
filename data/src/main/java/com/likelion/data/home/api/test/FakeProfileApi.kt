@@ -1,4 +1,4 @@
-package api.test
+package com.likelion.data.home.api.test
 
 import com.likelion.data.model.ProfileEntity
 
