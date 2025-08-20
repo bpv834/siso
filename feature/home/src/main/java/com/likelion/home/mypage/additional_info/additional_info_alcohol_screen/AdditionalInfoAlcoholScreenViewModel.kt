@@ -1,4 +1,4 @@
-package com.likelion.home.mypage.additional_info_alcohol_screen
+package com.likelion.home.mypage.additional_info.additional_info_alcohol_screen
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
