@@ -1,8 +1,9 @@
-import api.test.FakeImagesApi
-import api.test.FakeInterestApi
-import api.test.FakeProfileApi
-import api.test.FakeUserApi
-import api.test.FakeVoiceApi
+import com.likelion.data.home.api.test.FakeImagesApi
+import com.likelion.data.home.api.test.FakeInterestApi
+import com.likelion.data.home.api.test.FakeProfileApi
+import com.likelion.data.home.api.test.FakeUserApi
+import com.likelion.data.home.api.test.FakeVoiceApi
+import com.likelion.data.home.repository.UserRepository2Impl2
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import repository_impl.UserRepository2Impl2
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserRepositoryImplTest {
