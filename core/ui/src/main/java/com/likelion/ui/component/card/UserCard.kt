@@ -26,11 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.likelion.domain.model.UsersModel
+import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
@@ -69,7 +70,7 @@ fun UserCard(
                     text = if (user.isOnline) "온라인" else "오프라인",
                     fontSize = 14.sp,
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.White
+                    color = SisoColorTokens.GrayScale90
                 )
             }
             Spacer(Modifier.size(19.dp))
@@ -78,6 +79,8 @@ fun UserCard(
             if (user.userImages.isNotEmpty()) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
                     items(user.userImages) { imageUrl ->
                         Box {
@@ -93,19 +96,20 @@ fun UserCard(
                             )
                             Box(
                                 modifier = Modifier
-                                    .width(46.dp)
-                                    .height(31.dp)
-                                    .padding(end = 16.dp, bottom = 16.dp)
+                                    .align(Alignment.BottomEnd) // 먼저 우측 하단 정렬
+                                    .padding(end = 16.dp, bottom = 16.dp) // 그 다음 여백
                                     .background(
                                         color = SisoColorTokens.Black.copy(alpha = 0.6f),
                                         shape = RoundedCornerShape(99.dp)
                                     )
-                                    .align(Alignment.BottomEnd)
+                                    .width(46.dp)
+                                    .height(31.dp)
                             ) {
                                 Text(
-                                    text = "3/2",
+                                    text = "2/3",
                                     style = SisoTypoTokens.Label1,
                                     color = SisoColorTokens.White,
+                                    modifier = Modifier.align(Alignment.Center)
                                 )
                             }
                         }
@@ -122,12 +126,16 @@ fun UserCard(
                     .padding(bottom = 4.dp)
                     .height(23.dp)
             ) {
-                AsyncImage(model = com.likelion.ui.R.drawable.img_location, contentDescription = "")
+                AsyncImage(
+                    model = com.likelion.ui.R.drawable.ic_location_on_24px,
+                    contentDescription = "",
+                    modifier = Modifier.size(20.dp)
+                )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = "위치 : ${user.location}",
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale10
+                    color = SisoColorTokens.GrayScale90
                 )
             }
             Spacer(Modifier.size(12.dp))
@@ -135,52 +143,55 @@ fun UserCard(
 
             Text(
                 text = "${user.nickname}, ${user.age}세",
-                style = SisoTypoTokens.Title2, color = SisoColorTokens.White
+                style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90
             )
             Spacer(Modifier.size(12.dp))
             // 음성 버튼
 
             AsyncImage(
-                model = com.likelion.ui.R.drawable.img_voice_wave,
+                model = com.likelion.ui.R.drawable.ic_voicesample,
                 contentDescription = "",
                 modifier = Modifier
                     .width(130.dp)
                     .height(44.dp)
             )
+
             Spacer(Modifier.size(12.dp))
             // 관심사 목록
             Text(
                 text = user.interests.joinToString(separator = " #", prefix = "#"),
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale5
+                color = SisoColorTokens.GrayScale90
             )
             Spacer(Modifier.size(12.dp))
             // 자기소개
             Text(
                 text = user.introduce,
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.White
+                color = SisoColorTokens.GrayScale90, modifier = Modifier.height(54.dp),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
             Spacer(Modifier.size(15.dp))
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth() // ✅ Row가 전체 너비를 차지하도록 설정
                 ,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp) // ✅ 12dp 간격
             ) {
                 AsyncImage(
-                    model = com.likelion.ui.R.drawable.img_message_button,
+                    model = com.likelion.ui.R.drawable.ic_message_button,
                     contentDescription = "",
-                    modifier = Modifier.weight(1f),
-                    contentScale = ContentScale.FillWidth
+                  //  modifier = Modifier.weight(1f)
+                    modifier = Modifier.size(80.dp)
                 )
-                Spacer(Modifier.size(16.dp))
                 AsyncImage(
-                    model = com.likelion.ui.R.drawable.img_call_button,
+                    model = com.likelion.ui.R.drawable.ic_call_button,
                     contentDescription = "",
-                    modifier = Modifier.weight(1f),
-                    contentScale = ContentScale.FillWidth
+                   // modifier = Modifier.weight(3f)\
+                    modifier = Modifier.width(236.dp).height(80.dp)
+
                 )
 
 
