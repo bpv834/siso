@@ -1,0 +1,12 @@
+package com.likelion.home.mypage.additional_info_religion_screen
+
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class AdditionalInfoReligionScreenViewModel@Inject constructor (
+    //usecase자리
+): ViewModel(), AdditionalInfoReligionScreenViewModelType {
+
+}
