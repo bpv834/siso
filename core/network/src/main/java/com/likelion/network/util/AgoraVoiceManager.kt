@@ -2,11 +2,18 @@ package com.likelion.network.util
 
 
 import android.content.Context
+import com.likelion.domain.home.model.AgoraEvent
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IRtcEngineEventHandler
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /**
@@ -16,53 +23,110 @@ import timber.log.Timber
  * @param context 애플리케이션 컨텍스트
  * @param appId Agora 애플리케이션 ID (생성자에서 주입받음)
  */
-class AgoraVoiceManager(private val context: Context, private val appId: String) { // appId를 생성자 매개변수로 추가
+class AgoraVoiceManager(
+    private val context: Context,
+    private val appId: String,
+    // 이벤트를 발행할 코루틴 스코프를 외부에서 주입받도록 합니다.
+    // 이는 AgoraVoiceManager의 생명주기를 관리하는 데 도움이 됩니다.
 
+    // SupervisorJob은 일반 Job과 달리 자식 코루틴의 실패가 부모 Job에게 전파되지 않도록 합니다.
+    // 즉, SupervisorJob을 부모로 가진 자식 코루틴이 실패하더라도,
+    // 부모 Job은 취소되지 않으며, 다른 형제(sibling) 코루틴들도 영향을 받지 않고 계속 실행됩니다
+    private val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob())
+) {
     // Agora RtcEngine 인스턴스
     private var rtcEngine: RtcEngine? = null
+
+    // Agora 이벤트를 외부에 노출하기 위한 MutableSharedFlow
+    private val _agoraEvents = MutableSharedFlow<AgoraEvent>()
+    // 외부에 노출되는 읽기 전용 SharedFlow
+    val agoraEvents: SharedFlow<AgoraEvent> = _agoraEvents.asSharedFlow()
 
     // Agora SDK 이벤트 핸들러
     private val eventHandler = object : IRtcEngineEventHandler() {
         /**
-         * 채널 참여 성공 콜백
+         * 채널 참여 성공 콜백: 로컬 사용자(여기서는 발신자)가 채널에 성공적으로 참여했을 때 호출됩니다.
          * @param channel 참여한 채널 이름
          * @param uid 로컬 사용자 ID
          * @param elapsed 채널 참여까지 걸린 시간 (밀리초)
          */
         override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
-            Timber.d("채널 참여 성공: $channel, uid: $uid")
+            Timber.d("AgoraVoiceManager: 채널 참여 성공: $channel, uid: $uid")
+            // 코루틴 스코프 내에서 이벤트 발행
+            coroutineScope.launch {
+                _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
+            }
         }
 
         /**
-         * 원격 사용자가 채널에 참여했을 때 콜백
+         * 원격 사용자가 채널에 참여했을 때 콜백: 상대방(수신자)이 채널에 참여했을 때 호출됩니다.
          * @param uid 참여한 원격 사용자 ID
          * @param elapsed 사용자가 채널에 참여하는 데 걸린 시간 (밀리초)
          */
         override fun onUserJoined(uid: Int, elapsed: Int) {
-            Timber.d("사용자 참여: $uid")
+            Timber.d("AgoraVoiceManager: 원격 사용자 참여: $uid")
+            // 코루틴 스코프 내에서 이벤트 발행
+            coroutineScope.launch {
+                _agoraEvents.emit(AgoraEvent.ReceiverJoinedChannel)
+            }
         }
 
         /**
-         * 원격 사용자가 채널에서 나갔을 때 콜백
+         * 원격 사용자가 채널에서 나갔을 때 콜백: 상대방(수신자)이 채널에서 나갔을 때 호출됩니다.
          * @param uid 나간 원격 사용자 ID
          * @param reason 사용자가 나간 이유 (예: CONNECTION_INTERRUPTED, QUIT)
          */
         override fun onUserOffline(uid: Int, reason: Int) {
-            Timber.d("사용자 나감: $uid, reason: $reason")
+            Timber.d("AgoraVoiceManager: 원격 사용자 나감: $uid, reason: $reason")
+            // 코루틴 스코프 내에서 이벤트 발행
+            coroutineScope.launch {
+                _agoraEvents.emit(AgoraEvent.ReceiverLeftChannel)
+            }
+        }
+
+        /**
+         * SDK에서 에러가 발생했을 때 콜백
+         * @param err 에러 코드
+         */
+        override fun onError(err: Int) {
+            Timber.e("AgoraVoiceManager: Agora SDK 에러 발생: $err")
+            // 코루틴 스코프 내에서 에러 이벤트 발행
+            coroutineScope.launch {
+                _agoraEvents.emit(AgoraEvent.CallError(err, "Agora SDK Error: $err"))
+            }
+        }
+
+        /**
+         * 채널에서 나갔을 때 콜백: 로컬 사용자(발신자)가 채널에서 성공적으로 나갔을 때 호출됩니다.
+         * @param stats 채널 통계 정보
+         */
+        override fun onLeaveChannel(stats: RtcStats?) {
+            Timber.d("AgoraVoiceManager: 채널에서 나감")
+            coroutineScope.launch {
+                _agoraEvents.emit(AgoraEvent.CallerLeftChannel)
+            }
         }
     }
 
     init {
-        // Rtc 엔진을 초기화하는 시점에 주목하자
-        // 문서엔 activity에서 시작점에 하지만
-        // 우리는 힐트로 주입받아 처음 이 싱글톤 객체를 사용할때 한다.
-        // 그 이후 재사용할때 init은 돌아가지 않아 rtcEngine도 생성되지 않는다
-        // 공식문서에서 앱에선 한개의 엔진만 사용하고 여러개 사용할 경우 문제가 발생한다고 한다.
-
         // RtcEngine 인스턴스를 생성합니다.
         // 이 메서드는 앱 생명주기 동안 한 번만 호출하는 것이 권장됩니다.
         // eventHandler는 config와 함께 create 메서드의 인자로 전달됩니다.
-        rtcEngine = RtcEngine.create(context,appId, eventHandler) // eventHandler를 create 메서드의 두 번째 인자로 전달
+        try {
+            val config = RtcEngineConfig().apply {
+                mContext = context
+                mAppId = appId
+                mEventHandler = eventHandler
+            }
+            rtcEngine = RtcEngine.create(config)
+            Timber.d("AgoraVoiceManager: RtcEngine 초기화 성공")
+        } catch (e: Exception) {
+            Timber.e(e, "AgoraVoiceManager: RtcEngine 초기화 실패")
+            // 초기화 실패 시에도 에러 이벤트를 발행하여 상위 계층에 알릴 수 있습니다.
+            coroutineScope.launch {
+                _agoraEvents.emit(AgoraEvent.CallError(-999, "RtcEngine 초기화 실패: ${e.message}"))
+            }
+        }
     }
 
     /**
@@ -86,7 +150,7 @@ class AgoraVoiceManager(private val context: Context, private val appId: String)
         // rtcEngine이 null이 아닌 경우에만 joinChannel 호출
         // 수정된 joinChannel 메서드는 uid와 options를 추가 인자로 받습니다.
         rtcEngine?.joinChannel(token, channelName, uid, options)
-        Timber.d("채널 참여 시도: $channelName, uid: $uid")
+        Timber.d("AgoraVoiceManager: 채널 참여 시도: $channelName, uid: $uid")
     }
 
     /**
@@ -94,7 +158,7 @@ class AgoraVoiceManager(private val context: Context, private val appId: String)
      */
     fun leaveChannel() {
         rtcEngine?.leaveChannel()
-        Timber.d("채널에서 나감")
+        Timber.d("AgoraVoiceManager: 채널에서 나감 요청")
     }
 
     /**
@@ -106,6 +170,8 @@ class AgoraVoiceManager(private val context: Context, private val appId: String)
         // destroy()는 동기적으로 작동하며, 리소스 해제 후 다음 작업을 수행할 수 있습니다.
         RtcEngine.destroy()
         rtcEngine = null // 인스턴스 참조를 null로 설정하여 메모리 누수 방지
-        Timber.d("RtcEngine 리소스 해제")
+        Timber.d("AgoraVoiceManager: RtcEngine 리소스 해제")
+        // 이벤트를 더 이상 발행하지 않으므로 스코프를 취소할 필요는 없지만,
+        // 필요에 따라 coroutineScope.cancel()을 호출하여 내부 코루틴 작업을 중단할 수 있습니다.
     }
 }

@@ -1,10 +1,25 @@
 package com.likelion.data.home.repository
 
+import android.net.http.HttpException
+import android.os.Build
+import androidx.annotation.RequiresExtension
+import com.likelion.data.home.mapper.toDomainModel
+import com.likelion.domain.home.model.AgoraEvent
+import com.likelion.domain.home.model.CallInfoModel
 import com.likelion.domain.home.repository.CallRepository
 import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
 import com.likelion.remote.model.request.StartCallRequest
+import com.likelion.remote.model.response.CallInfoDto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import retrofit2.Response
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -13,38 +28,83 @@ class CallRepositoryImpl @Inject constructor(
     private val callApiService: CallApiService // 백엔드로부터 통화 정보(토큰, 채널명)를 가져오는 역할
 ) : CallRepository {
 
+    // 내부에서 이벤트를 발행하기 위한 MutableSharedFlow
+    private val _agoraEvents = MutableSharedFlow<AgoraEvent>()
+
+    // 인터페이스에서 노출하는 SharedFlow (읽기 전용)
+    override val agoraEvents: SharedFlow<AgoraEvent> = _agoraEvents.asSharedFlow()
+
+    // Repository 내부에서 코루틴을 관리할 스코프 (예: Application 스코프에 연결)
+    // 실제 앱에서는 DI를 통해 적절한 생명주기를 가진 CoroutineScope를 주입받는 것이 좋습니다.
+    // 여기서는 예시를 위해 SupervisorJob과 IO 디스패처를 사용합니다.
+    private val repositoryScope = CoroutineScope(SupervisorJob())
+
+    init {
+
+        // AgoraVoiceManager로부터 이벤트를 수집하여 _agoraEvents로 전달
+        repositoryScope.launch {
+            // agoraVoiceManager.agoraEvents.collect { event -> ... }
+            //  SharedFlow의 핵심적인 '수집(collect)' 또는 '구독(subscribe)' 연산입니다.
+            // 호출되면 SharedFlow가 종료되거나, 자신이 속한 코루틴이 취소될 때까지 계속해서 새로운 이벤트가 방출(emit)되기를 기다립니다.
+            agoraVoiceManager.agoraEvents.collect { event ->
+                _agoraEvents.emit(event)
+            }
+        }
+    }
+
     /**
      * 통화를 시작하고, 서버로부터 통화 정보를 받아 Agora 채널에 참여합니다.
      * 이 함수는 suspend 키워드가 붙어 있어 코루틴 내에서 비동기적으로 실행됩니다.
      */
-    override suspend fun startCall(callerId : Long, receiverId:Long): String {
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    override suspend fun startCall(callerId: Long, receiverId: Long): Result<CallInfoModel> {
         Timber.d("CallRepositoryImpl: 통화 시작 요청. CallApiService를 통해 서버 통화 정보 요청 중...")
 
-        // 실제 서버에 통화 시작 요청을 보내고 채널 정보를 받아옵니다.
-        // 여기서는 예시로 발신자/수신자 ID를 포함하는 요청을 보낸다고 가정합니다.
-        // TODO: 실제 사용자 ID를 여기에 입력하거나, 유스케이스/뷰모델을 통해 전달받아야 합니다.
         val request = StartCallRequest(callerId = callerId, receiverId = receiverId)
-        val callInfoDto = callApiService.requestCallSession(request)
 
-        val channelName = callInfoDto.channelName
-        val token = callInfoDto.token
-        val uid = callInfoDto.uid // 서버에서 할당된 UID 사용 (0이면 Agora가 자동 할당)
+        return try {
+            val response: Response<CallInfoDto> = callApiService.requestCallSession(request)
 
-        Timber.d("CallRepositoryImpl: 서버로부터 통화 정보 수신 완료. 채널명=$channelName, 토큰=$token, UID=$uid. Agora 채널 참여 시도...")
+            if (response.isSuccessful) {
+                val callInfoDto = response.body() ?: throw Exception("서버 응답 본문이 비어있습니다.")
 
-        // AgoraVoiceManager를 사용하여 실제 Agora 채널에 참여합니다.
-        agoraVoiceManager.joinChannel(token, channelName, uid)
-        return "통화 시작 요청 - 채널: $channelName, UID: $uid (서버 데이터 사용)"
+                // ⭐️ 매퍼를 사용하여 Remote 모델을 Domain 모델로 변환
+                val callInfoModel = callInfoDto.toDomainModel()
+
+                agoraVoiceManager.joinChannel(token = callInfoModel.token, channelName = callInfoModel.channelName)
+
+                Result.success(callInfoModel)
+            } else {
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = "서버 에러: ${response.code()} - ${errorBody ?: "내용 없음"}"
+                Timber.e(errorMessage)
+                // 통화 시작 실패 시 에러 이벤트 발행
+                _agoraEvents.emit(AgoraEvent.CallError(response.code(), errorMessage))
+                Result.failure(Exception(errorMessage))
+            }
+        } catch (e: HttpException) {
+            Timber.e(e, "HTTP 에러 발생: ${e.message}")
+            _agoraEvents.emit(AgoraEvent.CallError(-1, "HTTP 에러: ${e.message}"))
+            Result.failure(e)
+        } catch (e: IOException) {
+            Timber.e(e, "네트워크 연결 에러 발생")
+            _agoraEvents.emit(AgoraEvent.CallError(-2, "네트워크 에러: ${e.message}"))
+            Result.failure(e)
+        } catch (e: Exception) {
+            Timber.e(e, "알 수 없는 에러 발생")
+            _agoraEvents.emit(AgoraEvent.CallError(-3, "알 수 없는 에러: ${e.message}"))
+            Result.failure(e)
+        }
     }
-
 
     /**
      * 통화를 종료하고 Agora 리소스를 해제합니다.
      */
-    override suspend fun endCall() { // 인터페이스에 맞춰 suspend 키워드를 제거했습니다.
+    override suspend fun endCall() {
         // AgoraVoiceManager를 사용하여 채널에서 나갑니다.
         agoraVoiceManager.leaveChannel()
         agoraVoiceManager.destroy() // RtcEngine 리소스 해제
         Timber.d("CallRepositoryImpl: 통화 종료 및 Agora 리소스 해제 완료")
+        // 통화 종료 이벤트는 AgoraVoiceManager에서 'CallerLeftChannel' 등으로 발행될 것입니다.
     }
 }

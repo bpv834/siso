@@ -25,10 +25,10 @@ object RemoteModule {
         // 이 모듈은 Retrofit 인스턴스를 주입받아 실제 API 서비스를 만들지만,
         // 현재는 FakeCallApiService를 사용하기 위해 Retrofit 매개변수를 주석 처리합니다.
         // 실제 서버 통신 시에는 retrofit: Retrofit 매개변수를 활성화하세요.
-        // retrofit: Retrofit
+        retrofit: Retrofit
     ): CallApiService {
         // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
-        return FakeCallApiService() // 👈 현재는 가짜 구현체 반환
-        // return retrofit.create(CallApiService::class.java) // 실제 서버 통신 시 사용
+        // return FakeCallApiService() // 👈  가짜 구현체 반환
+         return retrofit.create(CallApiService::class.java) // 실제 서버 통신 시 사용
     }
 }
