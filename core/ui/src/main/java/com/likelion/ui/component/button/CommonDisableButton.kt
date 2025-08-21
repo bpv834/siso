@@ -1,9 +1,7 @@
 package com.likelion.ui.component.button
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -20,7 +18,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 fun CommonDisableButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier // ✨ 외부에서 modifier를 받도록 설정
+    modifier: Modifier = Modifier, // ✨ 외부에서 modifier를 받도록 설정
 ) {
     OutlinedButton(
         onClick = onClick,
