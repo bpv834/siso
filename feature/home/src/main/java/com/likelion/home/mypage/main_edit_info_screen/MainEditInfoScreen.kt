@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.R.attr.contentDescription
+import android.R.attr.onClick
 import android.R.attr.text
 import android.R.attr.theme
 import android.graphics.drawable.VectorDrawable
@@ -28,9 +29,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -56,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.ui.R
+import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
 import com.likelion.ui.theme.SisoColorTokens
@@ -593,6 +597,7 @@ fun EditInfoRepeatRadioButton(
 fun InfoEditScreenButton(
     titleText: String,
     selectText: String,
+    icon: ImageVector = ImageVector.vectorResource(com.likelion.home.R.drawable.chevron_down),
     click: () -> Unit = {}
 ) {
     Text(
@@ -603,40 +608,45 @@ fun InfoEditScreenButton(
         textAlign = TextAlign.Center
     )
     Spacer(Modifier.size(12.dp))
-    Row(
+    OutlinedButton(
+        onClick = {
+            click()
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = SisoColorTokens.GrayScale20,
+            contentColor = SisoColorTokens.GrayScale50
+        ),
+        border = null,
         modifier = Modifier
-            .height(52.dp)
             .fillMaxWidth()
-            .background(SisoColorTokens.GrayScale20, RoundedCornerShape(999.dp)),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
+            .height(54.dp),
     ) {
-        Spacer(Modifier.size(16.dp))
-        Box(
-            modifier = Modifier
-                .height(28.dp)
-                .fillMaxWidth(0.889F),
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Text(
-                modifier = Modifier.fillMaxHeight(),
-                text = selectText,
-                style = SisoTypoTokens.Body2,
-                color = SisoColorTokens.GrayScale50,
-                textAlign = TextAlign.Center
-            )
-        }
-        Spacer(Modifier.size(8.dp))
-        IconButton(
-            modifier = Modifier.size(24.dp),
-            onClick = {
-                click()
-            }) {
+            Spacer(Modifier.size(16.dp))
+            Box(
+                modifier = Modifier
+                    .height(28.dp)
+                    .fillMaxWidth(0.889F),
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxHeight(),
+                    text = selectText,
+                    style = SisoTypoTokens.Body2,
+                    color = SisoColorTokens.GrayScale50,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Spacer(Modifier.size(8.dp))
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.caret_right) ,
+                imageVector = icon ,
                 contentDescription = ""
             )
         }
     }
+
 }
 
 @OptIn(ExperimentalLayoutApi::class)
