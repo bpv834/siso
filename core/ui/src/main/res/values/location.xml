@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="상위위치">
+        <string name="서울">서울</string>
+        <string name="경기">경기</string>
+        <string name="인천">인천</string>
+        <string name="부산">부산</string>
+        <string name="경남">경남</string>
+        <string name="경북">경북</string>
+        <string name="대구">대구</string>
+        <string name="충남">충남</string>
+        <string name="대전">대전</string>
+        <string name="광주">광주</string>
+        <string name="울산">울산</string>
+        <string name="전남">전남</string>
+        <string name="전북">전북</string>
+        <string name="제주">제주</string>
+        <string name="강원">강원</string>
+        <string name="충주">충주</string>
+        <string name="세종">세종</string>
+    </array>
+
+    <array name="서울">
+        <string name="강남구">강남구</string>
+        <string name="강동구">강동구</string>
+        <string name="강북구">강북구</string>
+        <string name="강서구">강서구</string>
+        <string name="관악구">관악구</string>
+        <string name="광진구">광진구</string>
+        <string name="구로구">구로구</string>
+        <string name="금천구">금천구</string>
+        <string name="노원구">노원구</string>
+        <string name="도봉구">도봉구</string>
+        <string name="동대문구">동대문구</string>
+        <string name="동작구">동작구</string>
+        <string name="마포구">마포구</string>
+        <string name="서대문구">서대문구</string>
+        <string name="서초구">서초구</string>
+        <string name="성동구">성동구</string>
+        <string name="성북구">성북구</string>
+        <string name="송파구">송파구</string>
+        <string name="양천구">양천구</string>
+        <string name="영등포구">영등포구</string>
+        <string name="용산구">용산구</string>
+        <string name="은평구">은평구</string>
+        <string name="종로구">종로구</string>
+        <string name="중구">중구</string>
+        <string name="중랑구">중랑구</string>
+    </array>
+
+
+
+</resources>
