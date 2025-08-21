@@ -16,8 +16,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun CommonActiveButton(
     text: String,
+    modifier: Modifier = Modifier, // ✨ 외부에서 modifier를 받도록 설정
     onClick: () -> Unit,
-    modifier: Modifier = Modifier // ✨ 외부에서 modifier를 받도록 설정
 ) {
     OutlinedButton(
         onClick = onClick,
