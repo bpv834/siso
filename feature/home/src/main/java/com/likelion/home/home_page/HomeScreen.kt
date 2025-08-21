@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.likelion.domain.home.repository.FakeUsersRepository2Impl
+import com.likelion.domain.home.repository.FakeUsersRepositoryImpl
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.ui.component.card.UserCard
 import com.likelion.ui.component.full_screen.FullScreenImageDialog
@@ -85,7 +85,7 @@ fun HomeScreen(viewModel: HomeScreenViewModelType) {
 @Composable
 fun HomeScreenPreview() {
     SisoTheme {
-        val usecase = GetAllUsersUseCase(FakeUsersRepository2Impl())
+        val usecase = GetAllUsersUseCase(FakeUsersRepositoryImpl())
         HomeScreen(viewModel = FakeHomeScreenViewModel(usecase))
     }
 }

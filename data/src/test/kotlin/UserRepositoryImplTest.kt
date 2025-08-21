@@ -3,7 +3,7 @@ import com.likelion.data.home.api.test.FakeInterestApi
 import com.likelion.data.home.api.test.FakeProfileApi
 import com.likelion.data.home.api.test.FakeUserApi
 import com.likelion.data.home.api.test.FakeVoiceApi
-import com.likelion.data.home.repository.UserRepository2Impl2
+import com.likelion.data.home.repository.UserRepositoryImpl
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserRepositoryImplTest {
 
-    private lateinit var userRepository: UserRepository2Impl2
+    private lateinit var userRepository: UserRepositoryImpl
     private val testDispatcher = StandardTestDispatcher()
 
     private val fakeUserApi = FakeUserApi()
@@ -31,7 +31,7 @@ class UserRepositoryImplTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        userRepository = UserRepository2Impl2(
+        userRepository = UserRepositoryImpl(
             userApi = fakeUserApi,
             profileApi = fakeProfileApi,
             imagesApi = fakeImagesApi,

@@ -6,15 +6,16 @@ import com.likelion.data.home.api.test.FakeProfileApi
 import com.likelion.data.home.api.test.FakeUserApi
 import com.likelion.data.home.api.test.FakeVoiceApi
 import com.likelion.domain.home.model.UsersModel
-import com.likelion.domain.home.repository.UsersRepository2
+import com.likelion.domain.home.repository.UsersRepository
+import javax.inject.Inject
 
-class UserRepository2Impl2(
+class UserRepositoryImpl @Inject constructor(
     private val userApi: FakeUserApi,
     private val profileApi: FakeProfileApi,
     private val imagesApi: FakeImagesApi,
     private val voiceApi: FakeVoiceApi, // 🎤 음성 API 추가
     private val interestApi: FakeInterestApi // ❤️ 관심사 API 추가
-) : UsersRepository2 {
+) : UsersRepository {
 
     override suspend fun getAllUsers(): List<UsersModel> {
         val userEntities = userApi.getUsersEntity()

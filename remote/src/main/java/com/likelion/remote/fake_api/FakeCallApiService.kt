@@ -4,6 +4,7 @@ import com.likelion.remote.api.CallApiService
 import com.likelion.remote.model.request.StartCallRequest
 import com.likelion.remote.model.response.CallInfoDto
 import kotlinx.coroutines.delay
+import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -13,9 +14,9 @@ import javax.inject.Inject
  */
 class FakeCallApiService @Inject constructor() : CallApiService {
 
-    // 실제 API 호출 대신 가짜 데이터를 반환합니다.
+/*    // 실제 API 호출 대신 가짜 데이터를 반환합니다.
     // 실제 백엔드 서버와 연동되는 CallApiService의 구현체에서는 이 request: StartCallRequest 인자가 매우 중요하게 사용됩니다.
-    override suspend fun requestCallSession(request: StartCallRequest): CallInfoDto {
+    override suspend fun requestCallSession(request: StartCallRequest): Result<CallInfoModel> {
         Timber.Forest.d("FakeCallApiService: 가상 서버에 통화 정보 요청 중...")
         delay(1000L) // 실제 네트워크 지연을 시뮬레이션하기 위한 딜레이
 
@@ -31,11 +32,14 @@ class FakeCallApiService @Inject constructor() : CallApiService {
             token = fakeToken,
             uid = fakeUid
         )
-    }
+    }*/
 
     // 다른 API 메서드가 있다면 여기에 가짜 구현을 추가합니다.
     // override suspend fun getActiveChannels(): List<ChannelDto> {
     //     delay(500L)
     //     return emptyList()
     // }
+    override suspend fun requestCallSession(request: StartCallRequest): Response<CallInfoDto> {
+        TODO("Not yet implemented")
+    }
 }
