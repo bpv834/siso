@@ -50,14 +50,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.graphics.shapes.RoundedPolygon
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import coil3.size.Size
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
@@ -72,6 +78,19 @@ import kotlin.collections.listOf
 fun MainEditInfoScreen(
     viewModel: MainEditInfoScreenViewModelType
 ) {
+    // LocalConfiguration을 사용하여 현재 구성 정보를 가져옵니다.
+    val configuration = LocalConfiguration.current
+
+    // 화면의 너비와 높이를 Dp 단위로 가져옵니다.
+    val screenWidthDp = configuration.screenWidthDp.dp
+    val screenHeightDp = configuration.screenHeightDp.dp
+    val playButtonSize = 24.dp
+    val sliderVectorPadding = 7.75.dp
+    val playtimeSize = DpSize(48.5.dp,23.dp)
+    // 여러 같은 패딩 x 5 + slider 사이드 x 2 + 아이콘 + 재생시간 크기 를 모두 뺸 사이즈
+    val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize *2 + playtimeSize.width)
+
+    var playState by remember { mutableStateOf(false) }
 
     val myRadioButtons by viewModel.myRadioButtons.collectAsState()
     val pairRadioButtons by viewModel.pairRadioButtons.collectAsState()
@@ -86,6 +105,10 @@ fun MainEditInfoScreen(
     val heightTextRange = ageTextRange
     var weightText by remember { mutableStateOf("") }
     val weightTextRange = ageTextRange
+    val sliderVectorList = listOf(
+        12, 18, 12, 8, 12, 12, 18, 12, 6
+    )
+
 
     val interestList = listOf(
         "나의 관심사" to {},
@@ -217,18 +240,83 @@ fun MainEditInfoScreen(
             color = SisoColorTokens.GrayScale50,
             textAlign = TextAlign.Center
         )
+        Spacer(Modifier.size(24.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ){
+            // 음성 재생 바
             Box(
                 modifier = Modifier
                     .height(44.dp)
                     .fillMaxWidth(0.889F)
                     .clip(RoundedCornerShape(999.dp))
-                    .drawWithContent {
-                        drawRect(SisoColorTokens.GrayScale60)
-                    }
+                    .background(SisoColorTokens.GrayScale60),
             ) {
+                //음성 재생 아이콘 구현
+                Row(
+                    modifier = Modifier.padding(start = 16.dp,top= 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    //이미지 로드
+                    IconButton(
+                        modifier = Modifier.size(playButtonSize),
+                        onClick = {
+                            playState = !playState
+                            // 재생 / 정지
+                            if(!playState){
+                                // 재생하기
+
+                            }else {
+                                // 중지하기
+                            }
+                        }
+                    ){
+                        Icon(
+                            tint = SisoColorTokens.GrayScale10,
+                            imageVector = ImageVector.vectorResource(
+                                if (!playState)R.drawable.play
+                                else R.drawable.pause
+                            ),
+                            contentDescription = ""
+                        )
+                    }
+
+                    // 박스 크기만큼 뺀 패딩 9 - 1.25
+                    Spacer(Modifier.size(sliderVectorPadding))
+                    // 슬라이더 대체 이미지
+                    var temp = sliderSizing
+                    while (temp > 2.5.dp) {
+                        sliderVectorList.forEachIndexed { idx, height ->
+                            temp -= 2.5.dp
+                            if (temp > 2.5.dp)
+                                Box(
+                                    Modifier.size(width = 2.5.dp, height = height.dp)
+                                        .clip(RoundedCornerShape(999.dp))
+                                        .drawWithContent {
+                                            drawRect(SisoColorTokens.White)
+                                        })
+                            else
+                                return@forEachIndexed
+                            temp -= 3.5.dp
+                            if (temp > 3.5.dp)
+                                Spacer(Modifier.size(3.5.dp))
+                            else
+                                return@forEachIndexed
+
+                        }
+                    }
+                    // 박스 크기만큼 뺀 패딩 9 - 1.25
+                    Spacer(Modifier.size(sliderVectorPadding))
+                    Text(
+                        modifier = Modifier.size(playtimeSize),
+                        text = "00:15",
+                        style = SisoTypoTokens.Label1,
+                        color = SisoColorTokens.GrayScale10,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(Modifier.size(16.dp))
+
+                }
             }
             Spacer(Modifier.size(16.dp))
             Icon(
