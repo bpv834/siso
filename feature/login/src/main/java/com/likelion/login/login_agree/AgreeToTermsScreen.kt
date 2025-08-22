@@ -111,8 +111,6 @@ fun AgreeToTermsScreen(
 
             Spacer(modifier = Modifier.size(size = 286.dp))
 
-            Spacer(Modifier.padding(150.dp))
-
         }
         Column(
             modifier = Modifier.align(Alignment.BottomCenter)
