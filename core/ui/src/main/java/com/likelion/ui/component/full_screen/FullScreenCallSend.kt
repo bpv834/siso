@@ -41,14 +41,14 @@ fun FullScreenCallSend(
                     onClickBackButton()
                 }
         )
-        Spacer(Modifier.size(34.dp))
+        Spacer(Modifier.size(60.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             Text(text = " \uD83E\uDD1D 전화 시작 전 약속", style = SisoTypoTokens.Title2)
         }
-        Spacer(Modifier.size(34.dp))
+        Spacer(Modifier.size(64.dp))
         Column(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
@@ -100,7 +100,7 @@ fun FullScreenCallSend(
                             "예의를 지켜주세요.", style = SisoTypoTokens.Body2
                 )
             }
-            Spacer(Modifier.size(173.dp))
+            Spacer(Modifier.size(165.dp))
             CommonActiveButton(text = "확인했어요", onClick = {
                 onClickConfirm()
             })
