@@ -32,7 +32,7 @@ class HomeScreenViewModel @Inject constructor(
     val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
     init {
         getUserList()
-        Timber.d("_users : ${_userList.value}")
+       // Timber.d("_users : ${_userList.value}")
 
         // 홈 화면에 특화된 통화 이벤트 구독 (발신자 관점)
         // ViewModel의 생명주기에 맞춰 코루틴을 실행합니다.

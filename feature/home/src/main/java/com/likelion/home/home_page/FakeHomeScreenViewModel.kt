@@ -44,4 +44,8 @@ class FakeHomeScreenViewModel(val getAllUsersUseCase: GetAllUsersUseCase) : Home
         TODO("Not yet implemented")
     }
 
+    override fun resetCallState() {
+        TODO("Not yet implemented")
+    }
+
 }
