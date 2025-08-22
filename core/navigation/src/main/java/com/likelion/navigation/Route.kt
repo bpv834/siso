@@ -8,7 +8,9 @@ sealed class NavigationRoute(val route: String) {
     object ChatScreen : NavigationRoute("chat") {
         object AlarmScreen : NavigationRoute("chat/alarm")
     }
-    object MyPageScreen : NavigationRoute("myPage")
+    object MyPageScreen : NavigationRoute("myPage"){
+        object MainEditScreen : NavigationRoute("myPage/main_edit")
+    }
     /*
     * object 보여줄화면: NavigationRoute("보여줄화면")
     *
