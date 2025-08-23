@@ -92,7 +92,7 @@ fun FifthLoginInfoScreen(
         Text(
             text = "내 목소리를 들려주세요",
             style = SisoTypoTokens.Title2,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.Gray90
         )
         Spacer(Modifier.size(8.dp))
         Text(
@@ -100,7 +100,7 @@ fun FifthLoginInfoScreen(
                     "당신을 더 잘 이해할 수 있도록 \n" +
                     "15초 이내의 간단한 인삿말을 담아보세요.",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Column(
             modifier = Modifier
@@ -121,7 +121,7 @@ fun FifthLoginInfoScreen(
                     Text(
                         text = "00:00",
                         style = SisoTypoTokens.Body1,
-                        color = SisoColorTokens.GrayScale90
+                        color = SisoColorTokens.Gray90
                     )
                     Spacer(Modifier.size(74.dp))
                     AudioRecordingButton {
@@ -131,7 +131,7 @@ fun FifthLoginInfoScreen(
                     Text(
                         text = "건너뛰기",
                         style = SisoTypoTokens.Button2,
-                        color = SisoColorTokens.GrayScale50,
+                        color = SisoColorTokens.Gray50,
                         modifier = Modifier.clickable {
                             onNavigateNext()
                         }
@@ -176,7 +176,7 @@ fun FifthLoginInfoScreen(
                         Text(
                             text = "00:${minuteState.toString().padStart(2, '0')}",
                             style = SisoTypoTokens.Body1,
-                            color = SisoColorTokens.GrayScale90
+                            color = SisoColorTokens.Gray90
                         )
                         Spacer(Modifier.size(74.dp))
                         CommonDisableButton(text = "완료하기", onClick = {
@@ -209,7 +209,7 @@ fun FifthLoginInfoScreen(
                         Text(
                             text = "00:${minuteState.toString().padStart(2, '0')}",
                             style = SisoTypoTokens.Body1,
-                            color = SisoColorTokens.GrayScale90
+                            color = SisoColorTokens.Gray90
                         )
                     }
 

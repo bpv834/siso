@@ -10,7 +10,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.likelion.home.navigation.navigateToChat
-import com.likelion.home.navigation.navigateToFind
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.navigation.NavigationRoute
@@ -44,7 +43,6 @@ class SisoAppState(
             }
         when (bottomNavigationDestination) {
             BottomNavigationDestination.Home -> navController.navigateToHome(bottomNavigationOption)
-            BottomNavigationDestination.Find -> navController.navigateToFind(bottomNavigationOption)
             BottomNavigationDestination.Chat -> navController.navigateToChat(bottomNavigationOption)
             BottomNavigationDestination.MyPage -> navController.navigateToMyPage(bottomNavigationOption)
         }
@@ -55,10 +53,10 @@ class SisoAppState(
         return when (currentDestination?.route) {
             NavigationRoute.HomeScreen.route -> true
             NavigationRoute.ChatScreen.route -> true
-            NavigationRoute.FindScreen.route -> true
             NavigationRoute.MyPageScreen.route -> true
             NavigationRoute.LoginScreen.route -> false
             NavigationRoute.InputScreen.route -> false
+            NavigationRoute.ChatScreen.AlarmScreen.route -> false
             else -> false
         }
     }

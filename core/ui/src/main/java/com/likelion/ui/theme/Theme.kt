@@ -9,8 +9,8 @@ fun SisoTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = lightColorScheme(
             primary = SisoColorTokens.PrimaryColor,
-            background = SisoColorTokens.White,
-            surface = SisoColorTokens.White
+            background = SisoColorTokens.Gray5,
+            surface = SisoColorTokens.Gray5
         ),
     ) {
         content()

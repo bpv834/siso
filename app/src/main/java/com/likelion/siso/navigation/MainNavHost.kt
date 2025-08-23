@@ -5,11 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.likelion.home.navigation.chatNavigation
-import com.likelion.home.navigation.findNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
-import com.likelion.home.navigation.navigateToFind
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.login.navigation.inputNavigation
@@ -23,8 +21,7 @@ import com.likelion.navigation.NavigationRoute
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
-    //startDestination: String = NavigationRoute.OnBoardingScreen.route
-    startDestination: String = NavigationRoute.LoginScreen.route
+    startDestination: String = NavigationRoute.HomeScreen.route
 ) {
     NavHost(
         modifier = modifier,
@@ -59,10 +56,18 @@ fun MainNavHost(
         homeNavigation {
             appState.navController.navigateToHome()
         }
-        findNavigation {
-            appState.navController.navigateToFind()
-        }
-        chatNavigation {
+        chatNavigation(
+            navController = appState.navController,
+            onNavigateUp = {
+                // 루트 NavController에서 popBackStack 시도.
+                // 더 이상 pop할 수 없으면 Chat 탭으로 안전 복귀.
+                if (!appState.navController.popBackStack()) {
+                    appState.navController.navigateToChat(
+                        navOptions { launchSingleTop = true }
+                    )
+                }
+            }
+        ) {
             appState.navController.navigateToChat()
         }
         myPageNavigation {

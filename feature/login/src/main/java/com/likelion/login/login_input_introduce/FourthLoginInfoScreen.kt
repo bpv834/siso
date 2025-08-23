@@ -59,7 +59,7 @@ fun FourthLoginInfoScreen(
             contentDescription = ""
         )
         Spacer(Modifier.size(24.dp))
-        Text(text = "간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90)
+        Text(text = "간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.Gray90)
         Spacer(Modifier.size(8.dp))
         Text(
             text = "여러분의 진솔한 생각과 경험을 담아, 상대방이 \n" +
@@ -67,7 +67,7 @@ fun FourthLoginInfoScreen(
                     "5자 이상, 50자 이하로 작성해 주세요.\n" +
                     "정보는 나중에 수정할 수 있어요",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Spacer(Modifier.size(24.dp))
         // 여기에 EditText(텍스트 필드) 추가
@@ -89,7 +89,7 @@ fun FourthLoginInfoScreen(
             Text(
                 text = "${bioText.length}/50",
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
         }
         Spacer(Modifier.size(112.dp))
@@ -107,7 +107,7 @@ fun FourthLoginInfoScreen(
             CommonTextButton(
                 text = "건너뛰기",
                 style = SisoTypoTokens.Button2,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 onClick = { onNavigateNext() }
             )
 

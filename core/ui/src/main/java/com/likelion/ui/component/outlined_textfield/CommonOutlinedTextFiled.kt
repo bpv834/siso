@@ -1,7 +1,5 @@
 package com.likelion.ui.component.outlined_textfield
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -27,8 +25,8 @@ fun CommonOutlinedTextFiled(
         value = value,
         colors = OutlinedTextFieldDefaults.colors(
             // SisoColorTokens에 있는 원하는 색상을 사용하거나, 직접 Color를 지정합니다.
-            unfocusedContainerColor = SisoColorTokens.GrayScale20, // 포커스 없을 때 배경색
-            focusedContainerColor = SisoColorTokens.GrayScale20,   // 포커스 있을 때 배경색
+            unfocusedContainerColor = SisoColorTokens.Gray20, // 포커스 없을 때 배경색
+            focusedContainerColor = SisoColorTokens.Gray20,   // 포커스 있을 때 배경색
 
             // ✨ 테두리 색상을 투명하게 설정하여 없애기
             focusedBorderColor = Color.Transparent,
@@ -39,7 +37,7 @@ fun CommonOutlinedTextFiled(
             Text(
                 text = placeholderText,
                 style = SisoTypoTokens.Label1, // placeholder 텍스트 스타일
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
         },
         modifier = modifier,

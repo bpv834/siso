@@ -67,13 +67,13 @@ fun FirstEditInfoScreen(
         Text(
             text = "기본정보를 제공해주세요",
             style = SisoTypoTokens.Title1,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.Gray90
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
             text = "닉네임",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -106,7 +106,7 @@ fun FirstEditInfoScreen(
                     container = {
 
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.GrayScale20)
+                            drawRect(SisoColorTokens.Gray20)
                         })
 
                     },
@@ -114,7 +114,7 @@ fun FirstEditInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
                     }
@@ -128,7 +128,7 @@ fun FirstEditInfoScreen(
         Text(
             text = "나이",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -160,14 +160,14 @@ fun FirstEditInfoScreen(
                     interactionSource = MutableInteractionSource(),
                     container = {
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.GrayScale20)
+                            drawRect(SisoColorTokens.Gray20)
                         })
                     },
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
                     }
@@ -179,7 +179,7 @@ fun FirstEditInfoScreen(
         Text(
             text = "내 성별",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -190,13 +190,13 @@ fun FirstEditInfoScreen(
         Text(
             text = "매칭 성별",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 6.dp))
         Text(
             text = "동성선택시 동성친구 이성선택시 이성친구를\n추천해 드려요.",
             style = SisoTypoTokens.Label1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -212,7 +212,7 @@ fun FirstEditInfoScreen(
                 .height(65.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SisoColorTokens.Orange30,
-                disabledContainerColor = SisoColorTokens.GrayScale50
+                disabledContainerColor = SisoColorTokens.Gray50
             ),
             onClick = {
                 viewModel.fistContinueBooleanUpdate(true)
@@ -222,8 +222,8 @@ fun FirstEditInfoScreen(
             Text(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
-                color = if (viewModel.fistContinueBoolean == true) SisoColorTokens.GrayScale90
-                else SisoColorTokens.GrayScale50,
+                color = if (viewModel.fistContinueBoolean == true) SisoColorTokens.Gray90
+                else SisoColorTokens.Gray50,
                 fontSize = 22.sp
             )
         }
@@ -258,8 +258,8 @@ fun RepeatRadioButton(radios: MutableList<Pair<String, Boolean>>) {
             RadioButton(
                 selected = info.second,
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = SisoColorTokens.GrayScale90,
-                    unselectedColor = SisoColorTokens.GrayScale30
+                    selectedColor = SisoColorTokens.Gray90,
+                    unselectedColor = SisoColorTokens.Gray30
                 ),
                 onClick = {
                     radios.replaceAll {
