@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,8 +23,8 @@ fun CommonChip(
 ) {
     // 선택 상태에 따라 배경색, 텍스트색, 테두리색을 동적으로 결정
     val backgroundColor =
-        if (isSelected) SisoColorTokens.Gold40 else SisoColorTokens.GrayScale20
-    val textColor = SisoColorTokens.GrayScale90
+        if (isSelected) SisoColorTokens.Gold40 else SisoColorTokens.Gray20
+    val textColor = SisoColorTokens.Gray90
 
 
     Surface(

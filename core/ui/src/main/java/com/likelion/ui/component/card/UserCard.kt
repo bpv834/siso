@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -127,7 +126,7 @@ fun UserCard(
                 Text(
                     text = "위치 : ${user.location}",
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale10
+                    color = SisoColorTokens.Gray10
                 )
             }
             Spacer(Modifier.size(12.dp))
@@ -152,7 +151,7 @@ fun UserCard(
             Text(
                 text = user.interests.joinToString(separator = " #", prefix = "#"),
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale5
+                color = SisoColorTokens.Gray5
             )
             Spacer(Modifier.size(12.dp))
             // 자기소개

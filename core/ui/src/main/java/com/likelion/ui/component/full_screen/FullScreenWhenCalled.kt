@@ -1,12 +1,9 @@
 package com.likelion.ui.component.full_screen
 
-import android.R
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.likelion.domain.model.UsersModel
-import com.likelion.domain.usecase.GetUserByIdUseCase
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
@@ -37,14 +33,14 @@ fun FullScreenWhenCalled(user: UsersModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
-            .background(SisoColorTokens.GrayScale5),
+            .background(SisoColorTokens.Gray5),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.size(99.dp))
         Text(
             text = "${user.nickname}님으로부터\n전화가 걸려왔어요",
             style = SisoTypoTokens.Title2,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.Gray90
         )
         Spacer(Modifier.size(24.dp))
         AsyncImage(
@@ -60,13 +56,13 @@ fun FullScreenWhenCalled(user: UsersModel) {
             Text(
                 text = user.nickname,
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(16.dp))
             Text(
                 text = "${user.age}세",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
         }
         Spacer(Modifier.size(8.dp))
@@ -80,20 +76,20 @@ fun FullScreenWhenCalled(user: UsersModel) {
             Text(
                 text = user.location,
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
         }
         Spacer(Modifier.size(8.dp))
         Text(
             "${user.interests.joinToString(prefix = "#", separator = "# ")}",
             style = SisoTypoTokens.Label1,
-            color = SisoColorTokens.GrayScale70
+            color = SisoColorTokens.Gray70
         )
         Spacer(Modifier.size(36.dp))
         Text(
             text = user.introduce,
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
             modifier = Modifier.height(80.dp),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis

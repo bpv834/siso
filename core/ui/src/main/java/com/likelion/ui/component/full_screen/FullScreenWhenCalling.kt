@@ -109,12 +109,12 @@ fun FullScreenWhenCalling(
         Row {
             Text(
                 text = user.nickname,
-                style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90
+                style = SisoTypoTokens.Title2, color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(8.dp))
             Text(
                 text = "${user.age}세",
-                style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale50
+                style = SisoTypoTokens.Title2, color = SisoColorTokens.Gray50
             )
 
         }
@@ -131,7 +131,7 @@ fun FullScreenWhenCalling(
             Text(
                 text = user.location,
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
         }
         Spacer(Modifier.size(8.dp))
@@ -139,14 +139,14 @@ fun FullScreenWhenCalling(
         Text(
             text = user.interests.joinToString(separator = " #", prefix = "#"),
             style = SisoTypoTokens.Label1,
-            color = SisoColorTokens.GrayScale70
+            color = SisoColorTokens.Gray70
         )
         Spacer(Modifier.size(8.dp))
         // 자기소개
         Text(
             text = user.introduce,
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.height(90.dp)
@@ -287,7 +287,7 @@ fun BottomSheetAfterCall(
             Text(
                 text = "신고하기",
                 style = SisoTypoTokens.Button1,
-                color = SisoColorTokens.GrayScale90,
+                color = SisoColorTokens.Gray90,
                 modifier = Modifier.clickable {
                     onClickReport(user)
                 })
