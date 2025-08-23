@@ -21,7 +21,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 fun CommonActiveButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier // ✨ 외부에서 modifier를 받도록 설정
+    modifier: Modifier? = Modifier // ✨ 외부에서 modifier를 받도록 설정
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -30,7 +30,9 @@ fun CommonActiveButton(
             contentColor = SisoColorTokens.GrayScale90
         ),
         border = null,
-        modifier = modifier.fillMaxWidth().height(54.dp)
+        modifier = modifier ?: Modifier
+            .fillMaxWidth()
+            .height(54.dp)
     ) {
         Text(
             text = text,
@@ -39,6 +41,7 @@ fun CommonActiveButton(
         )
     }
 }
+
 // 프리뷰
 @Preview(showBackground = true)
 @Composable
