@@ -11,10 +11,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,30 +31,34 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun FullScreenCallingTry(user: UsersModel, onClickButtonCallEnd: () -> Unit) {
+fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { 3 }
     )
 
     Column(
-        modifier = Modifier.fillMaxSize(), // ✅ The column now fills the card
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.size(203.dp))
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+
+        ) {
+        Spacer(Modifier.size(160.dp))
         Text(
-            text = "${user.nickname} 님과\n연결중이에요",
+            text = "${otherUser.nickname} 님과\n연결중이에요",
             style = SisoTypoTokens.Title2,
             color = SisoColorTokens.GrayScale90
         )
-        Spacer(Modifier.size(65.dp))
+        Spacer(Modifier.size(22.dp))
         AsyncImage(
-            model = R.drawable.img_calling_wave, contentDescription = "",
+            model = otherUser.userImages[0], contentDescription = "",
             modifier = Modifier
-                .width(174.dp)
-                .height(60.dp)
+                .clip(CircleShape)
+                .size(160.dp),
+            contentScale = ContentScale.Crop,
         )
-        Spacer(Modifier.size(56.dp))
+        Spacer(Modifier.size(32.dp))
 
         HorizontalPager(
             state = pagerState,
@@ -133,11 +142,13 @@ fun FullScreenCallingTry(user: UsersModel, onClickButtonCallEnd: () -> Unit) {
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.ic_call_end,
                     contentDescription = "",
-                    modifier = Modifier.size(40.dp).clickable{onClickButtonCallEnd()}
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable { onClickButtonCallEnd() }
                 )
             },
             text = "전화끊기",
-            onClick = {},
+            onClick = { onClickButtonCallEnd() },
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
@@ -155,7 +166,6 @@ fun FullScreenCallingTryPreview() {
         id = 4L,
         isOnline = true,
         userImages = listOf(
-            "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
             "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
         ),
         location = "America",
@@ -167,5 +177,5 @@ fun FullScreenCallingTryPreview() {
                 " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                 " 안녕하세요. 코딩을 좋아하는 개발자입니다."
     )
-    FullScreenCallingTry(fakeUser,{})
+    FullScreenCallingTry(fakeUser, {})
 }
