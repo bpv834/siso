@@ -11,12 +11,17 @@ import com.likelion.navigation.NavigationRoute
 fun NavController.navigateToHome(navOptions: NavOptions? = null) =
     navigate(NavigationRoute.HomeScreen.route, navOptions)
 
-fun NavGraphBuilder.homeNavigation(action: () -> Unit) {
+fun NavGraphBuilder.homeNavigation(
+    navController: NavController,
+    onNavigateToCaller: () -> Unit, // 통화 화면으로 이동하는 콜백
+    action: () -> Unit
+) {
     composable(
         route = NavigationRoute.HomeScreen.route
     ) {
         HomeRoute(
-            actionSnackbar = action
+            actionSnackbar = action,
+            onNavigateToCaller = onNavigateToCaller
         )
     }
 }

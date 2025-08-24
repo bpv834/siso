@@ -17,6 +17,8 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
+import com.lion.call.navigation.callerNavigation
+import com.lion.call.navigation.navigateToCallForCaller
 
 
 @Composable
@@ -56,7 +58,14 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToInput()
         }
-        homeNavigation {
+        homeNavigation (
+            navController = appState.navController,
+            onNavigateToCaller = {
+                appState.navController.navigateToCallForCaller(navOptions = navOptions {
+                    launchSingleTop = true
+                })
+            }
+        ){
             appState.navController.navigateToHome()
         }
         findNavigation {
@@ -68,6 +77,10 @@ fun MainNavHost(
         myPageNavigation {
             appState.navController.navigateToMyPage()
         }
+        callerNavigation {
+            appState.navController.navigateToCallForCaller()
+        }
+
 
         /*
         *
