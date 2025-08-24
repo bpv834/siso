@@ -68,6 +68,8 @@ dependencies {
     implementation(project(":platform:kakao-auth"))
     implementation(project(":core:util"))
     implementation(project(":core:network"))
+    implementation(project(":feature:call"))
+
 
 
 
