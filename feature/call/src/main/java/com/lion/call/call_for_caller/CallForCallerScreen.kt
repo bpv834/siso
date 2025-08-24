@@ -2,10 +2,14 @@ package com.lion.call.call_for_caller
 
 import android.view.View
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.likelion.ui.component.full_screen.FullScreenCallSend
+import com.likelion.ui.component.full_screen.FullScreenCallingTry
 
 
 @Composable
@@ -14,13 +18,27 @@ fun CallerRouter(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
 ) {
-   // HomeScreen(hiltViewModel<HomeScreenViewModel>())
-    CallForCallerScreen()
+
+    CallForCallerScreen(hiltViewModel<CallForCallerScreenViewModel>())
 }
 
 @Composable
-fun CallForCallerScreen (){
+fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType) {
+    // user, otherUser 받아야함
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Column {
-        Text("전화발신화면")
+        when (uiState.callProgressState) {
+            CallForCallerState.Idle -> FullScreenCallSend(
+                onClickConfirm = { viewModel.onClickCall(callerId = 0L, receiverId = 1L) },
+                onClickBackButton = { viewModel.onClickBackButton() }
+            )
+            CallForCallerState.Calling -> FullScreenCallingTry(
+                otherUser = uiState.otherUser!!,
+                onClickButtonCallEnd = {})
+
+            CallForCallerState.CallActive -> TODO()
+            is CallForCallerState.CallFailed -> TODO()
+        }
+
     }
 }
