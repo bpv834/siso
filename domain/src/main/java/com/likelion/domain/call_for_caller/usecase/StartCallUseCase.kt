@@ -1,7 +1,7 @@
-package com.likelion.domain.home.usecase
+package com.likelion.domain.call_for_caller.usecase
 
-import com.likelion.domain.home.model.CallInfoModel
-import com.likelion.domain.home.repository.CallRepository
+import com.likelion.domain.call_for_caller.model.CallInfoModel
+import com.likelion.domain.call_for_caller.repository.CallRepository
 import javax.inject.Inject
 
 class StartCallUseCase @Inject constructor(

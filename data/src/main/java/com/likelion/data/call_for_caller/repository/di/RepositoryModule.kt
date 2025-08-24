@@ -1,6 +1,8 @@
-package com.likelion.data.home.repository.di
+package com.likelion.data.call_for_caller.repository.di
 
+import com.likelion.data.call_for_caller.repository.CallRepositoryImpl
 import com.likelion.data.home.repository.UserRepositoryImpl
+import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.domain.home.repository.UsersRepository
 import dagger.Binds
 import dagger.Module
@@ -11,12 +13,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-
     @Binds
     @Singleton
-    abstract fun bindUsersRepository(
-        userRepositoryImpl: UserRepositoryImpl
-    ): UsersRepository
+    abstract fun bindCallRepository(
+        callRepositoryImpl: CallRepositoryImpl
+    ): CallRepository
 
     // Note: FakeImagesApi, FakeInterestApi 등과 같은 외부 API들은 @Provides로 별도 제공되어야 합니다.
     // 이는 @Binds의 범위를 벗어납니다.

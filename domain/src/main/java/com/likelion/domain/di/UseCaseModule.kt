@@ -1,14 +1,14 @@
 package com.likelion.domain.di
 
-import com.likelion.domain.home.repository.CallRepository
+import com.likelion.domain.call_for_caller.repository.CallRepository
+import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
-import com.likelion.domain.home.usecase.ObserveCallEventsUseCase
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import dagger.Module
 
 @Module
 @InstallIn(SingletonComponent::class)

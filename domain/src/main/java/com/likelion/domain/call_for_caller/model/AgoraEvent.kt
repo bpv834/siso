@@ -1,4 +1,4 @@
-package com.likelion.domain.home.model
+package com.likelion.domain.call_for_caller.model
 
 /**
  * Agora SDK 이벤트를 나타내는 Sealed Class.
