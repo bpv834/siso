@@ -25,7 +25,9 @@ fun CommonButtonWithState(
     val contentColor = if (isActive) SisoColorTokens.GrayScale90 else SisoColorTokens.GrayScale50
 
     OutlinedButton(
-        onClick = onClick,
+        onClick = {
+            if (isActive) onClick()
+        },
         enabled = isActive, // isActive 상태에 따라 버튼 활성화/비활성화
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
@@ -33,10 +35,12 @@ fun CommonButtonWithState(
             disabledContainerColor = SisoColorTokens.GrayScale30, // 비활성화 상태 색상
             disabledContentColor = SisoColorTokens.GrayScale50 // 비활성화 상태 텍스트 색상
         ),
-        modifier = Modifier.fillMaxWidth().height(54.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(54.dp),
         border = null,
 
-    ) {
+        ) {
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
