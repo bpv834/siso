@@ -33,7 +33,7 @@ fun CircularCloseButton(
             // 원형으로 클리핑 (자르기)
             .clip(CircleShape)
             // 배경색을 #F0F0F0으로 지정
-            .background(SisoColorTokens.GrayScale10)
+            .background(SisoColorTokens.Gray10)
             // 클릭 가능하도록 설정
 
             .border(

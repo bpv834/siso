@@ -67,7 +67,7 @@ fun CallPopUpCard(caller: UsersModel) {
                 Text(
                     text = "${caller.nickname}님으로부터 전화가 걸려왔어요",
                     style = SisoTypoTokens.Title3,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
 
             }

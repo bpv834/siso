@@ -110,10 +110,10 @@ fun ThirdLoginInfoScreen(
         Text(
             text = "최소 1장 이상 선택해주세요\n정보는 나중에 수정할 수 있어요",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
-        Text(text = "대표사진", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.GrayScale55)
+        Text(text = "대표사진", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.Gray55)
         Spacer(modifier = Modifier.size(size = 9.dp))
         // 불러온 비트맵 보여주는 리스트
         PhotoLayoutWith1Main4Sub(
@@ -147,7 +147,7 @@ fun ThirdLoginInfoScreen(
                 CommonTextButton(
                     text = "건너뛰기",
                     style = SisoTypoTokens.Button2,
-                    color = SisoColorTokens.GrayScale50,
+                    color = SisoColorTokens.Gray50,
                     onClick = {}
                 )
             }
@@ -264,7 +264,7 @@ fun PhotoUploadBottomSheet(
         Text(
             text = "꼭 얼굴이 아니더라도 내가 관심있는 분야의\n사진을 올려줘도 좋아요",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Text(
             text = "예시) 반려동물, 꽃, 운동하는 사진, 등산 등",

@@ -25,7 +25,7 @@ fun CustomOutlinedButton(
     enableButtonColor: Color = SisoColorTokens.White,
     onclickButton: () -> Unit,
     isActive: Boolean,
-    horizontalContentPadding : Dp = 16.dp
+    horizontalContentPadding: Dp = 16.dp
 ) {
     // isActive 상태에 따라 버튼의 색상과 테두리 색상을 결정
     val borderColors = if (isActive) activeBorderColor else enableBorderColor
@@ -45,7 +45,7 @@ fun CustomOutlinedButton(
     ) {
         Text(
             text = text,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
             style = SisoTypoTokens.Button1,
         )
     }

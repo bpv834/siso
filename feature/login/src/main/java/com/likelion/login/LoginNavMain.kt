@@ -64,7 +64,7 @@ fun LoginMainScreen(
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = SisoColorTokens.White,
-                    titleContentColor = SisoColorTokens.GrayScale90
+                    titleContentColor = SisoColorTokens.Gray90
                 ),
                 title = {
                     Text(text = "내 정보 입력")

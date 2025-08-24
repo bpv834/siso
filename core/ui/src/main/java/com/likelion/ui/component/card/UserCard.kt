@@ -87,7 +87,7 @@ fun UserCard(
                     text = if (user.isOnline) "온라인" else "오프라인",
                     fontSize = 14.sp,
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
             }
             Spacer(Modifier.size(19.dp))
@@ -152,7 +152,7 @@ fun UserCard(
                 Text(
                     text = "위치 : ${user.location}",
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
             }
             Spacer(Modifier.size(12.dp))
@@ -160,7 +160,7 @@ fun UserCard(
 
             Text(
                 text = "${user.nickname}, ${user.age}세",
-                style = SisoTypoTokens.Title2, color = SisoColorTokens.GrayScale90
+                style = SisoTypoTokens.Title2, color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(12.dp))
             // 음성 버튼
@@ -178,14 +178,14 @@ fun UserCard(
             Text(
                 text = user.interests.joinToString(separator = " #", prefix = "#"),
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(12.dp))
             // 자기소개
             Text(
                 text = user.introduce,
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale90, modifier = Modifier.height(54.dp),
+                color = SisoColorTokens.Gray90, modifier = Modifier.height(54.dp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )

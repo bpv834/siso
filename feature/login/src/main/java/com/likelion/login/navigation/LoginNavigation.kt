@@ -19,7 +19,6 @@ fun NavGraphBuilder.loginNavigation(
     ) {
         LoginRoute(
             onLoggedIn = {
-                //navController.navigateToInput()
                 navController.navigate(NavigationRoute.InputScreen.route) {
                     popUpTo(NavigationRoute.LoginScreen.route) {
                         inclusive = true

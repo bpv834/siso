@@ -1,16 +1,11 @@
 package com.lion.mypage.setting_screen
 
-import android.R.attr.text
 import android.annotation.SuppressLint
-import android.util.Log.d
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,16 +14,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
-import java.lang.ProcessBuilder.Redirect.to
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -74,14 +65,14 @@ fun SettingText(
                 .padding(start = 16.dp),
             text = input,
             style = SisoTypoTokens.Body2,
-            color = if (input =="회원탈퇴") SisoColorTokens.GrayScale40
+            color = if (input =="회원탈퇴") SisoColorTokens.Gray40
             else SisoColorTokens.Black,
         )
         Spacer(modifier = Modifier.size(16.dp))
         if (input != "회원탈퇴") {
             HorizontalDivider(
                 thickness = 1.dp,
-                color = SisoColorTokens.GrayScale30
+                color = SisoColorTokens.Gray30
             )
         }
     }

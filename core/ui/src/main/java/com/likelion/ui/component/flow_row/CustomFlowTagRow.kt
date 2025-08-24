@@ -31,7 +31,7 @@ fun CustomFlowTagRow(
             Text(
                 text = "#$tag",
                 style = SisoTypoTokens.Button1,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(modifier = Modifier.size(spacing))
         }

@@ -55,19 +55,19 @@ fun LoginStartScreen(
                     modifier = Modifier.height( height = (textBoxSize/3).dp),
                     text = "시팅가입을 환영합니다",
                     style = introductionFontStyle,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
                 Text(
                     modifier = Modifier.height( height = (textBoxSize/3).dp),
                     text = "내 정보를 입력하면",
                     style = introductionFontStyle,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
                 Text(
                     modifier = Modifier.height( height = (textBoxSize/3).dp),
                     text = "좋은 인연을 만날 확률이 높아져요",
                     style = introductionFontStyle,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
 
             }
@@ -88,7 +88,7 @@ fun LoginStartScreen(
                     .height(54.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SisoColorTokens.Gold40,
-                    disabledContainerColor = SisoColorTokens.GrayScale50
+                    disabledContainerColor = SisoColorTokens.Gray50
                 ),
                 onClick = {
                     viewModel.fistContinueBooleanUpdate(true)
@@ -99,8 +99,8 @@ fun LoginStartScreen(
                 Text(
                     text = "계속하기",
                     style = SisoTypoTokens.Button1,
-                    color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.GrayScale90
-                    else SisoColorTokens.GrayScale50,
+                    color = if(viewModel.fistContinueBoolean == true)SisoColorTokens.Gray90
+                    else SisoColorTokens.Gray50,
                 )
             }
             Spacer(Modifier.size(size = 56.dp))

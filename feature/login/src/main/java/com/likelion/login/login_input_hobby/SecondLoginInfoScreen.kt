@@ -64,12 +64,12 @@ fun SecondLoginInfoScreen(
         Text(
             text = "최소 3개 이상 선택해주세요\n많이 고를수록 매칭 확률이 높아져요\n정보는 나중에 수정할 수 있어요",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
             text = "문화&예술", style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
         ChipRow(
@@ -79,7 +79,7 @@ fun SecondLoginInfoScreen(
             }, selectedInterests = selectedInterests
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
-        Text(text = "운동 & 야외활동", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.GrayScale50)
+        Text(text = "운동 & 야외활동", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.Gray50)
         Spacer(modifier = Modifier.size(size = 12.dp))
         ChipRow(
             chips = interests["운동 & 야외활동"]!!,
@@ -91,7 +91,7 @@ fun SecondLoginInfoScreen(
         Text(
             text = "여가 & 취미",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
         ChipRow(
@@ -110,7 +110,7 @@ fun SecondLoginInfoScreen(
             CommonTextButton(
                 text = "건너뛰기",
                 style = SisoTypoTokens.Button2,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 onClick = { onNavigateNext() })
         }
         Spacer(Modifier.size(39.dp))

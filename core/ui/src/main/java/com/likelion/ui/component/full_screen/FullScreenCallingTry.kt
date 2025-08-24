@@ -48,7 +48,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
         Text(
             text = "${otherUser.nickname} 님과\n연결중이에요",
             style = SisoTypoTokens.Title2,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.Gray90
         )
         Spacer(Modifier.size(22.dp))
         AsyncImage(
@@ -76,7 +76,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
                                     "시작해보세요.",
                             textAlign = TextAlign.Center,
                             style = SisoTypoTokens.Body4,
-                            color = SisoColorTokens.GrayScale70
+                            color = SisoColorTokens.Gray70
                         )
                         Spacer(Modifier.size(56.dp))
                         AsyncImage(
@@ -98,7 +98,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
                             text = "\n서로 다른 점보다는 공감할 수\n있는 이야기를 먼저 나눠요.",
                             textAlign = TextAlign.Center,
                             style = SisoTypoTokens.Body4,
-                            color = SisoColorTokens.GrayScale70
+                            color = SisoColorTokens.Gray70
                         )
                         Spacer(Modifier.size(69.dp))
                         AsyncImage(
@@ -122,7 +122,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
                                     "시작해보세요.",
                             textAlign = TextAlign.Center,
                             style = SisoTypoTokens.Body4,
-                            color = SisoColorTokens.GrayScale70
+                            color = SisoColorTokens.Gray70
                         )
                         Spacer(Modifier.size(56.dp))
                         AsyncImage(

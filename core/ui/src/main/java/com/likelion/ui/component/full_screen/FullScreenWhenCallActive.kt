@@ -78,14 +78,14 @@ fun FullScreenWhenCallActive(
                 Text(
                     text = otherUser.nickname,
                     style = SisoTypoTokens.Title2,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
                 Spacer(Modifier.size(4.dp))
                 // 나이 위치
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "${otherUser.age}세", style = SisoTypoTokens.Title3,
-                        color = SisoColorTokens.GrayScale70
+                        color = SisoColorTokens.Gray70
                     )
                     Spacer(Modifier.size(4.dp))
                     Icon(
@@ -97,7 +97,7 @@ fun FullScreenWhenCallActive(
                     Text(
                         text = otherUser.location,
                         style = SisoTypoTokens.SubTitle1,
-                        color = SisoColorTokens.GrayScale90
+                        color = SisoColorTokens.Gray90
                     )
                 }
             }
@@ -111,12 +111,12 @@ fun FullScreenWhenCallActive(
             Text(
                 text = "남은시간",
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale60
+                color = SisoColorTokens.Gray60
             )
             Text(
                 text = String.format("%02d:%02d", min, sec),
                 style = SisoTypoTokens.Title1,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(8.dp))
             CustomOutlinedButton(
@@ -182,7 +182,7 @@ fun FullScreenWhenCallActive(
                             .weight(1f)
                             .fillMaxSize(),
                         contentColor = SisoColorTokens.White,
-                        containerColor = SisoColorTokens.GrayScale50,
+                        containerColor = SisoColorTokens.Gray50,
                         icon = {
                             Icon(
                                 painter = painterResource(com.likelion.ui.R.drawable.ic_mute),

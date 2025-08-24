@@ -36,7 +36,7 @@ fun CustomOutlinedButtonWithCustomContentColor(
             containerColor = containerColor, // 인자로 받은 배경색 적용
             contentColor = contentColor // 인자로 받은 콘텐츠 색상 적용
         ),
-        border = BorderStroke(width = 1.dp, color = SisoColorTokens.GrayScale30)
+        border = BorderStroke(width = 1.dp, color = SisoColorTokens.Gray30)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,

@@ -1,9 +1,7 @@
 package com.likelion.ui.component.button
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -25,8 +23,8 @@ fun CommonDisableButton(
     OutlinedButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = SisoColorTokens.GrayScale30,
-            contentColor = SisoColorTokens.GrayScale50
+            containerColor = SisoColorTokens.Gray30,
+            contentColor = SisoColorTokens.Gray50
         ),
         border = null,
         modifier = modifier
@@ -36,7 +34,7 @@ fun CommonDisableButton(
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
-            color = SisoColorTokens.GrayScale50,
+            color = SisoColorTokens.Gray50,
         )
     }
 }
