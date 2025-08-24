@@ -1,7 +1,7 @@
 package com.likelion.domain.usecase
 
-import com.likelion.domain.model.UsersModel
-import com.likelion.domain.repository.UsersRepository2
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.home.repository.UsersRepository2
 
 class GetAllUsersUseCase(
     private val usersRepository2: UsersRepository2
