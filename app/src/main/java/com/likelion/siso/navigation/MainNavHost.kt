@@ -2,17 +2,14 @@ package com.likelion.siso.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Popup
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.likelion.data.mypage.mapper.LocationMapper
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
-import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
-import com.likelion.home.navigation.edit_Main.navigateToSettingMain
 import com.likelion.home.navigation.edit_Main.settingMainNavigation
 import com.likelion.home.navigation.findNavigation
 import com.likelion.home.navigation.homeNavigation
@@ -26,6 +23,7 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
+import com.likelion.ui.R
 
 
 @Composable
@@ -36,6 +34,7 @@ fun MainNavHost(
     //startDestination: String = NavigationRoute.LoginScreen.route
     startDestination: String = NavigationRoute.HomeScreen.route
 ) {
+    val context = LocalContext.current
     NavHost(
         modifier = modifier,
         navController = appState.navController,
@@ -81,13 +80,13 @@ fun MainNavHost(
         ) {
 
         }
-        val locationRepository = LocationRepositoryImpl(LocationMapper())
-        val topLocationUseCase = TopLocationUseCase(
-            locationRepository
-        )
-        val bottomLocationUseCase = BottomLocationUseCase(
-            locationRepository
-        )
+        val inputStream = context.resources.openRawResource(R.raw.korea_regions_ordered)
+        val jsonString = inputStream.bufferedReader().use { it.readText() }
+
+        val locationRepository = LocationRepositoryImpl()
+        locationRepository.setJson(jsonString)
+        val topLocationUseCase = TopLocationUseCase(locationRepository)
+        val bottomLocationUseCase = BottomLocationUseCase(locationRepository)
         editMainNavigation(
             navController = appState.navController,
             topLocationUseCase = topLocationUseCase,
