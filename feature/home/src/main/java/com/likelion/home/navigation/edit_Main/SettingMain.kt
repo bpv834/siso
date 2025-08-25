@@ -98,19 +98,19 @@ fun SettingMain (
 
                 SettingScreen(
                     action = listOf(
-                        // 계정 1
+                        // 계정 0
                         {  },
-                        // 알림 2
+                        // 알림 1
                         { navController.navigate(NavigationRoute.MyPageScreen.SettingScreen.CallEditScreen.route) },
-                        // 결제 내역 조회 3
+                        // 결제 내역 조회 2
                         { },
-                        // 개인정보 처리방침 4
+                        // 개인정보 처리방침 3
                         { },
-                        // 법적고지 5
+                        // 법적고지 4
                         { },
-                        // 로그아웃 6
+                        // 로그아웃 5
                         { },
-                        // 회원탈퇴 7
+                        // 회원탈퇴 6
                         { },
                     )
                 )
