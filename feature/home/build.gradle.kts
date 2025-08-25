@@ -64,5 +64,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // 로티 애니메이션
+    implementation(libs.lottie.compose)
+
+    implementation(libs.timber)
     testImplementation(libs.junit)
 }
