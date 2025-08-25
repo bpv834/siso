@@ -37,6 +37,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.likelion.domain.mypage.repository.FakeLocationMapper
+import com.likelion.domain.mypage.repository.FakeLocationRepositoryImpl
+import com.likelion.domain.mypage.repository.LocationRepository
+import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.TopLocationUseCase
 //import com.likelion.data.mypage.repository.LocationRepositoryImpl
 //import com.likelion.data.mypage.mapper.LocationMapper
 import com.likelion.ui.component.button.CommonActiveButton
@@ -283,12 +288,13 @@ fun LocationEditInfoScreenPreview(){
     SisoTheme {
         Scaffold {
             it
-//            val topUseCase = TopLocationUseCaseImpl(LocationRepositoryImpl())
-//            val bottomUseCase = BottomLocationUseCaseImpl(LocationRepositoryImpl())
-//            LocationEditInfoScreen(FakeLocationEditInfoScreenViewModel(
-//                topUseCase,
-//                bottomUseCase
-//            ))
+            val fakeLocationRepositoryImpl = FakeLocationRepositoryImpl(FakeLocationMapper())
+            val topUseCase = TopLocationUseCase(fakeLocationRepositoryImpl)
+            val bottomUseCase = BottomLocationUseCase(fakeLocationRepositoryImpl)
+            LocationEditInfoScreen(FakeLocationEditInfoScreenViewModel(
+                topUseCase,
+                bottomUseCase
+            ))
         }
     }
 }
