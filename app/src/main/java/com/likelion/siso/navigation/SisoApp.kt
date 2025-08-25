@@ -37,7 +37,7 @@ fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
                     .fillMaxSize()
                     .windowInsetsPadding(
                         WindowInsets.safeDrawing.only(
-                             WindowInsetsSides.Horizontal
+                            WindowInsetsSides.Horizontal
                         )
                     )
             ) {

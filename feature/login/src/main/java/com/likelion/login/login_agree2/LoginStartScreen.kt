@@ -73,7 +73,7 @@ fun LoginStartScreen(
             }
             Spacer(modifier = Modifier.size(size = 78.11.dp))
             AsyncImage(
-                model = R.drawable.start_lock,
+                model = R.drawable.img_start_lock,
                 contentDescription = ""
             )
             Spacer(Modifier.size(size = 59.1.dp))

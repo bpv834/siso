@@ -32,7 +32,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun AdditionalInfoAlcoholScreen(
-    viewModel: AdditionalInfoAlcoholScreenViewModelType
+    viewModel: AdditionalInfoAlcoholScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     var receiver by remember {
         mutableStateOf("")
@@ -99,7 +100,7 @@ fun AdditionalInfoAlcoholScreen(
                 if (receiver.isNotBlank()) {
                     d("receiver", receiver)
                 }
-
+                popBackStack()
             }
             Spacer(Modifier.size(72.dp))
         }

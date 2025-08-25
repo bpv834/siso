@@ -1,13 +1,11 @@
 package com.likelion.home.mypage.additional_info.additional_info_religion_screen
 
-import android.R.attr.text
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.likelion.home.mypage.location_edit_info_screen.LocationText
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
@@ -50,7 +47,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AdditionalInfoReligionScreen(
-    viewModel: AdditionalInfoReligionScreenViewModelType
+    viewModel: AdditionalInfoReligionScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     val receiverList = remember {
         mutableStateListOf<String>()
@@ -128,7 +126,8 @@ fun AdditionalInfoReligionScreen(
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-
+                //viewModel.updateReceiverList(receiverList)
+                popBackStack()
             }
             Spacer(Modifier.size(72.dp))
         }
@@ -175,7 +174,7 @@ fun AdditionalInfoReligionScreen(
                             modifier = Modifier
                                 .size(24.dp)
                                 .align(Alignment.CenterEnd),
-                            imageVector = ImageVector.vectorResource(R.drawable.bottom_close),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_bottom_close),
                             tint = SisoColorTokens.GrayScale90,
                             contentDescription = ""
                         )

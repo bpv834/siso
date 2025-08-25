@@ -34,7 +34,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun MatchingEditInfoScreen(
-    viewModel: MatchingEditInfoScreenViewModelType
+    viewModel: MatchingEditInfoScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     val matchingReceiverList = remember {
         mutableStateListOf<String>()
@@ -121,7 +122,7 @@ fun MatchingEditInfoScreen(
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-
+                popBackStack()
             }
             Spacer(Modifier.fillMaxWidth().height(72.dp))
 

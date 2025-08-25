@@ -45,7 +45,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun AdditionalInfoSmokingScreen(
-    viewModel: AdditionalInfoSmokingScreenViewModelType
+    viewModel: AdditionalInfoSmokingScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     var receiver by remember {
         mutableStateOf("")
@@ -114,7 +115,9 @@ fun AdditionalInfoSmokingScreen(
                 // 선택된 값을 보냄
                 if (receiver.isNotBlank()) {
                     d("receiver", receiver)
+
                 }
+                popBackStack()
             }
             Spacer(Modifier.size(72.dp))
         }

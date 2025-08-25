@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,20 +25,23 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun SettingScreen() {
+fun SettingScreen(
+    action : List<() -> Unit> = listOf()
+) {
     val settingOption = mutableStateListOf(
-        "계정" to {},
-        "알림" to {},
-        "문의하기" to {},
-        "결제 내역 조회" to {},
-        "개인정보 처리방침" to {},
-        "법적고지" to {},
-        "로그아웃" to {},
-        "회원탈퇴" to {},
+        "계정" to {if (action.isNotEmpty()) action[0]()},
+        "알림" to {if (action.isNotEmpty()) action[1]()},
+        "문의하기" to {if (action.isNotEmpty()) action[2]()},
+        "결제 내역 조회" to {if (action.isNotEmpty()) action[3]()},
+        "개인정보 처리방침" to {if (action.isNotEmpty()) action[4]()},
+        "법적고지" to {if (action.isNotEmpty()) action[5]()},
+        "로그아웃" to {if (action.isNotEmpty()) action[6]()},
+        "회원탈퇴" to {if (action.isNotEmpty()) action[7]()},
     )
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             .fillMaxHeight()
+            .verticalScroll(rememberScrollState())
 
     ) {
         Spacer(Modifier.size(24.dp))

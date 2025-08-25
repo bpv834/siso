@@ -131,7 +131,7 @@ fun FirstLoginInfoScreen(
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
-                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
                             tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
@@ -192,7 +192,7 @@ fun FirstLoginInfoScreen(
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
-                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
                             tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
