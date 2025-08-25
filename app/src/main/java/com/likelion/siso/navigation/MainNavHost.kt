@@ -58,10 +58,16 @@ fun MainNavHost(
         }
         homeNavigation (
             navController = appState.navController,
-            onNavigateToCaller = {
-                appState.navController.navigateToCallForCaller(navOptions = navOptions {
-                    launchSingleTop = true
-                })
+            // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
+            // navigateToCallForCaller 함수에 이 값들을 전달합니다.
+            onNavigateToCaller = { userId, otherUserId ->
+                appState.navController.navigateToCallForCaller(
+                    userId = userId,
+                    otherUserId = otherUserId,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
             }
         ){
             appState.navController.navigateToHome()
@@ -83,9 +89,19 @@ fun MainNavHost(
         myPageNavigation {
             appState.navController.navigateToMyPage()
         }
-        callerNavigation {
-            appState.navController.navigateToCallForCaller()
-        }
+        callerNavigation(
+            action = { }, // 예시로 스낵바 동작 추가
+            // onNavigateToCallForCaller 람다 정의
+            onNavigateToCallForCaller = { userId, otherUserId ->
+                appState.navController.navigateToCallForCaller(
+                    userId = userId,
+                    otherUserId = otherUserId,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            }
+        )
 
 
         /*

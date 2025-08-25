@@ -30,15 +30,22 @@ fun HomeRoute(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
-    onNavigateToCaller: () -> Unit // HomeRoute에 콜백 추가
+    // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 명시
+    onNavigateToCaller: (userId: String, otherUserId: String) -> Unit
 ) {
-    HomeScreen(hiltViewModel<HomeScreenViewModel>(), toCaller =  onNavigateToCaller )
+    // HomeScreen에 viewModel과 onNavigateToCaller 콜백을 그대로 전달
+    HomeScreen(
+        viewModel = hiltViewModel<HomeScreenViewModel>(),
+        toCaller = onNavigateToCaller
+    )
 }
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeScreenViewModelType, toCaller: () -> Unit) {
+fun HomeScreen(
+    viewModel: HomeScreenViewModelType,
+    toCaller: (userId: String, otherUserId: String) -> Unit
+) {
     val userList by viewModel.userList.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState(pageCount = { userList.size })
 
@@ -66,7 +73,7 @@ fun HomeScreen(viewModel: HomeScreenViewModelType, toCaller: () -> Unit) {
                 showImageDialog = true
             },
             onClickButtonCall = { receiverIdId -> viewModel.onClickCallButton(0L, receiverIdId) },
-            toCallScreen =  toCaller
+            toCallScreen = { userId: String, otherUserId: String -> toCaller(userId, otherUserId) }
         )
     }
 
@@ -88,7 +95,7 @@ fun HomeScreen(viewModel: HomeScreenViewModelType, toCaller: () -> Unit) {
 fun HomeScreenPreview() {
     SisoTheme {
         val usecase = GetAllUsersUseCase(FakeUsersRepositoryImpl())
-        HomeScreen(viewModel = FakeHomeScreenViewModel(usecase), {})
+        HomeScreen(viewModel = FakeHomeScreenViewModel(usecase),   toCaller = { userId, otherUserId -> })
     }
 }
 

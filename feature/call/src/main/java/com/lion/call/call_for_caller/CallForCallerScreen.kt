@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.likelion.ui.component.full_screen.FullScreenCallSend
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
+import timber.log.Timber
 
 
 @Composable
@@ -17,8 +18,11 @@ fun CallerRouter(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
+    userId: String,
+    otherUserId: String,
 ) {
 
+    Timber.d("userId${userId}/ otherUserId ${otherUserId}")
     CallForCallerScreen(hiltViewModel<CallForCallerScreenViewModel>())
 }
 
@@ -32,6 +36,7 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType) {
                 onClickConfirm = { viewModel.onClickCall(callerId = 0L, receiverId = 1L) },
                 onClickBackButton = { viewModel.onClickBackButton() }
             )
+
             CallForCallerState.Calling -> FullScreenCallingTry(
                 otherUser = uiState.otherUser!!,
                 onClickButtonCallEnd = {})
