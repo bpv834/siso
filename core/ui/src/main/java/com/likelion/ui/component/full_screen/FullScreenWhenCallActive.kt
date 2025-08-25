@@ -38,8 +38,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FullScreenWhenCallActive(
-    user: UsersModel,
-    otherUser: UsersModel,
+    user: com.likelion.domain.call_for_caller.model.UsersModel,
+    otherUser: com.likelion.domain.call_for_caller.model.UsersModel,
     callDuration: Int,
     onClickKeepGoing: (UsersModel) -> Unit,
     onClickCallEnd: () -> Unit,

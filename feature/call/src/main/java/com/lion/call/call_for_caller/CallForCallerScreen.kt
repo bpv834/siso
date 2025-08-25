@@ -8,8 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.likelion.ui.component.full_screen.FullScreenCallEnd
 import com.likelion.ui.component.full_screen.FullScreenCallSend
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
+import com.likelion.ui.component.full_screen.FullScreenWhenCallActive
 import timber.log.Timber
 
 
@@ -41,7 +43,19 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType) {
                 otherUser = uiState.otherUser!!,
                 onClickButtonCallEnd = {})
 
-            CallForCallerState.CallActive -> TODO()
+            CallForCallerState.CallActive -> FullScreenWhenCallActive(
+                user = DummyUser().fakeUser,
+                otherUser = DummyUser().fakeOtherUser,
+                callDuration = 30,
+                isMute = true,
+                onClickCallEnd ={},
+                isSpeaker = false,
+                onClickMute = {},
+                onClickSpeaker = {},
+                onClickKeepGoing = {}
+            )
+
+            CallForCallerState.CallEnd -> FullScreenCallEnd(otherUser = DummyUser().fakeOtherUser,)
             is CallForCallerState.CallFailed -> TODO()
         }
 
