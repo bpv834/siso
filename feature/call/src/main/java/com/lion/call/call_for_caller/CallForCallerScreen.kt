@@ -65,23 +65,27 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType,onNavigateUp
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태
             CallForCallerState.Calling -> FullScreenCallingTry(
-                otherUser = uiState.otherUser!!,
+                otherUser = DummyUser().fakeOtherUser,
                 onClickButtonCallEnd = { viewModel.onClickEndCall() } )
 
+            // 발신자 , 수신자 전부 입장한 상태
             CallForCallerState.CallActive -> FullScreenWhenCallActive(
                 user = DummyUser().fakeUser,
                 otherUser = DummyUser().fakeOtherUser,
-                callDuration = 30,
-                isMute = true,
+                callDuration = uiState.callDuration,
+                isMute = uiState.isMuted,
                 onClickCallEnd ={ viewModel.onClickEndCall() },
-                isSpeaker = false,
+                isSpeaker = uiState.isSpeakerOn,
                 onClickMute = {viewModel.toggleMute()},
                 onClickSpeaker = {viewModel.toggleSpeaker()},
                 // 인연이어가기 버튼 누르면 대화방으로 이동
-                onClickKeepGoing = {}
+                onClickKeepGoing = {},
+                startCallTimer = {viewModel.startCallTimer()},
             )
-            CallForCallerState.CallEnd -> FullScreenCallEnd(otherUser = DummyUser().fakeOtherUser,)
-
+            // 통화 종료 후 인연이어갈지 말지 선택하는 상태
+            CallForCallerState.CallEnd -> FullScreenCallEnd(otherUser = DummyUser().fakeOtherUser,
+                onClickBackButton = { viewModel.onClickBackButton() }
+                )
         }
 
     }
