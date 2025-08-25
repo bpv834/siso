@@ -7,6 +7,8 @@ import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
 import com.lion.call.call_for_caller.CallUiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +34,10 @@ class CallForCallerScreenViewModel @Inject constructor(
 
     private val _uiEvent = MutableSharedFlow<CallUiEvent>()
     override val uiEvent = _uiEvent.asSharedFlow()
+
+    // 시간 관련 일 객체
+    private var timerJob: Job? = null
+
 
     // 전화 버튼 누르는 메서드
     override fun onClickCall(callerId: Long, receiverId: Long) {
@@ -91,6 +97,40 @@ class CallForCallerScreenViewModel @Inject constructor(
       }
     }
 
+    // 타이머 Job 구현체 (private으로 내부에서만 관리)
+    private var _timerJob: Job? = null
+
+    // 통화 화면에서 시간 감소 메서드
+    override fun startCallTimer() {
+        // 이미 실행 중이 아니라면 새로운 Job을 시작합니다.
+        if (timerJob == null || timerJob?.isCancelled == true) {
+            timerJob = viewModelScope.launch {
+                while (_uiState.value.callDuration > 0) {
+                    delay(1000)
+                    _uiState.update { currentState ->
+                        currentState.copy(callDuration = currentState.callDuration - 1)
+                    }
+                }
+
+                // 시간이 0이 되면 상태를 종료로 변경하고 이벤트를 발행합니다.
+                _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) }
+                stopCallTimer() // 타이머 정리
+            }
+        }
+    }
+
+    // 타이머 중지 메서드
+    override fun stopCallTimer() {
+        _timerJob?.cancel()
+        _timerJob = null
+    }
+
+    // ViewModel이 파괴될 때 자동으로 타이머를 중지합니다.
+    override fun onCleared() {
+        super.onCleared()
+        stopCallTimer()
+    }
+
     init {
         // ViewModel의 생명주기에 맞춰 코루틴을 실행합니다.
         viewModelScope.launch {
@@ -108,9 +148,17 @@ class CallForCallerScreenViewModel @Inject constructor(
                     // 통화 중 에러가 발생했을 때
                     is AgoraEvent.CallError -> {
                         Timber.e("HomeScreenViewModel: CallError 이벤트 수신 - ${event.message}")
-                        _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
-                        _uiEvent.emit(NavigateUp) // UI 토스트 표시
+                      //  _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
+                       //  _uiEvent.emit(NavigateUp)
 
+                        //  연결중 상태로 테스트
+                      /*  _uiState.update { currentState ->
+                            currentState.copy(callProgressState = CallForCallerState.Calling) // 상태를 통화 시도로 변경
+                        }
+                        _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시*/
+
+                        _uiState.update { it.copy(callProgressState = CallForCallerState.CallActive) } // 상태를 활성 통화로 변경
+                        _uiEvent.emit(ShowToast("수신자가 통화에 참여했습니다.")) // UI 토스트 표시
                     }
 
                     // 발신자(Caller)가 채널에서 나갔을 때
