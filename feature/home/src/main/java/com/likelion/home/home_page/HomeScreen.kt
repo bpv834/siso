@@ -31,7 +31,7 @@ fun HomeRoute(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 명시
-    onNavigateToCaller: (userId: String, otherUserId: String) -> Unit
+    onNavigateToCaller: (userId: Long, otherUserId: Long) -> Unit
 ) {
     // HomeScreen에 viewModel과 onNavigateToCaller 콜백을 그대로 전달
     HomeScreen(
@@ -44,7 +44,7 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModelType,
-    toCaller: (userId: String, otherUserId: String) -> Unit
+    toCaller: (userId: Long, otherUserId: Long) -> Unit
 ) {
     val userList by viewModel.userList.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState(pageCount = { userList.size })
@@ -73,7 +73,7 @@ fun HomeScreen(
                 showImageDialog = true
             },
             onClickButtonCall = { receiverIdId -> viewModel.onClickCallButton(0L, receiverIdId) },
-            toCallScreen = { userId: String, otherUserId: String -> toCaller(userId, otherUserId) }
+            toCallScreen = { userId: Long, otherUserId: Long -> toCaller(userId, otherUserId) }
         )
     }
 

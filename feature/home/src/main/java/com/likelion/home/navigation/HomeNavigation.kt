@@ -14,8 +14,8 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) =
 fun NavGraphBuilder.homeNavigation(
     navController: NavController,
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 변경
-    onNavigateToCaller: (userId: String, otherUserId: String) -> Unit,
-    action: () -> Unit
+    onNavigateToCaller: (userId: Long, otherUserId: Long) -> Unit,
+    action: () -> Unit,
 ) {
     composable(
         route = NavigationRoute.HomeScreen.route
