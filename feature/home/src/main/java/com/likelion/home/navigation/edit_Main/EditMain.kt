@@ -53,10 +53,11 @@ fun EditMainRoute(
 fun EditMain (
     navigateToMyPage : () -> Unit = {},
 ) {
-        val title = stringResource(com.likelion.home.R.string.main_edit)
-        val navController = rememberNavController()
-        var appBarTitle by remember { mutableStateOf(title) }
+    val title = stringResource(com.likelion.home.R.string.main_edit)
+    val navController = rememberNavController()
+    var appBarTitle by remember { mutableStateOf(title) }
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
+
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -95,23 +96,23 @@ fun EditMain (
                     MainEditInfoScreen(
                         viewModel = FakeMainEditInfoScreenViewModel(),
                         action = listOf(
-                            // 사진 1
+                            // 사진 0
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route)},
-                            // 음성 2
+                            // 음성 1
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route)},
-                            // 위치 3
+                            // 위치 2
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route)},
-                            // 종교 4
+                            // 종교 3
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route)},
-                            // 흡연 5
+                            // 흡연 4
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.SmokingEditScreen.route)},
-                            // 음주 6
+                            // 음주 5
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.AlcoholEditScreen.route)},
-                            // MBTI 7
+                            // MBTI 6
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.MBTIEditScreen.route)},
-                            // 관심사 8
+                            // 관심사 7
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.InterestEditScreen.route)},
-                            // 매칭 관계 9
+                            // 매칭 관계 8
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.MatchingEditScreen.route)}
                         )
                     )
