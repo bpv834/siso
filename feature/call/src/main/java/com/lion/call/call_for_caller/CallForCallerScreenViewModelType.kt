@@ -16,4 +16,8 @@ interface CallForCallerScreenViewModelType {
     fun toggleMute() // 음소거/음소거 해제 토글
     fun toggleSpeaker() // 스피커폰/이어폰 모드 토글
     fun resetCallState() // 통화 실패 상태를 초기화하는 함수
+
+    // 3. 타이머 관련 멤버
+    fun startCallTimer()
+    fun stopCallTimer()
 }
