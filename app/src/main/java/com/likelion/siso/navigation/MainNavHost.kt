@@ -24,7 +24,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
     //startDestination: String = NavigationRoute.OnBoardingScreen.route
-    startDestination: String = NavigationRoute.LoginScreen.route
+    startDestination: String = NavigationRoute.HomeScreen.route
 ) {
     NavHost(
         modifier = modifier,
@@ -68,7 +68,7 @@ fun MainNavHost(
                         launchSingleTop = true
                     }
                 )
-            }
+            },
         ){
             appState.navController.navigateToHome()
         }
@@ -90,16 +90,9 @@ fun MainNavHost(
             appState.navController.navigateToMyPage()
         }
         callerNavigation(
-            action = { }, // 예시로 스낵바 동작 추가
-            // onNavigateToCallForCaller 람다 정의
-            onNavigateToCallForCaller = { userId, otherUserId ->
-                appState.navController.navigateToCallForCaller(
-                    userId = userId,
-                    otherUserId = otherUserId,
-                    navOptions = navOptions {
-                        launchSingleTop = true
-                    }
-                )
+            action = { },
+            onNavigateUp = {
+                appState.navController.popBackStack()
             }
         )
 
