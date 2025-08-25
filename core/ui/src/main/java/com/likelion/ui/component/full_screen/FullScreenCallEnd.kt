@@ -1,5 +1,6 @@
 package com.likelion.ui.component.full_screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -31,9 +32,14 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun FullScreenCallEnd(otherUser: com.likelion.domain.call_for_caller.model.UsersModel) {
+fun FullScreenCallEnd(
+    otherUser: com.likelion.domain.call_for_caller.model.UsersModel,
+    onClickBackButton: () -> Unit
+) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
@@ -44,7 +50,10 @@ fun FullScreenCallEnd(otherUser: com.likelion.domain.call_for_caller.model.Users
         ) {
             Icon(
                 painter = painterResource(com.likelion.ui.R.drawable.ic_close_24px),
-                contentDescription = ""
+                contentDescription = "",
+                modifier = Modifier.clickable {
+                    onClickBackButton()
+                }
             )
         }
         Spacer(Modifier.size(31.dp))
@@ -134,6 +143,6 @@ fun FullScreenCallEndPreview() {
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다."
         )
-        FullScreenCallEnd(otherUser = caller)
+        FullScreenCallEnd(otherUser = caller, onClickBackButton = {})
     }
 }
