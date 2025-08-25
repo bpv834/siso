@@ -1,11 +1,9 @@
 package com.likelion.data.mypage.di
 
-import com.likelion.data.mypage.mapper.LocationMapper
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
 import com.likelion.domain.mypage.repository.LocationRepository
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -26,6 +24,6 @@ abstract class MyPageModule {
 
     @Binds
     @Singleton
-    abstract fun bindLocattionRepo(impl: LocationRepositoryImpl): LocationRepository
+    abstract fun bindLocationRepo(impl: LocationRepositoryImpl): LocationRepository
 
 }
