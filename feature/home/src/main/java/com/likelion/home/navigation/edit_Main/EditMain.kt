@@ -1,5 +1,6 @@
 package com.likelion.home.navigation.edit_Main
 
+import android.annotation.SuppressLint
 import android.view.View
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -21,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreen
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.FakeAdditionalInfoAlcoholScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_religion_screen.AdditionalInfoReligionScreen
@@ -29,6 +32,8 @@ import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.A
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.FakeAdditionalInfoSmokingScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.FakeInterestEditInfoScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreen
+import com.likelion.home.mypage.location_edit_info_screen.FakeLocationEditInfoScreenViewModel
+import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreen
 import com.likelion.home.mypage.main_edit_info_screen.FakeMainEditInfoScreenViewModel
 import com.likelion.home.mypage.main_edit_info_screen.MainEditInfoScreen
 import com.likelion.home.mypage.matching_edit_info_screen.FakeMatchingEditInfoScreenViewModel
@@ -43,14 +48,23 @@ import com.likelion.ui.theme.SisoColorTokens
 fun EditMainRoute(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
+    topLocationUseCase : TopLocationUseCase,
+    bottomLocationUseCase : BottomLocationUseCase,
     actionSnackbar: () -> Unit = {}
 ) {
-    EditMain(navigateToMyPage = actionSnackbar)
+    EditMain(
+        topLocationUseCase = topLocationUseCase,
+        bottomLocationUseCase = bottomLocationUseCase,
+        navigateToMyPage = actionSnackbar
+    )
 }
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMain (
+    topLocationUseCase : TopLocationUseCase,
+    bottomLocationUseCase : BottomLocationUseCase,
     navigateToMyPage : () -> Unit = {},
 ) {
     val title = stringResource(com.likelion.home.R.string.main_edit)
@@ -129,10 +143,13 @@ fun EditMain (
                 }
                 // 위치 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route) {
-//                LocationEditInfoScreen(
-//                    viewModel = FakeLocationEditInfoScreenViewModel(),
-//                    popBackStack = {navController.popBackStack()}
-//                    )
+                LocationEditInfoScreen(
+                    viewModel = FakeLocationEditInfoScreenViewModel(
+                        topLocationUseCase = topLocationUseCase,
+                        bottomLocationUseCase = bottomLocationUseCase,
+                    ),
+                    popBackStack = {navController.popBackStack()}
+                    )
                 }
                 // 종교 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route) {
