@@ -1,11 +1,13 @@
 package com.lion.call.call_for_caller
 
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 interface CallForCallerScreenViewModelType {
     // 1. UI 상태
     // 모든 UI 상태를 담는 단일 StateFlow
     val uiState: StateFlow<CallUiState>
+    val uiEvent : SharedFlow<CallUiEvent>
 
     // 2. 사용자 액션
     fun onClickCall(callerId: Long, receiverId: Long) // 발신자가 통화를 시작하는 액션
