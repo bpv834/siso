@@ -63,8 +63,9 @@ class CallRepositoryImpl @Inject constructor(
         val request = StartCallRequest(callerId = callerId, receiverId = receiverId)
 
         return try {
+            // 채널명 토큰을 서버에서 불러옴
             val response: Response<CallInfoDto> = callApiService.requestCallSession(request)
-
+            // 통신이 성공했다면
             if (response.isSuccessful) {
                 val callInfoDto = response.body() ?: throw Exception("서버 응답 본문이 비어있습니다.")
 
@@ -72,7 +73,6 @@ class CallRepositoryImpl @Inject constructor(
                 val callInfoModel = callInfoDto.toDomainModel()
 
                 agoraVoiceManager.joinChannel(token = callInfoModel.token, channelName = callInfoModel.channelName)
-
                 Result.success(callInfoModel)
             } else {
                 val errorBody = response.errorBody()?.string()
