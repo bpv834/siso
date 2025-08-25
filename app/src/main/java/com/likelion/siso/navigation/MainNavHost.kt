@@ -5,6 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import com.likelion.data.mypage.mapper.LocationMapper
+import com.likelion.data.mypage.repository.LocationRepositoryImpl
+import com.likelion.domain.mypage.repository.LocationRepository
+import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
 import com.likelion.home.navigation.edit_Main.navigateToSettingMain
@@ -76,8 +81,17 @@ fun MainNavHost(
         ) {
 
         }
+        val locationRepository = LocationRepositoryImpl(LocationMapper())
+        val topLocationUseCase = TopLocationUseCase(
+            locationRepository
+        )
+        val bottomLocationUseCase = BottomLocationUseCase(
+            locationRepository
+        )
         editMainNavigation(
             navController = appState.navController,
+            topLocationUseCase = topLocationUseCase,
+            bottomLocationUseCase = bottomLocationUseCase,
         ){
             appState.navController.navigateToMyPage(
             navOptions {
