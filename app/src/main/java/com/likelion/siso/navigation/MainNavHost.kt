@@ -2,9 +2,14 @@ package com.likelion.siso.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.likelion.home.navigation.chatNavigation
+import com.likelion.home.navigation.edit_Main.editMainNavigation
+import com.likelion.home.navigation.edit_Main.navigateToSettingMain
+import com.likelion.home.navigation.edit_Main.settingMainNavigation
+import com.likelion.home.navigation.findNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
@@ -70,8 +75,21 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToChat()
         }
-        myPageNavigation {
-            appState.navController.navigateToMyPage()
+        myPageNavigation(
+            navController = appState.navController,
+            navigateToHome ={appState.navController.popBackStack(NavigationRoute.MyPageScreen.route, inclusive = true)}
+        ) {
+
+        }
+        editMainNavigation(
+            navController = appState.navController,
+        ){
+            appState.navController.navigateToMyPage(
+            navOptions {
+                appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
+                launchSingleTop = true
+            }
+            )
         }
 
         /*

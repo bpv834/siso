@@ -33,7 +33,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun InterestEditInfoScreen(
-    viewModel: InterestEditInfoScreenViewModelType
+    viewModel: InterestEditInfoScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     val cultureReceiverList = remember {
         mutableStateListOf<String>()
@@ -172,7 +173,7 @@ fun InterestEditInfoScreen(
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-
+                popBackStack()
             }
             Spacer(Modifier.fillMaxWidth().height(72.dp))
 

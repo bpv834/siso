@@ -34,7 +34,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
     // Gson 라이브러리
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson.v2131)
 
 
     // DI

@@ -1,11 +1,8 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
-import android.R.attr.contentDescription
-import android.R.attr.onClick
-import android.R.attr.text
-import android.R.attr.theme
-import android.graphics.drawable.VectorDrawable
+import android.R.attr.action
 import android.util.Log.d
+import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,19 +14,18 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +34,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,10 +46,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.style.TextAlign
@@ -60,12 +57,11 @@ import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.graphics.shapes.RoundedPolygon
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
-import coil3.size.Size
 import com.likelion.ui.R
-import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
 import com.likelion.ui.theme.SisoColorTokens
@@ -76,8 +72,19 @@ import kotlin.collections.listOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEditInfoScreen(
-    viewModel: MainEditInfoScreenViewModelType
+    viewModel: MainEditInfoScreenViewModelType,
+    action:List<()->Unit> = listOf()
 ) {
+    val potoNavigation = {if (action.isNotEmpty()) action[1]()}
+    val voiceNavigation = { if (action.isNotEmpty()) action[2]() }
+    val locationNavigation = {if (action.isNotEmpty()) action[3]()}
+    val religionNavigation = {if (action.isNotEmpty()) action[4]()}
+    val smokingNavigation = {if (action.isNotEmpty()) action[5]()}
+    val alcoholNavigation = { if (action.isNotEmpty()) action[6]() }
+    val mbtiNavigation = {if (action.isNotEmpty()) action[7]()}
+    val interestNavigation = {if (action.isNotEmpty()) action[8]() }
+    val matchingNavigation = {if (action.isNotEmpty()) action[9]()}
+
     // LocalConfiguration을 사용하여 현재 구성 정보를 가져옵니다.
     val configuration = LocalConfiguration.current
 
@@ -109,17 +116,16 @@ fun MainEditInfoScreen(
         12, 18, 12, 8, 12, 12, 18, 12, 6
     )
 
-
+    val appbarTitle = stringResource(com.likelion.home.R.string.main_edit)
     val interestList = listOf(
-        "나의 관심사" to {},
-        "매칭 상대와의 관계" to {}
+        "나의 관심사" to { interestNavigation() },
+        "매칭 상대와의 관계" to { matchingNavigation() }
     )
 
     val interestChipList = listOf(
         "나의 관심사를 골라주세요" to listOf<String>(),
         "어떤 관계를 원하시나요?" to listOf()
     )
-
     Column(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -138,9 +144,9 @@ fun MainEditInfoScreen(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-
+                        potoNavigation()
                     }
-            ){
+            ) {
                 AsyncImage(
                     modifier = Modifier.size(120.dp, 120.dp),
                     model = R.drawable.example_profile,
@@ -165,7 +171,7 @@ fun MainEditInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             tint = SisoColorTokens.GrayScale60,
-                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
                             contentDescription = ""
                         )
                     }
@@ -192,9 +198,9 @@ fun MainEditInfoScreen(
             value = nameState, // collect된 실시간 변경된 스트링 값을 넣는다.
             onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
                 viewModel.nameUpdate(
-                    if (newText.length >nameStateRange.length)
+                    if (newText.length > nameStateRange.length)
                         newText.substring(nameStateRange)
-                else newText
+                    else newText
                 )
             }
         )
@@ -209,7 +215,7 @@ fun MainEditInfoScreen(
         Spacer(Modifier.size(8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             // 여기에 EditText(텍스트 필드) 추가
             CommonOutlinedTextFiled(
                 modifier = Modifier
@@ -218,7 +224,7 @@ fun MainEditInfoScreen(
                 placeholderText = "",
                 value = ageText, // collect된 실시간 변경된 스트링 값을 넣는다.
                 onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                    val temp = if (newText.length >ageTextRange.length)
+                    val temp = if (newText.length > ageTextRange.length)
                         newText.substring(ageTextRange)
                     else newText
                     ageText = temp.replace(Regex("[^0-9]"), "")
@@ -243,7 +249,7 @@ fun MainEditInfoScreen(
         Spacer(Modifier.size(24.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-        ){
+        ) {
             // 음성 재생 바
             Box(
                 modifier = Modifier
@@ -254,7 +260,7 @@ fun MainEditInfoScreen(
             ) {
                 //음성 재생 아이콘 구현
                 Row(
-                    modifier = Modifier.padding(start = 16.dp,top= 10.dp),
+                    modifier = Modifier.padding(start = 16.dp, top = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //이미지 로드
@@ -263,19 +269,19 @@ fun MainEditInfoScreen(
                         onClick = {
                             playState = !playState
                             // 재생 / 정지
-                            if(!playState){
+                            if (!playState) {
                                 // 재생하기
 
-                            }else {
+                            } else {
                                 // 중지하기
                             }
                         }
-                    ){
+                    ) {
                         Icon(
                             tint = SisoColorTokens.GrayScale10,
                             imageVector = ImageVector.vectorResource(
-                                if (!playState)R.drawable.play
-                                else R.drawable.pause
+                                if (!playState) R.drawable.ic_play
+                                else R.drawable.ic_pause
                             ),
                             contentDescription = ""
                         )
@@ -290,7 +296,8 @@ fun MainEditInfoScreen(
                             temp -= 2.5.dp
                             if (temp > 2.5.dp)
                                 Box(
-                                    Modifier.size(width = 2.5.dp, height = height.dp)
+                                    Modifier
+                                        .size(width = 2.5.dp, height = height.dp)
                                         .clip(RoundedCornerShape(999.dp))
                                         .drawWithContent {
                                             drawRect(SisoColorTokens.White)
@@ -320,9 +327,16 @@ fun MainEditInfoScreen(
             }
             Spacer(Modifier.size(16.dp))
             Icon(
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(24.dp).clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    voiceNavigation()
+                },
+                imageVector = ImageVector.vectorResource(
+                    R.drawable.ic_text_edit
+                ),
                 tint = SisoColorTokens.GrayScale60,
-                painter = rememberAsyncImagePainter(R.drawable.text_edit),
                 contentDescription = ""
             )
         }
@@ -332,7 +346,7 @@ fun MainEditInfoScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(206.dp),
-        ){
+        ) {
 
             // 여기에 EditText(텍스트 필드) 추가
             CommonOutlinedTextFiled(
@@ -342,7 +356,7 @@ fun MainEditInfoScreen(
                 placeholderText = "안녕하세요. 인생의 황혼기에 접어들었지만, 늘 새로운 경험과 사랑을 찾아 나아가고 있습니다. 서로를 이해하며 함께할 수 있는 분을 기다립니다.",
                 value = introduceText, // collect된 실시간 변경된 스트링 값을 넣는다.
                 onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                    introduceText = if (newText.length >introduceTextRange.length)
+                    introduceText = if (newText.length > introduceTextRange.length)
                         newText.substring(introduceTextRange)
                     else newText
                 }
@@ -367,7 +381,7 @@ fun MainEditInfoScreen(
         Spacer(Modifier.size(32.dp))
         Column(
             modifier = Modifier.height(85.dp)
-        ){
+        ) {
             Text(
                 modifier = Modifier.height(23.dp),
                 text = "키",
@@ -378,7 +392,7 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 // 여기에 EditText(텍스트 필드) 추가
                 CommonOutlinedTextFiled(
                     modifier = Modifier
@@ -387,7 +401,7 @@ fun MainEditInfoScreen(
                     placeholderText = "",
                     value = heightText, // collect된 실시간 변경된 스트링 값을 넣는다.
                     onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                        val temp = if (newText.length>heightTextRange.length)
+                        val temp = if (newText.length > heightTextRange.length)
                             newText.substring(heightTextRange)
                         else newText
                         heightText = temp.replace(Regex("[^0-9]"), "")
@@ -418,7 +432,7 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(8.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 // 여기에 EditText(텍스트 필드) 추가
                 CommonOutlinedTextFiled(
                     modifier = Modifier
@@ -427,7 +441,7 @@ fun MainEditInfoScreen(
                     placeholderText = "",
                     value = weightText, // collect된 실시간 변경된 스트링 값을 넣는다.
                     onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                        val temp = if (newText.length>weightTextRange.length)
+                        val temp = if (newText.length > weightTextRange.length)
                             newText.substring(weightTextRange)
                         else newText
                         weightText = temp.replace(Regex("[^0-9]"), "")
@@ -491,8 +505,8 @@ fun MainEditInfoScreen(
         InfoEditScreenButton(
             titleText = "지역",
             selectText = "나의 지역을 등록해주세요"
-        ){
-
+        ) {
+            locationNavigation()
         }
 
         Spacer(Modifier.size(48.dp))
@@ -517,9 +531,9 @@ fun MainEditInfoScreen(
                     .size(68.dp, 27.dp)
                     .background(SisoColorTokens.Gold40, RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center,
-            ){
+            ) {
                 Text(
-                    modifier = Modifier.size(52.dp,23.dp),
+                    modifier = Modifier.size(52.dp, 23.dp),
                     text = "+30%",
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.GrayScale90,
@@ -532,40 +546,40 @@ fun MainEditInfoScreen(
         InfoEditScreenButton(
             titleText = "종교",
             selectText = "정보를 입력해주세요"
-        ){
-
+        ) {
+            religionNavigation()
         }
         Spacer(Modifier.size(24.dp))
         InfoEditScreenButton(
             titleText = "흡연",
             selectText = "정보를 입력해주세요"
-        ){
-
+        ) {
+            smokingNavigation()
         }
         Spacer(Modifier.size(24.dp))
         InfoEditScreenButton(
             titleText = "음주",
             selectText = "정보를 입력해주세요"
-        ){
-
+        ) {
+            alcoholNavigation()
         }
         Spacer(Modifier.size(24.dp))
         InfoEditScreenButton(
             titleText = "MBTI",
             selectText = "정보를 입력해주세요"
-        ){
-
+        ) {
+            mbtiNavigation()
         }
         Spacer(Modifier.size(48.dp))
 
         TitleText("관심사 / 취향 태그")
 
-        interestList.forEachIndexed { index, (sub,onclick) ->
+        interestList.forEachIndexed { index, (sub, onclick) ->
             Spacer(Modifier.size(32.dp))
-            Row (
+            Row(
                 modifier = Modifier.height(24.dp),
                 verticalAlignment = Alignment.CenterVertically,
-            ){
+            ) {
                 Text(
                     modifier = Modifier
                         .height(23.dp)
@@ -582,13 +596,13 @@ fun MainEditInfoScreen(
                     }
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.caret_right) ,
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
                         contentDescription = ""
                     )
                 }
             }
             Spacer(Modifier.size(12.dp))
-            d("interestChipList","$index ${interestChipList[index].first}")
+            d("interestChipList", "$index ${interestChipList[index].first}")
             InterestRepeatChip(
                 emptyText = interestChipList[index].first,
                 list = interestChipList[index].second,
@@ -729,11 +743,12 @@ fun InfoEditScreenButton(
             }
             Spacer(Modifier.size(8.dp))
             Icon(
-                imageVector = icon ,
+                imageVector = icon,
                 contentDescription = ""
             )
         }
     }
+
 
 }
 

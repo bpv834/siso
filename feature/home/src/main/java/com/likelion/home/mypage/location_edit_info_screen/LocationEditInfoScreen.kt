@@ -1,10 +1,5 @@
 package com.likelion.home.mypage.location_edit_info_screen
 
-import android.R.attr.end
-import android.content.res.Resources
-import android.util.Log.d
-import android.util.TypedValue
-import androidx.annotation.ArrayRes
 import com.likelion.ui.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -32,20 +26,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+//import com.likelion.data.mypage.repository.LocationRepositoryImpl
+//import com.likelion.data.mypage.mapper.LocationMapper
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -54,7 +47,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationEditInfoScreen(
-    viewModel: LocationEditInfoScreenViewModelType
+    viewModel: LocationEditInfoScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var text by remember { mutableStateOf("") }
@@ -65,7 +59,6 @@ fun LocationEditInfoScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
-
     val topLocations = locationMapper.topLocationList
 
     Box(
@@ -115,7 +108,7 @@ fun LocationEditInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp)
                                 .padding(end = 16.dp),
-                            imageVector = ImageVector.vectorResource(R.drawable.text_edit),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_text_edit),
                             tint = SisoColorTokens.GrayScale40,
                             contentDescription = ""
                         )
@@ -138,7 +131,7 @@ fun LocationEditInfoScreen(
             ){
                 Icon(
                     modifier = Modifier.size(20.dp),
-                    imageVector = ImageVector.vectorResource(R.drawable.crosshair),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_crosshair),
                     tint = SisoColorTokens.GrayScale40,
                     contentDescription = ""
                 )
@@ -220,7 +213,7 @@ fun LocationEditInfoScreen(
                             modifier = Modifier
                                 .size(24.dp)
                                 .align(Alignment.CenterEnd),
-                            imageVector = ImageVector.vectorResource(R.drawable.bottom_close),
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_bottom_close),
                             tint = SisoColorTokens.GrayScale90,
                             contentDescription = ""
                         )
@@ -290,7 +283,12 @@ fun LocationEditInfoScreenPreview(){
     SisoTheme {
         Scaffold {
             it
-            LocationEditInfoScreen(FakeLocationEditInfoScreenViewModel())
+//            val topUseCase = TopLocationUseCaseImpl(LocationRepositoryImpl())
+//            val bottomUseCase = BottomLocationUseCaseImpl(LocationRepositoryImpl())
+//            LocationEditInfoScreen(FakeLocationEditInfoScreenViewModel(
+//                topUseCase,
+//                bottomUseCase
+//            ))
         }
     }
 }

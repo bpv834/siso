@@ -47,7 +47,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun MBTIEditInfoScreen(
-    viewModel: MBTIEditInfoScreenViewModelType
+    viewModel: MBTIEditInfoScreenViewModelType,
+    popBackStack: () -> Unit = {},
 ) {
     var receiver by remember {
         mutableStateOf("")
@@ -190,7 +191,9 @@ fun MBTIEditInfoScreen(
                 // 선택된 값을 보냄
                 if (receiver.isNotBlank()) {
                     d("receiver", receiver)
+
                 }
+                popBackStack()
             }
             Spacer(Modifier.fillMaxWidth().height(68.dp)
                 .background(SisoColorTokens.White))
