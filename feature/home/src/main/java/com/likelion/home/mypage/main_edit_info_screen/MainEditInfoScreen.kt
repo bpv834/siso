@@ -75,15 +75,15 @@ fun MainEditInfoScreen(
     viewModel: MainEditInfoScreenViewModelType,
     action:List<()->Unit> = listOf()
 ) {
-    val potoNavigation = {if (action.isNotEmpty()) action[1]()}
-    val voiceNavigation = { if (action.isNotEmpty()) action[2]() }
-    val locationNavigation = {if (action.isNotEmpty()) action[3]()}
-    val religionNavigation = {if (action.isNotEmpty()) action[4]()}
-    val smokingNavigation = {if (action.isNotEmpty()) action[5]()}
-    val alcoholNavigation = { if (action.isNotEmpty()) action[6]() }
-    val mbtiNavigation = {if (action.isNotEmpty()) action[7]()}
-    val interestNavigation = {if (action.isNotEmpty()) action[8]() }
-    val matchingNavigation = {if (action.isNotEmpty()) action[9]()}
+    val potoNavigation = {if (action.isNotEmpty()) action[0]()}
+    val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
+    val locationNavigation = {if (action.isNotEmpty()) action[2]()}
+    val religionNavigation = {if (action.isNotEmpty()) action[3]()}
+    val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
+    val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
+    val mbtiNavigation = {if (action.isNotEmpty()) action[6]()}
+    val interestNavigation = {if (action.isNotEmpty()) action[7]() }
+    val matchingNavigation = {if (action.isNotEmpty()) action[8]()}
 
     // LocalConfiguration을 사용하여 현재 구성 정보를 가져옵니다.
     val configuration = LocalConfiguration.current
