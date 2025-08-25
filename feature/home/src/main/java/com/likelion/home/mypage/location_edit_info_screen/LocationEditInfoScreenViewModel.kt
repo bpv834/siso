@@ -20,12 +20,21 @@ class LocationEditInfoScreenViewModel @Inject constructor (
 ): ViewModel(), LocationEditInfoScreenViewModelType {
     private val _locationState = MutableStateFlow("")
     private val _topLocation = MutableStateFlow(topLocationUseCase.invoke())
-    val topLocation = _topLocation.asStateFlow()
+    override val topLocation = _topLocation.asStateFlow()
+    private val _bottomLocation = MutableStateFlow(Location(name = listOf()))
+    override val bottomLocation = _bottomLocation.asStateFlow()
 
-    override fun locationComplete(input: String, nav :()-> Unit){
+    override fun setBottomLocation(input: String){
+        val inputBottom = if(input != "")
+            bottomLocationUseCase.invoke(input)
+            else Location(name = listOf())
+        _bottomLocation.update { inputBottom }
+    }
+
+    override fun locationComplete(input: String, nav: (String) -> Unit) {
         _locationState.update { input }
         if (_locationState.value.isNotBlank()){
-            nav()
+            nav(_locationState.value)
         }
     }
 }
