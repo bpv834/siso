@@ -259,7 +259,7 @@ fun FullScreenWhenCallActive(
 @Composable
 fun FullScreenWhenCallActivePreview() {
     SisoTheme {
-        val user = UsersModel(
+        val user = com.likelion.domain.call_for_caller.model.UsersModel(
             id = 4L,
             isOnline = true,
             userImages = listOf(
@@ -283,7 +283,7 @@ fun FullScreenWhenCallActivePreview() {
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다."
         )
 
-        val otherUser = UsersModel(
+        val otherUser = com.likelion.domain.call_for_caller.model.UsersModel(
             id = 4L,
             isOnline = true,
             userImages = listOf(
