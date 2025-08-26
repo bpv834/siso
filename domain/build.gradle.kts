@@ -20,8 +20,8 @@ dependencies {
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
-    // Gson 라이브러리
-    implementation(libs.gson.v2131)
+    // Gson 컨버터
+    implementation(libs.converter.gson.v300)
 
     // Kotlin Coroutines Test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
