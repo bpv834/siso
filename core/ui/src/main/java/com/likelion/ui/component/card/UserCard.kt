@@ -48,7 +48,7 @@ fun UserCard(
     user: UsersModel,
     onImageClick: (imageUrl: String) -> Unit,
     onClickButtonCall: (receiverId: Long) -> Unit, // 상대 유저 uid를 얻어오는 메서드
-    toCallScreen : (String,String)->Unit,
+    toCallScreen : (Long,Long)->Unit,
 ) {
 
     val context = LocalContext.current // Toast 메시지를 띄우기 위한 Context
@@ -213,8 +213,8 @@ fun UserCard(
                                 recordAudioPermissionState.status.isGranted -> {
                                     // 권한이 이미 허용된 경우, 통화 시작 콜백 호출
                                    // onClickButtonCall(user.id)
-                                    val testUserId = "testUserId111"
-                                    val testOtherUserId = "testOtherUserId1111"
+                                    val testUserId = 0L
+                                    val testOtherUserId = 1L
                                     toCallScreen(testUserId,testOtherUserId) // 화면전환
                                     Toast.makeText(context, "통화를 시작합니다.", Toast.LENGTH_SHORT).show()
                                 }

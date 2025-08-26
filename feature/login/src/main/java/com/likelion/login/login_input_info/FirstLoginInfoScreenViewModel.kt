@@ -3,18 +3,23 @@ package com.likelion.login.login_input_info
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.likelion.domain.login.model.UserSignUpProfile
+import com.likelion.domain.login.usecase.SaveTemporaryUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FirstLoginInfoScreenViewModel @Inject constructor(
-
+    val saveTemporaryUserProfileUseCase: SaveTemporaryUserProfileUseCase
     // usecase자리
 ): ViewModel(), FirstLoginInfoScreenViewModelType {
+
     private val _nameState = MutableStateFlow("")
     override val nameState : String get() = _nameState.value
     private val _ageState = MutableStateFlow("")
@@ -61,5 +66,13 @@ class FirstLoginInfoScreenViewModel @Inject constructor(
         }.second && tempBoolean
         d("boolean","continueBoolean $continueBoolean")
         continueBoolean
+    }
+
+    override fun inputUserInfo(nick : String, age : Int, sex : String, preSex : String){
+        // 1. UserSignUpProfile 객체 생성 및 속성 설정
+        val user = UserSignUpProfile(nickname = nick,age=age, gender = sex, preferenceSex = preSex)
+        viewModelScope.launch {
+            saveTemporaryUserProfileUseCase.execute(user)
+        }
     }
 }

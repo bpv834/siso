@@ -33,7 +33,9 @@ android {
 
 dependencies {
 
-    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    api("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("com.google.dagger:hilt-android:2.44")
 
     // DI
     implementation(libs.hilt.android)

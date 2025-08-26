@@ -3,10 +3,12 @@ package com.likelion.data.login.repository.di
 
 /*package com.likelion.data.login.di*/
 
+import com.likelion.data.login.repository.InMemoryUserSignUpRepositoryImpl
 import com.likelion.data.login.repository.LoginRepositoryImpl
 import com.likelion.data.login.repository.TokenRepositoryImpl
 import com.likelion.domain.login.repository.AuthTokenRepository
 import com.likelion.domain.login.repository.LoginRepository
+import com.likelion.domain.login.repository.UserSignUpRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,4 +30,10 @@ abstract class LoginDataModule {
     abstract fun bindLoginRepository(
         impl: LoginRepositoryImpl
     ): LoginRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserSignUpRepository(
+        impl : InMemoryUserSignUpRepositoryImpl
+    ) :  UserSignUpRepository
 }

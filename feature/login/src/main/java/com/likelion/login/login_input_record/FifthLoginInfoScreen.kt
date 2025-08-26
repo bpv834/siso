@@ -216,6 +216,7 @@ fun FifthLoginInfoScreen(
 
                     Spacer(Modifier.size(43.dp))
                     CommonActiveButton(text = "완료하기", onClick = {
+                        viewModel.savePathInTempUser()
                         onNavigateNext()
            /*           val arr =  viewModel.getAudioBytes()
                         playAacFromByteArray(context = context, audioBytes =arr!!)*/

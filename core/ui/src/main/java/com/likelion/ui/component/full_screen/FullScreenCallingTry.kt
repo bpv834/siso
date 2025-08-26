@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.call_for_caller.model.UsersModel
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.theme.SisoColorTokens
@@ -39,8 +39,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {

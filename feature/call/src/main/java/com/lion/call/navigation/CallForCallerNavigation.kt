@@ -6,18 +6,17 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.likelion.navigation.NavigationRoute
 import com.lion.call.call_for_caller.CallerRouter
 
 fun NavController.navigateToCallForCaller(
-    userId: String, // userId 인자 추가
-    otherUserId: String, // otherUserId 인자 추가
+    userId: Long, // userId 인자 추가
+    otherUserId: Long, // otherUserId 인자 추가
     navOptions: NavOptions? = null
 ) = navigate("caller/$userId/$otherUserId", navOptions) // 경로에 인자 포함
 
 fun NavGraphBuilder.callerNavigation(
     action: () -> Unit,
-    onNavigateToCallForCaller: (userId: String, otherUserId: String) -> Unit
+    onNavigateUp : ()->Unit,
 ) {
     composable(
         // 라우트 경로에 인자 플레이스홀더를 명시합니다.
@@ -34,8 +33,9 @@ fun NavGraphBuilder.callerNavigation(
         // 인자를 CallerRouter로 전달합니다.
         CallerRouter(
             actionSnackbar = action,
-            userId = userId?:"테스트아이디",
-            otherUserId = otherUserId?:"테스트유저아이디"
+            userId = userId?.toLong()?:0L,
+            otherUserId = otherUserId?.toLong()?:1L,
+            onNavigateUp = onNavigateUp
         )
     }
 }

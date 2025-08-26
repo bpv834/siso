@@ -11,13 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,8 +37,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FullScreenWhenCallActive(
-    user: UsersModel,
-    otherUser: UsersModel,
+    user: com.likelion.domain.call_for_caller.model.UsersModel,
+    otherUser: com.likelion.domain.call_for_caller.model.UsersModel,
     callDuration: Int,
     onClickKeepGoing: (UsersModel) -> Unit,
     onClickCallEnd: () -> Unit,
@@ -47,14 +46,19 @@ fun FullScreenWhenCallActive(
     onClickSpeaker: () -> Unit,
     isMute: Boolean,
     isSpeaker: Boolean,
+    startCallTimer : ()-> Unit,
 ) {
+
+    LaunchedEffect(Unit) {
+        startCallTimer()
+    }
+
     val min = callDuration / 60
     val sec = callDuration % 60
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.size(72.dp))
         // 프사, 닉네임, 나이, 지역 로우
@@ -168,88 +172,57 @@ fun FullScreenWhenCallActive(
                     Icon(
                         painter = painterResource(com.likelion.ui.R.drawable.ic_call_end),
                         contentDescription = "",
-                        tint = SisoColorTokens.Red60 // Change this to your desired color
+                        tint = SisoColorTokens.Red60
                     )
                 },
-                onClick = {},
-                text = "전화종료"
+                onClick = {
+                    onClickCallEnd()
+                },
+                text = "종료"
             )
             Spacer(Modifier.size(8.dp))
-            when (isMute) {
-                true -> {
-                    CustomOutlinedButtonWithCustomContentColor(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize(),
-                        contentColor = SisoColorTokens.White,
-                        containerColor = SisoColorTokens.Gray50,
-                        icon = {
-                            Icon(
-                                painter = painterResource(com.likelion.ui.R.drawable.ic_mute),
-                                contentDescription = "",
-                            )
-                        },
-                        text = "음소거",
-                        onClick = {}
-                    )
-                }
+            val muteContentColor = if (isMute) SisoColorTokens.White else SisoColorTokens.Black
+            val muteContainerColor = if (isMute) SisoColorTokens.Gray50 else SisoColorTokens.White
 
-                false -> {
-                    CustomOutlinedButtonWithCustomContentColor(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize(),
-                        contentColor = SisoColorTokens.Black,
-                        containerColor = SisoColorTokens.White,
-                        icon = {
-                            Icon(
-                                painter = painterResource(com.likelion.ui.R.drawable.ic_mute),
-                                contentDescription = "",
-                            )
-                        },
-                        text = "음소거",
-                        onClick = {}
+            CustomOutlinedButtonWithCustomContentColor(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                contentColor = muteContentColor,
+                containerColor = muteContainerColor,
+                icon = {
+                    Icon(
+                        painter = painterResource(com.likelion.ui.R.drawable.ic_mute),
+                        contentDescription = "",
                     )
+                },
+                text = "음소거",
+                onClick = {
+                    onClickMute()
                 }
-            }
+            )
             Spacer(Modifier.size(8.dp))
-            when (isSpeaker) {
-                true -> {
-                    CustomOutlinedButtonWithCustomContentColor(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize(),
-                        contentColor = SisoColorTokens.White,
-                        containerColor = SisoColorTokens.Blue50,
-                        icon = {
-                            Icon(
-                                painter = painterResource(com.likelion.ui.R.drawable.ic_speaker),
-                                contentDescription = "",
-                            )
-                        },
-                        text = "스피커",
-                        onClick = {}
-                    )
-                }
 
-                false -> {
-                    CustomOutlinedButtonWithCustomContentColor(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize(),
-                        contentColor = SisoColorTokens.Black,
-                        containerColor = SisoColorTokens.White,
-                        icon = {
-                            Icon(
-                                painter = painterResource(com.likelion.ui.R.drawable.ic_speaker),
-                                contentDescription = "",
-                            )
-                        },
-                        text = "스피커",
-                        onClick = {}
+            val speakContentColor = if (isSpeaker) SisoColorTokens.White else SisoColorTokens.Black
+            val speakContainerColor =
+                if (isSpeaker) SisoColorTokens.Blue50 else SisoColorTokens.White
+
+            CustomOutlinedButtonWithCustomContentColor(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                contentColor = speakContentColor,
+                containerColor = speakContainerColor,
+                icon = {
+                    Icon(
+                        painter = painterResource(com.likelion.ui.R.drawable.ic_speaker),
+                        contentDescription = "",
                     )
-                }
-            }
+                },
+                text = "스피커",
+                onClick = { onClickSpeaker() }
+            )
+
         }
         Spacer(Modifier.size(64.dp))
     }
@@ -259,7 +232,7 @@ fun FullScreenWhenCallActive(
 @Composable
 fun FullScreenWhenCallActivePreview() {
     SisoTheme {
-        val user = UsersModel(
+        val user = com.likelion.domain.call_for_caller.model.UsersModel(
             id = 4L,
             isOnline = true,
             userImages = listOf(
@@ -283,7 +256,7 @@ fun FullScreenWhenCallActivePreview() {
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다."
         )
 
-        val otherUser = UsersModel(
+        val otherUser = com.likelion.domain.call_for_caller.model.UsersModel(
             id = 4L,
             isOnline = true,
             userImages = listOf(
@@ -317,6 +290,7 @@ fun FullScreenWhenCallActivePreview() {
             isMute = true,
             isSpeaker = true,
             callDuration = 59,
+            startCallTimer = {},
         )
     }
 }
