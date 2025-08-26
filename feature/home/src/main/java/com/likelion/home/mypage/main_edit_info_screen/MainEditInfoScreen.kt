@@ -158,19 +158,19 @@ fun MainEditInfoScreen(
                         .offset((2).dp, (3).dp)
                         .size(34.dp)
                         .clip(CircleShape)
-                        .background(SisoColorTokens.GrayScale5),
+                        .background(SisoColorTokens.Gray5),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
                         modifier = Modifier
                             .size(28.dp)
                             .clip(CircleShape)
-                            .background(SisoColorTokens.GrayScale20),
+                            .background(SisoColorTokens.Gray20),
                         contentAlignment = Alignment.TopStart
                     ) {
                         Icon(
                             modifier = Modifier.size(24.dp),
-                            tint = SisoColorTokens.GrayScale60,
+                            tint = SisoColorTokens.Gray60,
                             painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
                             contentDescription = ""
                         )
@@ -185,7 +185,7 @@ fun MainEditInfoScreen(
             modifier = Modifier.height(24.dp),
             text = "닉네임",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50,
+            color = SisoColorTokens.Gray50,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.size(8.dp))
@@ -209,7 +209,7 @@ fun MainEditInfoScreen(
             modifier = Modifier.height(24.dp),
             text = "나이",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50,
+            color = SisoColorTokens.Gray50,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.size(8.dp))
@@ -234,7 +234,7 @@ fun MainEditInfoScreen(
                 modifier = Modifier.height(24.dp),
                 text = "세",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
         }
@@ -243,7 +243,7 @@ fun MainEditInfoScreen(
             modifier = Modifier.height(24.dp),
             text = "자기소개",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50,
+            color = SisoColorTokens.Gray50,
             textAlign = TextAlign.Center
         )
         Spacer(Modifier.size(24.dp))
@@ -256,7 +256,7 @@ fun MainEditInfoScreen(
                     .height(44.dp)
                     .fillMaxWidth(0.889F)
                     .clip(RoundedCornerShape(999.dp))
-                    .background(SisoColorTokens.GrayScale60),
+                    .background(SisoColorTokens.Gray60),
             ) {
                 //음성 재생 아이콘 구현
                 Row(
@@ -278,7 +278,7 @@ fun MainEditInfoScreen(
                         }
                     ) {
                         Icon(
-                            tint = SisoColorTokens.GrayScale10,
+                            tint = SisoColorTokens.Gray10,
                             imageVector = ImageVector.vectorResource(
                                 if (!playState) R.drawable.ic_play
                                 else R.drawable.ic_pause
@@ -318,7 +318,7 @@ fun MainEditInfoScreen(
                         modifier = Modifier.size(playtimeSize),
                         text = "00:15",
                         style = SisoTypoTokens.Label1,
-                        color = SisoColorTokens.GrayScale10,
+                        color = SisoColorTokens.Gray10,
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.size(16.dp))
@@ -336,7 +336,7 @@ fun MainEditInfoScreen(
                 imageVector = ImageVector.vectorResource(
                     R.drawable.ic_text_edit
                 ),
-                tint = SisoColorTokens.GrayScale60,
+                tint = SisoColorTokens.Gray60,
                 contentDescription = ""
             )
         }
@@ -369,7 +369,7 @@ fun MainEditInfoScreen(
                     .offset((-16).dp, (-16).dp),
                 text = "${introduceText.length}/${introduceTextRange.end}",
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
 
         }
@@ -386,7 +386,7 @@ fun MainEditInfoScreen(
                 modifier = Modifier.height(23.dp),
                 text = "키",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.size(8.dp))
@@ -411,7 +411,7 @@ fun MainEditInfoScreen(
                     modifier = Modifier.height(24.dp),
                     text = "cm",
                     style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.GrayScale50,
+                    color = SisoColorTokens.Gray50,
                     textAlign = TextAlign.Center
                 )
             }
@@ -426,7 +426,7 @@ fun MainEditInfoScreen(
                 modifier = Modifier.height(23.dp),
                 text = "몸무게",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.size(8.dp))
@@ -451,7 +451,7 @@ fun MainEditInfoScreen(
                     modifier = Modifier.height(24.dp),
                     text = "kg",
                     style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.GrayScale50,
+                    color = SisoColorTokens.Gray50,
                     textAlign = TextAlign.Center
                 )
             }
@@ -467,7 +467,7 @@ fun MainEditInfoScreen(
                 modifier = Modifier.height(23.dp),
                 text = "내 성별",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.size(12.dp))
@@ -489,7 +489,7 @@ fun MainEditInfoScreen(
                 modifier = Modifier.height(23.dp),
                 text = "매칭 성별",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50,
+                color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.size(12.dp))
@@ -522,7 +522,7 @@ fun MainEditInfoScreen(
                     .height(23.dp),
                 text = "기본정보",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale90,
+                color = SisoColorTokens.Gray90,
                 textAlign = TextAlign.Center
             )
             Box(
@@ -536,7 +536,7 @@ fun MainEditInfoScreen(
                     modifier = Modifier.size(52.dp, 23.dp),
                     text = "+30%",
                     style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.GrayScale90,
+                    color = SisoColorTokens.Gray90,
                     textAlign = TextAlign.Center
                 )
             }
@@ -586,7 +586,7 @@ fun MainEditInfoScreen(
                         .fillMaxWidth(0.889F),
                     text = sub,
                     style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.GrayScale50,
+                    color = SisoColorTokens.Gray50,
                     textAlign = TextAlign.Start
                 )
                 IconButton(
@@ -627,7 +627,7 @@ fun TitleText(
                 .height(23.dp),
             text = titleText,
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
             textAlign = TextAlign.Center
         )
         Box(
@@ -641,7 +641,7 @@ fun TitleText(
                 modifier = Modifier.size(52.dp,23.dp),
                 text = "+30%",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale90,
+                color = SisoColorTokens.Gray90,
                 textAlign = TextAlign.Center
             )
         }
@@ -677,8 +677,8 @@ fun EditInfoRepeatRadioButton(
             RadioButton(
                 selected = info.second,
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = SisoColorTokens.GrayScale90,
-                    unselectedColor = SisoColorTokens.GrayScale30
+                    selectedColor = SisoColorTokens.Gray90,
+                    unselectedColor = SisoColorTokens.Gray30
                 ),
                 onClick = {
                     radios.replaceAll {
@@ -706,7 +706,7 @@ fun InfoEditScreenButton(
         modifier = Modifier.height(23.dp),
         text = titleText,
         style = SisoTypoTokens.SubTitle1,
-        color = SisoColorTokens.GrayScale50,
+        color = SisoColorTokens.Gray50,
         textAlign = TextAlign.Center
     )
     Spacer(Modifier.size(12.dp))
@@ -715,8 +715,8 @@ fun InfoEditScreenButton(
             click()
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = SisoColorTokens.GrayScale20,
-            contentColor = SisoColorTokens.GrayScale50
+            containerColor = SisoColorTokens.Gray20,
+            contentColor = SisoColorTokens.Gray50
         ),
         border = null,
         modifier = Modifier
@@ -737,7 +737,7 @@ fun InfoEditScreenButton(
                     modifier = Modifier.fillMaxHeight(),
                     text = selectText,
                     style = SisoTypoTokens.Body2,
-                    color = SisoColorTokens.GrayScale50,
+                    color = SisoColorTokens.Gray50,
                     textAlign = TextAlign.Center
                 )
             }
@@ -762,13 +762,13 @@ fun InterestRepeatChip(
         Box(
             modifier = Modifier
                 .height(48.dp)
-                .background(SisoColorTokens.GrayScale20, RoundedCornerShape(999.dp)),
+                .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp)),
         ){
             Text(
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 18.dp, end = 18.dp),
                 text = emptyText,
                 style = SisoTypoTokens.Body2,
-                color = SisoColorTokens.GrayScale70,
+                color = SisoColorTokens.Gray70,
                 textAlign = TextAlign.Center
             )
         }

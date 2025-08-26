@@ -37,13 +37,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.likelion.domain.mypage.repository.FakeLocationMapper
 import com.likelion.domain.mypage.repository.FakeLocationRepositoryImpl
-import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
-//import com.likelion.data.mypage.repository.LocationRepositoryImpl
-//import com.likelion.data.mypage.mapper.LocationMapper
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -78,14 +74,14 @@ fun LocationEditInfoScreen(
                 modifier = Modifier.height(31.dp),
                 text = "어디에 거주하시나요?",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(24.dp))
             Box(
                 modifier = Modifier
                     .height(54.dp)
                     .fillMaxWidth()
-                    .background(SisoColorTokens.GrayScale20, RoundedCornerShape(999.dp))
+                    .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -104,7 +100,7 @@ fun LocationEditInfoScreen(
                             .fillMaxWidth(locationTextFloat),
                         text = text.ifBlank { "검색" },
                         style = SisoTypoTokens.Body2,
-                        color = SisoColorTokens.GrayScale70,
+                        color = SisoColorTokens.Gray70,
                         textAlign = TextAlign.Start
                     )
                     Spacer(Modifier.size(if (text.isNotBlank())3.dp
@@ -114,7 +110,7 @@ fun LocationEditInfoScreen(
                             modifier = Modifier.size(24.dp)
                                 .padding(end = 16.dp),
                             imageVector = ImageVector.vectorResource(R.drawable.ic_text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
 
@@ -137,7 +133,7 @@ fun LocationEditInfoScreen(
                 Icon(
                     modifier = Modifier.size(20.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_crosshair),
-                    tint = SisoColorTokens.GrayScale40,
+                    tint = SisoColorTokens.Gray40,
                     contentDescription = ""
                 )
                 Spacer(Modifier.size(3.dp))
@@ -145,7 +141,7 @@ fun LocationEditInfoScreen(
                     modifier = Modifier.height(23.dp),
                     text = "현재 위치로 설정하기",
                     style = SisoTypoTokens.Body2,
-                    color = SisoColorTokens.GrayScale70,
+                    color = SisoColorTokens.Gray70,
                     textAlign = TextAlign.Start
                 )
             }
@@ -219,7 +215,7 @@ fun LocationEditInfoScreen(
                                 .size(24.dp)
                                 .align(Alignment.CenterEnd),
                             imageVector = ImageVector.vectorResource(R.drawable.ic_bottom_close),
-                            tint = SisoColorTokens.GrayScale90,
+                            tint = SisoColorTokens.Gray90,
                             contentDescription = ""
                         )
                     }
@@ -288,9 +284,13 @@ fun LocationEditInfoScreenPreview(){
     SisoTheme {
         Scaffold {
             it
-            val fakeLocationRepositoryImpl = FakeLocationRepositoryImpl(FakeLocationMapper())
-            val topUseCase = TopLocationUseCase(fakeLocationRepositoryImpl)
-            val bottomUseCase = BottomLocationUseCase(fakeLocationRepositoryImpl)
+            val context = LocalContext.current
+            val inputStream = context.resources.openRawResource(R.raw.korea_regions_ordered)
+            val jsonString  = inputStream.bufferedReader().use { it.readText() }
+            val fakeLocationRepository = FakeLocationRepositoryImpl()
+            fakeLocationRepository.setJson(jsonString)
+            val topUseCase = TopLocationUseCase(fakeLocationRepository)
+            val bottomUseCase = BottomLocationUseCase(fakeLocationRepository)
             LocationEditInfoScreen(FakeLocationEditInfoScreenViewModel(
                 topUseCase,
                 bottomUseCase

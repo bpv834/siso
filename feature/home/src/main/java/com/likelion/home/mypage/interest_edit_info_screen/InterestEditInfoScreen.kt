@@ -111,7 +111,7 @@ fun InterestEditInfoScreen(
                 modifier = Modifier.height(23.dp).fillMaxWidth(),
                 text = "문화 & 예술",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
             InterestEditInfoChips(
                 list = cultureList,
@@ -122,7 +122,7 @@ fun InterestEditInfoScreen(
                 modifier = Modifier.height(23.dp).fillMaxWidth(),
                 text = "운동 & 야외활동",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
             InterestEditInfoChips(
                 list = exerciseList,
@@ -133,7 +133,7 @@ fun InterestEditInfoScreen(
                 modifier = Modifier.height(23.dp).fillMaxWidth(),
                 text = "여가 & 취미",
                 style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.GrayScale50
+                color = SisoColorTokens.Gray50
             )
             InterestEditInfoChips(
                 list = leisureList,
@@ -152,14 +152,14 @@ fun InterestEditInfoScreen(
                 modifier = Modifier.height(31.dp).fillMaxWidth(),
                 text = "나의 관심을 선택해주세요",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(8.dp))
             Text(
                 modifier = Modifier.height(54.dp).fillMaxWidth(),
                 text = "최소 3개 이상 선택해주세요\n많이 고를수록 매칭 확률이 높아져요",
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale60
+                color = SisoColorTokens.Gray60
             )
         }
         Column(

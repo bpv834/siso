@@ -7,7 +7,7 @@ import javax.inject.Inject
 class BottomLocationUseCase @Inject constructor(
     private val locationRepository: LocationRepository
 ) {
-    operator fun invoke(topName: String): List<Location> =
+    operator fun invoke(topName: String): Location =
         locationRepository.getBottomLocationList(topName)
 
 }

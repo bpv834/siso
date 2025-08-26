@@ -1,7 +1,10 @@
 package com.likelion.siso.navigation
 
+import android.util.TypedValue
+import com.likelion.ui.R
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
@@ -12,9 +15,6 @@ import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
-import com.likelion.home.navigation.edit_Main.navigateToSettingMain
-import com.likelion.home.navigation.edit_Main.settingMainNavigation
-import com.likelion.home.navigation.findNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
@@ -33,6 +33,7 @@ fun MainNavHost(
     appState: SisoAppState,
     startDestination: String = NavigationRoute.HomeScreen.route
 ) {
+    val cotext = LocalContext.current
     NavHost(
         modifier = modifier,
         navController = appState.navController,
@@ -86,7 +87,10 @@ fun MainNavHost(
         ) {
 
         }
-        val locationRepository = LocationRepositoryImpl(LocationMapper())
+        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
+        val jsonString  = inputStream.bufferedReader().use { it.readText() }
+        val locationRepository = LocationRepositoryImpl()
+        locationRepository.setJson(jsonString)
         val topLocationUseCase = TopLocationUseCase(
             locationRepository
         )

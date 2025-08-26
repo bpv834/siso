@@ -265,7 +265,7 @@ fun AgreeRepeatRadioButton(
                         R.drawable.ic_unselect
                     ),
                     tint = if (checkIdList.contains(id)) SisoColorTokens.Gold40
-                    else SisoColorTokens.GrayScale30,
+                    else SisoColorTokens.Gray30,
                     contentDescription = ""
                 )
                 if (checkIdList.contains(id)) {
@@ -273,7 +273,7 @@ fun AgreeRepeatRadioButton(
                         imageVector = ImageVector.vectorResource(
                             R.drawable.ic_select
                         ),
-                        tint = SisoColorTokens.GrayScale90,
+                        tint = SisoColorTokens.Gray90,
                         contentDescription = ""
                     )
                 }

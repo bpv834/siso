@@ -12,20 +12,17 @@ fun LocationEntity.toTopDomain(): Location{
 }
 
 fun LocationEntity.toBottomDomain(
-    entity: LocationEntity,
     topName: String
-): List<Location>{
-    // 변환 하위 -> 상위
-    locationList
-    val locationList = mutableListOf<Location>()
-    entity.locationList.forEach {
-        if (it.topName == topName) {
-            locationList.add(Location(it.bottomName))
-            return@forEach
-        }
-    }
-    return locationList
+): Location {
+    return Location(locationList.filter {
+        it.topName == topName
+    }.map{
+        it.bottomName
+    }.first())
 }
+
+
+
 
 
 class LocationMapper {

@@ -6,46 +6,40 @@ import javax.inject.Inject
 import kotlin.jvm.java
 
 class FakeLocationRepositoryImpl @Inject constructor(
-    private val locationMapper: FakeLocationMapper
-): LocationRepository {
-    private val locationList =
-        Gson().fromJson("korea_regions_ordered.json", FakeLocationEntity::class.java)
 
-    override fun getTopLocationList(): Location {
-        return locationMapper.mapEntityToTopLocation(locationList)
+): LocationRepository {
+    private var locationEntity =
+        FakeLocationEntity(listOf())
+
+    override fun setJson(json:String){
+        locationEntity =
+            Gson().fromJson(json, FakeLocationEntity::class.java)
     }
 
-    override fun getBottomLocationList(topName: String): List<Location> {
-        return locationMapper.mapEntityToBottomLocation(locationList, topName)
+    override fun getTopLocationList(): Location {
+        return locationEntity.toTopDomain()
+    }
+
+    override fun getBottomLocationList(topName: String): Location {
+        return locationEntity.toBottomDomain(topName)
     }
 }
 
-class FakeLocationMapper {
-    // 하위 -> 상위
-    fun mapEntityToTopLocation(entity: FakeLocationEntity): Location {
-        return Location(entity.locationList.map {
-            it.topName
-        })
+fun FakeLocationEntity.toTopDomain(): Location{
+    // 변환 하위 -> 상위
+    return Location(locationList.map {
+        it.topName
+    })
+}
 
-    }
-    fun mapEntityToBottomLocation(
-        entity: FakeLocationEntity,
-        topName: String
-    ): List<Location> {
-        val locationList = mutableListOf<Location>()
-        entity.locationList.forEach {
-            if (it.topName == topName) {
-                locationList.add(Location(it.bottomName))
-                return@forEach
-            }
-        }
-        return locationList
-    }
-    // 상위 -> 하위
-    fun mapDomainToEntity(domain: String,bottomName: List<String>){
-        //
-
-    }
+fun FakeLocationEntity.toBottomDomain(
+    topName: String
+): Location {
+    return Location(locationList.filter {
+        it.topName == topName
+    }.map{
+        it.bottomName
+    }.first())
 }
 
 data class FakeLocationEntity(

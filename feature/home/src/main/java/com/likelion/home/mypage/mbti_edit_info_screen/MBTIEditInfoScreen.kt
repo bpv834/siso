@@ -101,7 +101,7 @@ fun MBTIEditInfoScreen(
                 text = "나의 성격유형(MBTI)을 \n" +
                         "선택해 주세요",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(13.dp))
             Text(
@@ -109,7 +109,7 @@ fun MBTIEditInfoScreen(
                 text = "성격유형(MBTI)은 나의 성격을 16가지로 구분하는 간단한 검사입니다.\n" +
                         "나와 비슷한 성격, 혹은 다른 성격을 가진 사람을 만나보는 데 도움이 될 수 있어요.",
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale60
+                color = SisoColorTokens.Gray60
             )
             Spacer(Modifier.size(32.dp))
             MBTIList.forEachIndexed { fourIdx, input ->
@@ -124,7 +124,7 @@ fun MBTIEditInfoScreen(
                             modifier = Modifier.weight(1f)
                                 .background(
                                     if (isChecked) SisoColorTokens.Gold40
-                                    else SisoColorTokens.GrayScale20,
+                                    else SisoColorTokens.Gray20,
                                     if (idx == 0) RoundedCornerShape(
                                         topStart = 24.dp,
                                         bottomStart = 24.dp
@@ -152,7 +152,7 @@ fun MBTIEditInfoScreen(
                                 text = pair.first,
                                 textAlign = TextAlign.Center,
                                 style = SisoTypoTokens.Title2,
-                                color = SisoColorTokens.GrayScale90
+                                color = SisoColorTokens.Gray90
                             )
                             Spacer(Modifier.size(8.dp))
                             Text(
@@ -161,14 +161,14 @@ fun MBTIEditInfoScreen(
                                 text = pair.second,
                                 textAlign = TextAlign.Center,
                                 style = SisoTypoTokens.Label1,
-                                color = SisoColorTokens.GrayScale60
+                                color = SisoColorTokens.Gray60
                             )
                             Spacer(Modifier.size(16.dp))
                         }
                         if (idx == 0) {
                             VerticalDivider(
                                 modifier = Modifier.padding(start = 4.dp, end = 4.dp),
-                                thickness = 1.dp, color = SisoColorTokens.GrayScale30
+                                thickness = 1.dp, color = SisoColorTokens.Gray30
                             )
                         }
                     }

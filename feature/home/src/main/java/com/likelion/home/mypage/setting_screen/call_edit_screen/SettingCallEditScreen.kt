@@ -116,11 +116,11 @@ fun SettingText(
                 },
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = SisoColorTokens.Gold40,
-                    uncheckedTrackColor = SisoColorTokens.GrayScale50,
-                    checkedBorderColor = SisoColorTokens.GrayScale30.copy(alpha = 0.0f),
+                    uncheckedTrackColor = SisoColorTokens.Gray50,
+                    checkedBorderColor = SisoColorTokens.Gray30.copy(alpha = 0.0f),
                     checkedThumbColor = SisoColorTokens.White,
                     uncheckedThumbColor = SisoColorTokens.White,
-                    uncheckedBorderColor = SisoColorTokens.GrayScale30.copy(alpha = 0.0f),
+                    uncheckedBorderColor = SisoColorTokens.Gray30.copy(alpha = 0.0f),
                 ),
                 thumbContent = {
                     Box(
@@ -138,7 +138,7 @@ fun SettingText(
 
         HorizontalDivider(
             thickness = 1.dp,
-            color = SisoColorTokens.GrayScale30
+            color = SisoColorTokens.Gray30
         )
 
     }

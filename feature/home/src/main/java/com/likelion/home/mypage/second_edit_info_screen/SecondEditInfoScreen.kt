@@ -104,7 +104,7 @@ fun SecondEditInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
                     }

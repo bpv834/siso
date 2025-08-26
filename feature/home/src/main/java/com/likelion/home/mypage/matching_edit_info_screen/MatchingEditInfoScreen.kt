@@ -101,14 +101,14 @@ fun MatchingEditInfoScreen(
                 modifier = Modifier.height(31.dp).fillMaxWidth(),
                 text = "이런 인연을 만나고 싶어요",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(8.dp))
             Text(
                 modifier = Modifier.height(54.dp).fillMaxWidth(),
                 text = "최소 3개 이상 선택해주세요\n많이 고를수록 매칭 확률이 높아져요",
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale60
+                color = SisoColorTokens.Gray60
             )
         }
         Column(
