@@ -98,7 +98,9 @@ fun FullScreenCallEndReview(
                             modifier = Modifier.size(45.dp)
                         )
                     },
-                    modifier = Modifier.size(142.dp),
+                    modifier = Modifier
+                        .size(142.dp)
+                        .safeContentPadding(),
                     text = "연락할래요",
                     onClick = {}
                 )
@@ -148,6 +150,6 @@ fun FullScreenCallReviewPreview() {
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다."
         )
-        FullScreenCallEndReview(caller = caller,{},{},{})
+        FullScreenCallEndReview(caller = caller, {}, {}, {})
     }
 }

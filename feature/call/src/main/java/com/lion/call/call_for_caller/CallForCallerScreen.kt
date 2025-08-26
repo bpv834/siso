@@ -8,6 +8,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -95,18 +98,22 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
             // 통화 종료 후 인연이어갈지 말지 선택하는 상태
             CallForCallerState.CallEnd -> FullScreenCallEndReview(
                 caller = DummyUser().fakeOtherUser,
-                onClickReport = {viewModel.onClickReportButton()}, // 바텀시트 열기
+                onClickReport = { viewModel.onClickReportButton() }, // 바텀시트 열기
                 onClickAnother = { viewModel.onClickEndCall() },
                 onClickKeepGoing = {}
             )
         }
 
     }
-    if (uiState.isOpenReportSheet) ModalBottomSheet(onDismissRequest = {}) {
+    if (uiState.isOpenReportSheet) ModalBottomSheet(
+        onDismissRequest = {}, sheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = true // 중간 상태 건너뛰기
+        )
+    ) {
         BottomSheetReport(
             badUser = DummyUser().fakeOtherUser,
             onDismissRequest = { viewModel.onClickReportButton() },
             onClickReport = { viewModel.onClickConfirmPopup() })
     }
-    if(uiState.isOpenConfirmPopup) ReportPopUpDialog(onClickClose = {viewModel.onClickEndCall()})
+    if (uiState.isOpenConfirmPopup) ReportPopUpDialog(onClickClose = { viewModel.onClickEndCall() })
 }
