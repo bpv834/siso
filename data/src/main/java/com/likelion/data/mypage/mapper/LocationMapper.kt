@@ -13,22 +13,19 @@ fun LocationEntity.toTopDomain(): Location{
 
 fun LocationEntity.toBottomDomain(
     topName: String
-): Location {
-    return Location(locationList.filter {
+): Location{
+    // 변환 하위 -> 상위
+    return Location(
+        name = locationList.filter {
         it.topName == topName
-    }.map{
+    }.map {
         it.bottomName
-    }.first())
+    }.first()
+    )
 }
 
+// 상위 -> 하위
+fun Location.mapDomainToEntity(domain: String,bottomName: List<String>){
+    //
 
-
-
-
-class LocationMapper {
-    // 상위 -> 하위
-    fun mapDomainToEntity(domain: String,bottomName: List<String>){
-        //
-
-    }
 }

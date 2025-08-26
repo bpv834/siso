@@ -109,6 +109,7 @@ fun EditMain (
 
                     MainEditInfoScreen(
                         viewModel = FakeMainEditInfoScreenViewModel(),
+                        saveHandle = navController.currentBackStackEntry?.savedStateHandle!!,
                         action = listOf(
                             // 사진 0
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route)},
@@ -148,7 +149,13 @@ fun EditMain (
                         topLocationUseCase = topLocationUseCase,
                         bottomLocationUseCase = bottomLocationUseCase,
                     ),
-                    popBackStack = {navController.popBackStack()}
+                    popBackStack = {location->
+                        navController
+                            .previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("location", location)
+                        navController.popBackStack()
+                    }
                     )
                 }
                 // 종교 수정

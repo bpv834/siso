@@ -37,6 +37,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.likelion.domain.mypage.repository.FakeLocationRepositoryImpl
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
@@ -44,23 +45,23 @@ import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
+import timber.log.Timber.Forest.d
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationEditInfoScreen(
     viewModel: LocationEditInfoScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (String) -> Unit = {},
 ) {
-    val context = LocalContext.current
-    var text by remember { mutableStateOf("") }
-    var tempText by remember { mutableStateOf("") }
-    val locationTextFloat = if (text.isBlank())  0.845F else 1F
+    var resultText by remember { mutableStateOf("") }
+    val locationTextFloat = if (resultText.isBlank())  0.845F else 1F
     var bottomState by remember { mutableStateOf(false) }
-    var topLocation by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
-    val topLocations = locationMapper.topLocationList
+    val topLocations by viewModel.topLocation.collectAsStateWithLifecycle()
+    d("topLocations : $topLocations")
+    val bottomLocation by viewModel.bottomLocation.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
@@ -98,14 +99,14 @@ fun LocationEditInfoScreen(
                         modifier = Modifier
                             .padding(top = 15.5.dp, bottom = 15.5.dp, start = 16.dp)
                             .fillMaxWidth(locationTextFloat),
-                        text = text.ifBlank { "검색" },
+                        text = resultText.ifBlank { "검색" },
                         style = SisoTypoTokens.Body2,
                         color = SisoColorTokens.Gray70,
                         textAlign = TextAlign.Start
                     )
-                    Spacer(Modifier.size(if (text.isNotBlank())3.dp
+                    Spacer(Modifier.size(if (resultText.isNotBlank())3.dp
                     else 16.dp))
-                    if (text.isNotBlank()) {
+                    if (resultText.isNotBlank()) {
                         Icon(
                             modifier = Modifier.size(24.dp)
                                 .padding(end = 16.dp),
@@ -147,7 +148,7 @@ fun LocationEditInfoScreen(
             }
         }
 
-        if (text.isNotBlank()) {
+        if (resultText.isNotBlank()) {
             Column(
                 Modifier.align(Alignment.BottomCenter)
             ) {
@@ -157,8 +158,10 @@ fun LocationEditInfoScreen(
                         .height(54.dp),
                     text = "완료하기",
                 ){
-                    viewModel.locationComplete(input = text){
+                    viewModel.locationComplete(input = resultText)
+                    {input->
                         // 완료후 화면을 내리는 네비
+                        popBackStack(input)
                     }
                 }
                 Spacer(Modifier.size(73.dp))
@@ -172,11 +175,9 @@ fun LocationEditInfoScreen(
                     // 바텀 내리기
                     bottomState = false
                     // 하위 지역 모드 초기화
-                    topLocation = ""
-                    // temp 초기화
-                    tempText = ""
+                    viewModel.setBottomLocation("")
                     // 검색 버튼 텍스트 초기화
-                    text = ""
+                    resultText = ""
                 },
                 sheetState = sheetState,
                 dragHandle = null
@@ -203,11 +204,9 @@ fun LocationEditInfoScreen(
                             // 바텀 내리기
                             bottomState = false
                             // 하위 지역 모드 초기화
-                            topLocation = ""
-                            // temp 초기화
-                            tempText = ""
+                            viewModel.setBottomLocation("")
                             // 검색 버튼 텍스트 초기화
-                            text = ""
+                            resultText = ""
                         }
                     ){
                         Icon(
@@ -221,28 +220,21 @@ fun LocationEditInfoScreen(
                     }
                 }
                 Spacer(Modifier.size(31.dp))
-                if (topLocation.isBlank()) {
-                    topLocations.forEach {
-                        LocationText(input = it.first) {
+                if (bottomLocation.name.isEmpty()) {
+                    topLocations.name.forEach { locationName->
+                        LocationText(input = locationName) {
                             //바텀 내용 하위 지역 모드 설정
-                            topLocation = it.second
-                            // 상위 지역 텍스트 임시 저장
-                            tempText = it.first
+                            viewModel.setBottomLocation(locationName)
+                            resultText = locationName
                         }
                     }
                 }else{
-                    val resId = context.resources.getIdentifier(
-                        "city_${ topLocation }",// 선택된 상위 위치
-                        "array",
-                        context.packageName
-                    )
-                    val locations = context.resources.getStringArray(resId)
-                    locations.forEach {
+                    bottomLocation.name.forEach {
                         LocationText(input = it) {
                             // 하위 지역 추가
-                            text = "$tempText $it"
-                            //바텀 내용 하위 지역 모드 초기화
-                            topLocation = ""
+                            resultText += " $it"
+                            // 하위 지역 모드 초기화
+                            viewModel.setBottomLocation("")
                             // 바텀 내리기
                             bottomState = false
                         }
@@ -284,13 +276,12 @@ fun LocationEditInfoScreenPreview(){
     SisoTheme {
         Scaffold {
             it
-            val context = LocalContext.current
-            val inputStream = context.resources.openRawResource(R.raw.korea_regions_ordered)
-            val jsonString  = inputStream.bufferedReader().use { it.readText() }
-            val fakeLocationRepository = FakeLocationRepositoryImpl()
-            fakeLocationRepository.setJson(jsonString)
-            val topUseCase = TopLocationUseCase(fakeLocationRepository)
-            val bottomUseCase = BottomLocationUseCase(fakeLocationRepository)
+
+            val inputStream = LocalContext.current.resources.openRawResource(R.raw.korea_regions_ordered)
+            val jsonString = inputStream.bufferedReader().use { it.readText() }
+            val fakeLocationRepositoryImpl = FakeLocationRepositoryImpl(jsonString)
+            val topUseCase = TopLocationUseCase(fakeLocationRepositoryImpl)
+            val bottomUseCase = BottomLocationUseCase(fakeLocationRepositoryImpl)
             LocationEditInfoScreen(FakeLocationEditInfoScreenViewModel(
                 topUseCase,
                 bottomUseCase

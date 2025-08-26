@@ -2,7 +2,6 @@ package com.likelion.home.mypage.main_edit_info_screen
 
 import android.R.attr.action
 import android.util.Log.d
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,7 +24,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,15 +34,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
@@ -57,7 +58,7 @@ import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
@@ -73,11 +74,16 @@ import kotlin.collections.listOf
 @Composable
 fun MainEditInfoScreen(
     viewModel: MainEditInfoScreenViewModelType,
+    saveHandle: SavedStateHandle,
     action:List<()->Unit> = listOf()
 ) {
+
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
+    val locationBlank =
+        saveHandle.get<String>("location") == null
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
+
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
@@ -117,6 +123,8 @@ fun MainEditInfoScreen(
     )
 
     val appbarTitle = stringResource(com.likelion.home.R.string.main_edit)
+
+
     val interestList = listOf(
         "나의 관심사" to { interestNavigation() },
         "매칭 상대와의 관계" to { matchingNavigation() }
@@ -504,7 +512,10 @@ fun MainEditInfoScreen(
         Spacer(Modifier.size(32.dp))
         InfoEditScreenButton(
             titleText = "지역",
-            selectText = "나의 지역을 등록해주세요"
+            selectText = if(locationBlank) "나의 지역을 등록해주세요"
+            else saveHandle.get<String>("location")!!,
+            color = if(locationBlank) SisoColorTokens.Gray50
+            else SisoColorTokens.Gray90,
         ) {
             locationNavigation()
         }
@@ -699,6 +710,7 @@ fun EditInfoRepeatRadioButton(
 fun InfoEditScreenButton(
     titleText: String,
     selectText: String,
+    color: Color = SisoColorTokens.Gray50,
     icon: ImageVector = ImageVector.vectorResource(com.likelion.home.R.drawable.chevron_down),
     click: () -> Unit = {}
 ) {
@@ -737,7 +749,7 @@ fun InfoEditScreenButton(
                     modifier = Modifier.fillMaxHeight(),
                     text = selectText,
                     style = SisoTypoTokens.Body2,
-                    color = SisoColorTokens.Gray50,
+                    color = color,
                     textAlign = TextAlign.Center
                 )
             }
@@ -795,7 +807,10 @@ fun MainEditInfoScreenPreview(){
     SisoTheme {
         Scaffold {
             it
-            MainEditInfoScreen(viewModel = FakeMainEditInfoScreenViewModel())
+            MainEditInfoScreen(
+                viewModel = FakeMainEditInfoScreenViewModel(),
+                saveHandle = SavedStateHandle(),
+            )
         }
     }
 }

@@ -3,25 +3,28 @@ package com.likelion.domain.mypage.repository
 import com.google.gson.Gson
 import com.likelion.domain.mypage.model.Location
 import javax.inject.Inject
+import kotlin.collections.filter
+import kotlin.collections.map
 import kotlin.jvm.java
 
 class FakeLocationRepositoryImpl @Inject constructor(
-
+    json: String
 ): LocationRepository {
-    private var locationEntity =
-        FakeLocationEntity(listOf())
 
-    override fun setJson(json:String){
-        locationEntity =
-            Gson().fromJson(json, FakeLocationEntity::class.java)
+    private var locationList = FakeLocationEntity(listOf())
+    init {
+        setJson(json)
+    }
+    override fun setJson(json: String) {
+        locationList = Gson().fromJson(json, FakeLocationEntity::class.java)
     }
 
     override fun getTopLocationList(): Location {
-        return locationEntity.toTopDomain()
+        return locationList.toTopDomain()
     }
 
     override fun getBottomLocationList(topName: String): Location {
-        return locationEntity.toBottomDomain(topName)
+        return locationList.toBottomDomain(topName)
     }
 }
 
@@ -34,23 +37,28 @@ fun FakeLocationEntity.toTopDomain(): Location{
 
 fun FakeLocationEntity.toBottomDomain(
     topName: String
-): Location {
-    return Location(locationList.filter {
-        it.topName == topName
-    }.map{
-        it.bottomName
-    }.first())
+): Location{
+    // 변환 하위 -> 상위
+    return Location(
+        name = locationList.filter {
+            it.topName == topName
+        }.map {
+            it.bottomName
+        }.first()
+    )
+}
+
+// 상위 -> 하위
+fun Location.mapDomainToEntity(domain: String,bottomName: List<String>){
+    //
+
 }
 
 data class FakeLocationEntity(
-    val locationList: List<FakeLocationListEntity>, // List<String>
-) {
-
-}
+    val locationList: List<FakeLocationListEntity>
+)
 
 data class FakeLocationListEntity(
-    val topName: String, // VARCHAR(255), NOT NULL
-    val bottomName: List<String>, // VARCHAR(255), NOT NULL
-) {
-
-}
+    val bottomName: List<String>,
+    val topName: String
+)

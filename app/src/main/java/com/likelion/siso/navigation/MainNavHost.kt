@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.likelion.data.mypage.mapper.LocationMapper
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
 import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
@@ -91,12 +90,8 @@ fun MainNavHost(
         val jsonString  = inputStream.bufferedReader().use { it.readText() }
         val locationRepository = LocationRepositoryImpl()
         locationRepository.setJson(jsonString)
-        val topLocationUseCase = TopLocationUseCase(
-            locationRepository
-        )
-        val bottomLocationUseCase = BottomLocationUseCase(
-            locationRepository
-        )
+        val topLocationUseCase = TopLocationUseCase(locationRepository)
+        val bottomLocationUseCase = BottomLocationUseCase(locationRepository)
         editMainNavigation(
             navController = appState.navController,
             topLocationUseCase = topLocationUseCase,
