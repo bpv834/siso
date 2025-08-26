@@ -19,15 +19,19 @@ class KakaoAuthRepositoryImpl @Inject constructor(
             val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
                 when {
                     error != null -> cont.resume(KakaoTokenResult.Error(error))
-                    token != null -> cont.resume(KakaoTokenResult.Success(token.accessToken))
+                    token != null -> cont.resume(
+                        KakaoTokenResult.Success(
+                            token = token.accessToken
+                        )
+                    )
+
                     else -> cont.resume(KakaoTokenResult.Canceled)
                 }
             }
 
-
             val userApi = UserApiClient.instance
             if (userApi.isKakaoTalkLoginAvailable(context)) {
-                userApi.loginWithKakaoTalk(context , callback = callback)
+                userApi.loginWithKakaoTalk(context, callback = callback)
             } else {
                 userApi.loginWithKakaoAccount(context, callback = callback)
             }
