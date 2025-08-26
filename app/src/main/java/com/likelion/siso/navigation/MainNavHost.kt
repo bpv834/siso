@@ -8,9 +8,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import com.likelion.data.mypage.repository.APILocationRepositoryImpl
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
+import com.likelion.domain.mypage.repository.APILocationRepository
 import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
@@ -90,12 +93,14 @@ fun MainNavHost(
         val jsonString  = inputStream.bufferedReader().use { it.readText() }
         val locationRepository = LocationRepositoryImpl()
         locationRepository.setJson(jsonString)
-        val topLocationUseCase = TopLocationUseCase(locationRepository)
-        val bottomLocationUseCase = BottomLocationUseCase(locationRepository)
+
+        val apiLocationRepository = APILocationRepositoryImpl()
+        apiLocationRepository.setContext(cotext)
         editMainNavigation(
             navController = appState.navController,
-            topLocationUseCase = topLocationUseCase,
-            bottomLocationUseCase = bottomLocationUseCase,
+            topLocationUseCase = TopLocationUseCase(locationRepository),
+            bottomLocationUseCase = BottomLocationUseCase(locationRepository),
+            currentLocationSetUseCase = CurrentLocationSetUseCase(apiLocationRepository)
         ){
             appState.navController.navigateToMyPage(
             navOptions {
