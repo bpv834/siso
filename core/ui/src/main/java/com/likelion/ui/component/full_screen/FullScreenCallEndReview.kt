@@ -29,7 +29,7 @@ fun FullScreenCallEndReview(
     caller: com.likelion.domain.call_for_caller.model.UsersModel,
     onClickReport: () -> Unit,
     onClickAnother: () -> Unit,
-    onClickKeepGoing: () -> Unit
+    onClickKeepGoing: () -> Unit // 채팅창으로 가야해서 상대방 id도 받아야함
 ) {
     Column(
         modifier = Modifier
@@ -87,7 +87,7 @@ fun FullScreenCallEndReview(
                         .size(142.dp)
                         .safeContentPadding(),
                     text = "고민할래요",
-                    onClick = {}
+                    onClick = {onClickAnother()}
                 )
                 Spacer(Modifier.size(8.dp))
                 CommonOutlinedButtonWithIconVertical(
