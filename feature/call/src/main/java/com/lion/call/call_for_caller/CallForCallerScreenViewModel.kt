@@ -35,6 +35,7 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<CallUiEvent>()
     override val uiEvent = _uiEvent.asSharedFlow()
 
+
     // 시간 관련 일 객체
     private var timerJob: Job? = null
 
@@ -95,6 +96,18 @@ class CallForCallerScreenViewModel @Inject constructor(
       _uiState.update { currentState->
           currentState.copy(callProgressState = CallForCallerState.Idle)
       }
+    }
+
+    override fun onClickReportButton() {
+        _uiState.update { currentState->
+            currentState.copy(isOpenReportSheet = !currentState.isOpenReportSheet)
+        }
+    }
+
+    override fun onClickConfirmPopup() {
+        _uiState.update { currentState->
+            currentState.copy(isOpenReportSheet = false, isOpenConfirmPopup = !currentState.isOpenConfirmPopup)
+        }
     }
 
     // 타이머 Job 구현체 (private으로 내부에서만 관리)
