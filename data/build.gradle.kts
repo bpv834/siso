@@ -33,7 +33,9 @@ dependencies {
     // Gson 컨버터
     implementation(libs.converter.gson.v300)
 
-
+    //위치 기반 서비스
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
