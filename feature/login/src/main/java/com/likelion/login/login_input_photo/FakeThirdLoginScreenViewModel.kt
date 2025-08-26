@@ -55,6 +55,18 @@ class FakeThirdLoginScreenViewModel(
         )
     }
 
+    override fun saveBitmapToInternalStorage(
+        context: Context,
+        bitmap: Bitmap,
+        fileName: String
+    ): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun finalizeImagesForSignUp(context: Context) {
+        TODO("Not yet implemented")
+    }
+
 
     private fun createDummyBitmap(width: Int, height: Int, color: Int): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)

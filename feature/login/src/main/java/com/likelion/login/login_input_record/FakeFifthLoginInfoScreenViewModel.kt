@@ -25,7 +25,8 @@ class FakeFifthLoginInfoScreenViewModel(
 
     // 현재 녹음 상태
     private val _recordingState = MutableStateFlow(RecordingState.IDLE)
-    override val recordingState: StateFlow<RecordingState> =_recordingState.asStateFlow()
+    override val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
+
     // 시간 상태
     private val _secondsState = MutableStateFlow(0)
     override val secondsState: StateFlow<Int> = _secondsState.asStateFlow()
@@ -40,6 +41,7 @@ class FakeFifthLoginInfoScreenViewModel(
     override fun onClickNextButton() {
         TODO("Not yet implemented")
     }
+
     // 녹음 시작 메서드
     override fun startRecording() {
         // ✨ 실제 오디오 녹음 로직 대신, 상태만 변경
@@ -61,7 +63,7 @@ class FakeFifthLoginInfoScreenViewModel(
             while (true) {
                 delay(1000L)
                 _secondsState.value++
-                if(_secondsState.value >15) {
+                if (_secondsState.value > 15) {
                     stopRecording()
                 }
             }
@@ -87,6 +89,7 @@ class FakeFifthLoginInfoScreenViewModel(
     fun clear() {
         fakeViewModelScope.cancel()
     }
+
     // 오디오 재생 로직을 담당하는 별도의 클래스나 파일
     override fun playAudio(filePath: String) {
         try {
@@ -105,26 +108,23 @@ class FakeFifthLoginInfoScreenViewModel(
         }
     }
 
-    override  fun getAudioBytes(): ByteArray? {
+    override fun savePathInTempUser() {
         // recordedFilePath Flow에서 현재 값을 가져옵니다.
-        val path = recordedFilePath.value ?: return null
+        val path = recordedFilePath.value ?: ""
 
         // 파일 경로가 유효한지 확인합니다.
         val file = File(path)
         if (!file.exists() || !file.canRead()) {
             // 파일이 존재하지 않거나 읽을 수 없으면 null 반환
             Timber.d("파일이 존재하지 않음: $path")
-            return null
+
         }
 
         // 파일의 내용을 바이트 배열로 읽어옵니다.
-        return try {
-            Timber.e("배열로 변환 : ${file.readBytes()}")
-            file.readBytes()
-        } catch (e: Exception) {
-            Timber.e("배열로 변환 에러: $e")
-            null
-        }
+
+        Timber.e("배열로 변환 : ${file.readBytes()}")
+        file.readBytes()
+
     }
 
 }

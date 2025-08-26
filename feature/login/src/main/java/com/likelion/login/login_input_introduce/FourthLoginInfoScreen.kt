@@ -94,6 +94,7 @@ fun FourthLoginInfoScreen(
         }
         Spacer(Modifier.size(112.dp))
         if (bioText.length in 5..50) CommonActiveButton(text = "완료하기", onClick = {
+            viewModel.saveBioTextInTemp()
             onNavigateNext()
         })
         else CommonDisableButton(text = "완료하기", onClick = {
