@@ -1,19 +1,54 @@
 package com.likelion.data.login.repository
 
-import com.likelion.domain.login.repository.AuthTokenRepository
+import com.likelion.data.login.mapper.toDomain
+import com.likelion.data.login.mapper.toRemote
+import com.likelion.domain.login.model.BasicToken
+import com.likelion.domain.login.model.User
+import com.likelion.domain.login.model.UserInfo
+import com.likelion.domain.login.model.UserStatus
+import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.local.datastore.DataStoreDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
     private val data: DataStoreDataSource
-) : AuthTokenRepository {
-    override suspend fun saveAuthToken(token: String) {
-        data.saveToken(token = token)
+) : TokenRepository {
+
+    // DataStore에서 저장된 키를 가져옴
+    override suspend fun getLocalToken(): Flow<BasicToken?> {
+        return data.getToken().map { it?.toDomain() }
     }
 
-    override suspend fun getAuthToken(): Flow<String?> {
-        return data.getToken()
+    override suspend fun clearLocalToken() {
+        data.clearToken()
     }
+
+    override suspend fun saveRefreshToken(token: BasicToken) {
+        data.saveToken(token.toRemote())
+    }
+
+    override suspend fun getTokenAll(): Flow<User?> {
+        return data.getTokenAll()
+    }
+
+    override suspend fun saveTokenAll(user: User) {
+//        val dummyUser = User(
+//            accessToken = "더미액세스",
+//            refreshToken = "더미리프래시",
+//            userStatus = UserStatus.REGISTER,
+//            userInfo = UserInfo(
+//                id = 1,
+//                email = "더미 이메일",
+//                provider = "더미 Provider",
+//                phoneNumber = "더미 01012341234",
+//                deleted = false,
+//                block = false
+//            )
+//        )
+        data.saveTokenAll(user)
+    }
+
 
 }
