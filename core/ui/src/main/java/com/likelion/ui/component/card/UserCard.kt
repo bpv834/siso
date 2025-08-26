@@ -256,5 +256,5 @@ fun UserCardPreview() {
         interests = listOf("독서", "영화", "헬스"),
         introduce = "안녕하세요. 자기소개입니다. 저는 영화와 독서를 좋아합니다."
     )
-    UserCard(user = sampleUser,{},{},{},)
+    UserCard(user = sampleUser,{},{},{id1,id2->},)
 }
