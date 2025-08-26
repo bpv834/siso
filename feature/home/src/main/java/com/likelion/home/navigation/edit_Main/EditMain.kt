@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreen
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.FakeAdditionalInfoAlcoholScreenViewModel
@@ -34,6 +35,7 @@ import com.likelion.home.mypage.interest_edit_info_screen.FakeInterestEditInfoSc
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreen
 import com.likelion.home.mypage.location_edit_info_screen.FakeLocationEditInfoScreenViewModel
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreen
+import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreenViewModel
 import com.likelion.home.mypage.main_edit_info_screen.FakeMainEditInfoScreenViewModel
 import com.likelion.home.mypage.main_edit_info_screen.MainEditInfoScreen
 import com.likelion.home.mypage.matching_edit_info_screen.FakeMatchingEditInfoScreenViewModel
@@ -50,11 +52,13 @@ fun EditMainRoute(
     view: View = LocalView.current,
     topLocationUseCase : TopLocationUseCase,
     bottomLocationUseCase : BottomLocationUseCase,
+    currentLocationSetUseCase : CurrentLocationSetUseCase,
     actionSnackbar: () -> Unit = {}
 ) {
     EditMain(
         topLocationUseCase = topLocationUseCase,
         bottomLocationUseCase = bottomLocationUseCase,
+        currentLocationSetUseCase = currentLocationSetUseCase,
         navigateToMyPage = actionSnackbar
     )
 }
@@ -65,6 +69,7 @@ fun EditMainRoute(
 fun EditMain (
     topLocationUseCase : TopLocationUseCase,
     bottomLocationUseCase : BottomLocationUseCase,
+    currentLocationSetUseCase : CurrentLocationSetUseCase,
     navigateToMyPage : () -> Unit = {},
 ) {
     val title = stringResource(com.likelion.home.R.string.main_edit)
@@ -145,9 +150,10 @@ fun EditMain (
                 // 위치 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route) {
                 LocationEditInfoScreen(
-                    viewModel = FakeLocationEditInfoScreenViewModel(
+                    viewModel = LocationEditInfoScreenViewModel(
                         topLocationUseCase = topLocationUseCase,
                         bottomLocationUseCase = bottomLocationUseCase,
+                        currentLocationSetUseCase = currentLocationSetUseCase
                     ),
                     popBackStack = {location->
                         navController
