@@ -74,6 +74,11 @@ class ChatRepositoryImpl @Inject constructor(
                 nickName = "애플",
                 callTime = System.currentTimeMillis(),
                 currentMsg = "Hello 안녕하세요 こんにちは"
+            ), ChatHistoryEntity(
+                profileImage = "https://picsum.photos/200/206",
+                nickName = "닉네임은여덟글자",
+                callTime = System.currentTimeMillis(),
+                currentMsg = "Hello 안녕하세요 こんにちは"
             )
 
         )
