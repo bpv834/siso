@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.google.android.material.snackbar.Snackbar
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.mypage.MyPageRoute
 import com.likelion.navigation.NavigationRoute
@@ -18,6 +19,7 @@ fun NavGraphBuilder.editMainNavigation(
     navController: NavController,
     topLocationUseCase : TopLocationUseCase,
     bottomLocationUseCase : BottomLocationUseCase,
+    currentLocationSetUseCase : CurrentLocationSetUseCase,
     actionSnackbar : () -> Unit
 ) {
     composable(
@@ -26,6 +28,7 @@ fun NavGraphBuilder.editMainNavigation(
         EditMainRoute (
             topLocationUseCase = topLocationUseCase,
             bottomLocationUseCase = bottomLocationUseCase,
+            currentLocationSetUseCase = currentLocationSetUseCase,
             actionSnackbar = actionSnackbar
         )
     }
