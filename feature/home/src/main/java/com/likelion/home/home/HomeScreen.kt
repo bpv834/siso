@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import com.likelion.navigation.NavigationRoute
 
-
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
