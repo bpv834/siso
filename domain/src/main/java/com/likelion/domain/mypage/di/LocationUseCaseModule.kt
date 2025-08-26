@@ -1,7 +1,9 @@
 package com.likelion.domain.mypage.di
 
+import com.likelion.domain.mypage.repository.APILocationRepository
 import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
+import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import dagger.Module
 import dagger.Provides
@@ -22,4 +24,9 @@ object LocationUseCaseModule {
     @Singleton
     fun provideBottomLocationUseCase(locationRepository: LocationRepository): BottomLocationUseCase =
         BottomLocationUseCase(locationRepository)
+
+    @Provides
+    @Singleton
+    fun provideCurrentLocationSetUseCase(apiLocationRepository: APILocationRepository): CurrentLocationSetUseCase =
+        CurrentLocationSetUseCase(apiLocationRepository)
 }
