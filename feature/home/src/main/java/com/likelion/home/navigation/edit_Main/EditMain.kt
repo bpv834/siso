@@ -77,7 +77,7 @@ fun EditMain (
                 CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = SisoColorTokens.White,
-                        titleContentColor = SisoColorTokens.GrayScale90
+                        titleContentColor = SisoColorTokens.Gray90
                     ),
                     title = {
                         Text(text = appBarTitle)
@@ -150,11 +150,10 @@ fun EditMain (
                         bottomLocationUseCase = bottomLocationUseCase,
                     ),
                     popBackStack = {location->
-                        // 📌 화면 B → A로 값 전달
-                        navController.previousBackStackEntry
+                        navController
+                            .previousBackStackEntry
                             ?.savedStateHandle
                             ?.set("location", location)
-
                         navController.popBackStack()
                     }
                     )

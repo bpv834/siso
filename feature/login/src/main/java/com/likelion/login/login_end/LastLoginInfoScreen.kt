@@ -35,7 +35,7 @@ fun LastLoginInfoScreen(
                     "시팅에서 나와 취향이 같은 \n" +
                     "인연을 더 잘 만날 수 있어요",
             style = SisoTypoTokens.Title2,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )

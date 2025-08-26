@@ -91,7 +91,7 @@ fun AdditionalInfoReligionScreen(
                 modifier = Modifier.height(31.dp).fillMaxWidth(),
                 text = "종교가 있나요?",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(32.dp))
             FlowRow(
@@ -175,7 +175,7 @@ fun AdditionalInfoReligionScreen(
                                 .size(24.dp)
                                 .align(Alignment.CenterEnd),
                             imageVector = ImageVector.vectorResource(R.drawable.ic_bottom_close),
-                            tint = SisoColorTokens.GrayScale90,
+                            tint = SisoColorTokens.Gray90,
                             contentDescription = ""
                         )
                     }

@@ -1,4 +1,4 @@
-package com.likelion.data.di
+package com.likelion.data.login.di
 
 import com.likelion.data.login.repository.LoginRepositoryImpl
 import com.likelion.data.login.repository.TokenRepositoryImpl
@@ -13,7 +13,7 @@ import javax.inject.Singleton
 // 구현체 연결부
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule {
+abstract class LoginDataModule {
     @Binds
     @Singleton
     abstract fun bindAuthTokenRepository(

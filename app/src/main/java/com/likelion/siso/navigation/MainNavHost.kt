@@ -1,21 +1,22 @@
 package com.likelion.siso.navigation
 
+import android.util.TypedValue
+import com.likelion.ui.R
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
+import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
-import com.likelion.home.navigation.edit_Main.settingMainNavigation
-import com.likelion.home.navigation.findNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
-import com.likelion.home.navigation.navigateToFind
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.login.navigation.inputNavigation
@@ -23,18 +24,15 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
-import com.likelion.ui.R
 
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
-    //startDestination: String = NavigationRoute.OnBoardingScreen.route
-    //startDestination: String = NavigationRoute.LoginScreen.route
     startDestination: String = NavigationRoute.HomeScreen.route
 ) {
-    val context = LocalContext.current
+    val cotext = LocalContext.current
     NavHost(
         modifier = modifier,
         navController = appState.navController,
@@ -68,10 +66,18 @@ fun MainNavHost(
         homeNavigation {
             appState.navController.navigateToHome()
         }
-        findNavigation {
-            appState.navController.navigateToFind()
-        }
-        chatNavigation {
+        chatNavigation(
+            navController = appState.navController,
+            onNavigateUp = {
+                // 루트 NavController에서 popBackStack 시도.
+                // 더 이상 pop할 수 없으면 Chat 탭으로 안전 복귀.
+                if (!appState.navController.popBackStack()) {
+                    appState.navController.navigateToChat(
+                        navOptions { launchSingleTop = true }
+                    )
+                }
+            }
+        ) {
             appState.navController.navigateToChat()
         }
         myPageNavigation(
@@ -80,9 +86,8 @@ fun MainNavHost(
         ) {
 
         }
-        val inputStream = context.resources.openRawResource(R.raw.korea_regions_ordered)
-        val jsonString = inputStream.bufferedReader().use { it.readText() }
-
+        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
+        val jsonString  = inputStream.bufferedReader().use { it.readText() }
         val locationRepository = LocationRepositoryImpl()
         locationRepository.setJson(jsonString)
         val topLocationUseCase = TopLocationUseCase(locationRepository)
@@ -100,16 +105,6 @@ fun MainNavHost(
             )
         }
 
-        settingMainNavigation(
-            navController = appState.navController
-        ){
-            appState.navController.navigateToMyPage(
-                navOptions {
-                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.SettingScreen.route,inclusive = true)
-                    launchSingleTop = true
-                }
-            )
-        }
         /*
         *
         * onBoardingNavigation(

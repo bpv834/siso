@@ -62,14 +62,14 @@ fun AdditionalInfoAlcoholScreen(
                 text = "음주 습관을 알려주세요. \n" +
                         "서로 이해하는 데 도움이 돼요",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(13.dp))
             Text(
                 modifier = Modifier.height(27.dp).fillMaxWidth(),
                 text = "최소 1개 이상 선택해주세요",
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale60
+                color = SisoColorTokens.Gray60
             )
             Spacer(Modifier.size(32.dp))
             smokingList.forEach { text ->

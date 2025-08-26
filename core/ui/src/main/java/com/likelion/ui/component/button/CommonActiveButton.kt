@@ -23,7 +23,7 @@ fun CommonActiveButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = SisoColorTokens.Gold40,
-            contentColor = SisoColorTokens.GrayScale90
+            contentColor = SisoColorTokens.Gray90
         ),
         border = null,
         modifier = modifier.fillMaxWidth().height(54.dp)
@@ -31,7 +31,7 @@ fun CommonActiveButton(
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
         )
     }
 }

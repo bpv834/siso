@@ -79,13 +79,13 @@ fun FirstLoginInfoScreen(
         Text(
             text = "기본정보를 제공해주세요",
             style = SisoTypoTokens.Title1,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.Gray90
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
             text = "닉네임",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -113,7 +113,7 @@ fun FirstLoginInfoScreen(
                             modifier = Modifier.height(23.dp),
                             text = "닉네임을 입력해주세요",
                             fontSize = SisoFontSizeTokens.Label1,
-                            color = SisoColorTokens.GrayScale50
+                            color = SisoColorTokens.Gray50
                         )
                     },
                     innerTextField = innerTextField,
@@ -124,7 +124,7 @@ fun FirstLoginInfoScreen(
                     container = {
 
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.GrayScale20)
+                            drawRect(SisoColorTokens.Gray20)
                         })
 
                     },
@@ -132,7 +132,7 @@ fun FirstLoginInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
                     }
@@ -146,7 +146,7 @@ fun FirstLoginInfoScreen(
         Text(
             text = "나이",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -176,7 +176,7 @@ fun FirstLoginInfoScreen(
                             modifier = Modifier.height(23.dp),
                             text = "나이를 입력해주세요",
                             fontSize = SisoFontSizeTokens.Label1,
-                            color = SisoColorTokens.GrayScale50
+                            color = SisoColorTokens.Gray50
                         )
                     },
                     innerTextField = innerTextField,
@@ -186,14 +186,14 @@ fun FirstLoginInfoScreen(
                     interactionSource = MutableInteractionSource(),
                     container = {
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.GrayScale20)
+                            drawRect(SisoColorTokens.Gray20)
                         })
                     },
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
                     }
@@ -205,7 +205,7 @@ fun FirstLoginInfoScreen(
         Text(
             text = "내 성별",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -218,13 +218,13 @@ fun FirstLoginInfoScreen(
         Text(
             text = "매칭 성별",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 6.dp))
         Text(
             text = "동성선택시 동성친구 이성선택시 이성친구를\n추천해 드려요.",
             style = SisoTypoTokens.Label1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
 
@@ -242,7 +242,7 @@ fun FirstLoginInfoScreen(
                 .height(54.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = SisoColorTokens.Gold40,
-                disabledContainerColor = SisoColorTokens.GrayScale30
+                disabledContainerColor = SisoColorTokens.Gray30
             ),
             onClick = {
                 onNavigateNext()
@@ -254,8 +254,8 @@ fun FirstLoginInfoScreen(
                 text = "계속하기",
                 style = SisoTypoTokens.Button1,
 
-                color = if(fistContinueBoolean.value == true)SisoColorTokens.GrayScale90
-                else SisoColorTokens.GrayScale50,
+                color = if(fistContinueBoolean.value == true)SisoColorTokens.Gray90
+                else SisoColorTokens.Gray50,
             )
         }
         Spacer(modifier = Modifier.size(size = 58.dp))
@@ -292,8 +292,8 @@ fun RepeatRadioButton(
             RadioButton(
                 selected = info.second,
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = SisoColorTokens.GrayScale90,
-                    unselectedColor = SisoColorTokens.GrayScale30
+                    selectedColor = SisoColorTokens.Gray90,
+                    unselectedColor = SisoColorTokens.Gray30
                 ),
                 onClick = {
                     radios.replaceAll {

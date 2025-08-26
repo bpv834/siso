@@ -115,7 +115,7 @@ fun AgreeToTermsScreen(
                         "\n새로운 인연을 만나기전에"+
                         "\n동의가 필요해요",
                 style = SisoTypoTokens.Body1,
-                color = SisoColorTokens.GrayScale90,
+                color = SisoColorTokens.Gray90,
             )
             Spacer(modifier = Modifier.size(size = 68.dp))
 
@@ -145,7 +145,7 @@ fun AgreeToTermsScreen(
                     .height(54.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SisoColorTokens.Gold40,
-                    disabledContainerColor = SisoColorTokens.GrayScale30
+                    disabledContainerColor = SisoColorTokens.Gray30
                 ),
                 onClick = {
                     onNavigateNext()
@@ -155,8 +155,8 @@ fun AgreeToTermsScreen(
                 Text(
                     text = "계속하기",
                     style = SisoTypoTokens.Button1,
-                    color = if(agreeContinueBoolean.value == true)SisoColorTokens.GrayScale90
-                    else SisoColorTokens.GrayScale50,
+                    color = if(agreeContinueBoolean.value == true)SisoColorTokens.Gray90
+                    else SisoColorTokens.Gray50,
                 )
             }
             Spacer(modifier = Modifier.size(size = 56.dp))
@@ -181,7 +181,7 @@ fun AgreeToTermsScreen(
                             text = if (bottomId == bottomTitle[0].first) bottomTitle[0].second
                             else bottomTitle[1].second,
                             style = SisoTypoTokens.Title3,
-                            color = SisoColorTokens.GrayScale90,
+                            color = SisoColorTokens.Gray90,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -251,7 +251,7 @@ fun AgreeRepeatRadioButton(
                     .align(Alignment.CenterStart),
                 text = text,
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale90,
+                color = SisoColorTokens.Gray90,
                 textAlign = TextAlign.Center
             )
             Box(
@@ -265,7 +265,7 @@ fun AgreeRepeatRadioButton(
                         R.drawable.ic_unselect
                     ),
                     tint = if (checkIdList.contains(id)) SisoColorTokens.Gold40
-                    else SisoColorTokens.GrayScale30,
+                    else SisoColorTokens.Gray30,
                     contentDescription = ""
                 )
                 if (checkIdList.contains(id)) {
@@ -273,7 +273,7 @@ fun AgreeRepeatRadioButton(
                         imageVector = ImageVector.vectorResource(
                             R.drawable.ic_select
                         ),
-                        tint = SisoColorTokens.GrayScale90,
+                        tint = SisoColorTokens.Gray90,
                         contentDescription = ""
                     )
                 }

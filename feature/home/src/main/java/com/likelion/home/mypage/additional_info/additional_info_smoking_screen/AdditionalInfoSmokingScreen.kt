@@ -76,14 +76,14 @@ fun AdditionalInfoSmokingScreen(
                 text = "흡연 여부를 알려주시면 \n" +
                         "더 잘 맞는 분과 연결해 드려요",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(13.dp))
             Text(
                 modifier = Modifier.height(27.dp).fillMaxWidth(),
                 text = "최소 1개 이상 선택해주세요",
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale60
+                color = SisoColorTokens.Gray60
             )
             Spacer(Modifier.size(32.dp))
             smokingList.forEach { text ->

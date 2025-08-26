@@ -65,7 +65,7 @@ fun MyPageMainScreen(
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = SisoColorTokens.White,
-                    titleContentColor = SisoColorTokens.GrayScale90
+                    titleContentColor = SisoColorTokens.Gray90
                 ),
                 title = {
                     Text(text = appBarTitle)

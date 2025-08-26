@@ -171,7 +171,7 @@ object SisoTypoTokens {
         lineHeight = SisoLineHeightTokens.Button2,
         letterSpacing = SisoLetterSpaceTokens.Spacing3
     )
-    val Caption = TextStyle(
+    val Caption1 = TextStyle(
         fontFamily = pretendardFontFamily,
         fontWeight = FontWeight.W400,
         fontSize = SisoFontSizeTokens.Caption,
@@ -206,7 +206,7 @@ fun TextPreview() {
         Text("Button 1", style = SisoTypoTokens.Button1)
         Text("Button 2", style = SisoTypoTokens.Button2)
         // Caption
-        Text("Caption 1", style = SisoTypoTokens.Caption)
+        Text("Caption 1", style = SisoTypoTokens.Caption1)
 
     }
 

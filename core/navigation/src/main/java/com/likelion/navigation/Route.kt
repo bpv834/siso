@@ -5,10 +5,11 @@ sealed class NavigationRoute(val route: String) {
     object LoginScreen : NavigationRoute("login")
     object InputScreen : NavigationRoute("input")
     object HomeScreen : NavigationRoute("home")
-    object FindScreen : NavigationRoute("find")
-    object ChatScreen : NavigationRoute("chat")
+    object ChatScreen : NavigationRoute("chat") {
+        object AlarmScreen : NavigationRoute("chat/alarm")
+    }
     object MyPageScreen : NavigationRoute("myPage"){
-        object MainEditScreen : NavigationRoute("myPage/main_edit"){
+        object MainEditScreen : NavigationRoute("myPage/main_edit") {
             object PotoEditScreen : NavigationRoute("myPage/main_edit/poto_edit")
             object VoiceEditScreen : NavigationRoute("myPage/main_edit/voice_edit")
             object LocationEditScreen : NavigationRoute("myPage/main_edit/location_edit")
@@ -19,7 +20,8 @@ sealed class NavigationRoute(val route: String) {
             object InterestEditScreen : NavigationRoute("myPage/main_edit/Interest_edit")
             object MatchingEditScreen : NavigationRoute("myPage/main_edit/matching_edit")
         }
-        object SettingScreen : NavigationRoute("myPage/setting"){
+
+        object SettingScreen : NavigationRoute("myPage/setting") {
             object CallEditScreen : NavigationRoute("myPage/setting/call_edit")
         }
     }

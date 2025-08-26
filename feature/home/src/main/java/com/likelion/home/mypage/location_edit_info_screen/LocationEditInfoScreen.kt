@@ -76,14 +76,14 @@ fun LocationEditInfoScreen(
                 modifier = Modifier.height(31.dp),
                 text = "어디에 거주하시나요?",
                 style = SisoTypoTokens.Title2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(24.dp))
             Box(
                 modifier = Modifier
                     .height(54.dp)
                     .fillMaxWidth()
-                    .background(SisoColorTokens.GrayScale20, RoundedCornerShape(999.dp))
+                    .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -102,7 +102,7 @@ fun LocationEditInfoScreen(
                             .fillMaxWidth(locationTextFloat),
                         text = resultText.ifBlank { "검색" },
                         style = SisoTypoTokens.Body2,
-                        color = SisoColorTokens.GrayScale70,
+                        color = SisoColorTokens.Gray70,
                         textAlign = TextAlign.Start
                     )
                     Spacer(Modifier.size(if (resultText.isNotBlank())3.dp
@@ -112,7 +112,7 @@ fun LocationEditInfoScreen(
                             modifier = Modifier.size(24.dp)
                                 .padding(end = 16.dp),
                             imageVector = ImageVector.vectorResource(R.drawable.ic_text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
 
@@ -135,7 +135,7 @@ fun LocationEditInfoScreen(
                 Icon(
                     modifier = Modifier.size(20.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.ic_crosshair),
-                    tint = SisoColorTokens.GrayScale40,
+                    tint = SisoColorTokens.Gray40,
                     contentDescription = ""
                 )
                 Spacer(Modifier.size(3.dp))
@@ -143,7 +143,7 @@ fun LocationEditInfoScreen(
                     modifier = Modifier.height(23.dp),
                     text = "현재 위치로 설정하기",
                     style = SisoTypoTokens.Body2,
-                    color = SisoColorTokens.GrayScale70,
+                    color = SisoColorTokens.Gray70,
                     textAlign = TextAlign.Start
                 )
             }
@@ -215,7 +215,7 @@ fun LocationEditInfoScreen(
                                 .size(24.dp)
                                 .align(Alignment.CenterEnd),
                             imageVector = ImageVector.vectorResource(R.drawable.ic_bottom_close),
-                            tint = SisoColorTokens.GrayScale90,
+                            tint = SisoColorTokens.Gray90,
                             contentDescription = ""
                         )
                     }

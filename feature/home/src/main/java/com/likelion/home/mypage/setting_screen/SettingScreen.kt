@@ -70,14 +70,14 @@ fun SettingText(
                 .padding(start = 16.dp),
             text = input,
             style = SisoTypoTokens.Body2,
-            color = if (input =="회원탈퇴") SisoColorTokens.GrayScale40
+            color = if (input =="회원탈퇴") SisoColorTokens.Gray40
             else SisoColorTokens.Black,
         )
         Spacer(modifier = Modifier.size(16.dp))
         if (input != "회원탈퇴") {
             HorizontalDivider(
                 thickness = 1.dp,
-                color = SisoColorTokens.GrayScale30
+                color = SisoColorTokens.Gray30
             )
         }
     }

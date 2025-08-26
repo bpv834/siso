@@ -108,7 +108,7 @@ fun RecordEditInfoScreen(
                     Text(
                         text = "00:${minuteState.toString().padStart(2, '0')}",
                         style = SisoTypoTokens.Body1,
-                        color = SisoColorTokens.GrayScale90
+                        color = SisoColorTokens.Gray90
                     )
                     Spacer(Modifier.size(191.dp))
                 }
@@ -140,7 +140,7 @@ fun RecordEditInfoScreen(
                     Text(
                         text = "00:00",
                         style = SisoTypoTokens.Body1,
-                        color = SisoColorTokens.GrayScale90
+                        color = SisoColorTokens.Gray90
                     )
                 }
                 Column(
@@ -202,7 +202,7 @@ fun RecordEditInfoScreen(
                     Text(
                         text = "00:${minuteState.toString().padStart(2, '0')}",
                         style = SisoTypoTokens.Body1,
-                        color = SisoColorTokens.GrayScale90
+                        color = SisoColorTokens.Gray90
                     )
                 }
                 Column(
@@ -242,7 +242,7 @@ fun RecordEditInfoScreen(
                     Text(
                         text = "00:${minuteState.toString().padStart(2, '0')}",
                         style = SisoTypoTokens.Body1,
-                        color = SisoColorTokens.GrayScale90
+                        color = SisoColorTokens.Gray90
                     )
                 }
 

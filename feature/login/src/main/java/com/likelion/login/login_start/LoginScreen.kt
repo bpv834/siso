@@ -1,5 +1,11 @@
 package com.likelion.login.login_start
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.compose.foundation.clickable
@@ -21,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +39,9 @@ import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Composable
 fun LoginRoute(
@@ -64,6 +74,8 @@ fun LoginScreen(
     }
     //val loginStatusInfoTitle = if (isLoggedIn.value) "로그인 상태" else "로그아웃 상태"
 
+    val context = LocalContext.current  // ✅ Context 가져오기
+    getKeyHash(context)
     Scaffold { innerPadding ->
         AsyncImage(
             contentScale = ContentScale.Crop,
@@ -114,6 +126,46 @@ fun LoginScreen(
     }
 }
 
+@SuppressLint("PackageManagerGetSignatures")
+fun getKeyHash(context: Context): String? {
+    return try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
+        } else {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNATURES
+            )
+        }
+
+        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.signingInfo!!.apkContentsSigners
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.signatures
+        }
+
+        if (signatures != null) {
+            for (signature in signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val keyHash = android.util.Base64.encodeToString(
+                    md.digest(),
+                    android.util.Base64.NO_WRAP
+                )
+                Log.d("키해시", "앱의 디버그 키해시는 👉 $keyHash") // ✅ 한글 로그
+                return keyHash
+            }
+        }
+        null
+    } catch (e: Exception) {
+        Log.e("키해시", "키해시 생성 중 오류 발생: ${e.message}") // ✅ 한글 에러 로그
+        null
+    }
+}
 @Preview
 @Composable
 fun LoginScreenPreview() {

@@ -23,8 +23,8 @@ fun CommonDisableButton(
     OutlinedButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = SisoColorTokens.GrayScale30,
-            contentColor = SisoColorTokens.GrayScale50
+            containerColor = SisoColorTokens.Gray30,
+            contentColor = SisoColorTokens.Gray50
         ),
         border = null,
         modifier = modifier
@@ -34,7 +34,7 @@ fun CommonDisableButton(
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
-            color = SisoColorTokens.GrayScale50,
+            color = SisoColorTokens.Gray50,
         )
     }
 }
