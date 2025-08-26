@@ -1,6 +1,6 @@
 package com.likelion.data.home.mapper
 
-import com.likelion.domain.home.model.CallInfoModel
+import com.likelion.domain.call_for_caller.model.CallInfoModel
 import com.likelion.remote.model.response.CallInfoDto
 
 

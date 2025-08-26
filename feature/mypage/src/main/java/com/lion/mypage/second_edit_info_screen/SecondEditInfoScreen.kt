@@ -1,6 +1,5 @@
 package com.lion.mypage.second_edit_info_screen
 
-import android.R.id.input
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +36,6 @@ import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoFontSizeTokens
 import com.likelion.ui.theme.SisoTypoTokens
-import com.lion.mypage.second_edit_info_screen.SecondEditInfoScreenViewModelType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,13 +58,13 @@ fun SecondEditInfoScreen(
         Text(
             text = "기본정보를 제공해주세요",
             style = SisoTypoTokens.Title1,
-            color = SisoColorTokens.GrayScale90
+            color = SisoColorTokens.Gray90
         )
         Spacer(modifier = Modifier.size(size = 24.dp))
         Text(
             text = "키",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale50
+            color = SisoColorTokens.Gray50
         )
         Spacer(modifier = Modifier.size(size = 12.dp))
         BasicTextField(
@@ -98,7 +96,7 @@ fun SecondEditInfoScreen(
                     container = {
 
                         Box(modifier = Modifier.drawBehind {
-                            drawRect(SisoColorTokens.GrayScale20)
+                            drawRect(SisoColorTokens.Gray20)
                         })
 
                     },
@@ -106,7 +104,7 @@ fun SecondEditInfoScreen(
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = rememberAsyncImagePainter(R.drawable.text_edit),
-                            tint = SisoColorTokens.GrayScale40,
+                            tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
                     }

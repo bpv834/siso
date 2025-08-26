@@ -69,13 +69,13 @@ fun MyPageScreen()  {
                 Text(
                     text = "따뜻한 봄날",
                     style = SisoTypoTokens.Title2,
-                    color = SisoColorTokens.GrayScale90,
+                    color = SisoColorTokens.Gray90,
                 )
                 Spacer(modifier = Modifier.size(size = 2.dp))
                 Text(
                     text = "56세",
                     style = SisoTypoTokens.Title3,
-                    color = SisoColorTokens.GrayScale70,
+                    color = SisoColorTokens.Gray70,
                 )
                 Spacer(modifier = Modifier.size(size = 10.dp))
                 Row {
@@ -88,7 +88,7 @@ fun MyPageScreen()  {
                     Text(
                         text = "서울 중구",
                         style = SisoTypoTokens.Label1,
-                        color = SisoColorTokens.GrayScale90,
+                        color = SisoColorTokens.Gray90,
                     )
                 }
 
@@ -166,14 +166,14 @@ fun MyPageScreen()  {
             Box (
                 modifier = Modifier
                     .height(72.dp)
-                    .background(SisoColorTokens.GrayScale20, RoundedCornerShape(24.dp))
+                    .background(SisoColorTokens.Gray20, RoundedCornerShape(24.dp))
             ){
                 Text(
                     modifier = Modifier.align(Alignment.Center)
                         .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 12.dp),
                     text = "안녕하세요? 식물과 자연을 좋아하는 닉네임입니다.",
                     style = SisoTypoTokens.Body2,
-                    color = SisoColorTokens.GrayScale90,
+                    color = SisoColorTokens.Gray90,
                 )
             }
 
@@ -183,7 +183,7 @@ fun MyPageScreen()  {
         Text(
             text = "계정정보",
             style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.GrayScale90,
+            color = SisoColorTokens.Gray90,
         )
 
         Spacer(modifier = Modifier.size(size = 12.dp))
@@ -230,7 +230,7 @@ fun ProfileCircle(
             modifier = Modifier.align(Alignment.BottomCenter)
                 .size(96.dp, 43.dp)
                 .border(2.dp, SisoColorTokens.Gold40, RoundedCornerShape(99.dp))
-                .background(SisoColorTokens.GrayScale5, RoundedCornerShape(99.dp))
+                .background(SisoColorTokens.Gray5, RoundedCornerShape(99.dp))
 
         ){
             Row(
@@ -263,7 +263,7 @@ fun ProfileCircle(
                     modifier = Modifier.align(Alignment.BottomCenter)
                         .size(117.dp, 44.dp)
                         .border(2.dp, SisoColorTokens.Gold40, RoundedCornerShape(99.dp))
-                        .background(SisoColorTokens.GrayScale5, RoundedCornerShape(99.dp))
+                        .background(SisoColorTokens.Gray5, RoundedCornerShape(99.dp))
                         .clickable{
                             completeEdit()
                         }
@@ -278,7 +278,7 @@ fun ProfileCircle(
                     Icon(
                         modifier = Modifier.size(24.dp),
                         painter = rememberAsyncImagePainter(R.drawable.text_edit),
-                        tint = SisoColorTokens.GrayScale70,
+                        tint = SisoColorTokens.Gray70,
                         contentDescription = ""
                     )
                 }
@@ -311,7 +311,7 @@ fun ProfileText(
         Spacer(modifier = Modifier.size(16.dp))
         HorizontalDivider(
             thickness = 1.dp,
-            color = SisoColorTokens.GrayScale30
+            color = SisoColorTokens.Gray30
         )
     }
 

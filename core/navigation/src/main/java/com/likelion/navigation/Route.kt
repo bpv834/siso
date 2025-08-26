@@ -5,10 +5,11 @@ sealed class NavigationRoute(val route: String) {
     object LoginScreen : NavigationRoute("login")
     object InputScreen : NavigationRoute("input")
     object HomeScreen : NavigationRoute("home")
-    object FindScreen : NavigationRoute("find")
-    object ChatScreen : NavigationRoute("chat")
+    object ChatScreen : NavigationRoute("chat") {
+        object AlarmScreen : NavigationRoute("chat/alarm")
+    }
     object MyPageScreen : NavigationRoute("myPage")
-    object CallForCallerScreen : NavigationRoute("caller")
+    object CallForCallerScreen : NavigationRoute("caller/{userId}/{otherUserId}")
     object CallForReceiverScreen : NavigationRoute("receiver")
     /*
     * object 보여줄화면: NavigationRoute("보여줄화면")

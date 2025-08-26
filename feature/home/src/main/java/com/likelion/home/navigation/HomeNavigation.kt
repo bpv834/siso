@@ -13,15 +13,19 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) =
 
 fun NavGraphBuilder.homeNavigation(
     navController: NavController,
-    onNavigateToCaller: () -> Unit, // 통화 화면으로 이동하는 콜백
+    // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 변경
+    onNavigateToCaller: (userId: String, otherUserId: String) -> Unit,
     action: () -> Unit
 ) {
     composable(
         route = NavigationRoute.HomeScreen.route
     ) {
+        // HomeRoute에 수정된 콜백 전달
         HomeRoute(
             actionSnackbar = action,
-            onNavigateToCaller = onNavigateToCaller
+            onNavigateToCaller = { user, otherUser -> // HomeRoute에서 실제 값을 받아와서
+                onNavigateToCaller(user, otherUser) // 콜백에 전달
+            }
         )
     }
 }

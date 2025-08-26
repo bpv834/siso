@@ -44,9 +44,9 @@ fun CommonOutlinedButtonWithIconVertical(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp), // 둥근 모서리 24.dp 설정
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = SisoColorTokens.GrayScale5
+            containerColor = SisoColorTokens.Gray5
         ),
-        border = BorderStroke(width = 1.dp, color = SisoColorTokens.GrayScale30)
+        border = BorderStroke(width = 1.dp, color = SisoColorTokens.Gray30)
     ) {
         Column (verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally){
@@ -55,7 +55,7 @@ fun CommonOutlinedButtonWithIconVertical(
                 // 아이콘과 텍스트가 모두 있을 경우 간격 추가
                 Spacer(Modifier.size(4.dp))
             }
-            Text(text=text?:"", style = SisoTypoTokens.Button1, color = SisoColorTokens.GrayScale90)
+            Text(text=text?:"", style = SisoTypoTokens.Button1, color = SisoColorTokens.Gray90)
         }
     }
 }

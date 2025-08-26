@@ -53,20 +53,20 @@ fun FullScreenCallEndReview(caller: UsersModel) {
                 Text(
                     text = caller.nickname,
                     style = SisoTypoTokens.Title2,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
                 Spacer(Modifier.size(8.dp))
                 Text(
                     text = "${caller.age}세",
                     style = SisoTypoTokens.Title2,
-                    color = SisoColorTokens.GrayScale60
+                    color = SisoColorTokens.Gray60
                 )
             }
             Spacer(Modifier.size(66.dp))
             Text(
                 text = "${caller.nickname}님과의\n통화는 어땠나요?",
                 style = SisoTypoTokens.Body2,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(21.dp))
             Row {
@@ -75,9 +75,9 @@ fun FullScreenCallEndReview(caller: UsersModel) {
                     onClick = {},
                     iconSize = 60.dp,
                     icon = painterResource(com.likelion.ui.R.drawable.ic_heart_break),
-                    iconTint = SisoColorTokens.GrayScale40,
+                    iconTint = SisoColorTokens.Gold40,
                     containerColor = SisoColorTokens.White,
-                    borderColor = SisoColorTokens.GrayScale30,
+                    borderColor = SisoColorTokens.Gray30,
                     borderWidth = 1.dp
                 )
                 Spacer(Modifier.size(8.dp))
@@ -88,7 +88,7 @@ fun FullScreenCallEndReview(caller: UsersModel) {
                     icon = painterResource(com.likelion.ui.R.drawable.ic_heart),
                     iconTint = SisoColorTokens.Red50,
                     containerColor = SisoColorTokens.White,
-                    borderColor = SisoColorTokens.GrayScale30,
+                    borderColor = SisoColorTokens.Gray30,
                     borderWidth = 1.dp
                 )
             }
@@ -96,7 +96,7 @@ fun FullScreenCallEndReview(caller: UsersModel) {
             CommonTextButton(
                 "신고하기",
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale60,
+                color = SisoColorTokens.Gray60,
                 onClick = {},
             )
 

@@ -1,14 +1,8 @@
 package com.likelion.siso.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,11 +13,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.likelion.ui.component.bottomnavigation.BottomNavigationDestination
 import com.likelion.ui.component.bottomnavigation.BottomNavigationItems
 import com.likelion.ui.component.bottomnavigation.SisoBottomNavigation
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+
 @Composable
 fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
     Scaffold(
-        // contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (appState.isBottomBarVisible()) {
                 SisoBottomBar(
@@ -33,18 +26,11 @@ fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
                 )
             }
         },
-        content = { //_ ->
-        innerPadding -> // <-- 여기가 변경되었습니다!
+        content = { innerPadding ->
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
                     .fillMaxSize()
-                 /*   .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                             WindowInsetsSides.Horizontal
-                        )
-                    )*/
-                   // .windowInsetsPadding(WindowInsets.safeDrawing) // windowInsetsPadding은 시스템 UI(상단바, 하단 제스처 바)에만 적용하고,
-
+                    .padding(innerPadding)
             ) {
                 MainNavHost(
                     appState = appState

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -49,7 +48,7 @@ fun UserCard(
     user: UsersModel,
     onImageClick: (imageUrl: String) -> Unit,
     onClickButtonCall: (receiverId: Long) -> Unit, // 상대 유저 uid를 얻어오는 메서드
-    toCallScreen: () -> Unit,
+    toCallScreen : (String,String)->Unit,
 ) {
 
     val context = LocalContext.current // Toast 메시지를 띄우기 위한 Context
@@ -88,19 +87,19 @@ fun UserCard(
                     text = if (user.isOnline) "온라인" else "오프라인",
                     fontSize = 14.sp,
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
             }
             Spacer(Modifier.size(19.dp))
 
             // 사용자 사진 목록
-            if (user.userImages.isNotEmpty()) {
+        /*    if (user.userImages.isNotEmpty()) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    itemsIndexed(user.userImages) { index, imageUrl ->
+                    items(user.userImages) { imageUrl ->
                         Box {
                             AsyncImage(
                                 model = imageUrl,
@@ -124,7 +123,7 @@ fun UserCard(
                                     .height(31.dp)
                             ) {
                                 Text(
-                                    text = "${index}/${user.userImages.size}",
+                                    text = "2/3",
                                     style = SisoTypoTokens.Label1,
                                     color = SisoColorTokens.White,
                                     modifier = Modifier.align(Alignment.Center)
@@ -133,7 +132,7 @@ fun UserCard(
                         }
                     }
                 }
-            }
+            }*/
             Spacer(Modifier.size(16.dp))
 
 
@@ -153,57 +152,40 @@ fun UserCard(
                 Text(
                     text = "위치 : ${user.location}",
                     style = SisoTypoTokens.Label1,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
             }
             Spacer(Modifier.size(12.dp))
             // 닉네임 및 나이
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(44.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row {
-                    Text(
-                        text = "${user.nickname}, ",
-                        style = SisoTypoTokens.Title2,
-                        color = SisoColorTokens.GrayScale90
-                    )
-                    Spacer(Modifier.size(8.dp))
-                    Text(
-                        text = "${user.age}세",
-                        style = SisoTypoTokens.Title2,
-                        color = SisoColorTokens.GrayScale60
-                    )
-
-                }
-                AsyncImage(
-                    model = com.likelion.ui.R.drawable.ic_voicesample,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .width(86.dp)
-                        .height(44.dp)
-                )
-            }
+            Text(
+                text = "${user.nickname}, ${user.age}세",
+                style = SisoTypoTokens.Title2, color = SisoColorTokens.Gray90
+            )
+            Spacer(Modifier.size(12.dp))
             // 음성 버튼
 
+            AsyncImage(
+                model = com.likelion.ui.R.drawable.ic_voicesample,
+                contentDescription = "",
+                modifier = Modifier
+                    .width(130.dp)
+                    .height(44.dp)
+            )
 
             Spacer(Modifier.size(12.dp))
             // 관심사 목록
             Text(
                 text = user.interests.joinToString(separator = " #", prefix = "#"),
                 style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.GrayScale90
+                color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(12.dp))
             // 자기소개
             Text(
                 text = user.introduce,
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale90, modifier = Modifier.height(54.dp),
+                color = SisoColorTokens.Gray90, modifier = Modifier.height(54.dp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -217,8 +199,8 @@ fun UserCard(
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.ic_message_button,
                     contentDescription = "",
-                    // modifier = Modifier.weight(1f)
-                    modifier = Modifier.size(80.dp)
+                   // modifier = Modifier.weight(1f)
+                      modifier = Modifier.size(80.dp)
                 )
                 AsyncImage(
                     model = com.likelion.ui.R.drawable.ic_call_button,
@@ -230,8 +212,10 @@ fun UserCard(
                             when {
                                 recordAudioPermissionState.status.isGranted -> {
                                     // 권한이 이미 허용된 경우, 통화 시작 콜백 호출
-                                    // onClickButtonCall(user.id)
-                                    toCallScreen() // 화면전환
+                                   // onClickButtonCall(user.id)
+                                    val testUserId = "testUserId111"
+                                    val testOtherUserId = "testOtherUserId1111"
+                                    toCallScreen(testUserId,testOtherUserId) // 화면전환
                                     Toast.makeText(context, "통화를 시작합니다.", Toast.LENGTH_SHORT).show()
                                 }
 
@@ -264,7 +248,7 @@ fun UserCardPreview() {
     val sampleUser = UsersModel(
         id = 1,
         isOnline = true,
-        userImages = listOf("https://m.health.chosun.com/site/data/img_dir/2024/10/22/2024102202299_0.jpg"),
+        userImages = listOf("url1", "url2", "url3"),
         location = "서울 강남구",
         nickname = "강남멋쟁이",
         age = 30,
@@ -272,7 +256,5 @@ fun UserCardPreview() {
         interests = listOf("독서", "영화", "헬스"),
         introduce = "안녕하세요. 자기소개입니다. 저는 영화와 독서를 좋아합니다."
     )
-    UserCard(user = sampleUser, onImageClick = { image -> }, onClickButtonCall = {}, {})
-
-
+    UserCard(user = sampleUser,{},{},{},)
 }

@@ -1,4 +1,4 @@
-package com.likelion.data.home.repository.di
+package com.likelion.data.call_for_caller.repository.di
 
 import android.content.Context
 import com.likelion.network.util.AgoraVoiceManager

@@ -33,7 +33,7 @@ fun SisoBottomNavigation(
         NavigationBar(
             modifier = modifier,
             containerColor = Color.Transparent,
-            contentColor = SisoColorTokens.GrayScale40,
+            contentColor = SisoColorTokens.Gray40,
             content = content
         )
     }
@@ -55,14 +55,14 @@ fun RowScope.BottomNavigationItems(
         label = {
             Text(
                 text = stringResource(label),
-                style = SisoTypoTokens.Caption,
-                color = if (selected) SisoColorTokens.Gold50 else SisoColorTokens.GrayScale40
+                style = SisoTypoTokens.Caption1,
+                color = if (selected) SisoColorTokens.Black else SisoColorTokens.Gray40
             )
         },
         alwaysShowLabel = true,
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = SisoColorTokens.Gold50,
-            unselectedIconColor = SisoColorTokens.GrayScale40,
+            selectedIconColor = SisoColorTokens.Black,
+            unselectedIconColor = SisoColorTokens.Gray40,
             indicatorColor = Color.Transparent,
         ),
     )

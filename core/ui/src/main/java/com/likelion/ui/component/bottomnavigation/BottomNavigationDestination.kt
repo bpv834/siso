@@ -10,10 +10,10 @@ enum class BottomNavigationDestination(
         icon = R.drawable.ic_home,
         routeName = R.string.home,
     ),
-    Find(
-        icon = R.drawable.ic_find,
-        routeName = R.string.find,
-    ),
+//    Find(
+//        icon = R.drawable.ic_find,
+//        routeName = R.string.find,
+//    ),
     Chat(
         icon = R.drawable.ic_chat,
         routeName = R.string.chat

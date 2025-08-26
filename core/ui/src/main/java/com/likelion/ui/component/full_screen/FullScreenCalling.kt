@@ -63,13 +63,13 @@ fun FullScreenCalling(caller: UsersModel) {
                 Text(
                     text = caller.nickname,
                     style = SisoTypoTokens.Title2,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
                 Spacer(Modifier.size(8.dp))
                 Text(
                     text = "${caller.age}세",
                     style = SisoTypoTokens.Title2,
-                    color = SisoColorTokens.GrayScale60
+                    color = SisoColorTokens.Gray60
                 )
             }
             Spacer(Modifier.size(8.dp))
@@ -83,7 +83,7 @@ fun FullScreenCalling(caller: UsersModel) {
                 Text(
                     caller.location,
                     style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.GrayScale90
+                    color = SisoColorTokens.Gray90
                 )
                 Spacer(Modifier.size(14.dp))
             }
@@ -114,7 +114,7 @@ fun FullScreenCalling(caller: UsersModel) {
                         Text(
                             text = "#$tag",
                             style = SisoTypoTokens.Button1,
-                            color = SisoColorTokens.GrayScale90
+                            color = SisoColorTokens.Gray90
                         )
                         Spacer(modifier = Modifier.size(8.dp))
                     }
@@ -125,7 +125,7 @@ fun FullScreenCalling(caller: UsersModel) {
             Text(
                 text = caller.introduce,
                 style = SisoTypoTokens.Body4,
-                color = SisoColorTokens.GrayScale90,
+                color = SisoColorTokens.Gray90,
                 modifier = Modifier.height(80.dp),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis

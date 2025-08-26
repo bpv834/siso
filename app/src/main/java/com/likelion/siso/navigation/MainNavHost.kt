@@ -5,11 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.likelion.home.navigation.chatNavigation
-import com.likelion.home.navigation.findNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
-import com.likelion.home.navigation.navigateToFind
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.login.navigation.inputNavigation
@@ -26,7 +24,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
     //startDestination: String = NavigationRoute.OnBoardingScreen.route
-    startDestination: String = NavigationRoute.HomeScreen.route
+    startDestination: String = NavigationRoute.LoginScreen.route
 ) {
     NavHost(
         modifier = modifier,
@@ -60,26 +58,50 @@ fun MainNavHost(
         }
         homeNavigation (
             navController = appState.navController,
-            onNavigateToCaller = {
-                appState.navController.navigateToCallForCaller(navOptions = navOptions {
-                    launchSingleTop = true
-                })
+            // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
+            // navigateToCallForCaller 함수에 이 값들을 전달합니다.
+            onNavigateToCaller = { userId, otherUserId ->
+                appState.navController.navigateToCallForCaller(
+                    userId = userId,
+                    otherUserId = otherUserId,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
             }
         ){
             appState.navController.navigateToHome()
         }
-        findNavigation {
-            appState.navController.navigateToFind()
-        }
-        chatNavigation {
+        chatNavigation(
+            navController = appState.navController,
+            onNavigateUp = {
+                // 루트 NavController에서 popBackStack 시도.
+                // 더 이상 pop할 수 없으면 Chat 탭으로 안전 복귀.
+                if (!appState.navController.popBackStack()) {
+                    appState.navController.navigateToChat(
+                        navOptions { launchSingleTop = true }
+                    )
+                }
+            }
+        ) {
             appState.navController.navigateToChat()
         }
         myPageNavigation {
             appState.navController.navigateToMyPage()
         }
-        callerNavigation {
-            appState.navController.navigateToCallForCaller()
-        }
+        callerNavigation(
+            action = { }, // 예시로 스낵바 동작 추가
+            // onNavigateToCallForCaller 람다 정의
+            onNavigateToCallForCaller = { userId, otherUserId ->
+                appState.navController.navigateToCallForCaller(
+                    userId = userId,
+                    otherUserId = otherUserId,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            }
+        )
 
 
         /*

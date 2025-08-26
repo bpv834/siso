@@ -1,7 +1,7 @@
-package com.likelion.domain.home.repository
+package com.likelion.domain.call_for_caller.repository
 
-import com.likelion.domain.home.model.AgoraEvent
-import com.likelion.domain.home.model.CallInfoModel
+import com.likelion.domain.call_for_caller.model.AgoraEvent
+import com.likelion.domain.call_for_caller.model.CallInfoModel
 import kotlinx.coroutines.flow.SharedFlow
 
 interface CallRepository {
