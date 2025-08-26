@@ -1,6 +1,9 @@
 package com.likelion.home.mypage.location_edit_info_screen
 
-import android.R.attr.text
+import android.annotation.SuppressLint
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.likelion.ui.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,14 +49,15 @@ import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
-import timber.log.Timber.Forest.d
 
+@SuppressLint("TimberArgCount")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationEditInfoScreen(
     viewModel: LocationEditInfoScreenViewModelType,
     popBackStack: (String) -> Unit = {},
 ) {
+    val context = LocalContext.current
     var resultText by remember { mutableStateOf("") }
     val locationTextFloat = if (resultText.isBlank())  0.845F else 1F
     var bottomState by remember { mutableStateOf(false) }
@@ -61,8 +65,22 @@ fun LocationEditInfoScreen(
         skipPartiallyExpanded = true,
     )
     val topLocations by viewModel.topLocation.collectAsStateWithLifecycle()
-    d("topLocations : $topLocations")
+
     val bottomLocation by viewModel.bottomLocation.collectAsStateWithLifecycle()
+
+    val locationState by viewModel.locationState.collectAsStateWithLifecycle()
+
+    // 권한 요청 Launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            viewModel.fetchUserLocation()
+            Toast.makeText(context, "위치 권한이 허용되었습니다. $locationState", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Box(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
@@ -130,6 +148,7 @@ fun LocationEditInfoScreen(
                     interactionSource = remember { MutableInteractionSource() }
                 ){
                     // 현재 위치로 설정하기 api
+                    viewModel.fetchUserLocation()
                 }
             ){
                 Icon(
