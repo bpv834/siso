@@ -28,6 +28,7 @@ dependencies {
     implementation(project(":remote"))
     implementation(project(":core:network"))
     implementation(project(":core:util"))
+    implementation(project(":core:datastore"))
 
 
     // Retrofit (최신 안정 버전)
