@@ -32,8 +32,12 @@ import com.likelion.login.login_end.LastLoginInfoScreen
 import com.likelion.login.login_agree2.LoginStartScreen
 import com.likelion.login.login_input_hobby.FakeSecondLoginInfoScreenViewModel
 import com.likelion.login.login_input_hobby.SecondLoginInfoScreen
+import com.likelion.login.login_input_hobby.SecondLoginInfoScreenViewModel
+import com.likelion.login.login_input_info.FirstLoginInfoScreenViewModel
+import com.likelion.login.login_input_introduce.FourthLoginInfoScreenViewModel
 import com.likelion.login.login_input_photo.FakeThirdLoginScreenViewModel
 import com.likelion.login.login_input_photo.ThirdLoginInfoScreen
+import com.likelion.login.login_input_photo.ThirdLoginInfoScreenViewModel
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -109,27 +113,28 @@ fun LoginMainScreen(
             }
             composable("screen1") {
                 FirstLoginInfoScreen(
-                    FakeFirstLoginInfoScreenViewModel(),
+                    hiltViewModel<FirstLoginInfoScreenViewModel>(),
                     onNavigateNext = {
                         navController.navigate("screen2")
                     })
             }
             composable("screen2") {
                 SecondLoginInfoScreen(
-                    FakeSecondLoginInfoScreenViewModel(),
+                    hiltViewModel<SecondLoginInfoScreenViewModel>(),
                     onNavigateNext = {
                         navController.navigate("screen3")
                     })
             }
             composable("screen3") {
                 ThirdLoginInfoScreen(
-                    FakeThirdLoginScreenViewModel(LocalContext.current),
+                    hiltViewModel<ThirdLoginInfoScreenViewModel>(),
                     onNavigateNext = {
                         navController.navigate("screen4")
                     })
             }
             composable("screen4") {
                 FourthLoginInfoScreen(
+                    hiltViewModel<FourthLoginInfoScreenViewModel>(),
                     onNavigateNext = {
                         navController.navigate("screen5")
                     })
