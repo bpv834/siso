@@ -73,8 +73,8 @@ fun HomeScreen(
                 showImageDialog = true
             },
             onClickButtonCall = { receiverIdId -> viewModel.onClickCallButton(0L, receiverIdId) },
-            toCallScreen = { userId: Long, otherUserId: Long -> toCaller(userId, otherUserId) }
-        )
+            toCallScreen = { userId: Long, otherUserId: Long -> toCaller(userId, otherUserId) },
+            true)
     }
 
     // ✅ 팝업을 조건부로 표시
@@ -95,7 +95,9 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     SisoTheme {
         val usecase = GetAllUsersUseCase(FakeUsersRepositoryImpl())
-        HomeScreen(viewModel = FakeHomeScreenViewModel(usecase),   toCaller = { userId, otherUserId -> })
+        HomeScreen(
+            viewModel = FakeHomeScreenViewModel(usecase),
+            toCaller = { userId, otherUserId -> })
     }
 }
 
