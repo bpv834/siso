@@ -1,17 +1,12 @@
 package com.likelion.siso.navigation
 
-import android.util.TypedValue
-import com.likelion.ui.R
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.window.Popup
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.likelion.data.mypage.repository.APILocationRepositoryImpl
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
-import com.likelion.domain.mypage.repository.APILocationRepository
-import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
@@ -28,6 +23,7 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
+import com.likelion.ui.R
 import com.lion.call.navigation.callerNavigation
 import com.lion.call.navigation.navigateToCallForCaller
 
