@@ -58,13 +58,14 @@ fun LoginRoute(
         Timber.tag("유저상태").d("${uiState.value.userState}")
         when (uiState.value.userState) {
             UserStatus.LOGIN -> {
-                if (uiState.value.userState == UserStatus.LOGIN && uiState.value.user != null) {
+                if (uiState.value.userState == UserStatus.LOGIN /*&& uiState.value.user != null*/) {
                     Timber.d("onHome()")
                     onHome()
                 }
                 navigatedToInput.value = false
             }//onHome() // 홈 화면 이동
             UserStatus.REGISTER -> {
+                Timber.d("REGISTER()")
                 if (!navigatedToInput.value) {
                     onInput()
                     navigatedToInput.value = true
@@ -72,8 +73,15 @@ fun LoginRoute(
             }
 
             UserStatus.NONE -> {
+                Timber.d("NONE()")
+                Timber.d("uiST: ${uiState.value}()")
                 navigatedToInput.value = false
             } //
+            else -> {
+                Timber.d("ELSE()")
+                Timber.d("ELSE: ${uiState.value}()")
+
+            }
         }
     }
     LoginScreen(

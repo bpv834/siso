@@ -6,6 +6,7 @@ import com.likelion.domain.auth.model.KakaoTokenResult
 import com.likelion.domain.auth.usecase.FetchKakaoTokenUseCase
 import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.PostKakaoResult
+import com.likelion.domain.login.model.UserStatus
 import com.likelion.domain.login.usecase.ClearLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
@@ -89,6 +90,7 @@ class LoginScreenViewModel @Inject constructor(
                     user = result,
                 )
             }
+            Timber.d("uiState131: ${_uiState.value}")
         }
     }
 
@@ -120,7 +122,7 @@ class LoginScreenViewModel @Inject constructor(
                                 it.copy(
                                     refreshToken = postKakao.token.refreshToken,
                                     userState = postKakao.token.userStatus,
-                                    //  userState = UserStatus.REGISTER,
+                                  //    userState = UserStatus.REGISTER,
                                 )
                             }
                             Timber.tag("LoginScreenViewModel").d("${postKakao.token}")
