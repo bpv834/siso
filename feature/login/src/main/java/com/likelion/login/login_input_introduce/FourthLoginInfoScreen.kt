@@ -59,7 +59,11 @@ fun FourthLoginInfoScreen(
             contentDescription = ""
         )
         Spacer(Modifier.size(24.dp))
-        Text(text = "간단한 자기소개를 작성해주세요", style = SisoTypoTokens.Title2, color = SisoColorTokens.Gray90)
+        Text(
+            text = "간단한 자기소개를 작성해주세요",
+            style = SisoTypoTokens.Title2,
+            color = SisoColorTokens.Gray90
+        )
         Spacer(Modifier.size(8.dp))
         Text(
             text = "여러분의 진솔한 생각과 경험을 담아, 상대방이 \n" +
@@ -93,10 +97,13 @@ fun FourthLoginInfoScreen(
             )
         }
         Spacer(Modifier.size(112.dp))
-        if (bioText.length in 5..50) CommonActiveButton(text = "완료하기", onClick = {
-            viewModel.saveBioTextInTemp()
-            onNavigateNext()
-        })
+        if (bioText.length in 5..50) CommonActiveButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp), text = "완료하기", onClick = {
+                viewModel.saveBioTextInTemp()
+                onNavigateNext()
+            })
         else CommonDisableButton(text = "완료하기", onClick = {
 
         })

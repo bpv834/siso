@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -82,15 +83,18 @@ fun ThirdLoginInfoScreen(
                     text = "건너뛰기",
                     style = SisoTypoTokens.Button2,
                     color = SisoColorTokens.Gray60,
-                    onClick = {}
+                    onClick = { onNavigateNext() }
                 )
             }
         // 사진이 한개라도 있다면 다음으로 버튼 노출
         if (capturedImages.isNotEmpty())
-            CommonActiveButton(text = "다음으로", onClick = {
-                viewModel.finalizeImagesForSignUp(context =context )
-                onNavigateNext()
-            })
+            CommonActiveButton(
+                text = "다음으로", modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp), onClick = {
+                    viewModel.finalizeImagesForSignUp(context = context)
+                    onNavigateNext()
+                })
     }
     // 사진 추가 바텀시트 및 카메라, 앨범 런처
     PhotoUploader(

@@ -111,9 +111,21 @@ fun PhotoUploadBottomSheet(
 
         Spacer(modifier = Modifier.height(60.dp))
         // 하단 버튼
-        CommonActiveButton("카메라로 사진찍기", onClick = onTakePhotoClick)
+        CommonActiveButton(
+            "카메라로 사진찍기",
+            onClick = onTakePhotoClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp)
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        CommonActiveButton("앨범에서 가져오기", onClick = onPickFromGalleryClick)
+        CommonActiveButton(
+            "앨범에서 가져오기",
+            onClick = onPickFromGalleryClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp)
+        )
         Spacer(modifier = Modifier.height(16.dp)) // 하단 패딩
     }
 }

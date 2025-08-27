@@ -24,7 +24,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun LastLoginInfoScreen(
     onNavigation: () -> Unit,
-    viewModel : LastLoginInfoScreenViewModel = hiltViewModel()
+    viewModel: LastLoginInfoScreenViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier
@@ -51,12 +51,15 @@ fun LastLoginInfoScreen(
         )
         Spacer(Modifier.size(80.dp))
         CommonActiveButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp)
+                .padding(horizontal = 16.dp),
             text = "인연 만나기",
             onClick = {
                 viewModel.onClick()
-                onNavigation() },
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
+                onNavigation()
+            },
         )
         Spacer(Modifier.size(72.dp))
 
@@ -68,6 +71,6 @@ fun LastLoginInfoScreen(
 @Composable
 fun LastLoginInfoScreenPreview() {
     SisoTheme {
-      /*  LastLoginInfoScreen({})*/
+        /*  LastLoginInfoScreen({})*/
     }
 }
