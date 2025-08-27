@@ -1,5 +1,10 @@
 package com.likelion.data.login.mapper
 
+import com.likelion.data.enum_pack.Call
+import com.likelion.data.enum_pack.DrinkingCapacity
+import com.likelion.data.enum_pack.Location
+import com.likelion.data.enum_pack.PreferenceContact
+import com.likelion.data.enum_pack.Religion
 import com.likelion.domain.login.model.UserSignUpProfile
 import com.likelion.remote.model.request.UserProfileRequest
 
@@ -7,14 +12,14 @@ import com.likelion.remote.model.request.UserProfileRequest
 // UserSignUpProfile을 UserProfileRequest로 변환하는 확장 함수
 fun UserSignUpProfile.toUserProfileRequest(): UserProfileRequest {
     return UserProfileRequest(
-        drinkingCapacity = "NOT_SPECIFIED", // TODO: 실제 enum 값 또는 매핑 로직 필요
-        religion = "NOT_SPECIFIED", // TODO: 실제 enum 값 또는 매핑 로직 필요
+        drinkingCapacity = "Naver", // TODO: 실제 enum 값 또는 매핑 로직 필요
+        religion = Religion.CHRISTIANITY.name, // TODO: 실제 enum 값 또는 매핑 로직 필요
         smoke = false, // TODO: 실제 값 매핑 필요
         age = this.age,
         nickname = this.nickname,
         introduce = this.introduce,
-        preferenceContact = "NOT_SPECIFIED", // TODO: 실제 enum 값 또는 매핑 로직 필요
-        location = "NOT_SPECIFIED", // TODO: 실제 enum 값 또는 매핑 로직 필요
+        preferenceContact = PreferenceContact.CALL.name, // TODO: 실제 enum 값 또는 매핑 로직 필요
+        location = Location.GYEONGGI.name, // TODO: 실제 enum 값 또는 매핑 로직 필요
         sex = this.gender, // 클라이언트의 gender를 서버의 sex로 매핑
         preferenceSex = this.preferenceSex
     )
