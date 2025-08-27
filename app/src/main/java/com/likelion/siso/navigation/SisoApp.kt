@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.component.bottomnavigation.BottomNavigationDestination
 import com.likelion.ui.component.bottomnavigation.BottomNavigationItems
 import com.likelion.ui.component.bottomnavigation.SisoBottomNavigation

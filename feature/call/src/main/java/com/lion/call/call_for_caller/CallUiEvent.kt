@@ -11,4 +11,7 @@ sealed class CallUiEvent {
 
     // (선택) 스낵바
     data class ShowSnackbar(val message: String, val actionLabel: String? = null) : CallUiEvent()
+
+    // 신고 이벤트: 신고 대상의 ID를 포함
+    data class ShowReportSheet(val targetId: String) : CallUiEvent()
 }

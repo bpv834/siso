@@ -13,4 +13,6 @@ data class CallUiState(
     val isSpeakerOn: Boolean = false,
     val errorMessage: String? = null,
     val isLoading : Boolean = false,
+    val isOpenReportSheet : Boolean = false,
+    val isOpenConfirmPopup : Boolean = false,
 )

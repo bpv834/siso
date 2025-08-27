@@ -106,7 +106,7 @@ fun BottomSheetReport(
         // Conditional Text Field for "Other" option
 
         Spacer(Modifier.size(16.dp))
-
+        if(selectedReason?.contains("기타") == true)
         OutlinedTextField(
             value = customReasonText,
             onValueChange = { customReasonText = it },
