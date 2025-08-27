@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -55,6 +58,7 @@ fun AdditionalInfoSmokingScreen(
     LaunchedEffect(viewModel.receiver.collectAsStateWithLifecycle()) {
         receiver = viewModel.receiver.value
     }
+    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val smokingList = listOf(
             "매우 자주 피워요 (하루에 1갑 이상)",
             "자주 피워요 (하루에 1갑 이상)",
@@ -119,7 +123,7 @@ fun AdditionalInfoSmokingScreen(
                 }
                 popBackStack()
             }
-            Spacer(Modifier.size(72.dp))
+            Spacer(Modifier.size(72.dp - navbarBottomPadding))
         }
     }
 }
