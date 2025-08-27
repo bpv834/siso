@@ -35,6 +35,8 @@ fun ThirdLoginInfoScreen(
     viewModel: ThirdLoginInfoScreenViewModelType,
     onNavigateNext: () -> Unit
 ) {
+
+    val context = LocalContext.current
     // 캡쳐된 이미지 보관 변수
     val capturedImages by viewModel.capturedImages.collectAsStateWithLifecycle()
     // 바텀시트 상태 관리 변수
@@ -69,7 +71,7 @@ fun ThirdLoginInfoScreen(
             onDelete = { bitmap -> viewModel.deleteBitMap(bitmap) },
         )
         // 건너띄기가 보일땐 24로 사진추가,다음으로 버튼일땐 8로 가깝게
-        val spaceSize = if(capturedImages.size!=0) 8.dp else 24.dp
+        val spaceSize = if (capturedImages.size != 0) 8.dp else 24.dp
         Spacer(Modifier.size(spaceSize))
         if (capturedImages.isEmpty()) // 이미지가 없을때만 건너뛰기를 노출
             Column(
@@ -85,7 +87,10 @@ fun ThirdLoginInfoScreen(
             }
         // 사진이 한개라도 있다면 다음으로 버튼 노출
         if (capturedImages.isNotEmpty())
-            CommonActiveButton(text = "다음으로", onClick = { onNavigateNext() })
+            CommonActiveButton(text = "다음으로", onClick = {
+                viewModel.finalizeImagesForSignUp(context =context )
+                onNavigateNext()
+            })
     }
     // 사진 추가 바텀시트 및 카메라, 앨범 런처
     PhotoUploader(
@@ -96,7 +101,7 @@ fun ThirdLoginInfoScreen(
         onImagePicked = { bitmap ->
             viewModel.addImageToCaptures(bitmap)
         },
-        onImageCaptured = {bitmap ->
+        onImageCaptured = { bitmap ->
             viewModel.addImageToCaptures(bitmap)
 
         },
