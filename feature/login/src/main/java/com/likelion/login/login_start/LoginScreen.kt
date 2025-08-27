@@ -60,7 +60,8 @@ fun LoginRoute(
             UserStatus.LOGIN -> {
                 if (uiState.value.userState == UserStatus.LOGIN /*&& uiState.value.user != null*/) {
                     Timber.d("onHome()")
-                    onHome()
+                   // onHome()
+                    onInput()
                 }
                 navigatedToInput.value = false
             }//onHome() // 홈 화면 이동
