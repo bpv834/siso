@@ -17,4 +17,8 @@ class FakeFourthLoginInfoScreenViewModel : FourthLoginInfoScreenViewModelType {
         _bioText.value = newText
         _isButtonEnabled.value = newText.length in 5..50
     }
+
+    override fun saveBioTextInTemp() {
+        TODO("Not yet implemented")
+    }
 }

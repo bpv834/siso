@@ -14,6 +14,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+//  HTTP 클라이언트(OkHttpClient), JSON 파서(Moshi), 그리고 Retrofit 인스턴스 자체와 같이
+//  순수한 네트워크 인프라 관련 의존성을 제공하는 데 집중
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

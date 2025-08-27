@@ -216,6 +216,7 @@ fun FifthLoginInfoScreen(
 
                     Spacer(Modifier.size(43.dp))
                     CommonActiveButton(text = "완료하기", onClick = {
+                        viewModel.savePathInTempUser()
                         onNavigateNext()
            /*           val arr =  viewModel.getAudioBytes()
                         playAacFromByteArray(context = context, audioBytes =arr!!)*/
@@ -237,7 +238,7 @@ fun FifthLoginInfoScreenPreview() {
     SisoTheme {
         // Preview Context를 사용해 AudioRecorder를 생성
         val context = LocalContext.current
-        val fakeAudioRecorder = AudioRecorderClass(context = context)
+        val fakeAudioRecorder = AudioRecorderManager(context = context)
         val fakeViewModel = FakeFifthLoginInfoScreenViewModel(audioRecorder = fakeAudioRecorder)
         FifthLoginInfoScreen(viewModel = fakeViewModel, {})
     }

@@ -127,7 +127,8 @@ fun ThirdLoginInfoScreen(
         Spacer(modifier = Modifier.size(size = 68.dp))
         // derivedStateOf는 다른 상태에서 파생된 값을 안전하고 효율적으로 계산하고 싶을 때 쓰는 도구예요.
         val isAddCapture by remember { derivedStateOf { capturedImages.size < 5 } }
-        CommonButtonWithState (text = "사진 추가하기 (${capturedImages.size}/5)",
+        CommonButtonWithState(
+            text = "사진 추가하기 (${capturedImages.size}/5)",
             onClick = {
                 if (capturedImages.size < 5) {
                     viewModel.showPhotoUploadBottomSheet()
@@ -153,7 +154,14 @@ fun ThirdLoginInfoScreen(
             }
         // 사진이 한개라도 있다면 다음으로 버튼 노출
         if (capturedImages.isNotEmpty())
-            CommonActiveButton(text = "다음으로", onClick = {onNavigateNext()})
+            CommonActiveButton(
+                text = "다음으로",
+                onClick = {
+                    // 임시 레포에 사진 경로 저장해야함
+                    viewModel.finalizeImagesForSignUp(context)
+                    onNavigateNext() },
+                modifier = Modifier.fillMaxWidth()
+            )
     }
 
     if (showBottomSheet) {

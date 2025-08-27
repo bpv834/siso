@@ -15,12 +15,15 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
+import com.lion.call.navigation.callerNavigation
+import com.lion.call.navigation.navigateToCallForCaller
 
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
+   // startDestination: String = NavigationRoute.HomeScreen.route
     startDestination: String = NavigationRoute.LoginScreen.route
 ) {
     NavHost(
@@ -61,7 +64,20 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToInput()
         }
-        homeNavigation {
+        homeNavigation (
+            navController = appState.navController,
+            // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
+            // navigateToCallForCaller 함수에 이 값들을 전달합니다.
+            onNavigateToCaller = { userId, otherUserId ->
+                appState.navController.navigateToCallForCaller(
+                    userId = userId,
+                    otherUserId = otherUserId,
+                    navOptions = navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            },
+        ){
             appState.navController.navigateToHome()
         }
         chatNavigation(
@@ -81,6 +97,13 @@ fun MainNavHost(
         myPageNavigation {
             appState.navController.navigateToMyPage()
         }
+        callerNavigation(
+            action = { },
+            onNavigateUp = {
+                appState.navController.popBackStack()
+            }
+        )
+
 
         /*
         *
