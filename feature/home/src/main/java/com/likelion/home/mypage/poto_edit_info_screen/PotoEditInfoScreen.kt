@@ -1,10 +1,6 @@
 package com.likelion.home.mypage.poto_edit_info_screen
 
 import android.Manifest
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -39,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.likelion.home.mypage.getBitmap
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonButtonWithState
@@ -54,6 +51,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @ExperimentalMaterial3Api
 fun PotoEditInfoScreen(
     viewModel: PotoEditInfoScreenViewModelType,
+    receiverList: List<String> = emptyList(),
     onNavigateNext: () -> Unit
 ) {
     val showBottomSheet by viewModel.showBottomSheet.collectAsStateWithLifecycle()
@@ -296,16 +294,6 @@ fun PhotoEditUploadBottomSheet(
         Spacer(modifier = Modifier.height(8.dp))
         CommonActiveButton("앨범에서 가져오기", onClick = onPickFromGalleryClick)
         Spacer(modifier = Modifier.height(16.dp)) // 하단 패딩
-    }
-}
-
-// uri를 비트맵으로 변환하는 확장 함수
-fun Uri.getBitmap(context: Context): Bitmap? {
-    return try {
-        val inputStream = context.contentResolver.openInputStream(this)
-        BitmapFactory.decodeStream(inputStream)
-    } catch (e: Exception) {
-        null
     }
 }
 

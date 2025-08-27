@@ -25,18 +25,20 @@ import androidx.navigation.compose.rememberNavController
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
+import com.likelion.domain.mypage.usecase.UsersFullUseCase
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreen
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.FakeAdditionalInfoAlcoholScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_religion_screen.AdditionalInfoReligionScreen
 import com.likelion.home.mypage.additional_info.additional_info_religion_screen.FakeAdditionalInfoReligionScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.AdditionalInfoSmokingScreen
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.FakeAdditionalInfoSmokingScreenViewModel
+import com.likelion.home.mypage.getBitmapFromUrl
 import com.likelion.home.mypage.interest_edit_info_screen.FakeInterestEditInfoScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreen
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreen
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreenViewModel
-import com.likelion.home.mypage.main_edit_info_screen.FakeMainEditInfoScreenViewModel
 import com.likelion.home.mypage.main_edit_info_screen.MainEditInfoScreen
+import com.likelion.home.mypage.main_edit_info_screen.MainEditInfoScreenViewModel
 import com.likelion.home.mypage.matching_edit_info_screen.FakeMatchingEditInfoScreenViewModel
 import com.likelion.home.mypage.matching_edit_info_screen.MatchingEditInfoScreen
 import com.likelion.home.mypage.mbti_edit_info_screen.FakeMBTIEditInfoScreenViewModel
@@ -55,6 +57,7 @@ fun EditMainRoute(
     topLocationUseCase : TopLocationUseCase,
     bottomLocationUseCase : BottomLocationUseCase,
     currentLocationSetUseCase : CurrentLocationSetUseCase,
+    usersFullUseCase : UsersFullUseCase,
     actionSnackbar: () -> Unit = {}
 ) {
     SisoTheme {
@@ -62,29 +65,29 @@ fun EditMainRoute(
             topLocationUseCase = topLocationUseCase,
             bottomLocationUseCase = bottomLocationUseCase,
             currentLocationSetUseCase = currentLocationSetUseCase,
+            usersFullUseCase = usersFullUseCase,
             navigateToMyPage = actionSnackbar
         )
     }
 
 }
 
-@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation", "StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMain (
     topLocationUseCase : TopLocationUseCase,
     bottomLocationUseCase : BottomLocationUseCase,
     currentLocationSetUseCase : CurrentLocationSetUseCase,
+    usersFullUseCase : UsersFullUseCase,
     navigateToMyPage : () -> Unit = {},
 ) {
     val title = stringResource(com.likelion.home.R.string.main_edit)
     val navController = rememberNavController()
     var appBarTitle by remember { mutableStateOf(title) }
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
-    val onlyTopInnerPadding = listOf(
-        NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route,
-        NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route
-    )
+
+    val mainEditInfoScreenViewModel = MainEditInfoScreenViewModel(usersFullUseCase)
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -122,7 +125,7 @@ fun EditMain (
                 composable(start) {
 
                     MainEditInfoScreen(
-                        viewModel = FakeMainEditInfoScreenViewModel(),
+                        viewModel = mainEditInfoScreenViewModel,
                         saveHandle = navController.currentBackStackEntry?.savedStateHandle!!,
                         action = listOf(
                             // 사진 0
@@ -149,9 +152,15 @@ fun EditMain (
 
                 // 내 정보 수정
                 // 사진 수정
+                val photoEditInfoScreenViewModel = PotoEditInfoScreenViewModel()
+                photoEditInfoScreenViewModel.addAllImageFromAlbum(mainEditInfoScreenViewModel.usersModel.value?.userImages?.map {
+                    it.getBitmapFromUrl()!!
+                }!!)
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route) {
                     PotoEditInfoScreen(
-                        viewModel = PotoEditInfoScreenViewModel()
+                        viewModel = photoEditInfoScreenViewModel,
+                        receiverList = mainEditInfoScreenViewModel.receiverUsersModel.value?.userImages
+                            ?: listOf(),
                     ) {
                         navController.popBackStack()
                     }

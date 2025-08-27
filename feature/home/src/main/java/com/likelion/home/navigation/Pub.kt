@@ -7,5 +7,9 @@ data class Pub(
     val chipText : String
 ): Serializable
 
-fun SavedStateHandle.getString(key:String):String?
-    = get<String>(key)
+fun SavedStateHandle.getString(key:String):String?{
+    val value = get<String>(key)
+    set(key,null)
+    return value
+}
+

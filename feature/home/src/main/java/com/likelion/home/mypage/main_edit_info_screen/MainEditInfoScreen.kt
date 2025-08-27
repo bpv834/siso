@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.R.attr.action
+import android.R.attr.textColor
 import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -64,9 +65,12 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.mypage.model.UsersFullModel
 import com.likelion.home.navigation.Pub
 import com.likelion.home.navigation.getString
 import com.likelion.ui.R
@@ -85,18 +89,84 @@ fun MainEditInfoScreen(
     saveHandle: SavedStateHandle,
     action:List<()->Unit> = listOf()
 ) {
+    val valueUpdate ={emptyText:String, key:String, userValue: String?->
+        if (saveHandle.getString(key) == null) {
+            if (userValue?.isBlank()!! && userValue.isEmpty())
+                emptyText
+            else
+                userValue
+        }else{
+            saveHandle.getString(key)!!
+            }
+    }
+    val textColor = {blank:Boolean, receiver: Boolean->
+        if (blank){
+            SisoColorTokens.Gray50
+            if (receiver)
+                SisoColorTokens.Gray50
+            else
+                SisoColorTokens.Gray90
+        }
+        else SisoColorTokens.Gray90
+    }
+
+    val receiverUser = viewModel.receiverUsersModel.collectAsStateWithLifecycle()
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
-    val locationBlank =
-        saveHandle.getString("location") == null
+
+    val locationUpdate = {
+        valueUpdate("지역을 입력해주세요","location", receiverUser.value?.location)
+    }
+    val locationColor = {textColor(
+        saveHandle.getString("location") == null,
+        receiverUser.value == null
+    )}
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
-    val religionBlank =
-        saveHandle.getString("religion") == null
+    val religionUpdate = {
+        valueUpdate("지역을 입력해주세요","religion", receiverUser.value?.religion)
+    }
+    val religionColor = {textColor(
+        saveHandle.getString("religion") == null,
+        receiverUser.value == null
+    )}
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
+
+    val smokingUpdate = {
+        valueUpdate("정보를 입력해주세요","smoking", receiverUser.value?.isSmoke)
+    }
+    val smokingColor = {textColor(
+        saveHandle.getString("smoking") == null,
+        receiverUser.value == null
+    )}
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
+
+    val alcoholUpdate = {
+        valueUpdate("정보를 입력해주세요","smoking", receiverUser.value?.isSmoke)
+    }
+    val alcoholColor = {textColor(
+        saveHandle.getString("smoking") == null,
+        receiverUser.value == null
+    )}
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
+    val mbtiUpdate = {
+        valueUpdate("정보를 입력해주세요","mbti", receiverUser.value?.isSmoke)
+    }
+    val mbtiColor = {textColor(
+        saveHandle.getString("mbti") == null,
+        receiverUser.value == null
+    )}
     val mbtiNavigation = {if (action.isNotEmpty()) action[6]()}
+    val interestBlank = saveHandle.get<List<String>>("interest") == null
+    val interestColor = {textColor(
+        saveHandle.get<List<String>>("interest") == null,
+        receiverUser.value == null
+    )}
     val interestNavigation = {if (action.isNotEmpty()) action[7]() }
+    val matchingBlank = saveHandle.get<List<String>>("matching") == null
+    val matchingColor = {textColor(
+        saveHandle.get<List<String>>("matching") == null,
+        receiverUser.value == null
+    )}
     val matchingNavigation = {if (action.isNotEmpty()) action[8]()}
 
     // LocalConfiguration을 사용하여 현재 구성 정보를 가져옵니다.
@@ -135,8 +205,15 @@ fun MainEditInfoScreen(
     )
 
     val interestChipList = listOf(
-        "나의 관심사를 골라주세요" to listOf<String>(),
-        "어떤 관계를 원하시나요?" to listOf()
+        "나의 관심사를 골라주세요" to if (interestBlank) {
+            if (receiverUser.value == null)
+                emptyList()
+            else
+                receiverUser.value?.interests!!
+        }
+        else saveHandle.get<List<String>>("interest"),
+        "어떤 관계를 원하시나요?" to if (matchingBlank) emptyList()
+        else saveHandle.get<List<String>>("matching")
     )
     Box(
         modifier = Modifier.fillMaxHeight()
@@ -440,10 +517,8 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(32.dp))
             InfoEditScreenButton(
                 titleText = "지역",
-                selectText = if(locationBlank) "나의 지역을 등록해주세요"
-                else saveHandle.get<String>("location")!!,
-                color = if(locationBlank) SisoColorTokens.Gray50
-                else SisoColorTokens.Gray90,
+                selectText = locationUpdate(),
+                color = locationColor(),
             ) {
                 locationNavigation()
             }
@@ -484,17 +559,16 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(36.dp))
             InfoEditScreenButton(
                 titleText = "종교",
-                selectText = if (religionBlank)"정보를 입력해주세요"
-                else saveHandle.getString("religion")!!,
-                color = if(religionBlank) SisoColorTokens.Gray50
-                else SisoColorTokens.Gray90,
+                selectText = religionUpdate(),
+                color = religionColor(),
             ) {
                 religionNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "흡연",
-                selectText = "정보를 입력해주세요"
+                selectText = smokingUpdate(),
+                color = smokingColor(),
             ) {
                 smokingNavigation()
             }
@@ -547,7 +621,7 @@ fun MainEditInfoScreen(
                 d("interestChipList", "$index ${interestChipList[index].first}")
                 InterestRepeatChip(
                     emptyText = interestChipList[index].first,
-                    list = interestChipList[index].second,
+                    list = interestChipList[index].second!!,
                 )
             }
             // 59 + 62

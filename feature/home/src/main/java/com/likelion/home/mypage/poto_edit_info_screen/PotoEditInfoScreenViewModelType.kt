@@ -12,6 +12,7 @@ interface PotoEditInfoScreenViewModelType {
     fun uploadImagesToServer()
     fun addImageFromAlbum(newImage: Bitmap)
     fun deleteBitMap(deleteMitMap : Bitmap)
+    fun addAllImageFromAlbum(list: List<Bitmap>)
 
     // 테스트용 더미 비트맵 리스트를 생성하는 메서드 추가
     fun createMockBitmapList(context: Context): List<Bitmap>
