@@ -15,4 +15,6 @@ interface ThirdLoginInfoScreenViewModelType {
 
     // 테스트용 더미 비트맵 리스트를 생성하는 메서드 추가
     fun createMockBitmapList(context: Context): List<Bitmap>
+    fun saveBitmapToInternalStorage(context: Context, bitmap: Bitmap, fileName: String): String?
+    fun finalizeImagesForSignUp(context : Context)
 }

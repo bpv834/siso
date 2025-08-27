@@ -1,5 +1,7 @@
 package com.likelion.ui.component.button
 
+import android.R.attr.onClick
+import android.R.attr.text
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
@@ -16,8 +18,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun CommonActiveButton(
     text: String,
+    modifier: Modifier? = Modifier, // ✨ 외부에서 modifier를 받도록 설정
     onClick: () -> Unit,
-    modifier: Modifier = Modifier // ✨ 외부에서 modifier를 받도록 설정
 ) {
     OutlinedButton(
         onClick = onClick,
@@ -26,7 +28,9 @@ fun CommonActiveButton(
             contentColor = SisoColorTokens.Gray90
         ),
         border = null,
-        modifier = modifier.fillMaxWidth().height(54.dp)
+        modifier = modifier ?: Modifier
+            .fillMaxWidth()
+            .height(54.dp)
     ) {
         Text(
             text = text,
@@ -35,6 +39,7 @@ fun CommonActiveButton(
         )
     }
 }
+
 // 프리뷰
 @Preview(showBackground = true)
 @Composable

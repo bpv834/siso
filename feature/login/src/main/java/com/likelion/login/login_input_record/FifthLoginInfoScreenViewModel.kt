@@ -3,6 +3,8 @@ package com.likelion.login.login_input_record
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.likelion.domain.login.usecase.GetTemporaryUserProfileUseCase
+import com.likelion.domain.login.usecase.SaveTemporaryUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,8 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FifthLoginInfoScreenViewModel @Inject constructor(
-    private val audioRecorder: AudioRecorderClass, // Hilt로 AudioRecorder 인스턴스를 주입받음
-    // usecase
+    private val audioRecorder: AudioRecorderManager, // Hilt로 AudioRecorder 인스턴스를 주입받음
+    // usecase자리
+    val getTemporaryUserProfileUseCase: GetTemporaryUserProfileUseCase,
+    val saveTemporaryUserProfileUseCase: SaveTemporaryUserProfileUseCase,
 ) : ViewModel(), FifthLoginInfoScreenViewModelType {
     // 초기 상태는 녹음 전상태
     private val _recordingState = MutableStateFlow(RecordingState.IDLE)
@@ -100,29 +104,28 @@ class FifthLoginInfoScreenViewModel @Inject constructor(
     }
 
     // 녹음본 저장 경로에서 파일을 가져와 byte 배열로 변환하는 메서드
-    override  fun getAudioBytes(): ByteArray? {
-        // recordedFilePath Flow에서 현재 값을 가져옵니다.
-        val path = recordedFilePath.value ?: return null
+    override fun savePathInTempUser() {
+        viewModelScope.launch {
 
-        // 파일 경로가 유효한지 확인합니다.
-        val file = File(path)
-        if (!file.exists() || !file.canRead()) {
-            // 파일이 존재하지 않거나 읽을 수 없으면 null 반환
-            Timber.d("파일이 존재하지 않음: $path")
-            return null
+            // recordedFilePath Flow에서 현재 값을 가져옵니다.
+            val path = recordedFilePath.value ?: ""
+
+            // 파일 경로가 유효한지 확인합니다.
+            val file = File(path)
+            if (!file.exists() || !file.canRead()) {
+                // 파일이 존재하지 않거나 읽을 수 없으면 null 반환
+                Timber.d("파일이 존재하지 않음: $path")
+
+            }
+            val tempUser = getTemporaryUserProfileUseCase.execute()
+            tempUser.voicePath = path
+            saveTemporaryUserProfileUseCase.execute(tempUser)
         }
 
-        // 파일의 내용을 바이트 배열로 읽어옵니다.
-        return try {
-            Timber.d("배열로 변환 d : ${file.readBytes().joinToString(" ")}")
-            Timber.i("배열로 변환 i: ${file.readBytes()}")
-            Timber.e("배열로 변환 e: ${file.readBytes()}")
+       /* Timber.d("배열로 변환 d : ${file.readBytes().joinToString(" ")}")
+        Timber.i("배열로 변환 i: ${file.readBytes()}")
+        Timber.e("배열로 변환 e: ${file.readBytes()}")*/
 
-            file.readBytes()
-        } catch (e: Exception) {
-            Timber.e("배열로 변환 에러: $e")
-            null
-        }
     }
 
 }

@@ -131,7 +131,7 @@ fun FirstLoginInfoScreen(
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
-                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
                             tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
@@ -192,7 +192,7 @@ fun FirstLoginInfoScreen(
                     trailingIcon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
-                            painter = rememberAsyncImagePainter(R.drawable.text_edit),
+                            painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
                             tint = SisoColorTokens.Gray40,
                             contentDescription = ""
                         )
@@ -245,6 +245,7 @@ fun FirstLoginInfoScreen(
                 disabledContainerColor = SisoColorTokens.Gray30
             ),
             onClick = {
+                viewModel.inputUserInfo(nick = nameText, age = ageText.toInt(), sex = "남성", preSex = "이성")
                 onNavigateNext()
             },
 

@@ -1,8 +1,8 @@
 package com.likelion.home.home_page
 
 import android.util.Log
-import com.likelion.domain.model.UsersModel
-import com.likelion.domain.usecase.GetAllUsersUseCase
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,4 +39,13 @@ class FakeHomeScreenViewModel(val getAllUsersUseCase: GetAllUsersUseCase) : Home
             Log.d("test","_userList${_userList.value}")
         }
     }
+
+    override fun onClickCallButton(callerId: Long, receiverId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun resetCallState() {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -26,19 +26,31 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":local"))
     implementation(project(":remote"))
+    implementation(project(":core:network"))
+    implementation(project(":core:util"))
+    implementation(project(":core:datastore"))
+
 
     // Retrofit (최신 안정 버전)
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
 
     // Gson 컨버터
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation(libs.converter.gson.v300)
 
-    // Gson 라이브러리
-    implementation("com.google.code.gson:gson:2.10.1")
-
-
+    //위치 기반 서비스
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+
+    // test
+    testImplementation(libs.junit)
+    // Kotlin Coroutines Test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    // (옵션) Truth 같은 assertion 라이브러리
+    testImplementation("com.google.truth:truth:1.4.2")
+    implementation(kotlin("test"))
 }
 

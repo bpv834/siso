@@ -37,6 +37,11 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
     implementation(project(":core:util"))
+    implementation(project(":core:network"))
+
+
+
+
 
 
     implementation(libs.androidx.core.ktx)
@@ -65,5 +70,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // 로티 애니메이션
+    implementation(libs.lottie.compose)
+
+    implementation(libs.timber)
     testImplementation(libs.junit)
 }
