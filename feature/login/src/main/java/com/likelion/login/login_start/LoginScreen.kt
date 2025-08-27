@@ -1,11 +1,6 @@
 package com.likelion.login.login_start
 
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,12 +8,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +23,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,7 +37,6 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 import timber.log.Timber
-import java.security.MessageDigest
 
 
 @Composable
@@ -67,9 +58,11 @@ fun LoginRoute(
         Timber.tag("유저상태").d("${uiState.value.userState}")
         when (uiState.value.userState) {
             UserStatus.LOGIN -> {
-                if (uiState.value.userState == UserStatus.LOGIN /*&& uiState.value.user != null*/) {
+                if (uiState.value.userState == UserStatus.LOGIN && uiState.value.hasProfile) {
                     Timber.d("onHome()")
                     onHome()
+                } else {
+                    onInput()
                 }
                 navigatedToInput.value = false
             }//onHome() // 홈 화면 이동
@@ -84,12 +77,8 @@ fun LoginRoute(
             UserStatus.NONE -> {
                 Timber.d("NONE()")
                 Timber.d("uiST: ${uiState.value}()")
+                viewModel.clearToken()
                 navigatedToInput.value = false
-            } //
-            else -> {
-                Timber.d("ELSE()")
-                Timber.d("ELSE: ${uiState.value}()")
-
             }
         }
     }
@@ -110,7 +99,6 @@ fun LoginScreen(
     onLogin: () -> Unit,
     onHome: () -> Unit
 ) {
-
     Scaffold { innerPadding ->
         AsyncImage(
             contentScale = ContentScale.Crop,
@@ -142,27 +130,6 @@ fun LoginScreen(
                     color = SisoColorTokens.Orange100
                 )
             }
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-            ) {
-                Text("초기화", style = SisoTypoTokens.Button2)
-            }
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-            ) {
-                Text("이미회원이라면", style = SisoTypoTokens.Button2)
-            }
-
             AsyncImage(
                 model = R.drawable.kakao_login,
                 contentDescription = "",
@@ -180,46 +147,6 @@ fun LoginScreen(
     }
 }
 
-@SuppressLint("PackageManagerGetSignatures")
-fun getKeyHash(context: Context): String? {
-    return try {
-        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            context.packageManager.getPackageInfo(
-                context.packageName,
-                PackageManager.GET_SIGNING_CERTIFICATES
-            )
-        } else {
-            context.packageManager.getPackageInfo(
-                context.packageName,
-                PackageManager.GET_SIGNATURES
-            )
-        }
-
-        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            packageInfo.signingInfo!!.apkContentsSigners
-        } else {
-            @Suppress("DEPRECATION")
-            packageInfo.signatures
-        }
-
-        if (signatures != null) {
-            for (signature in signatures) {
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                val keyHash = android.util.Base64.encodeToString(
-                    md.digest(),
-                    android.util.Base64.NO_WRAP
-                )
-                Log.d("키해시", "앱의 디버그 키해시는 👉 $keyHash") // ✅ 한글 로그
-                return keyHash
-            }
-        }
-        null
-    } catch (e: Exception) {
-        Log.e("키해시", "키해시 생성 중 오류 발생: ${e.message}") // ✅ 한글 에러 로그
-        null
-    }
-}
 @Preview
 @Composable
 fun LoginScreenPreview() {
