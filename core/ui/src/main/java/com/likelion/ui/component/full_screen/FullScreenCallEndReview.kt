@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
@@ -74,7 +76,7 @@ fun FullScreenCallEndReview(
                 color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(84.dp))
-            Row {
+            Row (modifier = Modifier.fillMaxWidth().height(150.dp)){
                 CommonOutlinedButtonWithIconVertical(
                     icon = {
                         AsyncImage(
