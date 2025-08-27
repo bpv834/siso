@@ -2,6 +2,7 @@ package com.likelion.home.navigation.edit_Main
 
 import android.annotation.SuppressLint
 import android.view.View
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,9 +43,12 @@ import com.likelion.home.mypage.matching_edit_info_screen.FakeMatchingEditInfoSc
 import com.likelion.home.mypage.matching_edit_info_screen.MatchingEditInfoScreen
 import com.likelion.home.mypage.mbti_edit_info_screen.FakeMBTIEditInfoScreenViewModel
 import com.likelion.home.mypage.mbti_edit_info_screen.MBTIEditInfoScreen
+import com.likelion.home.mypage.poto_edit_info_screen.PotoEditInfoScreen
+import com.likelion.home.mypage.poto_edit_info_screen.PotoEditInfoScreenViewModel
 import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
+import com.likelion.ui.theme.SisoTheme
 
 @Composable
 fun EditMainRoute(
@@ -55,12 +59,15 @@ fun EditMainRoute(
     currentLocationSetUseCase : CurrentLocationSetUseCase,
     actionSnackbar: () -> Unit = {}
 ) {
-    EditMain(
-        topLocationUseCase = topLocationUseCase,
-        bottomLocationUseCase = bottomLocationUseCase,
-        currentLocationSetUseCase = currentLocationSetUseCase,
-        navigateToMyPage = actionSnackbar
-    )
+    SisoTheme {
+        EditMain(
+            topLocationUseCase = topLocationUseCase,
+            bottomLocationUseCase = bottomLocationUseCase,
+            currentLocationSetUseCase = currentLocationSetUseCase,
+            navigateToMyPage = actionSnackbar
+        )
+    }
+
 }
 
 @SuppressLint("SuspiciousIndentation")
@@ -76,7 +83,10 @@ fun EditMain (
     val navController = rememberNavController()
     var appBarTitle by remember { mutableStateOf(title) }
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
-
+    val onlyTopInnerPadding = listOf(
+        NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route,
+        NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route
+    )
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -105,6 +115,7 @@ fun EditMain (
                 )
             },
         ) { innerPadding ->
+//            if (navController.currentDestination?.route))
             NavHost(
                 navController = navController,
                 startDestination = start,
@@ -141,7 +152,11 @@ fun EditMain (
                 // 내 정보 수정
                 // 사진 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route) {
-
+                    PotoEditInfoScreen(
+                        viewModel = PotoEditInfoScreenViewModel()
+                    ) {
+                        navController.popBackStack()
+                    }
                 }
                 //음성 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route) {
@@ -167,7 +182,13 @@ fun EditMain (
                 // 종교 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route) {
                     AdditionalInfoReligionScreen(viewModel = FakeAdditionalInfoReligionScreenViewModel(),
-                        popBackStack = {navController.popBackStack()}
+                        popBackStack = {pubList->
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("religion", pubList)
+                            navController.popBackStack()
+                        }
                     )
                 }
                 // 흡연 수정
