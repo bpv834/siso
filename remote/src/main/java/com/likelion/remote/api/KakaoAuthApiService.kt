@@ -1,8 +1,8 @@
 package com.likelion.remote.api
 
-import com.likelion.remote.model.KakaoAccessTokenRequestDto
-import com.likelion.remote.model.BasicTokenResponseDto
-import com.likelion.remote.model.UserInfoResponseDto
+import com.likelion.remote.model.response.KakaoAccessTokenRequestDto
+import com.likelion.remote.model.response.BasicTokenResponseDto
+import com.likelion.remote.model.response.UserInfoResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

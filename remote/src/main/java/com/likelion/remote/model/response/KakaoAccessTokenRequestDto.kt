@@ -1,4 +1,4 @@
-package com.likelion.remote.model
+package com.likelion.remote.model.response
 
 import com.squareup.moshi.JsonClass
 
