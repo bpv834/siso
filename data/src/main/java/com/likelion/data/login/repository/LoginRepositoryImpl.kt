@@ -1,5 +1,6 @@
 package com.likelion.data.login.repository
 
+import android.util.Log
 import com.likelion.data.login.mapper.toDomain
 import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.PostKakaoResult
@@ -33,6 +34,7 @@ class LoginRepositoryImpl @Inject constructor(
     // 서버에 리프래시 토큰 재발급
     override suspend fun postRefreshToken(token: BasicToken): User {
         val response = kakaoApi.refreshServerToken("Bearer ${token.refreshToken}")
+        Log.d("TEST","${response.body()?.accessToken}")
         if (response.isSuccessful) {
             val body = response.body() ?: throw IllegalStateException("Empty refresh body")
             return body.toDomain()
