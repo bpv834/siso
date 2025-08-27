@@ -1,7 +1,7 @@
 package com.likelion.remote.fake_api
 
 import com.likelion.remote.api.CallApiService
-import com.likelion.remote.model.request.StartCallRequest
+import com.likelion.remote.model.request.CallRequest
 import com.likelion.remote.model.response.CallInfoDto
 import kotlinx.coroutines.delay
 import retrofit2.Response
@@ -39,7 +39,9 @@ class FakeCallApiService @Inject constructor() : CallApiService {
     //     delay(500L)
     //     return emptyList()
     // }
-    override suspend fun requestCallSession(request: StartCallRequest): Response<CallInfoDto> {
+
+
+    override suspend fun requestCallSession(request: CallRequest): Response<CallInfoDto> {
         TODO("Not yet implemented")
     }
 }

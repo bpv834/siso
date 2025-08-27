@@ -9,7 +9,7 @@ import com.likelion.domain.call_for_caller.model.CallInfoModel
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
-import com.likelion.remote.model.request.StartCallRequest
+import com.likelion.remote.model.request.CallRequest
 import com.likelion.remote.model.response.CallInfoDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -60,7 +60,7 @@ class CallRepositoryImpl @Inject constructor(
     override suspend fun startCall(callerId: Long, receiverId: Long): Result<CallInfoModel> {
         Timber.d("CallRepositoryImpl: 통화 시작 요청. CallApiService를 통해 서버 통화 정보 요청 중...")
 
-        val request = StartCallRequest(callerId = callerId, receiverId = receiverId)
+        val request = CallRequest(receiverId = receiverId)
 
         return try {
             // 채널명 토큰을 서버에서 불러옴

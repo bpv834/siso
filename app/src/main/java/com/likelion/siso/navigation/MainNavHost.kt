@@ -23,7 +23,7 @@ import com.lion.call.navigation.navigateToCallForCaller
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
-    //startDestination: String = NavigationRoute.OnBoardingScreen.route
+   // startDestination: String = NavigationRoute.HomeScreen.route
     startDestination: String = NavigationRoute.LoginScreen.route
 ) {
     NavHost(
@@ -32,7 +32,15 @@ fun MainNavHost(
         startDestination = startDestination,
     ) {
         loginNavigation(
-            navController = appState.navController
+            navController = appState.navController,
+            onNavigateToHome = {
+                appState.navController.popBackStack(NavigationRoute.LoginScreen.route, inclusive = true)
+                appState.navController.navigateToHome(
+                    navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            }
         ) {
             appState.navController.navigateToLogin()
         }

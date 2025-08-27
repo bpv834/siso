@@ -4,8 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,19 +17,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.likelion.domain.home.model.UsersModel
-import com.likelion.ui.component.button.CustomButtonWithIcon
+import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.component.text_button.CommonTextButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun FullScreenCallEndReview(caller: UsersModel) {
+fun FullScreenCallEndReview(
+    caller: com.likelion.domain.call_for_caller.model.UsersModel,
+    onClickReport: () -> Unit,
+    onClickAnother: () -> Unit,
+    onClickKeepGoing: () -> Unit // 채팅창으로 가야해서 상대방 id도 받아야함
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,28 +76,39 @@ fun FullScreenCallEndReview(caller: UsersModel) {
                 style = SisoTypoTokens.Body2,
                 color = SisoColorTokens.Gray90
             )
-            Spacer(Modifier.size(21.dp))
-            Row {
-                CustomButtonWithIcon(
-                    modifier = Modifier.size(143.dp),
-                    onClick = {},
-                    iconSize = 60.dp,
-                    icon = painterResource(com.likelion.ui.R.drawable.ic_heart_break),
-                    iconTint = SisoColorTokens.Gold40,
-                    containerColor = SisoColorTokens.White,
-                    borderColor = SisoColorTokens.Gray30,
-                    borderWidth = 1.dp
+            Spacer(Modifier.size(84.dp))
+            Row (modifier = Modifier
+                .wrapContentSize()
+            //fillMaxWidth().height(150.dp)
+            ){
+                CommonOutlinedButtonWithIconVertical(
+                    icon = {
+                        AsyncImage(
+                            model = com.likelion.ui.R.drawable.ic_heart_break,
+                            contentDescription = "",
+                            modifier = Modifier.size(45.dp)
+                        )
+                    },
+                    modifier = Modifier
+                        .size(142.dp)
+                        .safeContentPadding(),
+                    text = "고민할래요",
+                    onClick = {onClickAnother()}
                 )
                 Spacer(Modifier.size(8.dp))
-                CustomButtonWithIcon(
-                    modifier = Modifier.size(143.dp),
-                    onClick = {},
-                    iconSize = 60.dp,
-                    icon = painterResource(com.likelion.ui.R.drawable.ic_heart),
-                    iconTint = SisoColorTokens.Red50,
-                    containerColor = SisoColorTokens.White,
-                    borderColor = SisoColorTokens.Gray30,
-                    borderWidth = 1.dp
+                CommonOutlinedButtonWithIconVertical(
+                    icon = {
+                        AsyncImage(
+                            model = com.likelion.ui.R.drawable.ic_heart,
+                            contentDescription = "",
+                            modifier = Modifier.size(45.dp)
+                        )
+                    },
+                    modifier = Modifier
+                        .size(142.dp)
+                        .safeContentPadding(),
+                    text = "연락할래요",
+                    onClick = {}
                 )
             }
             Spacer(Modifier.size(30.dp))
@@ -97,7 +116,9 @@ fun FullScreenCallEndReview(caller: UsersModel) {
                 "신고하기",
                 style = SisoTypoTokens.Label1,
                 color = SisoColorTokens.Gray60,
-                onClick = {},
+                onClick = {
+                    onClickReport()
+                },
             )
 
         }
@@ -109,7 +130,7 @@ fun FullScreenCallEndReview(caller: UsersModel) {
 @Composable
 fun FullScreenCallReviewPreview() {
     SisoTheme {
-        val caller = UsersModel(
+        val caller = com.likelion.domain.call_for_caller.model.UsersModel(
             id = 4L,
             isOnline = true,
             userImages = listOf(
@@ -135,6 +156,6 @@ fun FullScreenCallReviewPreview() {
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다."
         )
-        FullScreenCallEndReview(caller = caller)
+        FullScreenCallEndReview(caller = caller, {}, {}, {})
     }
 }

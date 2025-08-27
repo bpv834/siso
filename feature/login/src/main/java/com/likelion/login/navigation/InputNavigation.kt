@@ -1,10 +1,13 @@
 package com.likelion.login.navigation
 
+import android.util.Log
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.likelion.login.InputRoute
+import com.likelion.login.login_start.LoginScreenViewModel
 import com.likelion.navigation.NavigationRoute
 
 fun NavController.navigateToInput(navOptions: NavOptions? = null) =
@@ -18,7 +21,18 @@ fun NavGraphBuilder.inputNavigation(
     composable(
         route = NavigationRoute.InputScreen.route,
     ) {
+        val viewModel = hiltViewModel<LoginScreenViewModel>()
         InputRoute(
+            onNavigateInit = {
+                navController.navigate("login") {
+                    popUpTo("login") { inclusive = true }
+                    launchSingleTop = true
+                }
+            },
+            onExitRegister = {
+                viewModel.clearToken()
+                Log.d("뒤로가기 눌림","1")
+            },
             onNavigateUp = { navController.navigateUp() },
             onNavigateToHome = onNavigateToHome,
             actionSnackbar = action

@@ -1,9 +1,8 @@
-package com.likelion.remote.model.response
+package com.likelion.remote.model
 
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class TokenPairDto(
+data class KakaoAccessTokenRequestDto(
     val accessToken: String,
-    val refreshToken: String
 )
