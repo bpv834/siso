@@ -17,6 +17,7 @@ import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
+import com.likelion.home.navigation.edit_Main.settingMainNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
@@ -131,6 +132,17 @@ fun MainNavHost(
                 appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
                 launchSingleTop = true
             }
+            )
+        }
+
+        settingMainNavigation(
+            navController = appState.navController
+        ) {
+            appState.navController.navigateToMyPage(
+                navOptions {
+                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
+                    launchSingleTop = true
+                }
             )
         }
         callerNavigation(
