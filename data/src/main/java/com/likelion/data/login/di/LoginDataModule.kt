@@ -2,7 +2,7 @@ package com.likelion.data.login.di
 
 import com.likelion.data.login.repository.LoginRepositoryImpl
 import com.likelion.data.login.repository.TokenRepositoryImpl
-import com.likelion.domain.login.repository.AuthTokenRepository
+import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.domain.login.repository.LoginRepository
 import dagger.Binds
 import dagger.Module
@@ -18,7 +18,7 @@ abstract class LoginDataModule {
     @Singleton
     abstract fun bindAuthTokenRepository(
         impl: TokenRepositoryImpl
-    ): AuthTokenRepository
+    ): TokenRepository
 
     @Binds
     @Singleton

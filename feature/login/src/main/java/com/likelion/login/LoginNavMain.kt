@@ -1,5 +1,8 @@
 package com.likelion.login
 
+import androidx.activity.compose.BackHandler
+
+import android.util.Log
 import android.view.View
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -21,19 +24,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.likelion.login.first_loginInfo_screen.FirstLoginInfoScreen
 import com.likelion.login.login_agree.AgreeToTermsScreen
 import com.likelion.login.login_agree.FakeAgreeToTermsScreenViewModel
-import com.likelion.login.login_input_record.FifthLoginInfoScreen
-import com.likelion.login.login_input_record.FifthLoginInfoScreenViewModel
-import com.likelion.login.first_loginInfo_screen.FirstLoginInfoScreen
-import com.likelion.login.login_input_info.FakeFirstLoginInfoScreenViewModel
-import com.likelion.login.login_input_introduce.FourthLoginInfoScreen
-import com.likelion.login.login_end.LastLoginInfoScreen
 import com.likelion.login.login_agree2.LoginStartScreen
+import com.likelion.login.login_end.LastLoginInfoScreen
 import com.likelion.login.login_input_hobby.FakeSecondLoginInfoScreenViewModel
 import com.likelion.login.login_input_hobby.SecondLoginInfoScreen
+import com.likelion.login.login_input_info.FakeFirstLoginInfoScreenViewModel
+import com.likelion.login.login_input_introduce.FourthLoginInfoScreen
 import com.likelion.login.login_input_photo.FakeThirdLoginScreenViewModel
 import com.likelion.login.login_input_photo.ThirdLoginInfoScreen
+import com.likelion.login.login_input_record.FifthLoginInfoScreen
+import com.likelion.login.login_input_record.FifthLoginInfoScreenViewModel
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -44,11 +47,15 @@ fun InputRoute(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    onNavigateToHome: () -> Unit = {}
+    onNavigateToHome: () -> Unit = {},
+    onNavigateInit: () -> Unit = {},
+    onExitRegister: () -> Unit = {}
 ) {
     LoginMainScreen(
         onNavigateUp = onNavigateUp,
-        onNavigateToHome = onNavigateToHome
+        onNavigateToHome = onNavigateToHome,
+        onNavigateInit = onNavigateInit,
+        onExitRegister = onExitRegister,
     )
 }
 
@@ -56,14 +63,33 @@ fun InputRoute(
 @Composable
 fun LoginMainScreen(
     onNavigateUp: () -> Unit,
-    onNavigateToHome: () -> Unit
+    onNavigateToHome: () -> Unit,
+    onNavigateInit: () -> Unit,
+    onExitRegister: () -> Unit
 ) {
     val navController = rememberNavController()
+    BackHandler {
+        when (navController.currentBackStackEntry?.destination?.route) {
+            "login1" -> {
+                // Exit register flow: reset state then go to login root
+                onExitRegister()
+                onNavigateInit()
+
+                Log.d("Nav", "초기화(BackHandler)")
+            }
+            "main" -> {
+                onNavigateUp()
+            }
+            else -> {
+                navController.popBackStack()
+            }
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SisoColorTokens.White,
+                  //  containerColor = SisoColorTokens.White,
                     titleContentColor = SisoColorTokens.Gray90
                 ),
                 title = {
@@ -72,11 +98,25 @@ fun LoginMainScreen(
                 navigationIcon = {
                     IconButton(onClick = {
                         // 네비게이션 구현
-                        if (navController.currentBackStackEntry?.destination?.route != "main") {
-                            navController.popBackStack()
-                        } else {
-                            onNavigateUp()
+                        when (navController.currentBackStackEntry?.destination?.route) {
+                            "login1" ->{
+                                onExitRegister()
+                                onNavigateInit()
+                                Log.d("Nav","초기화")
+                            }
+                            "main" ->{
+                                onNavigateUp()
+                            }
+                            else ->{
+                                navController.popBackStack()
+                            }
                         }
+//                        if (navController.currentBackStackEntry?.destination?.route != "main") {
+//
+//                            navController.popBackStack()
+//                        } else {
+//                            onNavigateUp()
+//                        }
                     }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_back),
@@ -171,6 +211,6 @@ fun InputScreen1(
 @Preview
 fun InputScreenPreview() {
     SisoTheme {
-        LoginMainScreen(onNavigateUp = {}, {})
+        LoginMainScreen(onNavigateUp = {}, {},{}, {})
     }
 }
