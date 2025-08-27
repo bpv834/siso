@@ -47,7 +47,7 @@ fun MatchingEditInfoScreen(
     LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
         matchingReceiverList.addAll(viewModel.receiverList.value)
     }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
     val matchingList = remember {
         mutableListOf(
             "#동호회활동\uD83D\uDC65",
@@ -128,7 +128,7 @@ fun MatchingEditInfoScreen(
                 // 선택된 값을 보냄
                 popBackStack()
             }
-            Spacer(Modifier.fillMaxWidth().height(72.dp - navbarBottomPadding))
+            Spacer(Modifier.fillMaxWidth().height(72.dp))
 
         }
     }

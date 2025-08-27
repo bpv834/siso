@@ -73,8 +73,6 @@ fun LocationEditInfoScreen(
 
     val locationState by viewModel.locationState.collectAsStateWithLifecycle()
 
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-
     // 권한 요청 Launcher
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -189,7 +187,7 @@ fun LocationEditInfoScreen(
                         popBackStack(input)
                     }
                 }
-                Spacer(Modifier.size(73.dp - navbarBottomPadding))
+                Spacer(Modifier.size(73.dp))
             }
 
         }

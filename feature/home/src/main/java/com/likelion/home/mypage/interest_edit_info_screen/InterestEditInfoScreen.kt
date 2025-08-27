@@ -52,7 +52,6 @@ fun InterestEditInfoScreen(
     LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
         cultureReceiverList.addAll(viewModel.receiverList.value)
     }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val cultureList = remember {
         mutableListOf(
             "#음악감상 \uD83C\uDFA7",
@@ -179,7 +178,7 @@ fun InterestEditInfoScreen(
                 // 선택된 값을 보냄
                 popBackStack()
             }
-            Spacer(Modifier.fillMaxWidth().height(72.dp - navbarBottomPadding))
+            Spacer(Modifier.fillMaxWidth().height(72.dp))
 
         }
     }
