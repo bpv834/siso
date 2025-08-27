@@ -6,6 +6,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.likelion.home.mypage.MyPageRoute
 import com.likelion.home.navigation.edit_Main.navigateToEditMain
+import com.likelion.home.navigation.edit_Main.navigateToSettingMain
 import com.likelion.navigation.NavigationRoute
 
 fun NavController.navigateToMyPage(navOptions: NavOptions? = null) =
@@ -25,7 +26,7 @@ fun NavGraphBuilder.myPageNavigation(
                 navController.navigateToEditMain()
             },
             setting = {
-                navController.navigate(NavigationRoute.MyPageScreen.SettingScreen.route)
+                navController.navigateToSettingMain()
             },
             actionSnackbar = action,
         )
