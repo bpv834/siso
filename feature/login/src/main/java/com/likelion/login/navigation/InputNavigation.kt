@@ -29,10 +29,7 @@ fun NavGraphBuilder.inputNavigation(
                     launchSingleTop = true
                 }
             },
-            onExitRegister = {
-                viewModel.clearToken()
-                Log.d("뒤로가기 눌림","1")
-            },
+            onExitRegister = {},
             onNavigateUp = { navController.navigateUp() },
             onNavigateToHome = onNavigateToHome,
             actionSnackbar = action
