@@ -5,7 +5,8 @@ data class User(
     val accessToken: String,
     val refreshToken: String,
     val userStatus: UserStatus,
-    val userInfo: UserInfo
+    val userInfo: UserInfo,
+    val hasProfile: Boolean
 )
 
 data class UserInfo(

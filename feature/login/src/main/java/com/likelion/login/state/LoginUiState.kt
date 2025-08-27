@@ -8,6 +8,6 @@ data class LoginUiState(
     val accessToken: String? = null,
     val refreshToken: String? = null,
     val userState: UserStatus = UserStatus.NONE,
-    val user: User? = null,
+    val hasProfile: Boolean = false,
     val error: String? = null,
 )

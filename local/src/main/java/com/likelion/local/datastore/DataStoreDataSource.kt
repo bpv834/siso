@@ -3,12 +3,10 @@ package com.likelion.local.datastore
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.User
-import com.likelion.domain.login.model.UserStatus
 import com.likelion.local.model.BasicTokenEntity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -25,6 +23,7 @@ class DataStoreDataSource @Inject constructor(
         val REFRESH_TOKEN = stringPreferencesKey("REFRESH_TOKEN")
         val USER_STATUS = stringPreferencesKey("USER_STATUS")
         val USER_JSON = stringPreferencesKey("USER_JSON")
+        val HAS_PROFILE = booleanPreferencesKey("IS_PROFILE")
 
     }
 
@@ -37,11 +36,13 @@ class DataStoreDataSource @Inject constructor(
         return dataStore.data.map { prefs ->
             val refresh = prefs[PreferencesKey.REFRESH_TOKEN]
             val status = prefs[PreferencesKey.USER_STATUS]
+            val profile = prefs[PreferencesKey.HAS_PROFILE]
             if (status.isNullOrBlank() && refresh.isNullOrBlank()) {
                 null
             } else BasicTokenEntity(
                 refreshToken = refresh!!,
-                status = status!!
+                status = status!!,
+                hasProfile = profile!!
             )
         }
     }
@@ -53,14 +54,16 @@ class DataStoreDataSource @Inject constructor(
             prefs.remove(PreferencesKey.REFRESH_TOKEN)
             prefs.remove(PreferencesKey.USER_STATUS)
             prefs.remove(PreferencesKey.USER_JSON)
+            prefs.remove(PreferencesKey.HAS_PROFILE)
         }
     }
 
     override suspend fun saveToken(token: BasicTokenEntity) {
-        Log.d("saveRefresh","${token}")
+        Log.d("saveRefresh", "${token}")
         dataStore.edit { prefs ->
             prefs[PreferencesKey.REFRESH_TOKEN] = token.refreshToken
             prefs[PreferencesKey.USER_STATUS] = token.status
+            prefs[PreferencesKey.HAS_PROFILE] = token.hasProfile
         }
     }
 
