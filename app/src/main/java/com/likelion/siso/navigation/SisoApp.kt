@@ -34,8 +34,7 @@ fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
                     .padding(innerPadding)
             ) {
                 MainNavHost(
-                    appState = appState,
-                    startDestination = NavigationRoute.HomeScreen.route
+                    appState = appState
                 )
             }
         },
