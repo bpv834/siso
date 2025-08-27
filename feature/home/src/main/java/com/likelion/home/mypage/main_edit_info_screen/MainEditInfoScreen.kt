@@ -12,9 +12,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -58,11 +62,14 @@ import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import com.likelion.home.navigation.Pub
 import com.likelion.ui.R
+import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
 import com.likelion.ui.theme.SisoColorTokens
@@ -77,13 +84,14 @@ fun MainEditInfoScreen(
     saveHandle: SavedStateHandle,
     action:List<()->Unit> = listOf()
 ) {
-
+    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
     val locationBlank =
         saveHandle.get<String>("location") == null
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
-
+    val religionBlank =
+        saveHandle.get<String>("religion") == null
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
@@ -114,10 +122,6 @@ fun MainEditInfoScreen(
     val introduceTextRange = TextRange(0,50)
     var ageText by remember { mutableStateOf("") }
     val ageTextRange = TextRange(0,3)
-    var heightText by remember { mutableStateOf("") }
-    val heightTextRange = ageTextRange
-    var weightText by remember { mutableStateOf("") }
-    val weightTextRange = ageTextRange
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
     )
@@ -134,265 +138,92 @@ fun MainEditInfoScreen(
         "나의 관심사를 골라주세요" to listOf<String>(),
         "어떤 관계를 원하시나요?" to listOf()
     )
-    Column(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Box(
+    Box(
+        modifier = Modifier.fillMaxHeight()
+    ){
+        Column(
             modifier = Modifier
-                .padding(top = 12.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+                .padding(start = 16.dp, end = 16.dp)
+                .align(Alignment.TopCenter)
+                .verticalScroll(rememberScrollState())
         ) {
             Box(
                 modifier = Modifier
-                    .size(120.dp)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        potoNavigation()
-                    }
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                AsyncImage(
-                    modifier = Modifier.size(120.dp, 120.dp),
-                    model = R.drawable.example_profile,
-                    contentDescription = ""
-                )
                 Box(
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .offset((2).dp, (3).dp)
-                        .size(34.dp)
-                        .clip(CircleShape)
-                        .background(SisoColorTokens.Gray5),
-                    contentAlignment = Alignment.Center
+                        .size(120.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            potoNavigation()
+                        }
                 ) {
+                    AsyncImage(
+                        modifier = Modifier.size(120.dp, 120.dp),
+                        model = R.drawable.example_profile,
+                        contentDescription = ""
+                    )
                     Box(
                         modifier = Modifier
-                            .size(28.dp)
+                            .align(Alignment.BottomEnd)
+                            .offset((2).dp, (3).dp)
+                            .size(34.dp)
                             .clip(CircleShape)
-                            .background(SisoColorTokens.Gray20),
-                        contentAlignment = Alignment.TopStart
+                            .background(SisoColorTokens.Gray5),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            tint = SisoColorTokens.Gray60,
-                            painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
-                            contentDescription = ""
-                        )
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(SisoColorTokens.Gray20),
+                            contentAlignment = Alignment.TopStart
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                tint = SisoColorTokens.Gray60,
+                                painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
+                                contentDescription = ""
+                            )
+                        }
+
                     }
-
                 }
             }
-        }
 
-        Spacer(Modifier.size(12.dp))
-        Text(
-            modifier = Modifier.height(24.dp),
-            text = "닉네임",
-            style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.size(8.dp))
-        // 여기에 EditText(텍스트 필드) 추가
-        CommonOutlinedTextFiled(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp),
-            placeholderText = "닉네임을 입력해주세요",
-            value = nameState, // collect된 실시간 변경된 스트링 값을 넣는다.
-            onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                viewModel.nameUpdate(
-                    if (newText.length > nameStateRange.length)
-                        newText.substring(nameStateRange)
-                    else newText
-                )
-            }
-        )
-        Spacer(Modifier.size(24.dp))
-        Text(
-            modifier = Modifier.height(24.dp),
-            text = "나이",
-            style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.size(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // 여기에 EditText(텍스트 필드) 추가
-            CommonOutlinedTextFiled(
-                modifier = Modifier
-                    .size(86.dp, 52.dp)
-                    .padding(end = 6.dp),
-                placeholderText = "",
-                value = ageText, // collect된 실시간 변경된 스트링 값을 넣는다.
-                onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                    val temp = if (newText.length > ageTextRange.length)
-                        newText.substring(ageTextRange)
-                    else newText
-                    ageText = temp.replace(Regex("[^0-9]"), "")
-                }
-            )
+            Spacer(Modifier.size(12.dp))
             Text(
                 modifier = Modifier.height(24.dp),
-                text = "세",
+                text = "닉네임",
                 style = SisoTypoTokens.SubTitle1,
                 color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
-        }
-        Spacer(Modifier.size(24.dp))
-        Text(
-            modifier = Modifier.height(24.dp),
-            text = "자기소개",
-            style = SisoTypoTokens.SubTitle1,
-            color = SisoColorTokens.Gray50,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.size(24.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // 음성 재생 바
-            Box(
-                modifier = Modifier
-                    .height(44.dp)
-                    .fillMaxWidth(0.889F)
-                    .clip(RoundedCornerShape(999.dp))
-                    .background(SisoColorTokens.Gray60),
-            ) {
-                //음성 재생 아이콘 구현
-                Row(
-                    modifier = Modifier.padding(start = 16.dp, top = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //이미지 로드
-                    IconButton(
-                        modifier = Modifier.size(playButtonSize),
-                        onClick = {
-                            playState = !playState
-                            // 재생 / 정지
-                            if (!playState) {
-                                // 재생하기
-
-                            } else {
-                                // 중지하기
-                            }
-                        }
-                    ) {
-                        Icon(
-                            tint = SisoColorTokens.Gray10,
-                            imageVector = ImageVector.vectorResource(
-                                if (!playState) R.drawable.ic_play
-                                else R.drawable.ic_pause
-                            ),
-                            contentDescription = ""
-                        )
-                    }
-
-                    // 박스 크기만큼 뺀 패딩 9 - 1.25
-                    Spacer(Modifier.size(sliderVectorPadding))
-                    // 슬라이더 대체 이미지
-                    var temp = sliderSizing
-                    while (temp > 2.5.dp) {
-                        sliderVectorList.forEachIndexed { idx, height ->
-                            temp -= 2.5.dp
-                            if (temp > 2.5.dp)
-                                Box(
-                                    Modifier
-                                        .size(width = 2.5.dp, height = height.dp)
-                                        .clip(RoundedCornerShape(999.dp))
-                                        .drawWithContent {
-                                            drawRect(SisoColorTokens.White)
-                                        })
-                            else
-                                return@forEachIndexed
-                            temp -= 3.5.dp
-                            if (temp > 3.5.dp)
-                                Spacer(Modifier.size(3.5.dp))
-                            else
-                                return@forEachIndexed
-
-                        }
-                    }
-                    // 박스 크기만큼 뺀 패딩 9 - 1.25
-                    Spacer(Modifier.size(sliderVectorPadding))
-                    Text(
-                        modifier = Modifier.size(playtimeSize),
-                        text = "00:15",
-                        style = SisoTypoTokens.Label1,
-                        color = SisoColorTokens.Gray10,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(Modifier.size(16.dp))
-
-                }
-            }
-            Spacer(Modifier.size(16.dp))
-            Icon(
-                modifier = Modifier.size(24.dp).clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    voiceNavigation()
-                },
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_text_edit
-                ),
-                tint = SisoColorTokens.Gray60,
-                contentDescription = ""
-            )
-        }
-
-        Spacer(Modifier.size(24.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(206.dp),
-        ) {
-
+            Spacer(Modifier.size(8.dp))
             // 여기에 EditText(텍스트 필드) 추가
             CommonOutlinedTextFiled(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(206.dp),
-                placeholderText = "안녕하세요. 인생의 황혼기에 접어들었지만, 늘 새로운 경험과 사랑을 찾아 나아가고 있습니다. 서로를 이해하며 함께할 수 있는 분을 기다립니다.",
-                value = introduceText, // collect된 실시간 변경된 스트링 값을 넣는다.
+                    .height(55.dp),
+                placeholderText = "닉네임을 입력해주세요",
+                value = nameState, // collect된 실시간 변경된 스트링 값을 넣는다.
                 onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                    introduceText = if (newText.length > introduceTextRange.length)
-                        newText.substring(introduceTextRange)
-                    else newText
+                    viewModel.nameUpdate(
+                        if (newText.length > nameStateRange.length)
+                            newText.substring(nameStateRange)
+                        else newText
+                    )
                 }
             )
-
+            Spacer(Modifier.size(24.dp))
             Text(
-                modifier = Modifier
-                    .height(22.dp)
-                    .align(Alignment.BottomEnd)
-                    .offset((-16).dp, (-16).dp),
-                text = "${introduceText.length}/${introduceTextRange.end}",
-                style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.Gray50
-            )
-
-        }
-
-        Spacer(Modifier.size(48.dp))
-
-        TitleText("기본정보")
-
-        Spacer(Modifier.size(32.dp))
-        Column(
-            modifier = Modifier.height(85.dp)
-        ) {
-            Text(
-                modifier = Modifier.height(23.dp),
-                text = "키",
+                modifier = Modifier.height(24.dp),
+                text = "나이",
                 style = SisoTypoTokens.SubTitle1,
                 color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
@@ -407,220 +238,334 @@ fun MainEditInfoScreen(
                         .size(86.dp, 52.dp)
                         .padding(end = 6.dp),
                     placeholderText = "",
-                    value = heightText, // collect된 실시간 변경된 스트링 값을 넣는다.
+                    value = ageText, // collect된 실시간 변경된 스트링 값을 넣는다.
                     onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                        val temp = if (newText.length > heightTextRange.length)
-                            newText.substring(heightTextRange)
+                        val temp = if (newText.length > ageTextRange.length)
+                            newText.substring(ageTextRange)
                         else newText
-                        heightText = temp.replace(Regex("[^0-9]"), "")
+                        ageText = temp.replace(Regex("[^0-9]"), "")
                     }
                 )
                 Text(
                     modifier = Modifier.height(24.dp),
-                    text = "cm",
+                    text = "세",
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.Gray50,
                     textAlign = TextAlign.Center
                 )
             }
-        }
-
-        Spacer(Modifier.size(24.dp))
-        Column(
-            modifier = Modifier.height(85.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
+            Spacer(Modifier.size(24.dp))
             Text(
-                modifier = Modifier.height(23.dp),
-                text = "몸무게",
+                modifier = Modifier.height(24.dp),
+                text = "자기소개",
                 style = SisoTypoTokens.SubTitle1,
                 color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
-            Spacer(Modifier.size(8.dp))
+            Spacer(Modifier.size(24.dp))
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                // 여기에 EditText(텍스트 필드) 추가
-                CommonOutlinedTextFiled(
+                // 음성 재생 바
+                Box(
                     modifier = Modifier
-                        .size(86.dp, 52.dp)
-                        .padding(end = 6.dp),
-                    placeholderText = "",
-                    value = weightText, // collect된 실시간 변경된 스트링 값을 넣는다.
-                    onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                        val temp = if (newText.length > weightTextRange.length)
-                            newText.substring(weightTextRange)
-                        else newText
-                        weightText = temp.replace(Regex("[^0-9]"), "")
+                        .height(44.dp)
+                        .fillMaxWidth(0.889F)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(SisoColorTokens.Gray60),
+                ) {
+                    //음성 재생 아이콘 구현
+                    Row(
+                        modifier = Modifier.padding(start = 16.dp, top = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        //이미지 로드
+                        IconButton(
+                            modifier = Modifier.size(playButtonSize),
+                            onClick = {
+                                playState = !playState
+                                // 재생 / 정지
+                                if (!playState) {
+                                    // 재생하기
+
+                                } else {
+                                    // 중지하기
+                                }
+                            }
+                        ) {
+                            Icon(
+                                tint = SisoColorTokens.Gray10,
+                                imageVector = ImageVector.vectorResource(
+                                    if (!playState) R.drawable.ic_play
+                                    else R.drawable.ic_pause
+                                ),
+                                contentDescription = ""
+                            )
+                        }
+
+                        // 박스 크기만큼 뺀 패딩 9 - 1.25
+                        Spacer(Modifier.size(sliderVectorPadding))
+                        // 슬라이더 대체 이미지
+                        var temp = sliderSizing
+                        while (temp > 2.5.dp) {
+                            sliderVectorList.forEachIndexed { idx, height ->
+                                temp -= 2.5.dp
+                                if (temp > 2.5.dp)
+                                    Box(
+                                        Modifier
+                                            .size(width = 2.5.dp, height = height.dp)
+                                            .clip(RoundedCornerShape(999.dp))
+                                            .drawWithContent {
+                                                drawRect(SisoColorTokens.White)
+                                            })
+                                else
+                                    return@forEachIndexed
+                                temp -= 3.5.dp
+                                if (temp > 3.5.dp)
+                                    Spacer(Modifier.size(3.5.dp))
+                                else
+                                    return@forEachIndexed
+
+                            }
+                        }
+                        // 박스 크기만큼 뺀 패딩 9 - 1.25
+                        Spacer(Modifier.size(sliderVectorPadding))
+                        Text(
+                            modifier = Modifier.size(playtimeSize),
+                            text = "00:15",
+                            style = SisoTypoTokens.Label1,
+                            color = SisoColorTokens.Gray10,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.size(16.dp))
+
                     }
-                )
-                Text(
-                    modifier = Modifier.height(24.dp),
-                    text = "kg",
-                    style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.Gray50,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-
-        Spacer(Modifier.size(24.dp))
-
-        Column(
-            modifier = Modifier.height(59.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                modifier = Modifier.height(23.dp),
-                text = "내 성별",
-                style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.Gray50,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.size(12.dp))
-            Row(
-                modifier = Modifier.height(24.dp)
-            ) {
-                EditInfoRepeatRadioButton(myRadioButtons) {
-                    viewModel.fistContinueBooleanUpdate()
                 }
+                Spacer(Modifier.size(16.dp))
+                Icon(
+                    modifier = Modifier.size(24.dp).clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        voiceNavigation()
+                    },
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_text_edit
+                    ),
+                    tint = SisoColorTokens.Gray60,
+                    contentDescription = ""
+                )
             }
-        }
-        Spacer(Modifier.size(24.dp))
 
-        Column(
-            modifier = Modifier.height(59.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                modifier = Modifier.height(23.dp),
-                text = "매칭 성별",
-                style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.Gray50,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.size(12.dp))
-            Row(
-                modifier = Modifier.height(24.dp)
-            ) {
-                EditInfoRepeatRadioButton(pairRadioButtons) {
-                    viewModel.fistContinueBooleanUpdate()
-                }
-            }
-        }
-        Spacer(Modifier.size(32.dp))
-        InfoEditScreenButton(
-            titleText = "지역",
-            selectText = if(locationBlank) "나의 지역을 등록해주세요"
-            else saveHandle.get<String>("location")!!,
-            color = if(locationBlank) SisoColorTokens.Gray50
-            else SisoColorTokens.Gray90,
-        ) {
-            locationNavigation()
-        }
-
-        Spacer(Modifier.size(48.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(27.dp),
-        ) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .height(23.dp),
-                text = "기본정보",
-                style = SisoTypoTokens.SubTitle1,
-                color = SisoColorTokens.Gray90,
-                textAlign = TextAlign.Center
-            )
+            Spacer(Modifier.size(24.dp))
             Box(
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(68.dp, 27.dp)
-                    .background(SisoColorTokens.Gold40, RoundedCornerShape(8.dp)),
-                contentAlignment = Alignment.Center,
+                    .fillMaxWidth()
+                    .height(206.dp),
+            ) {
+
+                // 여기에 EditText(텍스트 필드) 추가
+                CommonOutlinedTextFiled(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(206.dp),
+                    placeholderText = "안녕하세요. 인생의 황혼기에 접어들었지만, 늘 새로운 경험과 사랑을 찾아 나아가고 있습니다. 서로를 이해하며 함께할 수 있는 분을 기다립니다.",
+                    value = introduceText, // collect된 실시간 변경된 스트링 값을 넣는다.
+                    onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
+                        introduceText = if (newText.length > introduceTextRange.length)
+                            newText.substring(introduceTextRange)
+                        else newText
+                    }
+                )
+
+                Text(
+                    modifier = Modifier
+                        .height(22.dp)
+                        .align(Alignment.BottomEnd)
+                        .offset((-16).dp, (-16).dp),
+                    text = "${introduceText.length}/${introduceTextRange.end}",
+                    style = SisoTypoTokens.Label1,
+                    color = SisoColorTokens.Gray50
+                )
+
+            }
+
+            Spacer(Modifier.size(48.dp))
+
+            TitleText("기본정보")
+
+            Spacer(Modifier.size(32.dp))
+            Column(
+                modifier = Modifier.height(59.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    modifier = Modifier.size(52.dp, 23.dp),
-                    text = "+30%",
+                    modifier = Modifier.height(23.dp),
+                    text = "내 성별",
+                    style = SisoTypoTokens.SubTitle1,
+                    color = SisoColorTokens.Gray50,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.size(12.dp))
+                Row(
+                    modifier = Modifier.height(24.dp)
+                ) {
+                    EditInfoRepeatRadioButton(myRadioButtons) {
+                        viewModel.fistContinueBooleanUpdate()
+                    }
+                }
+            }
+            Spacer(Modifier.size(24.dp))
+
+            Column(
+                modifier = Modifier.height(59.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier.height(23.dp),
+                    text = "매칭 성별",
+                    style = SisoTypoTokens.SubTitle1,
+                    color = SisoColorTokens.Gray50,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.size(12.dp))
+                Row(
+                    modifier = Modifier.height(24.dp)
+                ) {
+                    EditInfoRepeatRadioButton(pairRadioButtons) {
+                        viewModel.fistContinueBooleanUpdate()
+                    }
+                }
+            }
+            Spacer(Modifier.size(32.dp))
+            InfoEditScreenButton(
+                titleText = "지역",
+                selectText = if(locationBlank) "나의 지역을 등록해주세요"
+                else saveHandle.get<String>("location")!!,
+                color = if(locationBlank) SisoColorTokens.Gray50
+                else SisoColorTokens.Gray90,
+            ) {
+                locationNavigation()
+            }
+
+            Spacer(Modifier.size(48.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(27.dp),
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .height(23.dp),
+                    text = "기본정보",
                     style = SisoTypoTokens.SubTitle1,
                     color = SisoColorTokens.Gray90,
                     textAlign = TextAlign.Center
                 )
-            }
-
-        }
-        Spacer(Modifier.size(36.dp))
-        InfoEditScreenButton(
-            titleText = "종교",
-            selectText = "정보를 입력해주세요"
-        ) {
-            religionNavigation()
-        }
-        Spacer(Modifier.size(24.dp))
-        InfoEditScreenButton(
-            titleText = "흡연",
-            selectText = "정보를 입력해주세요"
-        ) {
-            smokingNavigation()
-        }
-        Spacer(Modifier.size(24.dp))
-        InfoEditScreenButton(
-            titleText = "음주",
-            selectText = "정보를 입력해주세요"
-        ) {
-            alcoholNavigation()
-        }
-        Spacer(Modifier.size(24.dp))
-        InfoEditScreenButton(
-            titleText = "MBTI",
-            selectText = "정보를 입력해주세요"
-        ) {
-            mbtiNavigation()
-        }
-        Spacer(Modifier.size(48.dp))
-
-        TitleText("관심사 / 취향 태그")
-
-        interestList.forEachIndexed { index, (sub, onclick) ->
-            Spacer(Modifier.size(32.dp))
-            Row(
-                modifier = Modifier.height(24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
+                Box(
                     modifier = Modifier
-                        .height(23.dp)
-                        .fillMaxWidth(0.889F),
-                    text = sub,
-                    style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.Gray50,
-                    textAlign = TextAlign.Start
-                )
-                IconButton(
-                    modifier = Modifier.size(24.dp),
-                    onClick = {
-                        onclick()
-                    }
+                        .align(Alignment.CenterEnd)
+                        .size(68.dp, 27.dp)
+                        .background(SisoColorTokens.Gold40, RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
-                        contentDescription = ""
+                    Text(
+                        modifier = Modifier.size(52.dp, 23.dp),
+                        text = "+30%",
+                        style = SisoTypoTokens.SubTitle1,
+                        color = SisoColorTokens.Gray90,
+                        textAlign = TextAlign.Center
                     )
                 }
+
             }
-            Spacer(Modifier.size(12.dp))
-            d("interestChipList", "$index ${interestChipList[index].first}")
-            InterestRepeatChip(
-                emptyText = interestChipList[index].first,
-                list = interestChipList[index].second,
-            )
+            Spacer(Modifier.size(36.dp))
+            InfoEditScreenButton(
+                titleText = "종교",
+                selectText = "정보를 입력해주세요"
+            ) {
+                religionNavigation()
+            }
+            Spacer(Modifier.size(24.dp))
+            InfoEditScreenButton(
+                titleText = "흡연",
+                selectText = "정보를 입력해주세요"
+            ) {
+                smokingNavigation()
+            }
+            Spacer(Modifier.size(24.dp))
+            InfoEditScreenButton(
+                titleText = "음주",
+                selectText = "정보를 입력해주세요"
+            ) {
+                alcoholNavigation()
+            }
+            Spacer(Modifier.size(24.dp))
+            InfoEditScreenButton(
+                titleText = "MBTI",
+                selectText = "정보를 입력해주세요"
+            ) {
+                mbtiNavigation()
+            }
+            Spacer(Modifier.size(48.dp))
+
+            TitleText("관심사 / 취향 태그")
+
+            interestList.forEachIndexed { index, (sub, onclick) ->
+                Spacer(Modifier.size(32.dp))
+                Row(
+                    modifier = Modifier.height(24.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .height(23.dp)
+                            .fillMaxWidth(0.889F),
+                        text = sub,
+                        style = SisoTypoTokens.SubTitle1,
+                        color = SisoColorTokens.Gray50,
+                        textAlign = TextAlign.Start
+                    )
+                    IconButton(
+                        modifier = Modifier.size(24.dp),
+                        onClick = {
+                            onclick()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
+                            contentDescription = ""
+                        )
+                    }
+                }
+                Spacer(Modifier.size(12.dp))
+                d("interestChipList", "$index ${interestChipList[index].first}")
+                InterestRepeatChip(
+                    emptyText = interestChipList[index].first,
+                    list = interestChipList[index].second,
+                )
+            }
+            // 59 + 62
+            Spacer(Modifier.size(121.dp))
         }
-        Spacer(Modifier.size(46.dp))
+
+        Column(
+            modifier = Modifier.align(Alignment.BottomCenter)
+                .padding(start = 16.dp, end = 16.dp)
+                .background(SisoColorTokens.Gray5)
+        ) {
+            Spacer(Modifier.size(8.dp))
+            CommonActiveButton(
+                text = "수정완료"
+            ) {
+
+            }
+            Spacer(Modifier.size(72.dp - navbarBottomPadding))
+        }
     }
+
 }
 
 @Composable
@@ -710,6 +655,7 @@ fun EditInfoRepeatRadioButton(
 fun InfoEditScreenButton(
     titleText: String,
     selectText: String,
+    pubList: List<Pub> = emptyList(),
     color: Color = SisoColorTokens.Gray50,
     icon: ImageVector = ImageVector.vectorResource(com.likelion.home.R.drawable.chevron_down),
     click: () -> Unit = {}
