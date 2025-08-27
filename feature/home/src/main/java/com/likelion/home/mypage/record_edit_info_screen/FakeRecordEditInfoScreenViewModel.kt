@@ -9,6 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
@@ -34,8 +35,21 @@ class FakeRecordEditInfoScreenViewModel(
     private val _recordedFilePath = MutableStateFlow<String?>(null)
     override val recordedFilePath: StateFlow<String?> = _recordedFilePath.asStateFlow()
 
+    // 서버에서 받은 음성 녹음 주소
+    private val _receiverUrl = MutableStateFlow<String?>(null)
+    override val receiverUrl: StateFlow<String?> = _receiverUrl.asStateFlow()
+
     // 코루틴 관리 작업
     private var timerJob: Job? = null
+    init {
+        _receiverUrl.update { "" } // 주소를 받아옴
+        val url = _receiverUrl.value!!
+        if (url.isNotBlank()) {
+            _recordingEditState.update { RecordingEditState.RE_EDIT } // 녹음 상태를 받아옴
+        }else{
+            _recordingEditState.update { RecordingEditState.IDLE } // 녹음 상태를 받아옴
+        }
+    }
 
     override fun onClickNextButton() {
         TODO("Not yet implemented")

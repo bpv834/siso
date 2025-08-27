@@ -1,8 +1,8 @@
-package com.likelion.data.model
+package com.likelion.data.mypage.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ProfileEntity(
+data class UsersFullEntity (
     @SerializedName("id")
     val id: Long,  // PRIMARY KEY, 숫자형
 
@@ -37,5 +37,8 @@ data class ProfileEntity(
     val location: String, // Enum, NOT NULL
 
     @SerializedName("sex")
-    val sex: String // Enum, NOT NULL
+    val sex: String, // Enum, NOT NULL
+
+    @SerializedName("preference_sex")
+    val preferenceSex : String,
 )

@@ -1,12 +1,17 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
+import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.viewModelScope
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.mypage.model.UsersFullModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class FakeMainEditInfoScreenViewModel(
 
@@ -14,16 +19,12 @@ class FakeMainEditInfoScreenViewModel(
 ): MainEditInfoScreenViewModelType {
 
     init {
-
+        fetchUsers()
     }
     private val _nameState = MutableStateFlow("")
     override val nameState : StateFlow<String> get() = _nameState.asStateFlow()
     private val _ageState = MutableStateFlow("")
     override val ageState: StateFlow<String> get() = _ageState.asStateFlow()
-    private val _heightState = MutableStateFlow("")
-    override val heightState : StateFlow<String> get() = _heightState.asStateFlow()
-    private val _weightState = MutableStateFlow("")
-    override val weightState: StateFlow<String> get() = _weightState.asStateFlow()
     private val _myRadioButtons = MutableStateFlow(
         mutableStateListOf(
             Pair(first = "여성", second = false),
@@ -41,6 +42,11 @@ class FakeMainEditInfoScreenViewModel(
     override val pairRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>> get() = _pairRadioButtons.asStateFlow()
     private val _firstContinueBoolean = MutableStateFlow(false)
     override val fistContinueBoolean : StateFlow<Boolean> get() = _firstContinueBoolean.asStateFlow()
+    val _receiverUsersModel =MutableStateFlow<UsersFullModel?>(null)
+    override val receiverUsersModel: StateFlow<UsersFullModel?> get() = _receiverUsersModel.asStateFlow()
+    val _usersModel =MutableStateFlow<UsersFullModel?>(null)
+    override val usersModel: StateFlow<UsersFullModel?> get() = _receiverUsersModel.asStateFlow()
+
     override fun fistContinueBooleanUpdate() = _firstContinueBoolean.update {
         val textBoolean = nameState.value.isNotBlank() && ageState.value.isNotBlank()
         d("boolean","text $ageState")
@@ -64,5 +70,9 @@ class FakeMainEditInfoScreenViewModel(
     override fun nameUpdate(input: String) {
         _nameState.update { input }
         fistContinueBooleanUpdate()
+    }
+
+    private fun fetchUsers() {
+
     }
 }

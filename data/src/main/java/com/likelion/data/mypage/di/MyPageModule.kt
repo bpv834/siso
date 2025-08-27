@@ -5,8 +5,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.likelion.data.mypage.repository.APILocationRepositoryImpl
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
+import com.likelion.data.mypage.repository.UserFullRepositoryImpl
 import com.likelion.domain.mypage.repository.APILocationRepository
 import com.likelion.domain.mypage.repository.LocationRepository
+import com.likelion.domain.mypage.repository.UserFullRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -36,5 +38,9 @@ abstract class MyPageModule {
     @Binds
     @Singleton
     abstract fun provideLocationRepository(impl: APILocationRepositoryImpl): APILocationRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideUserFullRepository(impl: UserFullRepositoryImpl): UserFullRepository
 
 }

@@ -10,11 +10,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.likelion.data.mypage.repository.APILocationRepositoryImpl
 import com.likelion.data.mypage.repository.LocationRepositoryImpl
+import com.likelion.data.mypage.repository.UserFullRepositoryImpl
 import com.likelion.domain.mypage.repository.APILocationRepository
 import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.usecase.BottomLocationUseCase
 import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
 import com.likelion.domain.mypage.usecase.TopLocationUseCase
+import com.likelion.domain.mypage.usecase.UsersFullUseCase
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
 import com.likelion.home.navigation.edit_Main.settingMainNavigation
@@ -125,6 +127,7 @@ fun MainNavHost(
             topLocationUseCase = TopLocationUseCase(locationRepository),
             bottomLocationUseCase = BottomLocationUseCase(locationRepository),
             currentLocationSetUseCase = CurrentLocationSetUseCase(apiLocationRepository)
+            ,usersFullUseCase = UsersFullUseCase(UserFullRepositoryImpl())
         ){
             appState.navController.navigateToMyPage(
             navOptions {
