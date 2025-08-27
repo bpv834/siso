@@ -57,7 +57,7 @@ fun ThirdLoginInfoScreen(
         Text(
             text = "최소 1장 이상 선택해주세요\n정보는 나중에 수정할 수 있어요",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Spacer(modifier = Modifier.size(size = 9.dp))
         // 불러온 비트맵 보여주는 리스트
@@ -79,7 +79,7 @@ fun ThirdLoginInfoScreen(
                 CommonTextButton(
                     text = "건너뛰기",
                     style = SisoTypoTokens.Button2,
-                    color = SisoColorTokens.GrayScale50,
+                    color = SisoColorTokens.Gray60,
                     onClick = {}
                 )
             }

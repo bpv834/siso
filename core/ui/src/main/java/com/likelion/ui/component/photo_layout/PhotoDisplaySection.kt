@@ -19,7 +19,7 @@ fun PhotoDisplaySection(
     onDelete: (Bitmap) -> Unit,
     onAddButtonClick: () -> Unit
 ) {
-    Text(text = "대표사진", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.GrayScale55)
+    Text(text = "대표사진", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.Gray60)
     Spacer(modifier = Modifier.size(size = 9.dp))
     PhotoLayoutWith1Main4Sub(
         mainWith = null,

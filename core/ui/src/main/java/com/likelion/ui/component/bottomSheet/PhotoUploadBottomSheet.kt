@@ -78,7 +78,7 @@ fun PhotoUploadBottomSheet(
         Text(
             text = "꼭 얼굴이 아니더라도 내가 관심있는 분야의\n사진을 올려줘도 좋아요",
             style = SisoTypoTokens.Body4,
-            color = SisoColorTokens.GrayScale60
+            color = SisoColorTokens.Gray60
         )
         Text(
             text = "예시) 반려동물, 꽃, 운동하는 사진, 등산 등",
