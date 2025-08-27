@@ -8,6 +8,7 @@ sealed class NavigationRoute(val route: String) {
     object ChatScreen : NavigationRoute("chat") {
         object AlarmScreen : NavigationRoute("chat/alarm")
     }
+
     object MyPageScreen : NavigationRoute("myPage"){
         object MainEditScreen : NavigationRoute("myPage/main_edit") {
             object PotoEditScreen : NavigationRoute("myPage/main_edit/poto_edit")
@@ -25,6 +26,9 @@ sealed class NavigationRoute(val route: String) {
             object CallEditScreen : NavigationRoute("myPage/setting/call_edit")
         }
     }
+    object CallForCallerScreen : NavigationRoute("caller/{userId}/{otherUserId}")
+    object CallForReceiverScreen : NavigationRoute("receiver")
+
     /*
     * object 보여줄화면: NavigationRoute("보여줄화면")
     *

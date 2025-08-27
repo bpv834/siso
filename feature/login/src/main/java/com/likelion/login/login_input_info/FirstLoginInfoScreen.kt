@@ -245,6 +245,7 @@ fun FirstLoginInfoScreen(
                 disabledContainerColor = SisoColorTokens.Gray30
             ),
             onClick = {
+                viewModel.inputUserInfo(nick = nameText, age = ageText.toInt(), sex = "남성", preSex = "이성")
                 onNavigateNext()
             },
 

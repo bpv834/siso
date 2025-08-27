@@ -8,4 +8,5 @@ interface FourthLoginInfoScreenViewModelType {
     val isButtonEnabled: StateFlow<Boolean>
 
     fun onBioTextChanged(newText: String)
+    fun saveBioTextInTemp()
 }

@@ -3,17 +3,26 @@
 	xmlns:tools="http://schemas.android.com/tools">
 
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature
+		android:name="android.hardware.camera"
+		android:required="false" />
+
+	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 <!--	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />-->
 <!--	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />-->
-	<uses-permission android:name="android.permission.INTERNET" />
+
+	<!-- 앱이 인터넷에 접속할 수 있도록 허용 -->
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<!-- 앱이 마이크를 사용하여 음성을 녹음할 수 있도록 허용 -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<!-- 앱이 오디오 설정(볼륨, 라우팅 등)을 변경할 수 있도록 허용 -->
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+	<!-- 블루투스 이어폰 등을 위한 권한도 추가할 수 있습니다 (선택 사항) -->
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<application
 		android:name=".App"
 		android:allowBackup="true"
@@ -24,6 +33,7 @@
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
 		android:theme="@style/Theme.Siso"
+		android:usesCleartextTraffic="true"
 		tools:targetApi="31">
 		<activity
 			android:name=".MainActivity"

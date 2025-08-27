@@ -26,6 +26,10 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":local"))
     implementation(project(":remote"))
+    implementation(project(":core:network"))
+    implementation(project(":core:util"))
+    implementation(project(":core:datastore"))
+
 
     // Retrofit (최신 안정 버전)
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
@@ -39,5 +43,14 @@ dependencies {
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+
+    // test
+    testImplementation(libs.junit)
+    // Kotlin Coroutines Test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    // (옵션) Truth 같은 assertion 라이브러리
+    testImplementation("com.google.truth:truth:1.4.2")
+    implementation(kotlin("test"))
 }
 

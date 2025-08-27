@@ -57,4 +57,13 @@ class FakeFirstLoginInfoScreenViewModel(
         d("boolean","continueBoolean $continueBoolean")
         continueBoolean
     }
+
+    override fun inputUserInfo(
+        nick: String,
+        age: Int,
+        sex: String,
+        preSex: String
+    ) {
+        TODO("Not yet implemented")
+    }
 }

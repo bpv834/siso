@@ -11,4 +11,5 @@ interface FirstLoginInfoScreenViewModelType {
     fun nameUpdate(input: String)
     fun ageUpdate(input: String)
     fun fistContinueBooleanUpdate()
+    fun inputUserInfo(nick : String, age : Int, sex : String, preSex : String)
 }

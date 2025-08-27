@@ -64,6 +64,7 @@ import java.lang.ProcessBuilder.Redirect.to
 import java.util.Collections.checkedList
 import kotlin.collections.forEachIndexed
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
 @Composable
@@ -88,6 +89,8 @@ fun AgreeToTermsScreen(
         2L to "이용약관" ,
         3L to "마케팅 정보 수신 사항",
     )
+
+    )
     // 필수 확인 목록 들
     val requireChecked = listOf(
         1L,
@@ -101,18 +104,18 @@ fun AgreeToTermsScreen(
         modifier = Modifier
             .fillMaxHeight()
             .padding(start = sideDp, end = sideDp)
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = AbsoluteAlignment.Left,
 
-        ) {
+            ) {
             Spacer(modifier = Modifier.size(size = 60.dp))
             Text(
                 text = "시팅에 어서오세요" +
-                        "\n새로운 인연을 만나기전에"+
+                        "\n새로운 인연을 만나기전에" +
                         "\n동의가 필요해요",
                 style = SisoTypoTokens.Body1,
                 color = SisoColorTokens.Gray90,
@@ -121,11 +124,13 @@ fun AgreeToTermsScreen(
 
             AgreeRepeatRadioButton(
                 termsList = agreeList,
+              
                 checked = requireChecked,
                 showBottom = {state->
+
                     bottomId = state
                 },
-                onClick = {continueBoolean->
+                onClick = { continueBoolean ->
                     viewModel.agreeContinueBooleanUpdate(continueBoolean)
                     Log.d("radioRemember", "[agreeContinueBoolean]")
                     Log.d("radioRemember", viewModel.agreeContinueBoolean.toString())
@@ -155,7 +160,7 @@ fun AgreeToTermsScreen(
                 Text(
                     text = "계속하기",
                     style = SisoTypoTokens.Button1,
-                    color = if(agreeContinueBoolean.value == true)SisoColorTokens.Gray90
+                    color = if (agreeContinueBoolean.value == true) SisoColorTokens.Gray90
                     else SisoColorTokens.Gray50,
                 )
             }
@@ -189,7 +194,7 @@ fun AgreeToTermsScreen(
                         )
                         IconButton(
                             modifier = Modifier
-                                .align(Alignment.CenterEnd) ,
+                                .align(Alignment.CenterEnd),
                             onClick = {
                                 bottomId = 0L
                             }) {
@@ -201,15 +206,18 @@ fun AgreeToTermsScreen(
                             )
                         }
                     }
-                    Spacer(modifier = Modifier.size(size = if (bottomId == bottomTitle[0].first) 14.dp
-                    else 32.dp))
+                    Spacer(
+                        modifier = Modifier.size(
+                            size = if (bottomId == bottomTitle[0].first) 14.dp
+                            else 32.dp
+                        )
+                    )
                     DocumentScreen(sideDp, bottomId)
                 }
             )
         }
 
     }
-
 
 
 }
@@ -224,6 +232,7 @@ fun AgreeRepeatRadioButton(
     onClick:(Boolean)->Unit = {}
 ){
     val checkIdList  = remember {
+
         mutableStateListOf<Long>()
     }
     val checked = checked
@@ -254,6 +263,7 @@ fun AgreeRepeatRadioButton(
                 color = SisoColorTokens.Gray90,
                 textAlign = TextAlign.Center
             )
+
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterEnd),
@@ -280,10 +290,8 @@ fun AgreeRepeatRadioButton(
             }
 
 
-
-
         }
-        if (idx < termsList.size - 1)Spacer(Modifier.size(22.dp))
+        if (idx < termsList.size - 1) Spacer(Modifier.size(22.dp))
 
     }
     Log.d("radioRemember", "[radioRemember]")
@@ -296,6 +304,7 @@ fun DocumentScreen(
     bottomId: Long = 0L
 ) {
     val bottomContent = listOf(
+
         1L to "",
         2L to "use_term.txt" ,
         3L to "marketing_reception_term.txt",
@@ -308,6 +317,7 @@ fun DocumentScreen(
     }
     val documentText = if (bottomId != 0L)loadTextFromFile(content = content)
                         else ""// 실제 문서는 다른 곳에서 가져와야 함
+
 
     Column(
         modifier = Modifier
@@ -353,11 +363,11 @@ fun loadTextFromFile(
 
 @Composable
 @Preview
-fun AgreeToTermsScreenPreview(){
+fun AgreeToTermsScreenPreview() {
     Surface(
         color = SisoColorTokens.White
-    ){
-        AgreeToTermsScreen(FakeAgreeToTermsScreenViewModel(),{})
+    ) {
+        AgreeToTermsScreen(FakeAgreeToTermsScreenViewModel(), {})
     }
 
 }
