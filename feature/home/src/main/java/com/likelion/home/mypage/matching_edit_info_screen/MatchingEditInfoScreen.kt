@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -44,6 +47,7 @@ fun MatchingEditInfoScreen(
     LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
         matchingReceiverList.addAll(viewModel.receiverList.value)
     }
+    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val matchingList = remember {
         mutableListOf(
             "#동호회활동\uD83D\uDC65",
@@ -124,7 +128,7 @@ fun MatchingEditInfoScreen(
                 // 선택된 값을 보냄
                 popBackStack()
             }
-            Spacer(Modifier.fillMaxWidth().height(72.dp))
+            Spacer(Modifier.fillMaxWidth().height(72.dp - navbarBottomPadding))
 
         }
     }
