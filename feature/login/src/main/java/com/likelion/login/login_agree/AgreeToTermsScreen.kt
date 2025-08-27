@@ -89,8 +89,6 @@ fun AgreeToTermsScreen(
         2L to "이용약관" ,
         3L to "마케팅 정보 수신 사항",
     )
-
-    )
     // 필수 확인 목록 들
     val requireChecked = listOf(
         1L,

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.component.bottomnavigation.BottomNavigationDestination
 import com.likelion.ui.component.bottomnavigation.BottomNavigationItems
 import com.likelion.ui.component.bottomnavigation.SisoBottomNavigation
@@ -33,7 +34,8 @@ fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
                     .padding(innerPadding)
             ) {
                 MainNavHost(
-                    appState = appState
+                    appState = appState,
+                    startDestination = NavigationRoute.HomeScreen.route
                 )
             }
         },
