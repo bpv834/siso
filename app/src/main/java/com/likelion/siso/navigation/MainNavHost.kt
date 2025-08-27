@@ -23,8 +23,8 @@ import com.lion.call.navigation.navigateToCallForCaller
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
-   // startDestination: String = NavigationRoute.HomeScreen.route
-    startDestination: String = NavigationRoute.LoginScreen.route
+    startDestination: String = NavigationRoute.HomeScreen.route
+    //startDestination: String = NavigationRoute.LoginScreen.route
 ) {
     NavHost(
         modifier = modifier,
