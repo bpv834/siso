@@ -110,7 +110,6 @@ fun MainNavHost(
         }
         myPageNavigation(
             navController = appState.navController,
-            navigateToHome ={appState.navController.popBackStack(NavigationRoute.MyPageScreen.route, inclusive = true)}
         ) {
 
         }
