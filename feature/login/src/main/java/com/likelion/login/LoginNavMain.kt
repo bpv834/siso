@@ -1,5 +1,7 @@
 package com.likelion.login
 
+import androidx.activity.compose.BackHandler
+
 import android.util.Log
 import android.view.View
 import androidx.compose.foundation.layout.Column
@@ -46,12 +48,14 @@ fun InputRoute(
     actionSnackbar: () -> Unit = {},
     onNavigateUp: () -> Unit = {},
     onNavigateToHome: () -> Unit = {},
-    onNavigateInit: () -> Unit = {}
+    onNavigateInit: () -> Unit = {},
+    onExitRegister: () -> Unit = {}
 ) {
     LoginMainScreen(
         onNavigateUp = onNavigateUp,
         onNavigateToHome = onNavigateToHome,
         onNavigateInit = onNavigateInit,
+        onExitRegister = onExitRegister,
     )
 }
 
@@ -60,9 +64,27 @@ fun InputRoute(
 fun LoginMainScreen(
     onNavigateUp: () -> Unit,
     onNavigateToHome: () -> Unit,
-    onNavigateInit: () -> Unit
+    onNavigateInit: () -> Unit,
+    onExitRegister: () -> Unit
 ) {
     val navController = rememberNavController()
+    BackHandler {
+        when (navController.currentBackStackEntry?.destination?.route) {
+            "login1" -> {
+                // Exit register flow: reset state then go to login root
+                onExitRegister()
+                onNavigateInit()
+
+                Log.d("Nav", "초기화(BackHandler)")
+            }
+            "main" -> {
+                onNavigateUp()
+            }
+            else -> {
+                navController.popBackStack()
+            }
+        }
+    }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -78,6 +100,7 @@ fun LoginMainScreen(
                         // 네비게이션 구현
                         when (navController.currentBackStackEntry?.destination?.route) {
                             "login1" ->{
+                                onExitRegister()
                                 onNavigateInit()
                                 Log.d("Nav","초기화")
                             }
@@ -188,6 +211,6 @@ fun InputScreen1(
 @Preview
 fun InputScreenPreview() {
     SisoTheme {
-        LoginMainScreen(onNavigateUp = {}, {},{})
+        LoginMainScreen(onNavigateUp = {}, {},{}, {})
     }
 }
