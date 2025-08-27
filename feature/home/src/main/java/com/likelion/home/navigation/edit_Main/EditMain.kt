@@ -2,7 +2,6 @@ package com.likelion.home.navigation.edit_Main
 
 import android.annotation.SuppressLint
 import android.view.View
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +33,6 @@ import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.A
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.FakeAdditionalInfoSmokingScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.FakeInterestEditInfoScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreen
-import com.likelion.home.mypage.location_edit_info_screen.FakeLocationEditInfoScreenViewModel
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreen
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreenViewModel
 import com.likelion.home.mypage.main_edit_info_screen.FakeMainEditInfoScreenViewModel
