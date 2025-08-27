@@ -1,6 +1,5 @@
 package com.likelion.login.login_start
 
-import android.util.Log
 import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -45,23 +46,40 @@ fun LoginRoute(
     actionSnackbar: () -> Unit = {},
     onInput: () -> Unit = {},
     onHome: () -> Unit = {},
+    onKakaoLogin: () -> Unit = {},
     onLogin: () -> Unit,
 ) {
     val viewModel: LoginScreenViewModel = hiltViewModel()
     val uiState = viewModel.uiState.collectAsState()
 
+    val navigatedToInput = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(uiState.value.userState) {
         Timber.tag("유저상태").d("${uiState.value.userState}")
         when (uiState.value.userState) {
-            UserStatus.LOGIN -> onHome() // 홈 화면 이동
-            UserStatus.REGISTER -> onInput()
-            UserStatus.NONE -> Unit //
+            UserStatus.LOGIN -> {
+                if (uiState.value.userState == UserStatus.LOGIN && uiState.value.user != null) {
+                    Timber.d("onHome()")
+                    onHome()
+                }
+                navigatedToInput.value = false
+            }//onHome() // 홈 화면 이동
+            UserStatus.REGISTER -> {
+                if (!navigatedToInput.value) {
+                    onInput()
+                    navigatedToInput.value = true
+                }
+            }
+
+            UserStatus.NONE -> {
+                navigatedToInput.value = false
+            } //
         }
     }
     LoginScreen(
         uiState = uiState.value,
-        onInput = { viewModel.handleEvent(LoginEvent.ClickLogin) },
+        onInput = onInput,
+        onKakaoLogin = { viewModel.handleEvent(LoginEvent.ClickLogin) },
         onLogin = onLogin,
         onHome = onHome
     )
@@ -70,11 +88,12 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     uiState: LoginUiState,
-    onInput: () -> Unit, // 로그인 버튼을 눌렀을 때
+    onInput: () -> Unit, // 입력 화면 이동 (REGISTER일 때)
+    onKakaoLogin: () -> Unit, // 카카오 로그인 트리거
     onLogin: () -> Unit,
     onHome: () -> Unit
 ) {
-
+    val viewModel = hiltViewModel<LoginScreenViewModel>()
     Scaffold { innerPadding ->
         AsyncImage(
             contentScale = ContentScale.Crop,
@@ -137,7 +156,7 @@ fun LoginScreen(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
-                        onInput()
+                        onKakaoLogin()
                     }
             )
         }
@@ -151,6 +170,7 @@ fun LoginScreenPreview() {
         LoginScreen(
             uiState = LoginUiState(),
             onInput = {},
+            onKakaoLogin = {},
             onLogin = {},
             onHome = {},
 
