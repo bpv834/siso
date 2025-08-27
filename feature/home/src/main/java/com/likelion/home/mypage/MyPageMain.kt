@@ -28,17 +28,15 @@ import com.likelion.ui.theme.SisoColorTokens
 fun MyPageRoute(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
-    navigateToHome: () -> Unit = {},
     mainEdit: () -> Unit = {},
     setting: () -> Unit = {},
     actionSnackbar: () -> Unit = {}
 ) {
-    MyPageMainScreen(navigateToHome, mainEdit, setting)
+    MyPageMainScreen( mainEdit = mainEdit, setting = setting)
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPageMainScreen(
-    navigateToHome : () -> Unit = {},
     mainEdit: () -> Unit = {},
     setting: () -> Unit = {},
 ) {
@@ -52,17 +50,6 @@ fun MyPageMainScreen(
                 ),
                 title = {
                     Text(text = appBarTitle)
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        // 네비게이션 구현
-                        navigateToHome()
-                    }) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_back),
-                            contentDescription = "뒤로가기 버튼"
-                        )
-                    }
                 },
                 actions = {
 
