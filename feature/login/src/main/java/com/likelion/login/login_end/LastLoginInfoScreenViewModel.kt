@@ -20,7 +20,8 @@ class LastLoginInfoScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val user = getTemporaryUserProfileUseCase.execute()
             Timber.d("user ${user}")
-            registerProfileToServerUseCase.execute(user)
+
+            //registerProfileToServerUseCase.execute(user)
         }
     }
 
