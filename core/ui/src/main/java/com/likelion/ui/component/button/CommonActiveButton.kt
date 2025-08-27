@@ -18,6 +18,7 @@ fun CommonActiveButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier? = Modifier // ✨ 외부에서 modifier를 받도록 설정
+
 ) {
     OutlinedButton(
         onClick = onClick,

@@ -1,5 +1,6 @@
 package com.likelion.login.login_start
 
+
 import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -24,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,7 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 import timber.log.Timber
+
 
 @Composable
 fun LoginRoute(
@@ -101,7 +104,7 @@ fun LoginScreen(
     onLogin: () -> Unit,
     onHome: () -> Unit
 ) {
-    val viewModel = hiltViewModel<LoginScreenViewModel>()
+
     Scaffold { innerPadding ->
         AsyncImage(
             contentScale = ContentScale.Crop,
@@ -171,6 +174,46 @@ fun LoginScreen(
     }
 }
 
+@SuppressLint("PackageManagerGetSignatures")
+fun getKeyHash(context: Context): String? {
+    return try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
+        } else {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNATURES
+            )
+        }
+
+        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.signingInfo!!.apkContentsSigners
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.signatures
+        }
+
+        if (signatures != null) {
+            for (signature in signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val keyHash = android.util.Base64.encodeToString(
+                    md.digest(),
+                    android.util.Base64.NO_WRAP
+                )
+                Log.d("키해시", "앱의 디버그 키해시는 👉 $keyHash") // ✅ 한글 로그
+                return keyHash
+            }
+        }
+        null
+    } catch (e: Exception) {
+        Log.e("키해시", "키해시 생성 중 오류 발생: ${e.message}") // ✅ 한글 에러 로그
+        null
+    }
+}
 @Preview
 @Composable
 fun LoginScreenPreview() {
