@@ -1,5 +1,6 @@
 package com.likelion.login.login_start
 
+
 import android.view.View
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -7,12 +8,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 import timber.log.Timber
 
+
 @Composable
 fun LoginRoute(
     modifier: Modifier = Modifier,
@@ -58,9 +58,10 @@ fun LoginRoute(
         Timber.tag("유저상태").d("${uiState.value.userState}")
         when (uiState.value.userState) {
             UserStatus.LOGIN -> {
-                if (uiState.value.userState == UserStatus.LOGIN /*&& uiState.value.user != null*/) {
+                if (uiState.value.userState == UserStatus.LOGIN && uiState.value.hasProfile) {
                     Timber.d("onHome()")
-                   // onHome()
+                    onHome()
+                } else {
                     onInput()
                 }
                 navigatedToInput.value = false
@@ -76,12 +77,8 @@ fun LoginRoute(
             UserStatus.NONE -> {
                 Timber.d("NONE()")
                 Timber.d("uiST: ${uiState.value}()")
+                viewModel.clearToken()
                 navigatedToInput.value = false
-            } //
-            else -> {
-                Timber.d("ELSE()")
-                Timber.d("ELSE: ${uiState.value}()")
-
             }
         }
     }
@@ -102,7 +99,6 @@ fun LoginScreen(
     onLogin: () -> Unit,
     onHome: () -> Unit
 ) {
-    val viewModel = hiltViewModel<LoginScreenViewModel>()
     Scaffold { innerPadding ->
         AsyncImage(
             contentScale = ContentScale.Crop,
@@ -134,27 +130,6 @@ fun LoginScreen(
                     color = SisoColorTokens.Orange100
                 )
             }
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-            ) {
-                Text("초기화", style = SisoTypoTokens.Button2)
-            }
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-            ) {
-                Text("이미회원이라면", style = SisoTypoTokens.Button2)
-            }
-
             AsyncImage(
                 model = R.drawable.kakao_login,
                 contentDescription = "",

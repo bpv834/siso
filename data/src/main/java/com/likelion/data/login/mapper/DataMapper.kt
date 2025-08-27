@@ -17,14 +17,16 @@ fun BasicTokenResponseDto.toDomain(): BasicToken {
         userStatus = when (this.registrationStatus) {
             RegistrationStatus.REGISTER -> UserStatus.REGISTER
             RegistrationStatus.LOGIN -> UserStatus.LOGIN
-        }
+        },
+        hasProfile = this.hasProfile
     )
 }
 
 fun BasicToken.toRemote(): BasicTokenEntity {
     return BasicTokenEntity(
         refreshToken = this.refreshToken,
-        status = this.userStatus.name
+        status = this.userStatus.name,
+        hasProfile = this.hasProfile
     )
 }
 
@@ -35,7 +37,8 @@ fun BasicTokenEntity.toDomain(): BasicToken {
             "LOGIN" -> UserStatus.LOGIN
             "REGISTER" -> UserStatus.REGISTER
             else -> UserStatus.NONE
-        }
+        },
+        hasProfile = this.hasProfile
     )
 }
 
@@ -61,8 +64,10 @@ fun UserInfoResponseDto.toDomain(): User = User(
         phoneNumber = user.phoneNumber,
         deleted = user.deleted,
         block = user.block
-    )
+    ),
+    hasProfile = token.hasProfile
 )
+
 private fun String.toUserStatus(): UserStatus = when (this) {
     "LOGIN" -> UserStatus.LOGIN
     "REGISTER" -> UserStatus.REGISTER

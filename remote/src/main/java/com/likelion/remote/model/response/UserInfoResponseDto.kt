@@ -24,5 +24,6 @@ data class UserInfoResponse(
 @JsonClass(generateAdapter = true)
 data class ApiToken(
     val refreshToken: String,
-    @Json(name = "registrationStatus") val registrationStatus: String
+    @Json(name = "registrationStatus") val registrationStatus: String,
+    val hasProfile: Boolean
 )

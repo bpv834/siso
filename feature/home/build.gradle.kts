@@ -70,5 +70,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // 로티 애니메이션
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+    implementation(libs.timber)
     testImplementation(libs.junit)
 }

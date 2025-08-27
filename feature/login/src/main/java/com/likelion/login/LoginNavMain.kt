@@ -73,8 +73,6 @@ fun LoginMainScreen(
                 // Exit register flow: reset state then go to login root
                 onExitRegister()
                 onNavigateInit()
-
-                Log.d("Nav", "초기화(BackHandler)")
             }
             "main" -> {
                 onNavigateUp()
