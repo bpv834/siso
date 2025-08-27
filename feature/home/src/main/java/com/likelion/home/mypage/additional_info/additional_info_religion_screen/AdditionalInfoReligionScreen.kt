@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.additional_info.additional_info_religion_screen
 
 import android.annotation.SuppressLint
+import android.util.Log.d
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -57,16 +58,9 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun AdditionalInfoReligionScreen(
     viewModel: AdditionalInfoReligionScreenViewModelType,
-    popBackStack: (List<Pub>) -> Unit = {},
+    popBackStack: (String) -> Unit = {},
 ) {
-    val receiverList = remember {
-        mutableStateListOf<String>()
-    }
-
-    LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
-        receiverList.addAll(viewModel.receiverList.value)
-    }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val receiver by viewModel.receiver.collectAsStateWithLifecycle()
 
     val religionList = remember {
         mutableListOf(
@@ -81,6 +75,11 @@ fun AdditionalInfoReligionScreen(
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
+
+    var selectText by remember {
+        mutableStateOf("")
+    }
+
     val editText = remember {
         mutableStateOf("")
     }
@@ -104,7 +103,7 @@ fun AdditionalInfoReligionScreen(
                 modifier = Modifier
                     .height(31.dp)
                     .fillMaxWidth(),
-                text = "종교가 있나요?",
+                text = receiver.ifBlank { "종교가 있나요?" },
                 style = SisoTypoTokens.Title2,
                 color = SisoColorTokens.Gray90
             )
@@ -115,16 +114,16 @@ fun AdditionalInfoReligionScreen(
                 religionList.forEach {text->
                     CommonChip(
                         text = text,
-                        isSelected = receiverList.contains(text),
+                        isSelected = selectText == text,
                     ) {
                         if(text == "기타(직접입력)") {
                             //입력창 오픈
                             bottomState = true
                         }else {
-                            if (receiverList.contains(text)) {
-                                receiverList.remove(text)
+                            if (selectText == text) {
+                                selectText = ""
                             } else {
-                                receiverList.add(text)
+                                selectText = text
                             }
                         }
                     }
@@ -136,18 +135,17 @@ fun AdditionalInfoReligionScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                viewModel.updatePubList(receiverList)
-                { pubList->
-                    popBackStack(pubList)
+                viewModel.updateReceiver(receiver)
+                { religion->
+                    popBackStack(religion)
                 }
 
             }
-            Spacer(Modifier.size(72.dp - navbarBottomPadding))
+            Spacer(Modifier.size(72.dp))
         }
 
 
@@ -165,7 +163,7 @@ fun AdditionalInfoReligionScreen(
                     // 뷰에 추가
                     religionList.add(religionList.size - 1, editText.value)
                     // 해당 종교 선택
-                    receiverList.add(editText.value)
+                    selectText = editText.value
                     // 입력창 초기화
                     editText.value = ""
                     // 바텀 내리기

@@ -92,8 +92,7 @@ fun AdditionalInfoAlcoholScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄

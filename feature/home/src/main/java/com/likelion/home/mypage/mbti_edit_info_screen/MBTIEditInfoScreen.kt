@@ -60,7 +60,6 @@ fun MBTIEditInfoScreen(
     LaunchedEffect(viewModel.receiver.collectAsStateWithLifecycle()) {
         receiver = viewModel.receiver.value
     }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val receiverList = remember { if (receiver.isNotBlank())receiver.split("").toMutableStateList()
     else mutableStateListOf("", "", "", "") }
     val exInList = listOf(
@@ -188,8 +187,7 @@ fun MBTIEditInfoScreen(
         ) {
             Spacer(Modifier.size(6.dp))
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
@@ -199,7 +197,7 @@ fun MBTIEditInfoScreen(
                 }
                 popBackStack()
             }
-            Spacer(Modifier.fillMaxWidth().height(68.dp - navbarBottomPadding)
+            Spacer(Modifier.fillMaxWidth().height(68.dp)
                 .background(SisoColorTokens.Gray5))
         }
     }

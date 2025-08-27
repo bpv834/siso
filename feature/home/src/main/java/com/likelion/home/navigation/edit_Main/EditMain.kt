@@ -180,11 +180,11 @@ fun EditMain (
                 // 종교 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route) {
                     AdditionalInfoReligionScreen(viewModel = FakeAdditionalInfoReligionScreenViewModel(),
-                        popBackStack = {pubList->
+                        popBackStack = {religion->
                             navController
                                 .previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.set("religion", pubList)
+                                ?.set("religion", religion)
                             navController.popBackStack()
                         }
                     )

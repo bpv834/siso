@@ -76,7 +76,7 @@ fun SettingMain (
         NavHost(
             navController = navController,
             startDestination = start,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(top = innerPadding.calculateTopPadding())
         ){
             composable(start) {
 

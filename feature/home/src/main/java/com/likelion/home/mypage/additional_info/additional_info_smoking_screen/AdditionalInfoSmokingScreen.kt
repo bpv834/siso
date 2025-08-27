@@ -58,7 +58,6 @@ fun AdditionalInfoSmokingScreen(
     LaunchedEffect(viewModel.receiver.collectAsStateWithLifecycle()) {
         receiver = viewModel.receiver.value
     }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val smokingList = listOf(
             "매우 자주 피워요 (하루에 1갑 이상)",
             "자주 피워요 (하루에 1갑 이상)",
@@ -123,7 +122,7 @@ fun AdditionalInfoSmokingScreen(
                 }
                 popBackStack()
             }
-            Spacer(Modifier.size(72.dp - navbarBottomPadding))
+            Spacer(Modifier.size(72.dp))
         }
     }
 }

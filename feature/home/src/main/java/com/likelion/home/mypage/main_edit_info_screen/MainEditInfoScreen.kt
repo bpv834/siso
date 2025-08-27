@@ -68,6 +68,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.home.navigation.Pub
+import com.likelion.home.navigation.getString
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
@@ -84,14 +85,13 @@ fun MainEditInfoScreen(
     saveHandle: SavedStateHandle,
     action:List<()->Unit> = listOf()
 ) {
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
     val locationBlank =
-        saveHandle.get<String>("location") == null
+        saveHandle.getString("location") == null
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
     val religionBlank =
-        saveHandle.get<String>("religion") == null
+        saveHandle.getString("religion") == null
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
@@ -484,7 +484,10 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(36.dp))
             InfoEditScreenButton(
                 titleText = "종교",
-                selectText = "정보를 입력해주세요"
+                selectText = if (religionBlank)"정보를 입력해주세요"
+                else saveHandle.getString("religion")!!,
+                color = if(religionBlank) SisoColorTokens.Gray50
+                else SisoColorTokens.Gray90,
             ) {
                 religionNavigation()
             }
@@ -554,15 +557,15 @@ fun MainEditInfoScreen(
         Column(
             modifier = Modifier.align(Alignment.BottomCenter)
                 .padding(start = 16.dp, end = 16.dp)
-                .background(SisoColorTokens.Gray5)
         ) {
             Spacer(Modifier.size(8.dp))
             CommonActiveButton(
+                modifier = null,
                 text = "수정완료"
             ) {
 
             }
-            Spacer(Modifier.size(72.dp - navbarBottomPadding))
+            Spacer(Modifier.size(72.dp))
         }
     }
 
