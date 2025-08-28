@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log.d
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -23,14 +24,16 @@ fun Uri.getBitmap(context: Context): Bitmap? {
 }
 
 // URL → Bitmap
-fun String.getBitmapFromUrl(): Bitmap? {
-    return try {
+suspend fun String.getBitmapFromUrl(): Bitmap? {
+    return withContext(Dispatchers.IO) {
+        try {
             val input: InputStream = URL(this@getBitmapFromUrl).openStream()
             BitmapFactory.decodeStream(input)
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
+    }
 
 }
 

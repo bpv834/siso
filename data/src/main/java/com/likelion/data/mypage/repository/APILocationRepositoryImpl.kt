@@ -20,8 +20,13 @@ import java.util.Locale
 import javax.inject.Inject
 
 class APILocationRepositoryImpl @Inject constructor(
-
+    context: Context
 ): APILocationRepository {
+
+    init {
+        setContext(context)
+    }
+
     private var fusedLocationClient : FusedLocationProviderClient? = null
     private var geocoder : Geocoder? = null
     fun setContext(context: Context){

@@ -1,8 +1,10 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
+import android.media.MediaPlayer
 import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.home.model.UsersModel
@@ -24,21 +26,25 @@ class MainEditInfoScreenViewModel @Inject constructor (
     private val userFullUseCase: UsersFullUseCase,
 ): ViewModel(), MainEditInfoScreenViewModelType {
 
-    init {
-        fetchUsers()
-    }
+    private val mediaPlayer = MediaPlayer()
+    private val _potoState = MutableStateFlow("")
+    override val potoState : StateFlow<String> get() = _potoState.asStateFlow() // 사진 주소
+    private val _voiceState = MutableStateFlow("")
+    override val voiceState : StateFlow<String> get() = _voiceState.asStateFlow() // 사진 주소
     private val _nameState = MutableStateFlow("")
-    override val nameState : StateFlow<String> get() = _nameState.asStateFlow()
+    override val nameState : StateFlow<String> get() = _nameState.asStateFlow() // 이름
     private val _ageState = MutableStateFlow("")
-    override val ageState: StateFlow<String> get() = _ageState.asStateFlow()
-    private val _myRadioButtons = MutableStateFlow(
+    override val ageState: StateFlow<String> get() = _ageState.asStateFlow() // 나이
+    private val _introduceState = MutableStateFlow("")
+    override val introduceState: StateFlow<String> get() = _introduceState.asStateFlow()
+    private val _myRadioButtons = MutableStateFlow(                   // 성별
         mutableStateListOf(
             Pair(first = "여성", second = false),
             Pair(first = "남성", second = false),
         )
     )
     override val myRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>> get() = _myRadioButtons.asStateFlow()
-    private val _pairRadioButtons = MutableStateFlow(
+    private val _pairRadioButtons = MutableStateFlow(                // 매칭 상대
         mutableStateListOf(
             Pair(first = "이성", second = false),
             Pair(first = "동성", second = false),
@@ -78,14 +84,64 @@ class MainEditInfoScreenViewModel @Inject constructor (
         fistContinueBooleanUpdate()
     }
 
-    private fun fetchUsers() {
+    override fun playAudio(filePath: String) {
+        try {
+            val mediaPlayer = mediaPlayer.apply {
+                setDataSource(filePath)
+                prepare() // 파일을 불러올 준비를 합니다.
+                start() // 재생 시작
+            }
+            // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+        } catch (e: Exception) {
+            // 오류 처리
+            e.printStackTrace()
+        }
+    }
+
+    override fun stopAudio() {
+        try {
+            val mediaPlayer = mediaPlayer.apply {
+                pause()
+            }
+            // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+        } catch (e: Exception) {
+            // 오류 처리
+            e.printStackTrace()
+        }
+    }
+
+     fun fetchUsers() {
         viewModelScope.launch {
             try {
-                _usersModel.update {
-                    userFullUseCase(1)
+                _receiverUsersModel.update {
+                    userFullUseCase(1)/* get user */
                 }
-//                val response = RetrofitClient.instance.getPhotos()
-//                _photos.value = response.photos
+                d("userImage","${receiverUsersModel.value}")
+                _potoState.update { receiverUsersModel.value?.userImages?.first() ?: "" } // 사진
+                _voiceState.update { receiverUsersModel.value?.voiceUrl ?: "" } // 음성
+                _nameState.update{ receiverUsersModel.value?.nickname ?: "" } // 이름
+                _ageState.update { receiverUsersModel.value?.age.toString() } // 나이
+                _introduceState.update { receiverUsersModel.value?.introduce ?: "" }
+
+                val male = myRadioButtons.value[0].first
+                val feMale = myRadioButtons.value[1].first
+                _myRadioButtons.value[0] = male to (male == receiverUsersModel.value?.sex)
+                _myRadioButtons.value[1] = feMale to (feMale == receiverUsersModel.value?.sex)
+
+                val other = pairRadioButtons.value[0].first
+                val equil = pairRadioButtons.value[1].first
+                val nothing = pairRadioButtons.value[2].first
+
+                pairRadioButtons.value[0] = male to (other == receiverUsersModel.value?.preferenceSex)
+                pairRadioButtons.value[1] = feMale to (equil == receiverUsersModel.value?.preferenceSex)
+                pairRadioButtons.value[2] = nothing to (nothing == receiverUsersModel.value?.preferenceSex)
+
             } catch (e: Exception) {
                 Log.e("API_ERROR", e.message.toString())
             }

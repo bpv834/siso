@@ -115,19 +115,12 @@ fun MainNavHost(
         ) {
 
         }
-        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
-        val jsonString  = inputStream.bufferedReader().use { it.readText() }
-        val locationRepository = LocationRepositoryImpl()
-        locationRepository.setJson(jsonString)
-
-        val apiLocationRepository = APILocationRepositoryImpl()
-        apiLocationRepository.setContext(cotext)
+//        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
+//        val jsonString  = inputStream.bufferedReader().use { it.readText() }
+//        val locationRepository = LocationRepositoryImpl()
+//        locationRepository.setJson(jsonString)
         editMainNavigation(
-            navController = appState.navController,
-            topLocationUseCase = TopLocationUseCase(locationRepository),
-            bottomLocationUseCase = BottomLocationUseCase(locationRepository),
-            currentLocationSetUseCase = CurrentLocationSetUseCase(apiLocationRepository)
-            ,usersFullUseCase = UsersFullUseCase(UserFullRepositoryImpl())
+            navController = appState.navController
         ){
             appState.navController.navigateToMyPage(
             navOptions {

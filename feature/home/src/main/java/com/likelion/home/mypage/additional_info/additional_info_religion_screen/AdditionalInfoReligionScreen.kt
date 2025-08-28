@@ -109,7 +109,8 @@ fun AdditionalInfoReligionScreen(
             )
             Spacer(Modifier.size(32.dp))
             FlowRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(end = 12.dp, bottom = 12.dp),
             ){
                 religionList.forEach {text->
                     CommonChip(

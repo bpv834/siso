@@ -10,11 +10,15 @@ interface MainEditInfoScreenViewModelType {
     val myRadioButtons: StateFlow<MutableList<Pair<String, Boolean>>>
     val pairRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>>
     val fistContinueBoolean : StateFlow<Boolean>
+    val potoState : StateFlow<String>
+    val voiceState : StateFlow<String>
     val nameState : StateFlow<String>
     val ageState: StateFlow<String>
+    val introduceState: StateFlow<String>
     val receiverUsersModel: StateFlow<UsersFullModel?>
     val usersModel: StateFlow<UsersFullModel?>
     fun fistContinueBooleanUpdate()
     fun nameUpdate(input: String)
-
+    fun playAudio(filePath: String)
+    fun stopAudio()
 }

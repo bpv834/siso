@@ -26,6 +26,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":local"))
     implementation(project(":remote"))
+    implementation(project(":core:ui"))
     implementation(project(":core:network"))
     implementation(project(":core:util"))
     implementation(project(":core:datastore"))

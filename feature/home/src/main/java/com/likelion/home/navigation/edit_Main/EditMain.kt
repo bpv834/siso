@@ -1,6 +1,7 @@
 package com.likelion.home.navigation.edit_Main
 
 import android.annotation.SuppressLint
+import android.util.Log.d
 import android.view.View
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -49,37 +51,30 @@ import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber.Forest.d
+import kotlin.coroutines.CoroutineContext
 
 @Composable
 fun EditMainRoute(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
-    topLocationUseCase : TopLocationUseCase,
-    bottomLocationUseCase : BottomLocationUseCase,
-    currentLocationSetUseCase : CurrentLocationSetUseCase,
-    usersFullUseCase : UsersFullUseCase,
     actionSnackbar: () -> Unit = {}
 ) {
     SisoTheme {
         EditMain(
-            topLocationUseCase = topLocationUseCase,
-            bottomLocationUseCase = bottomLocationUseCase,
-            currentLocationSetUseCase = currentLocationSetUseCase,
-            usersFullUseCase = usersFullUseCase,
             navigateToMyPage = actionSnackbar
         )
     }
 
 }
 
-@SuppressLint("SuspiciousIndentation", "StateFlowValueCalledInComposition")
+@SuppressLint("SuspiciousIndentation", "StateFlowValueCalledInComposition", "TimberArgCount")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditMain (
-    topLocationUseCase : TopLocationUseCase,
-    bottomLocationUseCase : BottomLocationUseCase,
-    currentLocationSetUseCase : CurrentLocationSetUseCase,
-    usersFullUseCase : UsersFullUseCase,
     navigateToMyPage : () -> Unit = {},
 ) {
     val title = stringResource(com.likelion.home.R.string.main_edit)
@@ -87,7 +82,9 @@ fun EditMain (
     var appBarTitle by remember { mutableStateOf(title) }
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
 
-    val mainEditInfoScreenViewModel = MainEditInfoScreenViewModel(usersFullUseCase)
+
+    val mainEditInfoScreenViewModel = hiltViewModel<MainEditInfoScreenViewModel>()
+    mainEditInfoScreenViewModel.fetchUsers()
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -153,14 +150,20 @@ fun EditMain (
                 // 내 정보 수정
                 // 사진 수정
                 val photoEditInfoScreenViewModel = PotoEditInfoScreenViewModel()
-                photoEditInfoScreenViewModel.addAllImageFromAlbum(mainEditInfoScreenViewModel.usersModel.value?.userImages?.map {
-                    it.getBitmapFromUrl()!!
-                }!!)
+                val userImages = mainEditInfoScreenViewModel.receiverUsersModel.value?.userImages
+                d("userImage","${userImages.toString()}")
+                if( userImages != null && userImages.isNotEmpty()) {
+                    d("userImage","${userImages.size} ${userImages.isNotEmpty()}")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        photoEditInfoScreenViewModel.addAllImageFromAlbum(userImages.map {
+                            it.getBitmapFromUrl()!!
+                        })
+                    }
+
+                }
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route) {
                     PotoEditInfoScreen(
-                        viewModel = photoEditInfoScreenViewModel,
-                        receiverList = mainEditInfoScreenViewModel.receiverUsersModel.value?.userImages
-                            ?: listOf(),
+                        viewModel = photoEditInfoScreenViewModel
                     ) {
                         navController.popBackStack()
                     }
@@ -172,11 +175,7 @@ fun EditMain (
                 // 위치 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route) {
                 LocationEditInfoScreen(
-                    viewModel = LocationEditInfoScreenViewModel(
-                        topLocationUseCase = topLocationUseCase,
-                        bottomLocationUseCase = bottomLocationUseCase,
-                        currentLocationSetUseCase = currentLocationSetUseCase
-                    ),
+                    viewModel = hiltViewModel<LocationEditInfoScreenViewModel>(),
                     popBackStack = {location->
                         navController
                             .previousBackStackEntry

@@ -16,6 +16,7 @@ fun AudioRecordingButton(
     )
 
     CommonActiveButton(
+        modifier = null,
         text = "녹음 시작",
         onClick = {
             if (recordAudioPermissionState.status.isGranted) {
