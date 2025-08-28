@@ -1,8 +1,11 @@
 package com.likelion.login.login_agree
 
+import android.R.attr.checked
+import android.R.attr.onClick
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import android.util.Log.d
 import android.widget.TextView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,12 +24,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -35,7 +40,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -43,12 +52,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
+import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.lang.ProcessBuilder.Redirect.to
+import java.util.Collections.checkedList
+import kotlin.collections.forEachIndexed
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition", "UnrememberedMutableState")
@@ -65,13 +80,22 @@ fun AgreeToTermsScreen(
     )
 
     val agreeList = listOf(
-        1L to "(필수) 이용약관 동의",
-        2L to "(선택) 마케팅 정보 수신",
+            1L to "(필수) 개인정보 처리방침",
+            2L to "(필수) 이용약관 동의",
+            3L to "(선택) 마케팅 정보 수신",
     )
     val bottomTitle = listOf(
-        1L to "이용약관",
-        2L to "마케팅 정보 수신 사항",
+        1L to "개인정보 처리방침",
+        2L to "이용약관" ,
+        3L to "마케팅 정보 수신 사항",
     )
+    // 필수 확인 목록 들
+    val requireChecked = listOf(
+        1L,
+        2L,
+    )
+
+
     val agreeContinueBoolean = viewModel.agreeContinueBoolean.collectAsStateWithLifecycle()
 
     Box(
@@ -98,7 +122,10 @@ fun AgreeToTermsScreen(
 
             AgreeRepeatRadioButton(
                 termsList = agreeList,
-                showBottom = { state ->
+              
+                checked = requireChecked,
+                showBottom = {state->
+
                     bottomId = state
                 },
                 onClick = { continueBoolean ->
@@ -109,8 +136,6 @@ fun AgreeToTermsScreen(
             )
 
             Spacer(modifier = Modifier.size(size = 286.dp))
-
-            Spacer(Modifier.padding(150.dp))
 
         }
         Column(
@@ -174,7 +199,7 @@ fun AgreeToTermsScreen(
                             AsyncImage(
                                 modifier = Modifier
                                     .size(24.dp),
-                                model = R.drawable.bottom_close,
+                                model = R.drawable.ic_bottom_close,
                                 contentDescription = ""
                             )
                         }
@@ -195,17 +220,20 @@ fun AgreeToTermsScreen(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AgreeRepeatRadioButton(
     termsList: List<Pair<Long, String>>,
-    showBottom: (Long) -> Unit = {},
-    onClick: (Boolean) -> Unit = {}
-) {
-    val checkIdList = remember {
+    showBottom: (Long)->Unit = {},
+    checked: List<Long> = listOf(),
+    onClick:(Boolean)->Unit = {}
+){
+    val checkIdList  = remember {
+
         mutableStateListOf<Long>()
     }
-
+    val checked = checked
     termsList.forEachIndexed { idx, (id, text) ->
         Box(
             modifier = Modifier
@@ -222,8 +250,7 @@ fun AgreeRepeatRadioButton(
                         showBottom(id)
                         checkIdList.add(id)
                     }
-
-                    onClick(checkIdList.contains(termsList.first().first))
+                    onClick(checkIdList.containsAll(checked))
                 },
         ) {
             Text(
@@ -234,14 +261,32 @@ fun AgreeRepeatRadioButton(
                 color = SisoColorTokens.Gray90,
                 textAlign = TextAlign.Center
             )
-            AsyncImage(
+
+            Box(
                 modifier = Modifier
-                    .size(24.dp)
                     .align(Alignment.CenterEnd),
-                model = if (checkIdList.contains(id)) R.drawable.select
-                else R.drawable.unselect,
-                contentDescription = ""
-            )
+                contentAlignment = Alignment.Center
+            ){
+
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        R.drawable.ic_unselect
+                    ),
+                    tint = if (checkIdList.contains(id)) SisoColorTokens.Gold40
+                    else SisoColorTokens.Gray30,
+                    contentDescription = ""
+                )
+                if (checkIdList.contains(id)) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(
+                            R.drawable.ic_select
+                        ),
+                        tint = SisoColorTokens.Gray90,
+                        contentDescription = ""
+                    )
+                }
+            }
+
 
         }
         if (idx < termsList.size - 1) Spacer(Modifier.size(22.dp))
@@ -257,13 +302,20 @@ fun DocumentScreen(
     bottomId: Long = 0L
 ) {
     val bottomContent = listOf(
-        1L to "use_term.txt",
-        2L to "marketing_reception_term.txt",
+
+        1L to "",
+        2L to "use_term.txt" ,
+        3L to "marketing_reception_term.txt",
     )
-    val content = if (bottomId == bottomContent[0].first) bottomContent[0].second
-    else bottomContent[1].second
-    val documentText = if (bottomId != 0L) loadTextFromFile(content = content)
-    else ""// 실제 문서는 다른 곳에서 가져와야 함
+    val content = when(bottomId){
+        bottomContent[0].first -> bottomContent[0].second
+        bottomContent[1].first ->  bottomContent[1].second
+        bottomContent[2].first ->  bottomContent[2].second
+        else -> ""
+    }
+    val documentText = if (bottomId != 0L)loadTextFromFile(content = content)
+                        else ""// 실제 문서는 다른 곳에서 가져와야 함
+
 
     Column(
         modifier = Modifier

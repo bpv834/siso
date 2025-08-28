@@ -4,5 +4,6 @@ package com.likelion.domain.login.model
 // 서버에서 보내주는 값
 data class BasicToken(
     val refreshToken: String,
-    val userStatus: UserStatus
+    val userStatus: UserStatus,
+    val hasProfile: Boolean
 )

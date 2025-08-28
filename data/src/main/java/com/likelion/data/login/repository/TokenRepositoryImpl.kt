@@ -4,8 +4,6 @@ import com.likelion.data.login.mapper.toDomain
 import com.likelion.data.login.mapper.toRemote
 import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.User
-import com.likelion.domain.login.model.UserInfo
-import com.likelion.domain.login.model.UserStatus
 import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.local.datastore.DataStoreDataSource
 import kotlinx.coroutines.flow.Flow
@@ -34,21 +32,6 @@ class TokenRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveTokenAll(user: User) {
-//        val dummyUser = User(
-//            accessToken = "더미액세스",
-//            refreshToken = "더미리프래시",
-//            userStatus = UserStatus.REGISTER,
-//            userInfo = UserInfo(
-//                id = 1,
-//                email = "더미 이메일",
-//                provider = "더미 Provider",
-//                phoneNumber = "더미 01012341234",
-//                deleted = false,
-//                block = false
-//            )
-//        )
         data.saveTokenAll(user)
     }
-
-
 }

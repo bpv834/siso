@@ -28,7 +28,7 @@ fun Modifier.shimmerEffect(): Modifier = composed {
     )
     background(
         brush = Brush.linearGradient(
-            colors = listOf(SisoColorTokens.Gray30, SisoColorTokens.Gray10, SisoColorTokens.Gray20),
+            colors = listOf(SisoColorTokens.Gray40, SisoColorTokens.Gray30, SisoColorTokens.Gray20),
             start = Offset(x = startOffsetX, 0f),
             end = Offset(x = startOffsetX + size.width.toFloat(), y = size.height.toFloat())
         )
