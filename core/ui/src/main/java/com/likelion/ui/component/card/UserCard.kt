@@ -270,6 +270,7 @@ fun UserCard(
                             .clip(RoundedCornerShape(24.dp)),
                         // IconButton 크기 설정,
                         onClick = {
+                            onClickButtonCall(user.id)
                         },
                         colors = IconButtonDefaults.iconButtonColors(
                             // `isPossibleMessage` 상태에 따라 아이콘 색상을 변경합니다.
