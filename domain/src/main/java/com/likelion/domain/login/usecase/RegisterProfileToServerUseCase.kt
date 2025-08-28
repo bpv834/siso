@@ -7,7 +7,7 @@ import javax.inject.Inject
 class RegisterProfileToServerUseCase @Inject constructor(
     private val repository: UserSignUpRepository
 ) {
-    suspend  fun execute(profile: UserSignUpProfile) {
-        repository.registerProfileToServer(profile)
+    suspend fun execute(refreshToken: String, profile: UserSignUpProfile) {
+        repository.registerProfileToServer(refreshToken, profile)
     }
 }

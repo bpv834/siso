@@ -1,7 +1,6 @@
 package com.likelion.remote.api
 
 
-
 import com.likelion.remote.model.request.UserProfileRequest
 import com.likelion.remote.model.response.ImageResponseDto
 import com.likelion.remote.model.response.UserProfileResponseDto
@@ -10,6 +9,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -19,7 +19,10 @@ interface UserSignUpApi {
     // POST /api/profiles
     // 사용자 프로필 정보를 등록합니다.
     @POST("api/profiles")
-    suspend fun registerUserProfile(@Body request: UserProfileRequest): Response<UserProfileResponseDto>
+    suspend fun registerUserProfile(
+        @Header("Authorization") refreshToken: String,
+        @Body request: UserProfileRequest
+    ): Response<UserProfileResponseDto>
 
     // POST /api/images/upload
     // 프로필 이미지 파일을 업로드합니다.

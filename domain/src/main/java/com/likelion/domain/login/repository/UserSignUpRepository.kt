@@ -7,6 +7,6 @@ interface UserSignUpRepository {
     suspend fun saveTemporaryUserProfile(profile: UserSignUpProfile)
     suspend fun getTemporaryUserProfile(): UserSignUpProfile
     suspend fun clearTemporaryUserProfile()
-    suspend fun registerProfileToServer(profile: UserSignUpProfile)
+    suspend fun registerProfileToServer(refreshToken: String, profile: UserSignUpProfile)
 
 }
