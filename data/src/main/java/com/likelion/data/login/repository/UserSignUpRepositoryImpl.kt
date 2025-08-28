@@ -29,11 +29,14 @@ class InMemoryUserSignUpRepositoryImpl @Inject constructor(
         temporaryProfile = UserSignUpProfile()
     }
 
-    override suspend fun registerProfileToServer(profile: UserSignUpProfile) {
+    override suspend fun registerProfileToServer(refreshToken: String, profile: UserSignUpProfile) {
         // 1. 프로필 정보 등록
         // domain 모델 (UserSignUpProfile)을 remote DTO (UserProfileRequest)로 변환합니다.
         val userProfileRequest = profile.toUserProfileRequest()
-        val profileResponse = userSignUpApi.registerUserProfile(userProfileRequest)
+        val profileResponse = userSignUpApi.registerUserProfile(
+            refreshToken = refreshToken,
+            request = userProfileRequest,
+        )
 
         if (!profileResponse.isSuccessful) {
             // 프로필 등록 실패 시 예외 처리
