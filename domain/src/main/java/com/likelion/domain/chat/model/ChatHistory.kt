@@ -7,5 +7,6 @@ data class ChatHistory(
     val callTime: String,
     val currentMsg: String,
     val isNew: Boolean = false,
+    val isChatImageLoaded: Boolean = false,
     val isDelete: Boolean = false
 )
