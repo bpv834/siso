@@ -9,6 +9,8 @@ import com.likelion.domain.login.usecase.ClearTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.GetTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.RegisterProfileToServerUseCase
 import com.likelion.domain.login.usecase.SaveTemporaryUserProfileUseCase
+import com.likelion.domain.notification.repository.FcmTokenRepository
+import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,5 +67,13 @@ object UseCaseModule {
         userRepository: UserSignUpRepository
     ): SaveTemporaryUserProfileUseCase {
         return SaveTemporaryUserProfileUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSendFcmTokenUseCase(
+        fcmTokenRepository: FcmTokenRepository
+    ): SendFcmTokenUseCase {
+        return SendFcmTokenUseCase(fcmTokenRepository)
     }
 }
