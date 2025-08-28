@@ -8,7 +8,7 @@ data class CallUiState(
     val myUser: UsersModel? = null,
     val otherUser: UsersModel? = null,
     val callProgressState: CallForCallerState = CallForCallerState.Idle,
-    val callDuration: Int = 70,
+    val callDuration: Int = 5,
     val isMuted: Boolean = false,
     val isSpeakerOn: Boolean = false,
     val errorMessage: String? = null,
