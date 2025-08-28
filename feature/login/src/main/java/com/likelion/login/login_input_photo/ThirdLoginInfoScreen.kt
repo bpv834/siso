@@ -47,7 +47,6 @@ fun ThirdLoginInfoScreen(
             .fillMaxWidth()
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
-            .background(SisoColorTokens.White)
     ) {
         Spacer(modifier = Modifier.size(size = 8.dp))
         AsyncImage(

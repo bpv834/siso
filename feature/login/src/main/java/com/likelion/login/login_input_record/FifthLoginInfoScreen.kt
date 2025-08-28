@@ -79,7 +79,6 @@ fun FifthLoginInfoScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = SisoColorTokens.White)
             .padding(16.dp)
             .verticalScroll(rememberScrollState()) // 이 부분을 추가
     ) {

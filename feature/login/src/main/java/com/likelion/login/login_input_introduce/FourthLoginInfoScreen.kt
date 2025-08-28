@@ -49,7 +49,6 @@ fun FourthLoginInfoScreen(
     val bioText by viewModel.bioText.collectAsStateWithLifecycle()
     Column(
         modifier = Modifier
-            .background(Color.White)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
