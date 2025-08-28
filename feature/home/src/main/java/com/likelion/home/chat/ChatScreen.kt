@@ -28,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -73,7 +74,8 @@ fun ChatScreen(
     onNavigateChatRoom: (String) -> Unit,
     viewModel: ChatViewModel
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    //val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = viewModel.uiState.collectAsState().value
     Column(
         modifier = Modifier.background(SisoColorTokens.Gray5)
     ) {
@@ -244,7 +246,7 @@ fun ChatHistoryList(
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
-                            .align(Alignment.CenterVertically)
+                            .align(Alignment.CenterVertically),
                     )
                     Column(
                         modifier = Modifier
