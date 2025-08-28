@@ -113,7 +113,8 @@ class MainEditInfoScreenViewModel @Inject constructor (
         // 기존 Job이 있다면 취소
         uiState.value.playJob?.cancel()
         val job = viewModelScope.launch {
-            _uiState.update { it.copy(playTime = uiState.value.mediaPlayer.currentPosition) }
+            _uiState.update { it.copy(playTime = uiState.value.mediaPlayer.currentPosition ) }
+
             while (true) {
                 delay(1000L)
                 _uiState.update { it.copy(playTime = uiState.value.mediaPlayer.currentPosition) }
