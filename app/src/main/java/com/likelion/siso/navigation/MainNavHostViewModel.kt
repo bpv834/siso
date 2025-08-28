@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainNavHostViewModel @Inject constructor(
-    private val getUserByIdUseCase: GetUserByIdUseCase
 ) : ViewModel() {
 /*    private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()*/
