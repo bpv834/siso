@@ -1,4 +1,4 @@
-package com.likelion.data.enum_pack
+package com.likelion.util
 
 enum class PreferenceContact(val code: Int, val description: String) {
     CALL(0, "전화"),

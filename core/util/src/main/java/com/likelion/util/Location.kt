@@ -1,4 +1,4 @@
-package com.likelion.data.enum_pack
+package com.likelion.util
 enum class Location(val code: Int, val koreanName: String) {
     SEOUL(0, "서울"),
     BUSAN(1, "부산"),

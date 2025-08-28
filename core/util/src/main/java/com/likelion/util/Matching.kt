@@ -1,4 +1,4 @@
-package com.likelion.data.enum_pack
+package com.likelion.util
 
 enum class Matching(val code: Int, val description: String) {
     MATCHED(0, "매칭 성립"),

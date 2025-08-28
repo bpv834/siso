@@ -1,11 +1,5 @@
 package com.likelion.data.login.mapper
 
-import com.likelion.data.enum_pack.Call
-import com.likelion.data.enum_pack.DrinkingCapacity
-import com.likelion.data.enum_pack.Location
-import com.likelion.data.enum_pack.Mbti
-import com.likelion.data.enum_pack.PreferenceContact
-import com.likelion.data.enum_pack.Religion
 import com.likelion.domain.login.model.UserSignUpProfile
 import com.likelion.remote.model.request.UserProfileRequest
 import timber.log.Timber

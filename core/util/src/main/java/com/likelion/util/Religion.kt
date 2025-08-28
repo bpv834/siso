@@ -1,4 +1,4 @@
-package com.likelion.data.enum_pack
+package com.likelion.util
 
 enum class Religion(val code: Int, val description: String) {
     NONE(0, "종교없음"),

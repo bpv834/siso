@@ -1,4 +1,4 @@
-package com.likelion.data.enum_pack
+package com.likelion.util
 
 enum class Call(val code: Int, val description: String) {
     REQUESTED(0, "통화 요청"),
