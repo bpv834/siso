@@ -34,6 +34,8 @@ fun MyPageRoute(
 ) {
     MyPageMainScreen( mainEdit = mainEdit, setting = setting)
 }
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPageMainScreen(

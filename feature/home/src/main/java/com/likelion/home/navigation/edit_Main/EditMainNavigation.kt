@@ -18,20 +18,12 @@ fun NavController.navigateToEditMain(navOptions: NavOptions? = null) =
 
 fun NavGraphBuilder.editMainNavigation(
     navController: NavController,
-    topLocationUseCase : TopLocationUseCase,
-    bottomLocationUseCase : BottomLocationUseCase,
-    currentLocationSetUseCase : CurrentLocationSetUseCase,
-    usersFullUseCase : UsersFullUseCase,
     actionSnackbar : () -> Unit
 ) {
     composable(
         route = NavigationRoute.MyPageScreen.MainEditScreen.route
     ) {
         EditMainRoute (
-            topLocationUseCase = topLocationUseCase,
-            bottomLocationUseCase = bottomLocationUseCase,
-            currentLocationSetUseCase = currentLocationSetUseCase,
-            usersFullUseCase = usersFullUseCase,
             actionSnackbar = actionSnackbar
         )
     }

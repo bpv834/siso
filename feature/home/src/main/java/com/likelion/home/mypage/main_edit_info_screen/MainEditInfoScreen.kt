@@ -71,6 +71,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.home.mypage.getBitmapFromUrl
 import com.likelion.home.navigation.Pub
 import com.likelion.home.navigation.getString
 import com.likelion.ui.R
@@ -89,9 +90,10 @@ fun MainEditInfoScreen(
     saveHandle: SavedStateHandle,
     action:List<()->Unit> = listOf()
 ) {
-    val valueUpdate ={emptyText:String, key:String, userValue: String?->
+    val valueUpdate ={emptyText:String, key:String, userValue: String->
         if (saveHandle.getString(key) == null) {
-            if (userValue?.isBlank()!! && userValue.isEmpty())
+
+            if (userValue?.isBlank()!!)
                 emptyText
             else
                 userValue
@@ -111,11 +113,20 @@ fun MainEditInfoScreen(
     }
 
     val receiverUser = viewModel.receiverUsersModel.collectAsStateWithLifecycle()
+    val potoUrl by remember { mutableStateOf(
+        receiverUser.value?.userImages?.first() ?: ""
+    ) }
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
+
+    val voiceUrl by remember { mutableStateOf(
+        receiverUser.value?.voiceUrl ?: ""
+    ) }
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
 
     val locationUpdate = {
-        valueUpdate("지역을 입력해주세요","location", receiverUser.value?.location)
+        valueUpdate("지역을 입력해주세요","location", if(receiverUser.value == null)""
+            else receiverUser.value!!.location
+        )
     }
     val locationColor = {textColor(
         saveHandle.getString("location") == null,
@@ -123,7 +134,9 @@ fun MainEditInfoScreen(
     )}
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
     val religionUpdate = {
-        valueUpdate("지역을 입력해주세요","religion", receiverUser.value?.religion)
+        valueUpdate("지역을 입력해주세요","religion", if(receiverUser.value == null)""
+        else receiverUser.value!!.religion
+        )
     }
     val religionColor = {textColor(
         saveHandle.getString("religion") == null,
@@ -132,7 +145,9 @@ fun MainEditInfoScreen(
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
 
     val smokingUpdate = {
-        valueUpdate("정보를 입력해주세요","smoking", receiverUser.value?.isSmoke)
+        valueUpdate("정보를 입력해주세요","smoking", if(receiverUser.value == null)""
+        else receiverUser.value!!.isSmoke
+        )
     }
     val smokingColor = {textColor(
         saveHandle.getString("smoking") == null,
@@ -141,15 +156,19 @@ fun MainEditInfoScreen(
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
 
     val alcoholUpdate = {
-        valueUpdate("정보를 입력해주세요","smoking", receiverUser.value?.isSmoke)
+        valueUpdate("정보를 입력해주세요","alcohol", if(receiverUser.value == null)""
+        else receiverUser.value!!.drinkingCapacity
+        )
     }
     val alcoholColor = {textColor(
-        saveHandle.getString("smoking") == null,
+        saveHandle.getString("alcohol") == null,
         receiverUser.value == null
     )}
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
     val mbtiUpdate = {
-        valueUpdate("정보를 입력해주세요","mbti", receiverUser.value?.isSmoke)
+        valueUpdate("정보를 입력해주세요","mbti", if(receiverUser.value == null)""
+        else receiverUser.value!!.location
+        )
     }
     val mbtiColor = {textColor(
         saveHandle.getString("mbti") == null,
@@ -188,9 +207,11 @@ fun MainEditInfoScreen(
     val fistContinueBoolean by viewModel.fistContinueBoolean.collectAsState()
     val nameState by viewModel.nameState.collectAsState()
     val nameStateRange = TextRange(0,10)
-    var introduceText by remember { mutableStateOf("") }
+    val introduceState by viewModel.introduceState.collectAsStateWithLifecycle()
+    var introduceText by remember { mutableStateOf(introduceState) }
     val introduceTextRange = TextRange(0,50)
-    var ageText by remember { mutableStateOf("") }
+    val ageState by viewModel.ageState.collectAsStateWithLifecycle()
+    var ageText by remember { mutableStateOf(ageState) }
     val ageTextRange = TextRange(0,3)
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
@@ -242,7 +263,7 @@ fun MainEditInfoScreen(
                 ) {
                     AsyncImage(
                         modifier = Modifier.size(120.dp, 120.dp),
-                        model = R.drawable.example_profile,
+                        model = potoUrl,
                         contentDescription = ""
                     )
                     Box(
@@ -364,9 +385,10 @@ fun MainEditInfoScreen(
                                 // 재생 / 정지
                                 if (!playState) {
                                     // 재생하기
-
+                                    viewModel.playAudio(voiceUrl)
                                 } else {
                                     // 중지하기
+                                    viewModel.stopAudio()
                                 }
                             }
                         ) {
@@ -575,7 +597,8 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "음주",
-                selectText = "정보를 입력해주세요"
+                selectText = alcoholUpdate(),
+                color = alcoholColor()
             ) {
                 alcoholNavigation()
             }
@@ -803,22 +826,26 @@ fun InterestRepeatChip(
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 18.dp, end = 18.dp),
                 text = emptyText,
                 style = SisoTypoTokens.Body2,
-                color = SisoColorTokens.Gray70,
+                color = SisoColorTokens.Gray50,
                 textAlign = TextAlign.Center
             )
         }
 
     else
         FlowRow(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.padding(12.dp)
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
             list.forEach {
                 if (it.isNotBlank())
-                CommonChip(
-                    text = it,
-                    isSelected = false
-                ) { }
+                    Box(
+                        modifier = Modifier.padding(end = 12.dp, bottom = 12.dp)
+                    ) {
+                        CommonChip(
+                            text = it,
+                            isSelected = false
+                        ) { }
+                    }
+
             }
         }
 }

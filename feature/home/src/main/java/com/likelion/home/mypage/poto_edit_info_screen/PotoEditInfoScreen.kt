@@ -51,7 +51,6 @@ import com.likelion.ui.theme.SisoTypoTokens
 @ExperimentalMaterial3Api
 fun PotoEditInfoScreen(
     viewModel: PotoEditInfoScreenViewModelType,
-    receiverList: List<String> = emptyList(),
     onNavigateNext: () -> Unit
 ) {
     val showBottomSheet by viewModel.showBottomSheet.collectAsStateWithLifecycle()
