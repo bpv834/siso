@@ -3,7 +3,6 @@ package com.example.notification
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.likelion.domain.notification.model.FcmToken
-import com.likelion.domain.notification.usecase.GetUserByIdUseCase
 import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope

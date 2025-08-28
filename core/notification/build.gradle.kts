@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+/*    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)*/
 }
 
 android {
@@ -41,7 +41,8 @@ dependencies {
 
 
     // Firebase Messaging (푸시 알림)
-    implementation("com.google.firebase:firebase-messaging:24.0.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0")) // 최신 버전으로 변경
+    implementation(libs.firebase.messaging.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -51,5 +52,5 @@ dependencies {
 
     // DI
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    // ksp(libs.hilt.compiler)
 }
