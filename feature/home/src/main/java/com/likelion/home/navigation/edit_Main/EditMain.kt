@@ -150,7 +150,7 @@ fun EditMain (
                 // 내 정보 수정
                 // 사진 수정
                 val photoEditInfoScreenViewModel = PotoEditInfoScreenViewModel()
-                val userImages = mainEditInfoScreenViewModel.receiverUsersModel.value?.userImages
+                val userImages = mainEditInfoScreenViewModel.uiState.value.receiverUsersModel?.userImages
                 d("userImage","${userImages.toString()}")
                 if( userImages != null && userImages.isNotEmpty()) {
                     d("userImage","${userImages.size} ${userImages.isNotEmpty()}")

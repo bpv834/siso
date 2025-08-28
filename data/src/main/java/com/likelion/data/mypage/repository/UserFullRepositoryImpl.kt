@@ -40,6 +40,8 @@ class UserFullRepositoryImpl @Inject constructor(
             isSmoke = "비흡연자",
             sex = "여성",
             preferenceSex = "상관없음",
+            mbti = "istj",
+            meeting = listOf(),
         )
         return fakeUser
     }
