@@ -5,10 +5,10 @@ import com.likelion.domain.login.model.User
 import com.likelion.domain.login.model.UserInfo
 import com.likelion.domain.login.model.UserStatus
 import com.likelion.local.model.BasicTokenEntity
-import com.likelion.remote.model.BasicTokenResponseDto
-import com.likelion.remote.model.RegistrationStatus
-import com.likelion.remote.model.UserInfoResponse
-import com.likelion.remote.model.UserInfoResponseDto
+import com.likelion.remote.model.response.BasicTokenResponseDto
+import com.likelion.remote.model.response.RegistrationStatus
+import com.likelion.remote.model.response.UserInfoResponse
+import com.likelion.remote.model.response.UserInfoResponseDto
 
 
 fun BasicTokenResponseDto.toDomain(): BasicToken {

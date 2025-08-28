@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -179,7 +180,7 @@ fun FifthLoginInfoScreen(
                             color = SisoColorTokens.Gray90
                         )
                         Spacer(Modifier.size(74.dp))
-                        CommonDisableButton(text = "완료하기", onClick = {
+                        CommonDisableButton(modifier = Modifier, text = "완료하기", onClick = {
 
                         })
                     }
@@ -215,14 +216,22 @@ fun FifthLoginInfoScreen(
 
 
                     Spacer(Modifier.size(43.dp))
-                    CommonActiveButton(text = "완료하기", onClick = {
-                        viewModel.savePathInTempUser()
-                        onNavigateNext()
-           /*           val arr =  viewModel.getAudioBytes()
-                        playAacFromByteArray(context = context, audioBytes =arr!!)*/
-                    })
+                    CommonActiveButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp), text = "완료하기", onClick = {
+                            viewModel.savePathInTempUser()
+                            onNavigateNext()
+                            /*           val arr =  viewModel.getAudioBytes()
+                                         playAacFromByteArray(context = context, audioBytes =arr!!)*/
+                        })
                     Spacer(Modifier.size(8.dp))
-                    CommonActiveButton(text = "다시 녹음하기", onClick = { viewModel.startRecording() })
+                    CommonActiveButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp),
+                        text = "다시 녹음하기",
+                        onClick = { viewModel.startRecording() })
                     Spacer(Modifier.size(8.dp))
                 }
             }

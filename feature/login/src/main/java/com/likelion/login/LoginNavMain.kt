@@ -142,7 +142,7 @@ fun LoginMainScreen(
                 FirstLoginInfoScreen(
                     hiltViewModel<FirstLoginInfoScreenViewModel>(),
                     onNavigateNext = {
-                        navController.navigate("screen2")
+                        navController.navigate("screen3")
                     })
             }
             composable("screen2") {

@@ -1,0 +1,20 @@
+package com.likelion.remote.model.request
+
+import com.google.gson.annotations.SerializedName
+
+
+// 서버의 UserProfileRequestDto와 매칭
+data class UserProfileRequest(
+    @SerializedName("age") val age: Int,
+    @SerializedName("nickname") val nickname: String,
+    @SerializedName("drinkingCapacity") val drinkingCapacity: String?,
+    @SerializedName("religion") val religion: String?,
+    @SerializedName("smoke") val smoke: Boolean?,
+    @SerializedName("introduce") val introduce: String?,
+    @SerializedName("preferenceContact") val preferenceContact: String?,
+    @SerializedName("location") val location: String?,
+    @SerializedName("sex") val sex: String?,
+    @SerializedName("preferenceSex") val preferenceSex: String?,
+    @SerializedName("profileImageId") val profileImageId: Long?,
+    @SerializedName("mbti") val mbti: String?
+)

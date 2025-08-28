@@ -1,6 +1,10 @@
 package com.likelion.ui.component.button
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -16,6 +20,9 @@ fun AudioRecordingButton(
     )
 
     CommonActiveButton(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(54.dp),
         text = "녹음 시작",
         onClick = {
             if (recordAudioPermissionState.status.isGranted) {
