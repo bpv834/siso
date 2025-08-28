@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services") version "4.4.3" apply false
+ /*   alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)*/
 }
 
 android {
@@ -34,11 +35,22 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:util"))
+    implementation(project(":domain"))
+    implementation(project(":core:ui"))
 
+
+    // Firebase Messaging (푸시 알림)
+    implementation("com.google.firebase:firebase-bom:33.0.0")
+    implementation(libs.firebase.messaging)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // DI
+    implementation(libs.hilt.android)
+    // ksp(libs.hilt.compiler)
 }

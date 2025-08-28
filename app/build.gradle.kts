@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("com.google.gms.google-services")
 }
 
 val property = Properties().apply {
@@ -69,6 +70,9 @@ dependencies {
     implementation(project(":core:util"))
     implementation(project(":core:network"))
     implementation(project(":feature:call"))
+    implementation(project(":core:notification"))
+    // Firebase Messaging (푸시 알림)
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
 
 
 
@@ -87,6 +91,7 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 
     // DI
     implementation(libs.hilt.android)
