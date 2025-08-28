@@ -57,6 +57,7 @@ class SisoAppState(
             NavigationRoute.LoginScreen.route -> false
             NavigationRoute.InputScreen.route -> false
             NavigationRoute.ChatScreen.AlarmScreen.route -> false
+            NavigationRoute.ChatScreen.ChatRoomScreen.route -> false
             else -> false
         }
     }
