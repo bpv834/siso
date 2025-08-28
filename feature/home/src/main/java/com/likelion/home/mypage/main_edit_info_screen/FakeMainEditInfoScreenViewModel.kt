@@ -1,5 +1,6 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.util.Log
 import android.util.Log.d
@@ -7,6 +8,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.mypage.model.UsersFullModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,71 +21,53 @@ class FakeMainEditInfoScreenViewModel(
     // usecase자리
 ): MainEditInfoScreenViewModelType {
 
-    init {
-        fetchUsers()
-    }
-    private val mediaPlayer = MediaPlayer()
-    private val _potoState = MutableStateFlow("")
-    override val potoState : StateFlow<String> get() = _potoState.asStateFlow() // 사진 주소
-    private val _voiceState = MutableStateFlow("")
-    override val voiceState : StateFlow<String> get() = _voiceState.asStateFlow() // 사진 주소
-    private val _nameState = MutableStateFlow("")
-    override val nameState : StateFlow<String> get() = _nameState.asStateFlow() // 이름
-    private val _ageState = MutableStateFlow("")
-    override val ageState: StateFlow<String> get() = _ageState.asStateFlow() // 나이
-    private val _introduceState = MutableStateFlow("")
-    override val introduceState: StateFlow<String> get() = _introduceState.asStateFlow()
-    private val _myRadioButtons = MutableStateFlow(                   // 성별
-        mutableStateListOf(
-            Pair(first = "여성", second = false),
-            Pair(first = "남성", second = false),
+    private var _uiState = MutableStateFlow(EditUiState())
+    override val uiState = _uiState.asStateFlow()
+
+    override fun fistContinueBooleanUpdate() = _uiState.update {
+        val newUi = it.copy(
+            firstContinueBoolean = it.fistContinueBooleanUpdate()
         )
-    )
-    override val myRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>> get() = _myRadioButtons.asStateFlow()
-    private val _pairRadioButtons = MutableStateFlow(                // 매칭 상대
-        mutableStateListOf(
-            Pair(first = "이성", second = false),
-            Pair(first = "동성", second = false),
-            Pair(first = "상관없음", second = false),
+        d("boolean","ui $newUi")
+        newUi
+    }
+
+    override fun nameUpdate(input: String) = _uiState.update {
+        val tempUi = it.copy(editUsersModel = it.editUsersModel.copy(nickname = input))
+        tempUi.copy(firstContinueBoolean = it.fistContinueBooleanUpdate())
+    }
+
+    override fun myRadioButtonsUpdate(sex: String) = _uiState.update {
+        val male = it.myRadioButtons[0].first
+        val feMale = it.myRadioButtons[1].first
+        it.copy(
+            myRadioButtons = listOf(
+                male to (male == sex),
+                feMale to (feMale == sex)
+            )
         )
-    )
-    override val pairRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>> get() = _pairRadioButtons.asStateFlow()
-    private val _firstContinueBoolean = MutableStateFlow(false)
-    override val fistContinueBoolean : StateFlow<Boolean> get() = _firstContinueBoolean.asStateFlow()
-    val _receiverUsersModel =MutableStateFlow<UsersFullModel?>(null)
-    override val receiverUsersModel: StateFlow<UsersFullModel?> get() = _receiverUsersModel.asStateFlow()
-    val _usersModel =MutableStateFlow<UsersFullModel?>(null)
-    override val usersModel: StateFlow<UsersFullModel?> get() = _receiverUsersModel.asStateFlow()
-
-    override fun fistContinueBooleanUpdate() = _firstContinueBoolean.update {
-        val textBoolean = nameState.value.isNotBlank() && ageState.value.isNotBlank()
-        d("boolean","text $ageState")
-        d("boolean","text $nameState")
-        d("boolean","text $textBoolean")
-
-        val tempBoolean = myRadioButtons.value.reduce { acc, pair ->
-            val boolean = acc.copy(second = pair.second || acc.second)
-            d("boolean","tempBoolean $pair")
-            boolean
-        }.second && textBoolean
-        val continueBoolean = pairRadioButtons.value.reduce { acc, pair ->
-            val boolean = acc.copy(second = pair.second || acc.second)
-            d("boolean","continueBoolean $pair")
-            boolean
-        }.second && tempBoolean
-        d("boolean","continueBoolean $continueBoolean")
-        continueBoolean
     }
 
-    override fun nameUpdate(input: String) {
-        _nameState.update { input }
-        fistContinueBooleanUpdate()
+    override fun pairRadioButtonsUpdate(pair: String) = _uiState.update {
+        val other = it.pairRadioButtons[0].first
+        val equil = it.pairRadioButtons[1].first
+        val nothing = it.pairRadioButtons[2].first
+        it.copy(
+            pairRadioButtons = listOf(
+                other to (other == pair),
+                equil to (equil == pair),
+                nothing to (nothing == pair)
+            )
+        )
     }
 
+    @SuppressLint("DefaultLocale")
     override fun playAudio(filePath: String) {
         try {
-            val mediaPlayer = mediaPlayer.apply {
+            val mediaPlayer = _uiState.value.mediaPlayer.apply {
                 setDataSource(filePath)
+
+                runPlayingTimer()
                 prepare() // 파일을 불러올 준비를 합니다.
                 start() // 재생 시작
             }
@@ -99,7 +83,7 @@ class FakeMainEditInfoScreenViewModel(
 
     override fun stopAudio() {
         try {
-            val mediaPlayer = mediaPlayer.apply {
+            val mediaPlayer = _uiState.value.mediaPlayer.apply {
                 pause()
             }
             // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
@@ -112,7 +96,14 @@ class FakeMainEditInfoScreenViewModel(
         }
     }
 
-    private fun fetchUsers() {
+    // 타이머 시작 메서드
+    override fun runPlayingTimer() {
+        // 기존 Job이 있다면 취소
+        uiState.value.playJob?.cancel()
+
+    }
+
+    fun fetchUsers() {
 
     }
 }

@@ -1,7 +1,9 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.R.attr.action
+import android.R.attr.contentDescription
 import android.R.attr.textColor
+import android.annotation.SuppressLint
 import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -81,6 +83,7 @@ import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
+import java.util.concurrent.TimeUnit
 import kotlin.collections.listOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,79 +115,77 @@ fun MainEditInfoScreen(
         else SisoColorTokens.Gray90
     }
 
-    val receiverUser = viewModel.receiverUsersModel.collectAsStateWithLifecycle()
-    val potoUrl by remember { mutableStateOf(
-        receiverUser.value?.userImages?.first() ?: ""
-    ) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
 
-    val voiceUrl by remember { mutableStateOf(
-        receiverUser.value?.voiceUrl ?: ""
-    ) }
+    val voiceUrl =
+        uiState.receiverUsersModel?.voiceUrl ?: ""
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
 
     val locationUpdate = {
-        valueUpdate("지역을 입력해주세요","location", if(receiverUser.value == null)""
-            else receiverUser.value!!.location
+        valueUpdate("지역을 입력해주세요","location", if(uiState.receiverUsersModel == null)""
+            else uiState.receiverUsersModel!!.location
         )
     }
     val locationColor = {textColor(
         saveHandle.getString("location") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
     val religionUpdate = {
-        valueUpdate("지역을 입력해주세요","religion", if(receiverUser.value == null)""
-        else receiverUser.value!!.religion
+        valueUpdate("지역을 입력해주세요","religion", if(uiState.receiverUsersModel == null)""
+        else uiState.receiverUsersModel!!.religion
         )
     }
     val religionColor = {textColor(
         saveHandle.getString("religion") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
 
     val smokingUpdate = {
-        valueUpdate("정보를 입력해주세요","smoking", if(receiverUser.value == null)""
-        else receiverUser.value!!.isSmoke
+        valueUpdate("정보를 입력해주세요","smoking", if(uiState.receiverUsersModel == null)""
+        else uiState.receiverUsersModel!!.isSmoke
         )
     }
     val smokingColor = {textColor(
         saveHandle.getString("smoking") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
 
     val alcoholUpdate = {
-        valueUpdate("정보를 입력해주세요","alcohol", if(receiverUser.value == null)""
-        else receiverUser.value!!.drinkingCapacity
+        valueUpdate("정보를 입력해주세요","alcohol", if(uiState.receiverUsersModel == null)""
+        else uiState.receiverUsersModel!!.drinkingCapacity
         )
     }
     val alcoholColor = {textColor(
         saveHandle.getString("alcohol") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
     val mbtiUpdate = {
-        valueUpdate("정보를 입력해주세요","mbti", if(receiverUser.value == null)""
-        else receiverUser.value!!.location
+        valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
+        else uiState.receiverUsersModel!!.location
         )
     }
     val mbtiColor = {textColor(
         saveHandle.getString("mbti") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val mbtiNavigation = {if (action.isNotEmpty()) action[6]()}
     val interestBlank = saveHandle.get<List<String>>("interest") == null
+
     val interestColor = {textColor(
         saveHandle.get<List<String>>("interest") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val interestNavigation = {if (action.isNotEmpty()) action[7]() }
     val matchingBlank = saveHandle.get<List<String>>("matching") == null
+
     val matchingColor = {textColor(
         saveHandle.get<List<String>>("matching") == null,
-        receiverUser.value == null
+        uiState.receiverUsersModel == null
     )}
     val matchingNavigation = {if (action.isNotEmpty()) action[8]()}
 
@@ -196,22 +197,16 @@ fun MainEditInfoScreen(
     val screenHeightDp = configuration.screenHeightDp.dp
     val playButtonSize = 24.dp
     val sliderVectorPadding = 7.75.dp
-    val playtimeSize = DpSize(48.5.dp,23.dp)
+    val playtimeSize = DpSize(52.dp,23.dp)
     // 여러 같은 패딩 x 5 + slider 사이드 x 2 + 아이콘 + 재생시간 크기 를 모두 뺸 사이즈
     val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize *2 + playtimeSize.width)
 
     var playState by remember { mutableStateOf(false) }
-
-    val myRadioButtons by viewModel.myRadioButtons.collectAsState()
-    val pairRadioButtons by viewModel.pairRadioButtons.collectAsState()
-    val fistContinueBoolean by viewModel.fistContinueBoolean.collectAsState()
-    val nameState by viewModel.nameState.collectAsState()
+    val nameState by remember { mutableStateOf(uiState.editUsersModel.nickname) }
     val nameStateRange = TextRange(0,10)
-    val introduceState by viewModel.introduceState.collectAsStateWithLifecycle()
-    var introduceText by remember { mutableStateOf(introduceState) }
+    var introduceText by remember { mutableStateOf(uiState.editUsersModel.introduce) }
     val introduceTextRange = TextRange(0,50)
-    val ageState by viewModel.ageState.collectAsStateWithLifecycle()
-    var ageText by remember { mutableStateOf(ageState) }
+    var ageText by remember { mutableStateOf(uiState.editUsersModel.age.toString()) }
     val ageTextRange = TextRange(0,3)
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
@@ -227,14 +222,16 @@ fun MainEditInfoScreen(
 
     val interestChipList = listOf(
         "나의 관심사를 골라주세요" to if (interestBlank) {
-            if (receiverUser.value == null)
+            if (uiState.receiverUsersModel == null)
                 emptyList()
             else
-                receiverUser.value?.interests!!
-        }
-        else saveHandle.get<List<String>>("interest"),
-        "어떤 관계를 원하시나요?" to if (matchingBlank) emptyList()
-        else saveHandle.get<List<String>>("matching")
+                uiState.receiverUsersModel?.interests!!
+        } else saveHandle.get<List<String>>("interest"),
+        "어떤 관계를 원하시나요?" to if (matchingBlank) {
+            if (uiState.receiverUsersModel == null)
+                emptyList()
+            else uiState.receiverUsersModel!!.meeting
+        }else saveHandle.get<List<String>>("matching"),
     )
     Box(
         modifier = Modifier.fillMaxHeight()
@@ -263,7 +260,7 @@ fun MainEditInfoScreen(
                 ) {
                     AsyncImage(
                         modifier = Modifier.size(120.dp, 120.dp),
-                        model = potoUrl,
+                        model = uiState.receiverUsersModel?.userImages?.first() ?: "",
                         contentDescription = ""
                     )
                     Box(
@@ -395,7 +392,7 @@ fun MainEditInfoScreen(
                             Icon(
                                 tint = SisoColorTokens.Gray10,
                                 imageVector = ImageVector.vectorResource(
-                                    if (!playState) R.drawable.ic_play
+                                    if (!uiState.mediaPlayer.isPlaying) R.drawable.ic_play
                                     else R.drawable.ic_pause
                                 ),
                                 contentDescription = ""
@@ -431,7 +428,7 @@ fun MainEditInfoScreen(
                         Spacer(Modifier.size(sliderVectorPadding))
                         Text(
                             modifier = Modifier.size(playtimeSize),
-                            text = "00:15",
+                            text = formatMillisToMinutesSeconds(uiState.playTime),
                             style = SisoTypoTokens.Label1,
                             color = SisoColorTokens.Gray10,
                             textAlign = TextAlign.Center
@@ -442,12 +439,14 @@ fun MainEditInfoScreen(
                 }
                 Spacer(Modifier.size(16.dp))
                 Icon(
-                    modifier = Modifier.size(24.dp).clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        voiceNavigation()
-                    },
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            voiceNavigation()
+                        },
                     imageVector = ImageVector.vectorResource(
                         R.drawable.ic_text_edit
                     ),
@@ -509,7 +508,9 @@ fun MainEditInfoScreen(
                 Row(
                     modifier = Modifier.height(24.dp)
                 ) {
-                    EditInfoRepeatRadioButton(myRadioButtons) {
+                    EditInfoRepeatRadioButton(uiState.myRadioButtons)
+                    { sex ->
+                        viewModel.myRadioButtonsUpdate(sex)
                         viewModel.fistContinueBooleanUpdate()
                     }
                 }
@@ -531,7 +532,9 @@ fun MainEditInfoScreen(
                 Row(
                     modifier = Modifier.height(24.dp)
                 ) {
-                    EditInfoRepeatRadioButton(pairRadioButtons) {
+                    EditInfoRepeatRadioButton(uiState.pairRadioButtons)
+                    {pair->
+                        viewModel.pairRadioButtonsUpdate(pair)
                         viewModel.fistContinueBooleanUpdate()
                     }
                 }
@@ -642,6 +645,9 @@ fun MainEditInfoScreen(
                 }
                 Spacer(Modifier.size(12.dp))
                 d("interestChipList", "$index ${interestChipList[index].first}")
+                d("interestChipList", "$index ${matchingBlank}")
+                d("interestChipList", "$index ${interestChipList[index].second}" +
+                        "${uiState.receiverUsersModel}")
                 InterestRepeatChip(
                     emptyText = interestChipList[index].first,
                     list = interestChipList[index].second!!,
@@ -652,7 +658,8 @@ fun MainEditInfoScreen(
         }
 
         Column(
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .padding(start = 16.dp, end = 16.dp)
         ) {
             Spacer(Modifier.size(8.dp))
@@ -707,8 +714,8 @@ fun TitleText(
 
 @Composable
 fun EditInfoRepeatRadioButton(
-    radios: MutableList<Pair<String, Boolean>>,
-    click: () -> Unit = {}
+    radios: List<Pair<String, Boolean>>,
+    click: (String) -> Unit = {}
 ) {
     radios.forEachIndexed { index, info ->
         Row(
@@ -717,12 +724,7 @@ fun EditInfoRepeatRadioButton(
             modifier = Modifier
                 .wrapContentSize()
                 .clickable {
-                    radios.replaceAll {
-                        it.copy(
-                            second = (it.first == info.first)
-                        )
-                    }
-                    click()
+                    click(info.first)
                 }
         ) {
             Text(
@@ -737,12 +739,7 @@ fun EditInfoRepeatRadioButton(
                     unselectedColor = SisoColorTokens.Gray30
                 ),
                 onClick = {
-                    radios.replaceAll {
-                        it.copy(
-                            second = (it.first == info.first)
-                        )
-                    }
-                    click()
+
                 }
             )
 
@@ -850,6 +847,15 @@ fun InterestRepeatChip(
         }
 }
 
+// 포맷 함수
+@SuppressLint("DefaultLocale")
+fun formatMillisToMinutesSeconds(millis: Int): String {
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(millis.toLong())
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(millis.toLong()) % 60
+    val formattedSeconds = String.format("%02d:%02d", minutes, seconds)
+    d("formatMillisToMinutesSeconds",formattedSeconds)
+    return formattedSeconds
+}
 
 @Preview
 @Composable
