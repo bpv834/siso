@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -77,36 +79,33 @@ fun FullScreenCallEndReview(
                 color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(84.dp))
+            
             Row (modifier = Modifier
                 .wrapContentSize()
             //fillMaxWidth().height(150.dp)
             ){
                 CommonOutlinedButtonWithIconVertical(
+                    modifier = Modifier
+                        .size(142.dp),
                     icon = {
-                        AsyncImage(
-                            model = com.likelion.ui.R.drawable.ic_heart_break,
-                            contentDescription = "",
-                            modifier = Modifier.size(45.dp)
+                        Icon(
+                            painterResource(com.likelion.ui.R.drawable.ic_heart_break),
+                            contentDescription = "", tint = SisoColorTokens.Gray40
                         )
                     },
-                    modifier = Modifier
-                        .size(142.dp)
-                        .safeContentPadding(),
                     text = "고민할래요",
-                    onClick = {onClickAnother()}
+                    onClick = { onClickAnother() }
                 )
                 Spacer(Modifier.size(8.dp))
                 CommonOutlinedButtonWithIconVertical(
                     icon = {
-                        AsyncImage(
-                            model = com.likelion.ui.R.drawable.ic_heart,
-                            contentDescription = "",
-                            modifier = Modifier.size(45.dp)
+                        Icon(
+                            painterResource(com.likelion.ui.R.drawable.ic_heart),
+                            contentDescription = "", tint = SisoColorTokens.Red50
                         )
                     },
                     modifier = Modifier
-                        .size(142.dp)
-                        .safeContentPadding(),
+                        .size(142.dp),
                     text = "연락할래요",
                     onClick = {}
                 )

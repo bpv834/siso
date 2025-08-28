@@ -1,6 +1,7 @@
 package com.likelion.siso.navigation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -18,6 +19,7 @@ import com.likelion.ui.component.bottomnavigation.SisoBottomNavigation
 @Composable
 fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (appState.isBottomBarVisible()) {
                 SisoBottomBar(

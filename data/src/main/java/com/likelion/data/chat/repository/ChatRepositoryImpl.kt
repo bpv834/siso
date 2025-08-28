@@ -5,8 +5,12 @@ import androidx.annotation.RequiresApi
 import com.likelion.data.chat.mapper.toDomain
 import com.likelion.data.chat.model.CallHistoryEntity
 import com.likelion.data.chat.model.ChatHistoryEntity
+import com.likelion.data.chat.model.MyChatEntity
+import com.likelion.data.chat.model.PartnerChatEntity
 import com.likelion.domain.chat.model.CallHistory
 import com.likelion.domain.chat.model.ChatHistory
+import com.likelion.domain.chat.model.MyChat
+import com.likelion.domain.chat.model.PartnerChat
 import com.likelion.domain.chat.repository.ChatRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +22,8 @@ class ChatRepositoryImpl @Inject constructor(
 ) : ChatRepository {
     private val dummyCallHistory = MutableStateFlow(createDummyCallHistory())
     private val dummyChatHistory = MutableStateFlow(createDummyChatHistory())
+    private val dummyPartnerChat = MutableStateFlow(createDummyPartnerChat())
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getCallList(): Flow<List<CallHistory>> {
@@ -35,6 +41,49 @@ class ChatRepositoryImpl @Inject constructor(
         }
     }
 
+    // 메시지 보내기
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun sendChat(msg: String): MyChat {
+        val now = System.currentTimeMillis()
+        val entity = MyChatEntity(
+            msg = msg,
+            time = now,
+            showTime = true
+        )
+        return entity.toDomain()
+    }
+
+    // 메시지 가져오기
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getChat(): Flow<List<PartnerChat>> {
+        return dummyPartnerChat.map { list ->
+            list.map { it.toDomain() }
+        }
+    }
+
+    private fun createDummyPartnerChat(): List<PartnerChatEntity> {
+        return listOf(
+            PartnerChatEntity(
+                partnerImg = "https://picsum.photos/200/200",
+                partnerMsg = "안녕하세요",
+                partnerTime = System.currentTimeMillis(),
+                showTime = true
+            ),
+            PartnerChatEntity(
+                partnerImg = "https://picsum.photos/200/200",
+                partnerMsg = "Hello",
+                partnerTime = System.currentTimeMillis(),
+                showTime = true
+            ),
+            PartnerChatEntity(
+                partnerImg = "https://picsum.photos/200/200",
+                partnerMsg = "こんにちは",
+                partnerTime = System.currentTimeMillis(),
+                showTime = true
+            )
+        )
+    }
+
     private fun createDummyChatHistory(): List<ChatHistoryEntity> {
         return listOf(
             ChatHistoryEntity(
@@ -47,8 +96,8 @@ class ChatRepositoryImpl @Inject constructor(
                 profileImage = "https://picsum.photos/200/201",
                 nickName = "자바",
                 callTime = System.currentTimeMillis(),
-                currentMsg = "Hello 안녕하세요 こんにちは",
-                isView = true,
+                currentMsg = "코틀린님과의 채팅과의 채팅방이 개설되었습니다",
+                isView = false,
             ), ChatHistoryEntity(
                 profileImage = "https://picsum.photos/200/202",
                 nickName = "씨",
@@ -72,6 +121,11 @@ class ChatRepositoryImpl @Inject constructor(
             ), ChatHistoryEntity(
                 profileImage = "https://picsum.photos/200/206",
                 nickName = "애플",
+                callTime = System.currentTimeMillis(),
+                currentMsg = "Hello 안녕하세요 こんにちは"
+            ), ChatHistoryEntity(
+                profileImage = "https://picsum.photos/200/206",
+                nickName = "닉네임은여덟글자",
                 callTime = System.currentTimeMillis(),
                 currentMsg = "Hello 안녕하세요 こんにちは"
             )

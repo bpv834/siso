@@ -5,5 +5,6 @@ data class CallHistory(
     val nickName: String,
     val profileImage: String,
     val callTime: String,
+    val isCallImageLoaded: Boolean = false,
     val isDelete: Boolean = false
 )

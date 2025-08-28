@@ -7,6 +7,7 @@ sealed class NavigationRoute(val route: String) {
     object HomeScreen : NavigationRoute("home")
     object ChatScreen : NavigationRoute("chat") {
         object AlarmScreen : NavigationRoute("chat/alarm")
+        object ChatRoomScreen: NavigationRoute("chat/chatroom")
     }
 
     object MyPageScreen : NavigationRoute("myPage"){
