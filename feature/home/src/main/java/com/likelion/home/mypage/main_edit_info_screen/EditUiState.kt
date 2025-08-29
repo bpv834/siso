@@ -14,12 +14,15 @@ data class EditUiState(
         Pair(first = "남성", second = false),
     ),
     val pairRadioButtons : List<Pair<String, Boolean>> = listOf(
-        Pair(first = "이성", second = false),
-        Pair(first = "동성", second = false),
+        Pair(first = "여성", second = false),
+        Pair(first = "남성", second = false),
         Pair(first = "상관없음", second = false),
     ),
     val playTime : Int = 0,
+    val voicePath :String = "",
     val playJob : Job? = null,
+    val playState : Boolean = false,
+
     val firstContinueBoolean : Boolean = false,
     val receiverUsersModel: UsersFullModel? = null,
     val editUsersModel: UsersFullModel = UsersFullModel(

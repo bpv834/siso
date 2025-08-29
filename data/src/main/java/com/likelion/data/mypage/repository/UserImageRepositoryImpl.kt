@@ -2,8 +2,9 @@ package com.likelion.data.mypage.repository
 
 import com.likelion.domain.mypage.model.UserEditImageModel
 import com.likelion.domain.mypage.repository.UserImageRepository
+import javax.inject.Inject
 
-class UserImageRepositoryImpl(
+class UserImageRepositoryImpl @Inject constructor(
 
 ) : UserImageRepository {
     override fun getUserImages(userId: Long): List<UserEditImageModel> {

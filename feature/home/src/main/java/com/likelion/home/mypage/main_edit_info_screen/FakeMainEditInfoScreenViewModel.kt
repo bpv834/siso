@@ -1,7 +1,9 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
@@ -62,15 +64,18 @@ class FakeMainEditInfoScreenViewModel(
     }
 
     @SuppressLint("DefaultLocale")
-    override fun playAudio(filePath: String) {
+    override fun playAudio(context: Context) {
         try {
-            val mediaPlayer = _uiState.value.mediaPlayer.apply {
-                setDataSource(filePath)
+            d("audio","playAudio")
+            val mediaPlayer = _uiState.value.mediaPlayer
+            mediaPlayer.setDataSource(context, Uri.parse(uiState.value.voicePath))
 
+            mediaPlayer.setOnPreparedListener{
+                it.start() // 재생 시작
                 runPlayingTimer()
-                prepare() // 파일을 불러올 준비를 합니다.
-                start() // 재생 시작
             }
+            mediaPlayer.prepareAsync()// 파일을 불러올 준비를 합니다.
+
             // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
             mediaPlayer.setOnCompletionListener {
                 it.release()
@@ -83,15 +88,11 @@ class FakeMainEditInfoScreenViewModel(
 
     override fun stopAudio() {
         try {
-            val mediaPlayer = _uiState.value.mediaPlayer.apply {
-                pause()
-            }
-            // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
-            mediaPlayer.setOnCompletionListener {
-                it.release()
+            val mediaPlayer = _uiState.value.mediaPlayer
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
             }
         } catch (e: Exception) {
-            // 오류 처리
             e.printStackTrace()
         }
     }

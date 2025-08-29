@@ -1,9 +1,13 @@
 package com.likelion.data.mypage.model
 
+import androidx.annotation.Size
 import com.google.gson.annotations.SerializedName
 import com.likelion.data.mypage.enum_model.DrinkingCapacity
+import com.likelion.data.mypage.enum_model.MBTI
+import com.likelion.data.mypage.enum_model.Meeting
 import com.likelion.data.mypage.enum_model.PreferenceSex
 import com.likelion.data.mypage.enum_model.Religion
+import com.likelion.data.mypage.enum_model.Sex
 
 data class UsersFullEntity (
     @SerializedName("id")
@@ -31,10 +35,10 @@ data class UsersFullEntity (
     val location: String, // Enum, NOT NULL
 
     @SerializedName("sex")
-    val sex: String, // Boolean, NOT NULL
+    val sex: Sex, // Boolean, NOT NULL
 
     @SerializedName("preference_sex")
-    val preferenceSex : PreferenceSex,
+    val preferenceSex: PreferenceSex,
 
     @SerializedName("is_smoke")
     val isSmoke: Boolean, // Enum (nullable)
@@ -46,11 +50,12 @@ data class UsersFullEntity (
     val religion: Religion, // Enum (nullable)
 
     @SerializedName("mbti")
-    val mbti: String, // Enum (nullable)
+    val mbti: MBTI, // Enum (nullable)
 
     @SerializedName("interest")
-    val interest : List<String>,
+    val interest: List<String>,
 
     @SerializedName("meeting")
-    val meeting : List<String>,
+    @Size(min =3,max = 7)
+    val meeting: List<Meeting>,
 )

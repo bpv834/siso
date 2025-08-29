@@ -59,9 +59,7 @@ fun AdditionalInfoSmokingScreen(
         receiver = viewModel.receiver.value
     }
     val smokingList = listOf(
-            "매우 자주 피워요 (하루에 1갑 이상)",
-            "자주 피워요 (하루에 1갑 이상)",
-            "가끔 피워요 (일주일에 몇 번 정도)",
+            "흡연자",
             "비흡연자",
         )
 
@@ -111,8 +109,7 @@ fun AdditionalInfoSmokingScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄

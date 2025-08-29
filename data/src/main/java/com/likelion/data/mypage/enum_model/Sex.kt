@@ -1,7 +1,6 @@
 package com.likelion.data.mypage.enum_model
 
-enum class PreferenceSex(val preSex:String) {
+enum class Sex(val sex:String) {
     Male("남성"),
     Female("여성"),
-    Other("상관없음"),
 }

@@ -12,7 +12,7 @@ fun UsersFullEntity.dataToDomain() : UsersFullModel
         location = location,
         nickname = nickname,
         age = age,
-        sex = "MALE",
+        sex = sex.dataToDomain(),
         preferenceSex = preferenceSex.dataToDomain(),
         voiceUrl = voiceUrl,
         drinkingCapacity = drinkingCapacity.dataToDomain(),
@@ -23,8 +23,8 @@ fun UsersFullEntity.dataToDomain() : UsersFullModel
             true -> "흠연자"
             false -> "비흡연자"
         },
-        mbti = mbti,
-        meeting = meeting
+        mbti = mbti.dataToDomain(),
+        meeting = meeting.map { "#${it.dataToDomain()}" },
     )
 
 }

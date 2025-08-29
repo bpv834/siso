@@ -55,6 +55,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -93,13 +94,11 @@ fun MainEditInfoScreen(
     saveHandle: SavedStateHandle,
     action:List<()->Unit> = listOf()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val valueUpdate ={emptyText:String, key:String, userValue: String->
         if (saveHandle.getString(key) == null) {
-
-            if (userValue?.isBlank()!!)
-                emptyText
-            else
-                userValue
+            userValue.ifBlank { emptyText }
         }else{
             saveHandle.getString(key)!!
             }
@@ -114,12 +113,15 @@ fun MainEditInfoScreen(
         }
         else SisoColorTokens.Gray90
     }
+    val nameState by remember { mutableStateOf(uiState.editUsersModel.nickname) }
+    val nameStateRange = TextRange(0,10)
+    var introduceText by remember { mutableStateOf(uiState.editUsersModel.introduce) }
+    val introduceTextRange = TextRange(0,50)
+    var ageText by remember { mutableStateOf(uiState.editUsersModel.age.toString()) }
+    val ageTextRange = TextRange(0,3)
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
 
-    val voiceUrl =
-        uiState.receiverUsersModel?.voiceUrl ?: ""
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
 
     val locationUpdate = {
@@ -166,7 +168,7 @@ fun MainEditInfoScreen(
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
     val mbtiUpdate = {
         valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
-        else uiState.receiverUsersModel!!.location
+        else uiState.receiverUsersModel!!.mbti
         )
     }
     val mbtiColor = {textColor(
@@ -201,13 +203,7 @@ fun MainEditInfoScreen(
     // 여러 같은 패딩 x 5 + slider 사이드 x 2 + 아이콘 + 재생시간 크기 를 모두 뺸 사이즈
     val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize *2 + playtimeSize.width)
 
-    var playState by remember { mutableStateOf(false) }
-    val nameState by remember { mutableStateOf(uiState.editUsersModel.nickname) }
-    val nameStateRange = TextRange(0,10)
-    var introduceText by remember { mutableStateOf(uiState.editUsersModel.introduce) }
-    val introduceTextRange = TextRange(0,50)
-    var ageText by remember { mutableStateOf(uiState.editUsersModel.age.toString()) }
-    val ageTextRange = TextRange(0,3)
+    var playState by remember { mutableStateOf(uiState.playState) }
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
     )
@@ -260,7 +256,7 @@ fun MainEditInfoScreen(
                 ) {
                     AsyncImage(
                         modifier = Modifier.size(120.dp, 120.dp),
-                        model = uiState.receiverUsersModel?.userImages?.first() ?: "",
+                        model = uiState.receiverUsersModel?.userImages ?: "",
                         contentDescription = ""
                     )
                     Box(
@@ -378,11 +374,10 @@ fun MainEditInfoScreen(
                         IconButton(
                             modifier = Modifier.size(playButtonSize),
                             onClick = {
-                                playState = !playState
                                 // 재생 / 정지
-                                if (!playState) {
+                                if (!uiState.mediaPlayer.isPlaying) {
                                     // 재생하기
-                                    viewModel.playAudio(voiceUrl)
+                                    viewModel.playAudio(context = context)
                                 } else {
                                     // 중지하기
                                     viewModel.stopAudio()
@@ -426,6 +421,7 @@ fun MainEditInfoScreen(
                         }
                         // 박스 크기만큼 뺀 패딩 9 - 1.25
                         Spacer(Modifier.size(sliderVectorPadding))
+
                         Text(
                             modifier = Modifier.size(playtimeSize),
                             text = formatMillisToMinutesSeconds(uiState.playTime),
@@ -608,7 +604,8 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "MBTI",
-                selectText = "정보를 입력해주세요"
+                selectText = mbtiUpdate(),
+                color = mbtiColor()
             ) {
                 mbtiNavigation()
             }
@@ -829,9 +826,7 @@ fun InterestRepeatChip(
         }
 
     else
-        FlowRow(
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
+        FlowRow {
             list.forEach {
                 if (it.isNotBlank())
                     Box(

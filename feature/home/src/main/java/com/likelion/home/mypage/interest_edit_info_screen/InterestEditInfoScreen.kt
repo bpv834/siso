@@ -54,48 +54,48 @@ fun InterestEditInfoScreen(
     }
     val cultureList = remember {
         mutableListOf(
-            "#음악감상 \uD83C\uDFA7",
-            "#사진촬영\uD83D\uDCF8",
-            "#서예\uD83D\uDD8C\uFE0F",
-            "#글쓰기✍\uFE0F",
-            "#영화감상\uD83C\uDFAC",
-            "#전시관람\uD83D\uDDBC\uFE0F",
-            "#클래식감상\uD83C\uDFBB",
-            "#노래부르기\uD83C\uDFA4",
-            "#댄스\uD83D\uDC83\uD83D\uDD7A"
+            "#음악감상",
+            "#사진촬영",
+            "#서예",
+            "#글쓰기",
+            "#영화감상",
+            "#전시관람",
+            "#클래식감상",
+            "#노래부르기",
+            "#댄스"
         )
     }
 
     val exerciseList = remember {
         mutableListOf(
-            "#등산⛰\uFE0F",
-            "#낚시\uD83C\uDFA3",
-            "#요가\uD83E\uDDD8\u200D♀\uFE0F",
-            "#골프⛳\uFE0F",
-            "#자전거\uD83D\uDEB4\u200D♀\uFE0F",
-            "#캠핑\uD83C\uDFD5\uFE0F",
-            "#수영\uD83C\uDFCA\u200D♂\uFE0F",
-            "#바둑♟\uFE0F",
-            "#볼링\uD83C\uDFB3",
-            "#탁구\uD83C\uDFD3",
-            "#꽃꽂이\uD83D\uDC90",
-            "#드라이브\uD83D\uDE97"
+            "#등산",
+            "#낚시",
+            "#요가",
+            "#골프",
+            "#자전거",
+            "#캠핑",
+            "#수영",
+            "#바둑",
+            "#볼링",
+            "#탁구",
+            "#꽃꽂이",
+            "#드라이브"
         )
     }
 
     val leisureList = remember {
         mutableListOf(
-            "#독서\uD83D\uDCDA",
-            "#베이킹\uD83E\uDDC1",
-            "#뜨개질\uD83E\uDDF6",
-            "#원예\uD83C\uDF3F",
-            "#여행✈\uFE0F",
-            "#맛집\uD83C\uDF7D\uFE0F",
-            "#명상\uD83E\uDDD8",
-            "#와인\uD83C\uDF77",
-            "#요리\uD83C\uDF73",
-            "#탁구\uD83C\uDFD3",
-            "#인테리어\uD83E\uDE9F",
+            "#독서",
+            "#베이킹",
+            "#뜨개질",
+            "#원예",
+            "#여행",
+            "#맛집",
+            "#명상",
+            "#와인",
+            "#요리",
+            "#탁구",
+            "#인테리어",
         )
     }
 

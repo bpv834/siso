@@ -1,6 +1,5 @@
 package com.likelion.domain.mypage.di
 
-import com.likelion.domain.home.repository.FakeUsersRepositoryImpl
 import com.likelion.domain.mypage.repository.APILocationRepository
 import com.likelion.domain.mypage.repository.LocationRepository
 import com.likelion.domain.mypage.repository.UserFullRepository
@@ -18,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocationUseCaseModule {
+object MyPageUseCaseModule {
     
     @Provides
     @Singleton
