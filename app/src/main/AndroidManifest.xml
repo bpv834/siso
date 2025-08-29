@@ -64,7 +64,7 @@
 			</intent-filter>
 		</activity>
 		<service
-			android:name=".App"
+			android:name="com.example.notification.FcmService"
 			android:exported="false">
 			<intent-filter>
 				<action android:name="com.google.firebase.MESSAGING_EVENT" />
