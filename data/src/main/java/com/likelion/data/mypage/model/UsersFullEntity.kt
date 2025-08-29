@@ -18,6 +18,9 @@ data class UsersFullEntity (
     @SerializedName("nickname")
     val nickname: String, // Varchar(50), NOT NULL
 
+    @SerializedName("voice_url")
+    val voiceUrl: String, //  NOT NULL
+
     @SerializedName("introduce")
     val introduce: String?, // Varchar(255), nullable
 
@@ -28,7 +31,7 @@ data class UsersFullEntity (
     val location: String, // Enum, NOT NULL
 
     @SerializedName("sex")
-    val sex: Boolean, // Boolean, NOT NULL
+    val sex: String, // Boolean, NOT NULL
 
     @SerializedName("preference_sex")
     val preferenceSex : PreferenceSex,

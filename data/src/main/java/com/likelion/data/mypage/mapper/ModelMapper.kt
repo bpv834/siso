@@ -13,7 +13,7 @@ fun UsersFullEntity.dataToDomain() : UsersFullModel
         age = age,
         sex = "MALE",
         preferenceSex = TODO(),
-        voiceUrl = TODO(),
+        voiceUrl = voiceUrl,
         drinkingCapacity = drinkingCapacity.dataToDomain(),
         interests = TODO(),
         introduce = TODO(),
