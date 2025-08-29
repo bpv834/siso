@@ -5,8 +5,7 @@ enum class Religion(val code: Int, val description: String) {
     CHRISTIANITY(1, "기독교"),
     CATHOLIC(2, "천주교"),
     BUDDHISM(3, "불교"),
-    ISLAM(4, "이슬람"),
-    OTHER(5, "기타");
+    OTHER(4, "기타");
 
     companion object {
         fun fromCode(code: Int): Religion? = entries.find { it.code == code }
