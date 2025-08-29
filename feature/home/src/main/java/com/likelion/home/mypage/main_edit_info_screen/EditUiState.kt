@@ -24,8 +24,7 @@ data class EditUiState(
     val receiverUsersModel: UsersFullModel? = null,
     val editUsersModel: UsersFullModel = UsersFullModel(
         id = 0,
-        isOnline = true,
-        userImages = listOf(),
+        userImages = "",
         nickname = "",
         age = -1,
         voiceUrl = "",

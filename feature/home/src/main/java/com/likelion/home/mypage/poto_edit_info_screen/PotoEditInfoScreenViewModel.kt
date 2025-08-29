@@ -4,25 +4,43 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.likelion.domain.model.ImagesModel
+import com.likelion.domain.mypage.model.UserEditImageModel
+import com.likelion.domain.mypage.usecase.GetUserImagesUseCase
+import com.likelion.home.mypage.getBitmapFromUrl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PotoEditInfoScreenViewModel @Inject constructor(
     // usecase자리
+    val getUserImagesUseCase : GetUserImagesUseCase
 ) : ViewModel(), PotoEditInfoScreenViewModelType {
     // 바텀 시트의 표시 여부를 관리하는 StateFlow
     private val _showBottomSheet = MutableStateFlow(false)
     override val showBottomSheet: StateFlow<Boolean> = _showBottomSheet.asStateFlow()
 
+    private var imagesModel = listOf<UserEditImageModel>()
+
     // 사진 리스트의 상태를 관리하는 StateFlow
     private val _capturedImages = MutableStateFlow<List<Bitmap>>(emptyList())
     override val capturedImages: StateFlow<List<Bitmap>> = _capturedImages.asStateFlow()
 
+    fun fetch(userId: Long) {
+        imagesModel = getUserImagesUseCase(userId)
+        viewModelScope.launch(Dispatchers.IO) {
+            _capturedImages.update {
+                // 사진 받는 선행 함수
+                imagesModel.filter { it.path != null && it.path!!.isNotBlank() }.map { it.path?.getBitmapFromUrl()!! }
+            }
+        }
+    }
 
     // 바텀 시트 여는 메서드
     override fun showPhotoUploadBottomSheet() {
@@ -36,10 +54,6 @@ class PotoEditInfoScreenViewModel @Inject constructor(
 
     override fun addImageFromAlbum(newImage: Bitmap) {
         _capturedImages.value = _capturedImages.value + newImage
-    }
-
-    override fun addAllImageFromAlbum(list: List<Bitmap>) {
-        _capturedImages.value += list
     }
 
     // 사진 삭제 메서드
