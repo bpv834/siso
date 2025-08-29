@@ -3,27 +3,38 @@ package com.example.notification
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.likelion.domain.notification.model.FcmToken
+import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 //  * 2. AndroidManifest.xml에 서비스 등록
 // * 3. onMessageReceived, onNewToken 등 오버라이드
 @AndroidEntryPoint
-class FcmService @Inject constructor(
+class FcmService  @Inject constructor(
+    // 서비스는 인자없는 생성자가 있어야한다.
+    // 따라서 인자로 받지말고 내부에서 찾아줘야함
 ) : FirebaseMessagingService() {
 
+    // 내부에서 usecase 찾기
     @Inject
-    lateinit var sendFcmTokenUseCase: SendFcmTokenUseCase
+    lateinit var saveFcmTokenUseCase: SaveFcmTokenUseCase
 
-    // 서버로 토큰 전송
+    // 토큰을 발급받을때 dataStore에 저장
+    // 로그인할때 토큰, ID 매핑해서 서버에 post
     override fun onNewToken(token: String) {
+
+        Timber.d("onNewToken $token" )
         super.onNewToken(token)
         CoroutineScope(Dispatchers.IO).launch {
-            sendFcmTokenUseCase(token = FcmToken(token = token))
+           /* // 우리 서버에 토큰과 유저 정보를 매핑하도록 정보를 post
+            sendFcmTokenUseCase(token = FcmToken(token = token))*/
+            saveFcmTokenUseCase(token)
+
         }
     }
 
