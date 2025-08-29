@@ -1,6 +1,9 @@
 package com.likelion.data.mypage.model
 
 import com.google.gson.annotations.SerializedName
+import com.likelion.data.mypage.enum_model.DrinkingCapacity
+import com.likelion.data.mypage.enum_model.PreferenceSex
+import com.likelion.data.mypage.enum_model.Religion
 
 data class UsersFullEntity (
     @SerializedName("id")
@@ -8,15 +11,6 @@ data class UsersFullEntity (
 
     @SerializedName("user_id")
     val userId: Long,  // BigInt
-
-    @SerializedName("drinking_capacity")
-    val drinkingCapacity: String?, // Enum (nullable)
-
-    @SerializedName("religion")
-    val religion: String?, // Enum (nullable)
-
-    @SerializedName("is_smoke")
-    val isSmoke: String?, // Enum (nullable)
 
     @SerializedName("age")
     val age: Int, // Int, NOT NULL
@@ -27,9 +21,6 @@ data class UsersFullEntity (
     @SerializedName("introduce")
     val introduce: String?, // Varchar(255), nullable
 
-    @SerializedName("contact")
-    val contact: String?, // Enum, nullable
-
     @SerializedName("profile_Image")
     val profileImage: String, // URL, NOT NULL
 
@@ -37,8 +28,20 @@ data class UsersFullEntity (
     val location: String, // Enum, NOT NULL
 
     @SerializedName("sex")
-    val sex: String, // Enum, NOT NULL
+    val sex: Boolean, // Boolean, NOT NULL
 
     @SerializedName("preference_sex")
-    val preferenceSex : String,
+    val preferenceSex : PreferenceSex,
+
+    @SerializedName("is_smoke")
+    val isSmoke: Boolean, // Enum (nullable)
+
+    @SerializedName("drinking_capacity")
+    val drinkingCapacity: DrinkingCapacity, // Enum (nullable)
+
+    @SerializedName("religion")
+    val religion: Religion, // Enum (nullable)
+
+    @SerializedName("meeting")
+    val meeting : String,
 )

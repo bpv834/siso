@@ -60,7 +60,6 @@ fun MyPageScreen(
     val progressValue by remember { mutableFloatStateOf(.36F) }
 
     val profileOption = listOf(
-        "통화 기록" to {},
         "차단 / 신고한 인연" to {},
         "매칭 필터 설정" to {},
     )
@@ -135,46 +134,6 @@ fun MyPageScreen(
 
                 } else
                     Spacer(modifier = Modifier.size(width = 190.dp, height = 48.dp))
-                /*                Box(
-                                modifier = Modifier.size(194.dp, 48.dp)
-                                    .padding(end = 10.dp)
-                            ){
-                                AsyncImage(
-                                    modifier = Modifier.align(Alignment.CenterStart)
-                                        .offset(x = (-10).dp)
-                                        .size(width = 15.dp, height = 16.dp),
-                                    model = com.likelion.ui.R.drawable.left_triangle,
-                                    contentDescription = ""
-                                )
-                                Box(
-                                    modifier = Modifier.padding(start = 5.dp)
-                                        .size(181.dp, 48.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(SisoColorTokens.Gold50),
-
-                                    ){
-
-                                    Row(
-                                        modifier = Modifier.padding(12.dp)
-                                            .align(Alignment.CenterStart)
-                                    ) {
-
-                                        Text(
-                                            modifier = Modifier.size(width = 125.dp, height = 23.dp),
-                                            text = "자기소개 완성하기",
-                                            style = SisoTypoTokens.SubTitle1,
-                                            color = SisoColorTokens.Black,
-                                        )
-                                        Spacer(modifier = Modifier.size(size = 8.dp))
-                                        AsyncImage(
-                                            modifier = Modifier.size(24.dp,24.dp),
-                                            model = com.likelion.ui.R.drawable.text_edit_gray70,
-                                            contentDescription = ""
-                                        )
-                                    }
-
-                                }
-                            }*/
             }
         }
         Spacer(modifier = Modifier.size(size = 27.dp))

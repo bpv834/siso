@@ -20,6 +20,7 @@ class UserFullRepositoryImpl @Inject constructor(
 ) : UserFullRepository {
 
     override suspend fun getUserById(id: Long): UsersFullModel {
+
         val fakeUser = UsersFullModel(
             id = 4L,
             isOnline = true,
