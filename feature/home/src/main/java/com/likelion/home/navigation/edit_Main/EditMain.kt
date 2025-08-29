@@ -51,6 +51,7 @@ import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,6 +86,7 @@ fun EditMain (
 
     val mainEditInfoScreenViewModel = hiltViewModel<MainEditInfoScreenViewModel>()
     mainEditInfoScreenViewModel.fetchUsers()
+    val photoEditInfoScreenViewModel = hiltViewModel<PotoEditInfoScreenViewModel>()
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -149,17 +151,11 @@ fun EditMain (
 
                 // 내 정보 수정
                 // 사진 수정
-                val photoEditInfoScreenViewModel = PotoEditInfoScreenViewModel()
-                val userImages = mainEditInfoScreenViewModel.uiState.value.receiverUsersModel?.userImages
-                d("userImage","${userImages.toString()}")
-                if( userImages != null && userImages.isNotEmpty()) {
-                    d("userImage","${userImages.size} ${userImages.isNotEmpty()}")
-                    CoroutineScope(Dispatchers.IO).launch {
-                        photoEditInfoScreenViewModel.addAllImageFromAlbum(userImages.map {
-                            it.getBitmapFromUrl()!!
-                        })
-                    }
 
+                val user = mainEditInfoScreenViewModel.uiState.value.receiverUsersModel
+
+                if (user != null){
+                    photoEditInfoScreenViewModel.fetch(userId = user.id)
                 }
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route) {
                     PotoEditInfoScreen(

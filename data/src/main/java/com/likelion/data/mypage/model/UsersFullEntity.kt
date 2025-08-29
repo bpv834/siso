@@ -45,6 +45,12 @@ data class UsersFullEntity (
     @SerializedName("religion")
     val religion: Religion, // Enum (nullable)
 
+    @SerializedName("mbti")
+    val mbti: String, // Enum (nullable)
+
+    @SerializedName("interest")
+    val interest : List<String>,
+
     @SerializedName("meeting")
-    val meeting : String,
+    val meeting : List<String>,
 )

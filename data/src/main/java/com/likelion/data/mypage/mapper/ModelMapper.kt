@@ -1,5 +1,6 @@
 package com.likelion.data.mypage.mapper
 
+import com.likelion.data.mypage.enum_model.Religion
 import com.likelion.data.mypage.model.UsersFullEntity
 import com.likelion.domain.mypage.model.UsersFullModel
 
@@ -12,15 +13,18 @@ fun UsersFullEntity.dataToDomain() : UsersFullModel
         nickname = nickname,
         age = age,
         sex = "MALE",
-        preferenceSex = TODO(),
+        preferenceSex = preferenceSex.dataToDomain(),
         voiceUrl = voiceUrl,
         drinkingCapacity = drinkingCapacity.dataToDomain(),
-        interests = TODO(),
-        introduce = TODO(),
-        religion = TODO(),
-        isSmoke = TODO(),
-        mbti = TODO(),
-        meeting = TODO()
+        interests = interest,
+        introduce = introduce ?: "",
+        religion = religion.dataToDomain(),
+        isSmoke = when (isSmoke){
+            true -> "흠연자"
+            false -> "비흡연자"
+        },
+        mbti = mbti,
+        meeting = meeting
     )
 
 }
