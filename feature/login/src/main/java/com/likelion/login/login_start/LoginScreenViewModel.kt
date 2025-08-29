@@ -14,6 +14,8 @@ import com.likelion.domain.login.usecase.PostKakaoAccessTokenUseCase
 import com.likelion.domain.login.usecase.PostRefreshTokenUseCase
 import com.likelion.domain.login.usecase.SaveRefreshTokenUseCase
 import com.likelion.domain.login.usecase.SaveTokenAllUseCase
+import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
+import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
 import com.likelion.login.event.LoginEvent
 import com.likelion.login.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,12 +44,16 @@ class LoginScreenViewModel @Inject constructor(
     private val saveTokenAllUseCase: SaveTokenAllUseCase,
     private val getTokenAllUseCase: GetTokenAllUseCase,
 
+    private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
+    private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
+
     ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     init {
         checkLocalToken()
+        sendFcmToken()
     }
 
     fun handleEvent(event: LoginEvent) {
@@ -88,6 +94,8 @@ class LoginScreenViewModel @Inject constructor(
                         hasProfile = result.hasProfile,
                     )
                 }
+                // 3) 저장소에서 fcm 토큰 얻어와 서버에 전송 호준
+                sendFcmToken()
             } catch (e: Exception) {
                 val msg = e.message.orEmpty()
                 if (msg.contains("401", true) || msg.contains("unauthorized", true)) {
@@ -133,6 +141,8 @@ class LoginScreenViewModel @Inject constructor(
                             Timber.tag("LoginScreenViewModel").d("${postKakao.token}")
                             // 리프래시 토큰 요청
                             postRefreshToken(postKakao.token)
+                            // fcm 토큰을 가져와 서버에 전송한다
+
                         }
 
                         is PostKakaoResult.Error -> {
@@ -161,6 +171,21 @@ class LoginScreenViewModel @Inject constructor(
                     Timber.d("카카오 Canceled")
                 }
 
+            }
+        }
+    }
+
+    // Fcm 토큰을 서버로 전송하는 메서드
+    fun sendFcmToken() {
+        viewModelScope.launch {
+            try {
+                val fcmToken: String? = getFcmTokenUseCase().firstOrNull()
+                Timber.d("fcmToken: $fcmToken" )
+                fcmToken?.let {
+                    sendFcmTokenUseCase(it)
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "FCM 토큰 전송 실패")
             }
         }
     }
