@@ -38,10 +38,6 @@ class FakePotoEditInfoScreenViewModel(
         _capturedImages.value = _capturedImages.value + newImage
     }
 
-    override fun addAllImageFromAlbum(list: List<Bitmap>) {
-        _capturedImages.value += list
-    }
-
     // 사진 삭제 메서드
     override fun deleteBitMap(delete: Bitmap) {
         val mutableList = _capturedImages.value.toMutableList()
