@@ -31,7 +31,7 @@ class UserFullRepositoryImpl @Inject constructor(
             location = "America",
             nickname = "코딩러",
             age = 65,
-            voiceUrl = "https://example.com/voice1.mp3",
+            voiceUrl = "https://samplelib.com/lib/preview/mp3/sample-15s.mp3",
             interest = listOf("풋볼", "영화", "음악"),
             introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
