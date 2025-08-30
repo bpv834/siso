@@ -6,7 +6,7 @@ import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.domain.login.repository.InMemoryUserSignUpRepository
-import com.likelion.domain.login.repository.SignUpRepository
+import com.likelion.domain.login.repository.UserProfileRepository
 import com.likelion.domain.login.usecase.AddProfileUseCase
 import com.likelion.domain.login.usecase.ClearTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.GetTemporaryUserProfileUseCase
@@ -92,7 +92,7 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideAddProfileUseCase(
-        repository: SignUpRepository
+        repository: UserProfileRepository
     ): AddProfileUseCase {
         return AddProfileUseCase(repository)
     }
