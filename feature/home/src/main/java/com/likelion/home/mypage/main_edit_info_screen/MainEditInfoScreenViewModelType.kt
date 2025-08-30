@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.content.Context
+import com.likelion.domain.mypage.model.UsersFullModel
 import kotlinx.coroutines.flow.StateFlow
 
 interface MainEditInfoScreenViewModelType {
@@ -12,4 +13,5 @@ interface MainEditInfoScreenViewModelType {
     fun pairRadioButtonsUpdate(pair: String)
     fun stopAudio()
     fun runPlayingTimer()
+    fun updateUsers(usersModel: UsersFullModel)
 }

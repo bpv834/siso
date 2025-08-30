@@ -1,5 +1,6 @@
 package com.likelion.home.mypage.matching_edit_info_screen
 
+import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -38,15 +40,9 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun MatchingEditInfoScreen(
     viewModel: MatchingEditInfoScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (List<String>) -> Unit = {},
 ) {
-    val matchingReceiverList = remember {
-        mutableStateListOf<String>()
-    }
-
-    LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
-        matchingReceiverList.addAll(viewModel.receiverList.value)
-    }
+    val matchingReceiverList by viewModel.receiverList.collectAsStateWithLifecycle()
 
     val matchingList = remember {
         mutableListOf(
@@ -90,7 +86,11 @@ fun MatchingEditInfoScreen(
             Spacer(Modifier.size((141).dp))
             MatchingEditInfoChips(
                 list = matchingList,
-                receiverList = matchingReceiverList
+                receiverList = matchingReceiverList,
+                onChipClick = {
+                    d("addString","onChipClick$it")
+                    viewModel.addString(it)
+                }
             )
             // 버튼과 스크롤 겸치는 만큼 추가 패딩 22 + 126
             Spacer(Modifier.size(148.dp))
@@ -117,16 +117,16 @@ fun MatchingEditInfoScreen(
         }
         Column(
             modifier = Modifier.align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(SisoColorTokens.White),
+                .fillMaxWidth(),
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                popBackStack()
+                if (matchingReceiverList.size >= 3) {
+                    popBackStack(matchingReceiverList)
+                }
             }
             Spacer(Modifier.fillMaxWidth().height(72.dp))
 
@@ -138,7 +138,8 @@ fun MatchingEditInfoScreen(
 @Composable
 fun MatchingEditInfoChips(
     list: MutableList<String>,
-    receiverList: SnapshotStateList<String>
+    receiverList: MutableList<String>,
+    onChipClick: (String) -> Unit = {}
 ){
     Spacer(Modifier.size(12.dp))
     FlowRow(
@@ -152,11 +153,7 @@ fun MatchingEditInfoChips(
                     text = text,
                     isSelected = receiverList.contains(text),
                 ) {
-                    if (receiverList.contains(text)) {
-                        receiverList.remove(text)
-                    } else {
-                        receiverList.add(text)
-                    }
+                    onChipClick(text)
                 }
             }
         }

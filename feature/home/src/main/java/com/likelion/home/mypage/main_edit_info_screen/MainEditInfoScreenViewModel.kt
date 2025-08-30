@@ -153,8 +153,7 @@ class MainEditInfoScreenViewModel @Inject constructor (
                     val other = it.pairRadioButtons[0].first
                     val equil = it.pairRadioButtons[1].first
                     val nothing = it.pairRadioButtons[2].first
-                    it.copy(receiverUsersModel = newModel,
-                        editUsersModel = newModel,/* get user */
+                    it.copy(receiverUsersModel = newModel,/* get user */
                         myRadioButtons = listOf(
                             male to (male == newModel.sex),
                             feMale to (feMale == newModel.sex)
@@ -180,6 +179,17 @@ class MainEditInfoScreenViewModel @Inject constructor (
                 Log.e("API_ERROR", e.message.toString())
             }
         }
+    }
+
+    override fun updateUsers(usersModel: UsersFullModel) {
+        _uiState.update {
+            it.copy(editUsersModel = usersModel)
+        }
+    }
+
+    fun completeUsers(usersModel: UsersFullModel) {
+        usersModel.nickname != uiState.value.editUsersModel.nickname
+        if (usersModel.nickname.isBlank()) return
     }
 
 

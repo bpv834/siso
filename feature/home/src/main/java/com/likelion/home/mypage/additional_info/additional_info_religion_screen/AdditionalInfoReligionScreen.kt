@@ -62,32 +62,10 @@ fun AdditionalInfoReligionScreen(
 ) {
     val receiver by viewModel.receiver.collectAsStateWithLifecycle()
 
-    val religionList = remember {
-        mutableListOf(
-            "기독교(개신교)",
-            "불교",
-            "가톨릭",
-            "원불교",
-            "무교",
-            "기타(직접입력)"
-        )
-    }
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-
+    val religionList = viewModel.religionList
     var selectText by remember {
-        mutableStateOf("")
+        mutableStateOf(receiver)
     }
-
-    val editText = remember {
-        mutableStateOf("")
-    }
-
-    var bottomState by remember {
-        mutableStateOf(false)
-    }
-
     Box(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -109,18 +87,18 @@ fun AdditionalInfoReligionScreen(
             )
             Spacer(Modifier.size(32.dp))
             FlowRow(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(end = 12.dp, bottom = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth(),
             ){
                 religionList.forEach {text->
-                    CommonChip(
-                        text = text,
-                        isSelected = selectText == text,
-                    ) {
-                        if(text == "기타(직접입력)") {
-                            //입력창 오픈
-                            bottomState = true
-                        }else {
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 12.dp, bottom = 12.dp)
+                    ){
+                        CommonChip(
+                            text = text,
+                            isSelected = selectText == text,
+                        ) {
                             if (selectText == text) {
                                 selectText = ""
                             } else {
@@ -128,6 +106,7 @@ fun AdditionalInfoReligionScreen(
                             }
                         }
                     }
+
                 }
             }
             Spacer(modifier = Modifier.size(366.dp))
@@ -140,37 +119,13 @@ fun AdditionalInfoReligionScreen(
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                viewModel.updateReceiver(receiver)
+                viewModel.complete(selectText)
                 { religion->
                     popBackStack(religion)
                 }
 
             }
             Spacer(Modifier.size(72.dp))
-        }
-
-
-        if (bottomState) {
-            BottomRegion(
-                sheetState = sheetState,
-                editText = editText,
-                onDismiss = {
-                    // 바텀 내리기
-                    bottomState = false
-                    // 입력창 초기화
-                    editText.value = ""
-                },
-                complete = {
-                    // 뷰에 추가
-                    religionList.add(religionList.size - 1, editText.value)
-                    // 해당 종교 선택
-                    selectText = editText.value
-                    // 입력창 초기화
-                    editText.value = ""
-                    // 바텀 내리기
-                    bottomState = false
-                }
-            )
         }
     }
 }

@@ -104,7 +104,9 @@ class FakeMainEditInfoScreenViewModel(
 
     }
 
-    fun fetchUsers() {
-
+    override fun updateUsers(usersModel: UsersFullModel) {
+        _uiState.update {
+            it.copy(editUsersModel = usersModel)
+        }
     }
 }

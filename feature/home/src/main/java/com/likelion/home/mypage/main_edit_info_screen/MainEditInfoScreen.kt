@@ -87,22 +87,27 @@ import com.likelion.ui.theme.SisoTypoTokens
 import java.util.concurrent.TimeUnit
 import kotlin.collections.listOf
 
+@SuppressLint("LogNotTimber")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEditInfoScreen(
     viewModel: MainEditInfoScreenViewModelType,
     saveHandle: SavedStateHandle,
+    naviToMyPage:()->Unit = {},
     action:List<()->Unit> = listOf()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val valueUpdate ={emptyText:String, key:String, userValue: String->
-        if (saveHandle.getString(key) == null) {
-            userValue.ifBlank { emptyText }
-        }else{
-            saveHandle.getString(key)!!
+    val valueUpdate =
+        { emptyText:String, key:String, userValue: String->
+            if (saveHandle.getString(key).isNullOrBlank()) {
+                d("receiver", "$key is null")
+                userValue.ifBlank { emptyText }
+            }else{
+                d("receiver", "$key ${saveHandle.getString(key).isNullOrBlank()}")
+                saveHandle.getString(key)!!
             }
-    }
+        }
     val textColor = {blank:Boolean, receiver: Boolean->
         if (blank){
             SisoColorTokens.Gray50
@@ -113,82 +118,90 @@ fun MainEditInfoScreen(
         }
         else SisoColorTokens.Gray90
     }
-    val nameState by remember { mutableStateOf(uiState.editUsersModel.nickname) }
+    var nameState by remember { mutableStateOf(uiState.receiverUsersModel?.nickname ?: "") }
     val nameStateRange = TextRange(0,10)
-    var introduceText by remember { mutableStateOf(uiState.editUsersModel.introduce) }
+    var introduceText by remember { mutableStateOf(uiState.receiverUsersModel?.introduce ?: "") }
     val introduceTextRange = TextRange(0,50)
-    var ageText by remember { mutableStateOf(uiState.editUsersModel.age.toString()) }
+    var ageText by remember { mutableStateOf(uiState.receiverUsersModel?.age.toString()) }
     val ageTextRange = TextRange(0,3)
 
+
+    val interestBlank = saveHandle.get<List<String>>("interest") == null
+    val matchingBlank = saveHandle.get<List<String>>("matching") == null
+
+    LaunchedEffect(Unit){
+        viewModel.updateUsers(
+            UsersFullModel(
+                id = uiState.editUsersModel.id,
+                userImages = uiState.editUsersModel.userImages,
+                nickname = nameState,
+                age = ageText.toInt(),
+                voiceUrl = uiState.receiverUsersModel?.voiceUrl!!,
+                introduce = introduceText,
+                sex = uiState.myRadioButtons.first { it.second }.first,
+                preferenceSex = uiState.pairRadioButtons.first { it.second }.first,
+                location = valueUpdate("지역을 입력해주세요","location", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.location),
+                drinkingCapacity = valueUpdate("정보를 입력해주세요","alchol", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.drinkingCapacity),
+                religion = valueUpdate("지역을 입력해주세요","religion", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.religion),
+                isSmoke = valueUpdate("정보를 입력해주세요","smoking", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.isSmoke),
+                interests =
+                        if (interestBlank) {
+                            if (uiState.receiverUsersModel == null)
+                                emptyList()
+                            else
+                                uiState.receiverUsersModel?.interests!!
+                        } else saveHandle.get<List<String>>("interest")!!,
+                mbti = valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.mbti
+                ),
+                meeting = if (matchingBlank) {
+                    if (uiState.receiverUsersModel == null)
+                        emptyList()
+                    else uiState.receiverUsersModel!!.meeting
+                }else saveHandle.get<List<String>>("matching")!!
+            )
+        )
+    }
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
 
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
 
-    val locationUpdate = {
-        valueUpdate("지역을 입력해주세요","location", if(uiState.receiverUsersModel == null)""
-            else uiState.receiverUsersModel!!.location
-        )
-    }
-    val locationColor = {textColor(
+    val locationColor = textColor(
         saveHandle.getString("location") == null,
         uiState.receiverUsersModel == null
-    )}
+    )
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
-    val religionUpdate = {
-        valueUpdate("지역을 입력해주세요","religion", if(uiState.receiverUsersModel == null)""
-        else uiState.receiverUsersModel!!.religion
-        )
-    }
-    val religionColor = {textColor(
+
+    val religionColor = textColor(
         saveHandle.getString("religion") == null,
         uiState.receiverUsersModel == null
-    )}
+    )
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
 
-    val smokingUpdate = {
-        valueUpdate("정보를 입력해주세요","smoking", if(uiState.receiverUsersModel == null)""
-        else uiState.receiverUsersModel!!.isSmoke
-        )
-    }
-    val smokingColor = {textColor(
+    val smokingColor = textColor(
         saveHandle.getString("smoking") == null,
         uiState.receiverUsersModel == null
-    )}
+    )
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
 
-    val alcoholUpdate = {
-        valueUpdate("정보를 입력해주세요","alcohol", if(uiState.receiverUsersModel == null)""
-        else uiState.receiverUsersModel!!.drinkingCapacity
-        )
-    }
-    val alcoholColor = {textColor(
+    val alcoholColor = textColor(
         saveHandle.getString("alcohol") == null,
         uiState.receiverUsersModel == null
-    )}
+    )
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
-    val mbtiUpdate = {
-        valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
-        else uiState.receiverUsersModel!!.mbti
-        )
-    }
-    val mbtiColor = {textColor(
+
+    val mbtiColor = textColor(
         saveHandle.getString("mbti") == null,
         uiState.receiverUsersModel == null
-    )}
+    )
     val mbtiNavigation = {if (action.isNotEmpty()) action[6]()}
-    val interestBlank = saveHandle.get<List<String>>("interest") == null
 
-    val interestColor = {textColor(
-        saveHandle.get<List<String>>("interest") == null,
-        uiState.receiverUsersModel == null
-    )}
     val interestNavigation = {if (action.isNotEmpty()) action[7]() }
-    val matchingBlank = saveHandle.get<List<String>>("matching") == null
 
-    val matchingColor = {textColor(
-        saveHandle.get<List<String>>("matching") == null,
-        uiState.receiverUsersModel == null
-    )}
     val matchingNavigation = {if (action.isNotEmpty()) action[8]()}
 
     // LocalConfiguration을 사용하여 현재 구성 정보를 가져옵니다.
@@ -217,17 +230,8 @@ fun MainEditInfoScreen(
     )
 
     val interestChipList = listOf(
-        "나의 관심사를 골라주세요" to if (interestBlank) {
-            if (uiState.receiverUsersModel == null)
-                emptyList()
-            else
-                uiState.receiverUsersModel?.interests!!
-        } else saveHandle.get<List<String>>("interest"),
-        "어떤 관계를 원하시나요?" to if (matchingBlank) {
-            if (uiState.receiverUsersModel == null)
-                emptyList()
-            else uiState.receiverUsersModel!!.meeting
-        }else saveHandle.get<List<String>>("matching"),
+        "나의 관심사를 골라주세요" to uiState.editUsersModel.interests,
+        "어떤 관계를 원하시나요?" to uiState.editUsersModel.meeting,
     )
     Box(
         modifier = Modifier.fillMaxHeight()
@@ -304,11 +308,11 @@ fun MainEditInfoScreen(
                 placeholderText = "닉네임을 입력해주세요",
                 value = nameState, // collect된 실시간 변경된 스트링 값을 넣는다.
                 onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                    viewModel.nameUpdate(
+                    nameState =
                         if (newText.length > nameStateRange.length)
                             newText.substring(nameStateRange)
                         else newText
-                    )
+
                 }
             )
             Spacer(Modifier.size(24.dp))
@@ -538,8 +542,8 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(32.dp))
             InfoEditScreenButton(
                 titleText = "지역",
-                selectText = locationUpdate(),
-                color = locationColor(),
+                selectText = uiState.editUsersModel.location,
+                color = locationColor,
             ) {
                 locationNavigation()
             }
@@ -580,32 +584,32 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(36.dp))
             InfoEditScreenButton(
                 titleText = "종교",
-                selectText = religionUpdate(),
-                color = religionColor(),
+                selectText = uiState.editUsersModel.religion,
+                color = religionColor,
             ) {
                 religionNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "흡연",
-                selectText = smokingUpdate(),
-                color = smokingColor(),
+                selectText = uiState.editUsersModel.isSmoke,
+                color = smokingColor,
             ) {
                 smokingNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "음주",
-                selectText = alcoholUpdate(),
-                color = alcoholColor()
+                selectText = uiState.editUsersModel.drinkingCapacity,
+                color = alcoholColor
             ) {
                 alcoholNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "MBTI",
-                selectText = mbtiUpdate(),
-                color = mbtiColor()
+                selectText = uiState.editUsersModel.mbti,
+                color = mbtiColor
             ) {
                 mbtiNavigation()
             }
@@ -616,7 +620,14 @@ fun MainEditInfoScreen(
             interestList.forEachIndexed { index, (sub, onclick) ->
                 Spacer(Modifier.size(32.dp))
                 Row(
-                    modifier = Modifier.height(24.dp),
+                    modifier = Modifier
+                        .height(24.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onclick()
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -628,27 +639,24 @@ fun MainEditInfoScreen(
                         color = SisoColorTokens.Gray50,
                         textAlign = TextAlign.Start
                     )
-                    IconButton(
-                        modifier = Modifier.size(24.dp),
-                        onClick = {
-                            onclick()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
-                            contentDescription = ""
-                        )
-                    }
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
+                        contentDescription = ""
+                    )
                 }
                 Spacer(Modifier.size(12.dp))
                 d("interestChipList", "$index ${interestChipList[index].first}")
                 d("interestChipList", "$index ${matchingBlank}")
-                d("interestChipList", "$index ${interestChipList[index].second}" +
-                        "${uiState.receiverUsersModel}")
+                d(
+                    "interestChipList", "$index ${interestChipList[index].second}" +
+                            "${uiState.receiverUsersModel}"
+                )
                 InterestRepeatChip(
                     emptyText = interestChipList[index].first,
-                    list = interestChipList[index].second!!,
+                    list = interestChipList[index].second,
+                    onClick = { onclick() }
                 )
+
             }
             // 59 + 62
             Spacer(Modifier.size(121.dp))
@@ -664,7 +672,7 @@ fun MainEditInfoScreen(
                 modifier = null,
                 text = "수정완료"
             ) {
-
+                naviToMyPage()
             }
             Spacer(Modifier.size(72.dp))
         }
@@ -749,7 +757,6 @@ fun EditInfoRepeatRadioButton(
 fun InfoEditScreenButton(
     titleText: String,
     selectText: String,
-    pubList: List<Pub> = emptyList(),
     color: Color = SisoColorTokens.Gray50,
     icon: ImageVector = ImageVector.vectorResource(com.likelion.home.R.drawable.chevron_down),
     click: () -> Unit = {}
@@ -783,7 +790,7 @@ fun InfoEditScreenButton(
             Box(
                 modifier = Modifier
                     .height(28.dp)
-                    .fillMaxWidth(0.889F),
+                    .fillMaxWidth(0.89F),
             ) {
                 Text(
                     modifier = Modifier.fillMaxHeight(),
@@ -808,38 +815,52 @@ fun InfoEditScreenButton(
 @Composable
 fun InterestRepeatChip(
     emptyText: String,
-    list: List<String>
+    list: List<String>,
+    onClick : ()-> Unit = {}
 ){
-    if (list.isEmpty()||list.all { it.isBlank() })
-        Box(
-            modifier = Modifier
-                .height(48.dp)
-                .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp)),
+    Box(
+        modifier = Modifier.fillMaxWidth().clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
         ){
-            Text(
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 18.dp, end = 18.dp),
-                text = emptyText,
-                style = SisoTypoTokens.Body2,
-                color = SisoColorTokens.Gray50,
-                textAlign = TextAlign.Center
-            )
+            onClick()
         }
-
-    else
-        FlowRow {
-            list.forEach {
-                if (it.isNotBlank())
-                    Box(
-                        modifier = Modifier.padding(end = 12.dp, bottom = 12.dp)
-                    ) {
-                        CommonChip(
-                            text = it,
-                            isSelected = false
-                        ) { }
-                    }
-
+    ) {
+        if (list.isEmpty()||list.all { it.isBlank() })
+            Box(
+                modifier = Modifier
+                    .height(48.dp)
+                    .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp)),
+            ){
+                Text(
+                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 18.dp, end = 18.dp),
+                    text = emptyText,
+                    style = SisoTypoTokens.Body2,
+                    color = SisoColorTokens.Gray50,
+                    textAlign = TextAlign.Center
+                )
             }
-        }
+
+        else
+            FlowRow {
+                list.forEach {
+                    if (it.isNotBlank())
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 12.dp, bottom = 12.dp)
+                        ) {
+                            CommonChip(
+                                text = it,
+                                isSelected = false
+                            ) {
+                                onClick()
+                            }
+                        }
+
+                }
+            }
+    }
+
 }
 
 // 포맷 함수

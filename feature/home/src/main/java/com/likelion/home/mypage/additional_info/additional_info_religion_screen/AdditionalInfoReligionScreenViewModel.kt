@@ -13,16 +13,24 @@ class AdditionalInfoReligionScreenViewModel@Inject constructor (
     //usecase자리
 ): ViewModel(), AdditionalInfoReligionScreenViewModelType {
     private var _receiver = MutableStateFlow("")
-    init {
-        // 초기 리스트 불러오는 부분
-        _receiver.update {
-            ""
+
+    override val receiver = _receiver.asStateFlow()
+    override val religionList = listOf(
+        "기독교",
+        "불교",
+        "가톨릭",
+        "무교",
+        "기타"
+    )
+    override fun fetch(religion : String){
+        if (religion.isNotBlank() && religionList.contains(religion)){
+            _receiver.update { religion }
         }
     }
-    override val receiver = _receiver.asStateFlow()
 
-    override fun updateReceiver(religion : String,nav:(String)->Unit){
+    override fun complete(religion : String,nav:(String)->Unit){
         if (religion.isNotBlank()){
+            _receiver.update { religion }
             nav(religion)
         }
     }

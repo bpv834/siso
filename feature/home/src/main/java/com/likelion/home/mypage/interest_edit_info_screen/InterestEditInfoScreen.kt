@@ -1,5 +1,6 @@
 package com.likelion.home.mypage.interest_edit_info_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,84 +21,41 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.util.CoilUtils.result
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun InterestEditInfoScreen(
     viewModel: InterestEditInfoScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (List<String>) -> Unit = {},
 ) {
-    val cultureReceiverList = remember {
-        mutableStateListOf<String>()
-    }
-    val exerciseReceiverList = remember {
-        mutableStateListOf<String>()
-    }
-    val leisureReceiverList = remember {
-        mutableStateListOf<String>()
-    }
+    val cultureReceiver by viewModel.cultureReceiverList.collectAsStateWithLifecycle()
+    val exerciseReceiver by viewModel.exerciseReceiverList.collectAsStateWithLifecycle()
+    val leisureReceiver by viewModel.leisureReceiverList.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
-        cultureReceiverList.addAll(viewModel.receiverList.value)
-    }
-    val cultureList = remember {
-        mutableListOf(
-            "#음악감상",
-            "#사진촬영",
-            "#서예",
-            "#글쓰기",
-            "#영화감상",
-            "#전시관람",
-            "#클래식감상",
-            "#노래부르기",
-            "#댄스"
-        )
-    }
+    val cultureList = viewModel.cultureList
 
-    val exerciseList = remember {
-        mutableListOf(
-            "#등산",
-            "#낚시",
-            "#요가",
-            "#골프",
-            "#자전거",
-            "#캠핑",
-            "#수영",
-            "#바둑",
-            "#볼링",
-            "#탁구",
-            "#꽃꽂이",
-            "#드라이브"
-        )
-    }
+    val exerciseList = viewModel.exerciseList
 
-    val leisureList = remember {
-        mutableListOf(
-            "#독서",
-            "#베이킹",
-            "#뜨개질",
-            "#원예",
-            "#여행",
-            "#맛집",
-            "#명상",
-            "#와인",
-            "#요리",
-            "#탁구",
-            "#인테리어",
-        )
-    }
+    val leisureList = viewModel.leisureList
+
+
 
     Box(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
@@ -118,7 +76,10 @@ fun InterestEditInfoScreen(
             )
             InterestEditInfoChips(
                 list = cultureList,
-                receiverList = cultureReceiverList
+                receiverList = cultureReceiver,
+                onChipClick = {
+                    viewModel.setCultureReceiver(it)
+                }
             )
             Spacer(Modifier.size(12.dp))
             Text(
@@ -129,7 +90,10 @@ fun InterestEditInfoScreen(
             )
             InterestEditInfoChips(
                 list = exerciseList,
-                receiverList = exerciseReceiverList
+                receiverList = exerciseReceiver,
+                onChipClick = {
+                    viewModel.setExerciseReceiver(it)
+                }
             )
             Spacer(Modifier.size(12.dp))
             Text(
@@ -140,7 +104,11 @@ fun InterestEditInfoScreen(
             )
             InterestEditInfoChips(
                 list = leisureList,
-                receiverList = leisureReceiverList
+                receiverList = leisureReceiver
+                ,onChipClick = {
+                    viewModel.setLeisureReceiver(it)
+                }
+
             )
             // 버튼과 스크롤 겸치는 만큼 추가 패딩 22 + 126
             Spacer(Modifier.size(148.dp))
@@ -166,17 +134,22 @@ fun InterestEditInfoScreen(
             )
         }
         Column(
-            modifier = Modifier.align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(SisoColorTokens.White),
+            modifier = Modifier.align(Alignment.BottomCenter),
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                popBackStack()
+                val size = cultureReceiver.size + exerciseReceiver.size
+                + leisureReceiver.size
+                if (size > 3 && size < 8) {
+                    val result = mutableListOf<String>()
+                    result.addAll(cultureReceiver)
+                    result.addAll(exerciseReceiver)
+                    result.addAll(leisureReceiver)
+                    popBackStack(result)
+                }
             }
             Spacer(Modifier.fillMaxWidth().height(72.dp))
 
@@ -187,8 +160,9 @@ fun InterestEditInfoScreen(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InterestEditInfoChips(
-    list: MutableList<String>,
-    receiverList: SnapshotStateList<String>
+    list: List<String>,
+    receiverList: MutableList<String>,
+    onChipClick: (String) -> Unit = {}
 ){
     Spacer(Modifier.size(12.dp))
     FlowRow(
@@ -202,11 +176,7 @@ fun InterestEditInfoChips(
                     text = text,
                     isSelected = receiverList.contains(text),
                 ) {
-                    if (receiverList.contains(text)) {
-                        receiverList.remove(text)
-                    } else {
-                        receiverList.add(text)
-                    }
+                    onChipClick(text)
                 }
             }
         }

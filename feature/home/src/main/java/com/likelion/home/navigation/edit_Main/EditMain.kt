@@ -1,7 +1,6 @@
 package com.likelion.home.navigation.edit_Main
 
 import android.annotation.SuppressLint
-import android.util.Log.d
 import android.view.View
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -24,39 +23,33 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.likelion.domain.mypage.usecase.BottomLocationUseCase
-import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
-import com.likelion.domain.mypage.usecase.TopLocationUseCase
-import com.likelion.domain.mypage.usecase.UsersFullUseCase
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreen
+import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreenViewModel
+import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreenViewModel_HiltModules_KeyModule_ProvideFactory
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.FakeAdditionalInfoAlcoholScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_religion_screen.AdditionalInfoReligionScreen
-import com.likelion.home.mypage.additional_info.additional_info_religion_screen.FakeAdditionalInfoReligionScreenViewModel
+import com.likelion.home.mypage.additional_info.additional_info_religion_screen.AdditionalInfoReligionScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.AdditionalInfoSmokingScreen
+import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.AdditionalInfoSmokingScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.FakeAdditionalInfoSmokingScreenViewModel
-import com.likelion.home.mypage.getBitmapFromUrl
 import com.likelion.home.mypage.interest_edit_info_screen.FakeInterestEditInfoScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreen
+import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreenViewModel
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreen
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreenViewModel
 import com.likelion.home.mypage.main_edit_info_screen.MainEditInfoScreen
 import com.likelion.home.mypage.main_edit_info_screen.MainEditInfoScreenViewModel
-import com.likelion.home.mypage.matching_edit_info_screen.FakeMatchingEditInfoScreenViewModel
 import com.likelion.home.mypage.matching_edit_info_screen.MatchingEditInfoScreen
-import com.likelion.home.mypage.mbti_edit_info_screen.FakeMBTIEditInfoScreenViewModel
+import com.likelion.home.mypage.matching_edit_info_screen.MatchingEditInfoScreenViewModel
 import com.likelion.home.mypage.mbti_edit_info_screen.MBTIEditInfoScreen
+import com.likelion.home.mypage.mbti_edit_info_screen.MBTIEditInfoScreenViewModel
 import com.likelion.home.mypage.poto_edit_info_screen.PotoEditInfoScreen
 import com.likelion.home.mypage.poto_edit_info_screen.PotoEditInfoScreenViewModel
+import com.likelion.home.navigation.getString
 import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import timber.log.Timber.Forest.d
-import kotlin.coroutines.CoroutineContext
 
 @Composable
 fun EditMainRoute(
@@ -82,11 +75,55 @@ fun EditMain (
     val navController = rememberNavController()
     var appBarTitle by remember { mutableStateOf(title) }
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
-
+    val preSavedStateHandle = navController.previousBackStackEntry?.savedStateHandle
 
     val mainEditInfoScreenViewModel = hiltViewModel<MainEditInfoScreenViewModel>()
     mainEditInfoScreenViewModel.fetchUsers()
     val photoEditInfoScreenViewModel = hiltViewModel<PotoEditInfoScreenViewModel>()
+    val additionalInfoSmokingScreenViewModel = hiltViewModel<AdditionalInfoSmokingScreenViewModel>()
+    val additionalInfoAlcoholScreenViewModel = hiltViewModel<AdditionalInfoAlcoholScreenViewModel>()
+    val mbtiEditInfoScreenViewModel = hiltViewModel<MBTIEditInfoScreenViewModel>()
+    val religionEditInfoScreenViewModel = hiltViewModel<AdditionalInfoReligionScreenViewModel>()
+    val matchingEditInfoScreenViewModel = hiltViewModel<MatchingEditInfoScreenViewModel>()
+    val interestEditInfoScreenViewModel = hiltViewModel<InterestEditInfoScreenViewModel>()
+
+    // 사진 수정 화면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.getString("photo") != null){
+        photoEditInfoScreenViewModel.fetch(13L)
+    }
+
+
+
+    // 종교 화면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.getString("religion") != null){
+        religionEditInfoScreenViewModel.fetch(preSavedStateHandle.getString("religion")!!)
+    }
+
+    // 흡연 화면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.getString("smoking") != null){
+        additionalInfoSmokingScreenViewModel.fetch(preSavedStateHandle.getString("smoking")!!)
+    }
+
+    // 음주 화면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.getString("alcohol") != null){
+        additionalInfoAlcoholScreenViewModel.fetch(preSavedStateHandle.getString("alcohol")!!)
+    }
+
+    // MBTI 화면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.getString("mbti") != null){
+        mbtiEditInfoScreenViewModel.setReceiver(preSavedStateHandle.getString("mbti")!!)
+    }
+
+    // 관심사 화면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.get<List<String>>("interest") != null){
+        interestEditInfoScreenViewModel.fetch(preSavedStateHandle.get<List<String>>("interest")!!)
+    }
+
+    // 매칭 인연 선택 하면에 해당 값 삽입
+    if(preSavedStateHandle != null && preSavedStateHandle.get<List<String>>("matching") != null){
+        matchingEditInfoScreenViewModel.fetch(preSavedStateHandle.get<List<String>>("matching")!!)
+    }
+
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
@@ -126,6 +163,7 @@ fun EditMain (
                     MainEditInfoScreen(
                         viewModel = mainEditInfoScreenViewModel,
                         saveHandle = navController.currentBackStackEntry?.savedStateHandle!!,
+                        naviToMyPage = {navigateToMyPage()},
                         action = listOf(
                             // 사진 0
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route)},
@@ -134,7 +172,7 @@ fun EditMain (
                             // 위치 2
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route)},
                             // 종교 3
-                            {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route)},
+                            { navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route) },
                             // 흡연 4
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.SmokingEditScreen.route)},
                             // 음주 5
@@ -183,7 +221,8 @@ fun EditMain (
                 }
                 // 종교 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.ReligionEditScreen.route) {
-                    AdditionalInfoReligionScreen(viewModel = FakeAdditionalInfoReligionScreenViewModel(),
+                    AdditionalInfoReligionScreen(
+                        viewModel = religionEditInfoScreenViewModel,
                         popBackStack = {religion->
                             navController
                                 .previousBackStackEntry
@@ -195,36 +234,66 @@ fun EditMain (
                 }
                 // 흡연 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.SmokingEditScreen.route) {
-                    AdditionalInfoSmokingScreen(viewModel = FakeAdditionalInfoSmokingScreenViewModel(),
-                        popBackStack = {navController.popBackStack()}
+                    AdditionalInfoSmokingScreen(viewModel = additionalInfoSmokingScreenViewModel,
+                        popBackStack = {smoking->
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("smoking", smoking)
+                            navController.popBackStack()
+                        }
                     )
                 }
                 // 음주 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.AlcoholEditScreen.route) {
                     AdditionalInfoAlcoholScreen(
-                        viewModel = FakeAdditionalInfoAlcoholScreenViewModel(),
-                        popBackStack = {navController.popBackStack()}
+                        viewModel = additionalInfoAlcoholScreenViewModel,
+                        popBackStack = {
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("alcohol", it)
+                            navController.popBackStack()
+                        }
                     )
                 }
                 // MBTI 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.MBTIEditScreen.route) {
                     MBTIEditInfoScreen(
-                        viewModel = FakeMBTIEditInfoScreenViewModel(),
-                        popBackStack = {navController.popBackStack()}
+                        viewModel = mbtiEditInfoScreenViewModel,
+                        popBackStack = {mbti->
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("mbti", mbti)
+                            navController.popBackStack()
+                        }
                     )
                 }
                 // 관심사 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.InterestEditScreen.route) {
                     InterestEditInfoScreen(
-                        viewModel = FakeInterestEditInfoScreenViewModel(),
-                        popBackStack = {navController.popBackStack()}
+                        viewModel = interestEditInfoScreenViewModel,
+                        popBackStack = {interest->
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("interest", interest)
+                            navController.popBackStack()
+                        }
                     )
                 }
                 // 매칭 관계 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.MatchingEditScreen.route) {
                     MatchingEditInfoScreen(
-                        viewModel = FakeMatchingEditInfoScreenViewModel(),
-                        popBackStack = {navController.popBackStack()}
+                        viewModel = matchingEditInfoScreenViewModel,
+                        popBackStack = {
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("matching", it)
+                            navController.popBackStack()
+                        }
                     )
                 }
             }
