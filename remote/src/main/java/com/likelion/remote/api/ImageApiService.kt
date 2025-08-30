@@ -1,13 +1,15 @@
 package com.likelion.remote.api
 
-import com.likelion.remote.model.response.ImageResponseDto
+import com.likelion.remote.model.response.ImageResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface ImageApiService {
 
@@ -16,17 +18,15 @@ interface ImageApiService {
     @POST("/api/images/upload")
     suspend fun uploadProfileImage(
         @Header("Authorization") refreshToken: String,
-        @Part image: MultipartBody.Part, // 실제 이미지 파일
-        @Body userId: Long // 사용자 ID (String을 RequestBody로 변환)
-    ): Response<ImageResponseDto> // 단일 이미지 업로드이므로 ImageResponse를 반환합니다.
+        @Part files: MultipartBody.Part,        // 실제 이미지 파일
+    ): Response<Unit> // 서버 응답을 안 쓸 거면 Unit 으로 받기
 
     // 사용자별 이미지 조회
-    @Multipart
-    @POST("/api/images/{userId}")
+    @GET("/api/images/user/{userId}")
     suspend fun getUserProfileImages(
-        @Header("Authorization") refreshToken: String,
-        @Body userId: Long
-    ): Response<ImageResponseDto>
+        refreshToken: String,
+        @Path("userId") userId: String
+    ): Response<List<ImageResponse>>
 
     // 이미지 삭제
     @Multipart
@@ -34,6 +34,6 @@ interface ImageApiService {
     suspend fun deleteUserProfileImages(
         @Header("Authorization") refreshToken: String,
         @Body imageId: String
-    ): Response<ImageResponseDto>
+    ): Response<ImageResponse>
 
 }

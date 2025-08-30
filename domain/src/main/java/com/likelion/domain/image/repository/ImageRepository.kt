@@ -3,6 +3,6 @@ package com.likelion.domain.image.repository
 import com.likelion.domain.image.model.ImageModel
 
 interface ImageRepository {
-    fun getImage(userId : String) : Result<ImageModel>
-    fun upLoadImage(imgPath : String) : Result<Unit>
+    suspend fun getImagesByUserId(userId : String,refreshToken: String) : Result<List<ImageModel>>
+    suspend fun upLoadImage(imgPathList: List<String>, refreshToken: String): Result<Unit>
 }
