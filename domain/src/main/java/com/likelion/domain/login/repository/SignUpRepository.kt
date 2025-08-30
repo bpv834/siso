@@ -9,8 +9,8 @@ interface SignUpRepository {
         profile: UserSignUpProfile
     )
 
-    suspend fun addImage(imgPathList: List<String>)
+    suspend fun addImage(imgPathList: List<String>, refreshToken: String)
 
-    suspend fun addVoice(voicePath: String)
+    suspend fun addVoice(voicePath: String,refreshToken: String)
 
 }
