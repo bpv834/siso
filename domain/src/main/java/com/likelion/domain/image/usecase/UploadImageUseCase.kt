@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UploadImageUseCase @Inject constructor(
     val repository: ImageRepository
 ) {
-    suspend fun execute() {
-        repository.upLoadImage(refreshToken = "", imgPathList = emptyList())
+    suspend fun execute(refreshToke : String, imgList:List<String>) {
+        repository.upLoadImage(refreshToken = refreshToke, imgPathList = imgList)
     }
 }
