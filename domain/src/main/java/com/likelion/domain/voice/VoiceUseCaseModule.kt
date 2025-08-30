@@ -19,6 +19,7 @@ import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
 import com.likelion.domain.voice.repository.VoiceRepository
 import com.likelion.domain.voice.usecase.GetVoiceSampleUseCase
+import com.likelion.domain.voice.usecase.UploadVoiceSampleUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,10 +31,10 @@ import javax.inject.Singleton
 object VoiceUseCaseModule {
     @Provides
     @Singleton
-    fun provideUploadImageUseCase(
-        repository: ImageRepository
-    ): UploadImageUseCase {
-        return UploadImageUseCase(repository)
+    fun provideUploadVoiceSampleUseCase(
+        repository: VoiceRepository
+    ): UploadVoiceSampleUseCase {
+        return UploadVoiceSampleUseCase(repository)
     }
 
     @Provides

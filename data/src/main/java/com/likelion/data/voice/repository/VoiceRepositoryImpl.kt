@@ -43,38 +43,33 @@ class VoiceRepositoryImpl @Inject constructor(
     override suspend fun uploadVoiceSample(
         path: String,
         refreshToken: String
-    ): Result<Unit> {
-        return try {
-            val file = File(path)
-            if (!file.exists()) {
-                return Result.failure(FileNotFoundException("File not found at $path"))
-            }
-
-            // 파일 확장자 기반 MIME 타입 결정
-            val mimeType = when (file.extension.lowercase()) {
-                "m4a" -> "audio/mp4"
-                "mp3" -> "audio/mpeg"
-                "wav" -> "audio/wav"
-                "ogg" -> "audio/ogg"
-                else -> "application/octet-stream"
-            }
-
-            val requestFile = file.asRequestBody(mimeType.toMediaType())
-            val multipart = MultipartBody.Part.createFormData("file", file.name, requestFile)
-
-            val response = voiceApiService.uploadVoiceSample(
-                refreshToken = "Bearer $refreshToken",
-                file = multipart
-            )
-
-            if (response.isSuccessful) {
-                Result.success(Unit)
-            } else {
-                val errorBody = response.errorBody()?.string() ?: "Unknown error"
-                Result.failure(Exception("Upload failed: ${response.code()} : ${response.message()} | $errorBody"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
+    ) {
+        val file = File(path)
+        if (!file.exists()) {
+            throw FileNotFoundException("File not found at $path")
         }
+
+        // 파일 확장자 기반 MIME 타입 결정
+        val mimeType = when (file.extension.lowercase()) {
+            "m4a" -> "audio/mp4"
+            "mp3" -> "audio/mpeg"
+            "wav" -> "audio/wav"
+            "ogg" -> "audio/ogg"
+            else -> "application/octet-stream"
+        }
+
+        val requestFile = file.asRequestBody(mimeType.toMediaType())
+        val multipart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+        val response = voiceApiService.uploadVoiceSample(
+            refreshToken = "Bearer $refreshToken",
+            file = multipart
+        )
+
+        if (!response.isSuccessful) {
+            val errorBody = response.errorBody()?.string() ?: "Unknown error"
+            throw Exception("Upload failed: ${response.code()} : ${response.message()} | $errorBody")
+        }
+
     }
 }
