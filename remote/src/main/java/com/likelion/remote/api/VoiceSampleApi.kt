@@ -17,8 +17,7 @@ interface VoiceSampleApi {
     @POST("/api/voice-samples/upload")
     suspend fun uploadVoiceSample(
         @Header("Authorization") refreshToken: String,
-        @Part voice: MultipartBody.Part, // 실제 음성 파일
-        @Part("userId") userId: RequestBody // 사용자 ID
+        @Part file: MultipartBody.Part, // 실제 음성 파일
     ): Response<VoiceSampleResponseDto>
 
     // POST /api/voice-samples/upload
