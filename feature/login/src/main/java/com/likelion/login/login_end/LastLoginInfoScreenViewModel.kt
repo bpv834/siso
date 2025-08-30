@@ -109,7 +109,7 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                         uploadVoiceSampleUseCase.execute(
                             path = user.voicePath,
                             refreshToken = refreshToken
-                        ); Unit
+                        )
                     }
                 }
                 workList.add(work3)
