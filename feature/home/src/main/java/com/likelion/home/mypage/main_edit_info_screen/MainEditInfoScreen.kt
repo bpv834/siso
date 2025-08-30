@@ -139,25 +139,32 @@ fun MainEditInfoScreen(
                 voiceUrl = uiState.receiverUsersModel?.voiceUrl!!,
                 introduce = introduceText,
                 sex = uiState.myRadioButtons.first { it.second }.first,
+
                 preferenceSex = uiState.pairRadioButtons.first { it.second }.first,
                 location = valueUpdate("지역을 입력해주세요","location", if(uiState.receiverUsersModel == null)""
                 else uiState.receiverUsersModel!!.location),
+
                 drinkingCapacity = valueUpdate("정보를 입력해주세요","alchol", if(uiState.receiverUsersModel == null)""
                 else uiState.receiverUsersModel!!.drinkingCapacity),
+
                 religion = valueUpdate("지역을 입력해주세요","religion", if(uiState.receiverUsersModel == null)""
                 else uiState.receiverUsersModel!!.religion),
+
                 isSmoke = valueUpdate("정보를 입력해주세요","smoking", if(uiState.receiverUsersModel == null)""
                 else uiState.receiverUsersModel!!.isSmoke),
+
                 interests =
-                        if (interestBlank) {
-                            if (uiState.receiverUsersModel == null)
-                                emptyList()
-                            else
-                                uiState.receiverUsersModel?.interests!!
-                        } else saveHandle.get<List<String>>("interest")!!,
+                    if (interestBlank) {
+                        if (uiState.receiverUsersModel == null)
+                            emptyList()
+                        else
+                            uiState.receiverUsersModel?.interests!!
+                    } else saveHandle.get<List<String>>("interest")!!,
+
                 mbti = valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
                 else uiState.receiverUsersModel!!.mbti
                 ),
+
                 meeting = if (matchingBlank) {
                     if (uiState.receiverUsersModel == null)
                         emptyList()
@@ -215,14 +222,9 @@ fun MainEditInfoScreen(
     val playtimeSize = DpSize(52.dp,23.dp)
     // 여러 같은 패딩 x 5 + slider 사이드 x 2 + 아이콘 + 재생시간 크기 를 모두 뺸 사이즈
     val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize *2 + playtimeSize.width)
-
-    var playState by remember { mutableStateOf(uiState.playState) }
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
     )
-
-    val appbarTitle = stringResource(com.likelion.home.R.string.main_edit)
-
 
     val interestList = listOf(
         "나의 관심사" to { interestNavigation() },
@@ -819,12 +821,14 @@ fun InterestRepeatChip(
     onClick : ()-> Unit = {}
 ){
     Box(
-        modifier = Modifier.fillMaxWidth().clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null
-        ){
-            onClick()
-        }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick()
+            }
     ) {
         if (list.isEmpty()||list.all { it.isBlank() })
             Box(
