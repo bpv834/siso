@@ -57,7 +57,7 @@ fun LastLoginInfoScreen(
                 .padding(horizontal = 16.dp),
             text = "인연 만나기",
             onClick = {
-                viewModel.onClick()
+                viewModel.onProfileUploadClicked()
                 onNavigation()
             },
         )
