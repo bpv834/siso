@@ -4,6 +4,8 @@ import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
+import com.likelion.domain.image.repository.ImageRepository
+import com.likelion.domain.image.usecase.UploadImageUseCase
 import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.domain.login.repository.InMemoryUserSignUpRepository
 import com.likelion.domain.login.repository.UserProfileRepository
@@ -15,6 +17,9 @@ import com.likelion.domain.notification.repository.FcmTokenRepository
 import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
+import com.likelion.domain.voice.repository.VoiceRepository
+import com.likelion.domain.voice.usecase.GetVoiceSampleUseCase
+import com.likelion.domain.voice.usecase.UploadVoiceSampleUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -96,4 +101,7 @@ object UseCaseModule {
     ): AddProfileUseCase {
         return AddProfileUseCase(repository)
     }
+
+
+
 }

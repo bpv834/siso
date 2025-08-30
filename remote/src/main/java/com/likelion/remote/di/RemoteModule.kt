@@ -4,7 +4,7 @@ import com.likelion.remote.api.CallApiService
 import com.likelion.remote.api.ImageApiService
 import com.likelion.remote.api.KakaoAuthApiService
 import com.likelion.remote.api.UserApiService
-import com.likelion.remote.api.VoiceSampleApi
+import com.likelion.remote.api.VoiceApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -59,9 +59,9 @@ object RemoteModule {
     @Provides
     fun provideVoiceSampleApiService(
         retrofit: Retrofit
-    ): VoiceSampleApi {
+    ): VoiceApiService {
         // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
-        return retrofit.create(VoiceSampleApi::class.java) // 실제 서버 통신 시 사용
+        return retrofit.create(VoiceApiService::class.java) // 실제 서버 통신 시 사용
     }
 
 
