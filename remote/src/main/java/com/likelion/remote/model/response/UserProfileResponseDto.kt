@@ -13,6 +13,6 @@ data class UserProfileResponseDto(
     @SerializedName("location") val location: String = "Seoul",
     @SerializedName("sex") val sex: String = "MALE",
     @SerializedName("preferenceSex") val preferenceSex: String = "MALE",
-    @SerializedName("profileImages") val profileImages: List<ImageResponseDto> ,// ImageResponseDto 리스트
+    @SerializedName("profileImages") val profileImages: List<ImageResponse>,// ImageResponseDto 리스트
     @SerializedName("meetings") val meetings : List<String> = listOf("CLUB_ACTIVITY","VOLUNTEER_ACTIVITY","HOBBY_GROUP")
 )
