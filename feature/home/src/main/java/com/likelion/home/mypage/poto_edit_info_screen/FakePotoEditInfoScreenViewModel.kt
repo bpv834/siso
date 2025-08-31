@@ -2,13 +2,12 @@ package com.likelion.home.mypage.poto_edit_info_screen
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import androidx.lifecycle.viewModelScope
+import com.likelion.ui.component.photo_layout.EditableImage
+import com.likelion.ui.component.photo_layout.ImageItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.update
 
 
 class FakePotoEditInfoScreenViewModel(
@@ -20,8 +19,8 @@ class FakePotoEditInfoScreenViewModel(
     override val showBottomSheet: StateFlow<Boolean> = _showBottomSheet.asStateFlow()
 
     // 사진 리스트의 상태를 관리하는 StateFlow
-    private val _capturedImages = MutableStateFlow<List<Bitmap>>(emptyList())
-    override val capturedImages: StateFlow<List<Bitmap>> = _capturedImages.asStateFlow()
+    private val _capturedImages = MutableStateFlow<List<EditableImage>>(emptyList())
+    override val capturedImages: StateFlow<List<EditableImage>> = _capturedImages.asStateFlow()
 
 
     // 바텀 시트 여는 메서드
@@ -35,14 +34,22 @@ class FakePotoEditInfoScreenViewModel(
     }
 
     override fun addImageFromAlbum(newImage: Bitmap) {
-        _capturedImages.value = _capturedImages.value + newImage
+
+        val imageItem = EditableImage(null, ImageItem.BitmapImage(newImage))
+        _capturedImages.value = _capturedImages.value + imageItem
     }
 
     // 사진 삭제 메서드
-    override fun deleteBitMap(delete: Bitmap) {
-        val mutableList = _capturedImages.value.toMutableList()
-        mutableList.remove(delete)
-        _capturedImages.value = mutableList
+    override fun deleteImageItem(delete: ImageItem) {
+        _capturedImages.update {
+            capturedImages.value.map { item ->
+                if (item.edited == delete) {
+                    item.copy(edited = null)
+                } else {
+                    item
+                }
+            }
+        }
     }
 
     override fun createMockBitmapList(context: Context): List<coil3.Bitmap> {

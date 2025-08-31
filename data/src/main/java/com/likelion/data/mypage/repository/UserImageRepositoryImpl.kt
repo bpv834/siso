@@ -12,25 +12,25 @@ class UserImageRepositoryImpl @Inject constructor(
             UserEditImageModel(
                 userId = 13L,
                 path = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-                serverImageName = "",
+                serverImageName = "1",
                 originalName = "",
             ),
             UserEditImageModel(
                 userId = 13L,
                 path = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-                serverImageName = "",
+                serverImageName = "2",
                 originalName = "",
             ),
             UserEditImageModel(
                 userId = 13L,
                 path = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-                serverImageName = "",
+                serverImageName = "3",
                 originalName = "",
             ),
             UserEditImageModel(
                 userId = 13L,
                 path = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-                serverImageName = "",
+                serverImageName = "4",
                 originalName = "",
             ),
         )

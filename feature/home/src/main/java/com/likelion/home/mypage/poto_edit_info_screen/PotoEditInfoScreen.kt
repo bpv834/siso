@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.poto_edit_info_screen
 
 import android.Manifest
+import android.R.attr.bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -41,6 +42,7 @@ import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonButtonWithState
 import com.likelion.ui.component.camera.CameraPreview
 import com.likelion.ui.component.photo_layout.PhotoLayoutWith1Main4Sub
+import com.likelion.ui.component.photo_layout.SealedPhotoLayoutWith1Main4Sub
 import com.likelion.ui.component.text_button.CommonTextButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -65,7 +67,7 @@ fun PotoEditInfoScreen(
     var isCameraVisible by remember { mutableStateOf(false) }
     // 가져온 비트맵 저장하는 리스트 변수
     val capturedImages by viewModel.capturedImages.collectAsStateWithLifecycle()
-
+    val edit = capturedImages.filter { it.edited != null }.map { it.edited!! }
     // 카메라 권한 요청 런처
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -108,20 +110,21 @@ fun PotoEditInfoScreen(
         Text(text = "대표사진", style = SisoTypoTokens.SubTitle1, color = SisoColorTokens.Gray55)
         Spacer(modifier = Modifier.size(size = 9.dp))
         // 불러온 비트맵 보여주는 리스트
-        PhotoLayoutWith1Main4Sub(
+        SealedPhotoLayoutWith1Main4Sub(
             mainWith = null,
             mainHeight = 206.dp,
             subWith = 76.dp,
             subHeight = 72.dp,
-            capturedImages = capturedImages,
-            onClickDelete = { bitmap -> viewModel.deleteBitMap(bitmap) }
+            capturedImages = edit,
+            onClickDelete = { imageItem -> viewModel.deleteImageItem(imageItem) }
         )
         Spacer(modifier = Modifier.size(size = 68.dp))
         // derivedStateOf는 다른 상태에서 파생된 값을 안전하고 효율적으로 계산하고 싶을 때 쓰는 도구예요.
-        val isAddCapture by remember { derivedStateOf { capturedImages.size < 5 } }
-        CommonButtonWithState (text = "사진 추가하기 (${capturedImages.size}/5)",
+
+        val isAddCapture by remember { derivedStateOf { edit.size < 5 } }
+        CommonButtonWithState (text = "사진 추가하기 (${edit.size}/5)",
             onClick = {
-                if (capturedImages.size < 5) {
+                if (edit.size < 5) {
                     viewModel.showPhotoUploadBottomSheet()
                     //onNavigateNext()
                 } else {

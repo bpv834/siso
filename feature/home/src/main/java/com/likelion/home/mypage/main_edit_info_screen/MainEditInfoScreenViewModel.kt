@@ -4,6 +4,7 @@ import android.R.attr.duration
 import android.R.id.input
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.net.Uri
@@ -11,12 +12,20 @@ import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.core.net.toUri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.domain.mypage.usecase.GetUserImagesUseCase
 import com.likelion.domain.mypage.usecase.UsersFullUseCase
+import com.likelion.ui.component.photo_layout.EditableImage
 import com.likelion.home.mypage.getBitmapFromUrl
+import com.likelion.ui.R
+import com.likelion.ui.component.photo_layout.ImageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -37,10 +46,14 @@ import kotlin.collections.get
 class MainEditInfoScreenViewModel @Inject constructor (
     //usecase자리
     private val userFullUseCase: UsersFullUseCase,
+    private val getUserImagesUseCase : GetUserImagesUseCase,
 ): ViewModel(), MainEditInfoScreenViewModelType {
 
     private var _uiState = MutableStateFlow(EditUiState())
     override val uiState = _uiState.asStateFlow()
+
+    private val _userImages = mutableStateListOf<EditableImage>()
+    override val userImages: SnapshotStateList<EditableImage> = _userImages
 
     override fun fistContinueBooleanUpdate() = _uiState.update {
         val newUi = it.copy(
@@ -143,17 +156,26 @@ class MainEditInfoScreenViewModel @Inject constructor (
     }
 
     @SuppressLint("LogNotTimber")
-    fun fetchUsers() {
+    fun fetchUsers(id: Long,imageId: Long) {
         viewModelScope.launch {
             try {
-                val newModel = userFullUseCase(1)
+                val newModel = userFullUseCase(id)
+                val newImages = getUserImagesUseCase(imageId)
+                val profile = newImages.firstOrNull().let {
+                    ImageItem.UrlImage(it?.path!!,it.serverImageName)
+                }
                 _uiState.update {
                     val male = it.myRadioButtons[0].first
                     val feMale = it.myRadioButtons[1].first
                     val other = it.pairRadioButtons[0].first
                     val equil = it.pairRadioButtons[1].first
                     val nothing = it.pairRadioButtons[2].first
-                    it.copy(receiverUsersModel = newModel,/* get user */
+                    it.copy(receiverUsersModel = newModel.copy(
+                        introduce =
+                            if (newModel.introduce.length > 50)
+                                newModel.introduce.substring(0, 50)
+                            else newModel.introduce
+                    ),/* get user */
                         myRadioButtons = listOf(
                             male to (male == newModel.sex),
                             feMale to (feMale == newModel.sex)
@@ -164,12 +186,21 @@ class MainEditInfoScreenViewModel @Inject constructor (
                             nothing to (nothing == newModel.preferenceSex)
                         ),
                         voicePath = newModel.voiceUrl,
+                        editImage = profile
                     )
                 }
                 // viewModel Io 따로 로딩
                 _uiState.update {
                     it.copy(playTime = getAudioDurationFromUrl(newModel.voiceUrl) ?: 0)
                 }
+
+                _userImages.clear()
+                // 서버 이름으로 아이디를 받아서 저장
+                _userImages.addAll(newImages.map { EditableImage(
+                    original = ImageItem.UrlImage(it.path!!,it.serverImageName),
+                    edited = ImageItem.UrlImage(it.path!!,it.serverImageName)
+                ) })
+
                 d("newModel", "nickname ${newModel.nickname}")
                 d("newModel", "age ${newModel.age}")
                 d("newModel", "uiState nickname ${uiState.value.editUsersModel.nickname}")
@@ -177,6 +208,26 @@ class MainEditInfoScreenViewModel @Inject constructor (
 
             } catch (e: Exception) {
                 Log.e("API_ERROR", e.message.toString())
+            }
+        }
+    }
+
+    fun userImages(newUserImages: List<EditableImage>) {
+        _userImages.clear()
+        _userImages.addAll(newUserImages)
+
+        if (newUserImages.firstOrNull() != null) {
+            val imageItem =
+                newUserImages.first().edited
+                    ?: ImageItem.UrlImage(
+                        "android.resource://com.example.app/${R.drawable.example_profile}".toUri().toString(),
+                        "android.resource://com.example.app/${R.drawable.example_profile}".toUri().toString()
+                    )
+
+            _uiState.update {
+                it.copy(
+                    editImage = imageItem
+                )
             }
         }
     }

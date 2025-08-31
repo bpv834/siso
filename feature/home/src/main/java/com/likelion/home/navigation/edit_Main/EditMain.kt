@@ -1,6 +1,7 @@
 package com.likelion.home.navigation.edit_Main
 
 import android.annotation.SuppressLint
+import android.util.Log.d
 import android.view.View
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,14 +26,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreen
 import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreenViewModel
-import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.AdditionalInfoAlcoholScreenViewModel_HiltModules_KeyModule_ProvideFactory
-import com.likelion.home.mypage.additional_info.additional_info_alcohol_screen.FakeAdditionalInfoAlcoholScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_religion_screen.AdditionalInfoReligionScreen
 import com.likelion.home.mypage.additional_info.additional_info_religion_screen.AdditionalInfoReligionScreenViewModel
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.AdditionalInfoSmokingScreen
 import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.AdditionalInfoSmokingScreenViewModel
-import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.FakeAdditionalInfoSmokingScreenViewModel
-import com.likelion.home.mypage.interest_edit_info_screen.FakeInterestEditInfoScreenViewModel
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreen
 import com.likelion.home.mypage.interest_edit_info_screen.InterestEditInfoScreenViewModel
 import com.likelion.home.mypage.location_edit_info_screen.LocationEditInfoScreen
@@ -50,6 +47,7 @@ import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun EditMainRoute(
@@ -78,7 +76,7 @@ fun EditMain (
     val preSavedStateHandle = navController.previousBackStackEntry?.savedStateHandle
 
     val mainEditInfoScreenViewModel = hiltViewModel<MainEditInfoScreenViewModel>()
-    mainEditInfoScreenViewModel.fetchUsers()
+    mainEditInfoScreenViewModel.fetchUsers(13L,13L) // 유저 정보를 가져오는 곳
     val photoEditInfoScreenViewModel = hiltViewModel<PotoEditInfoScreenViewModel>()
     val additionalInfoSmokingScreenViewModel = hiltViewModel<AdditionalInfoSmokingScreenViewModel>()
     val additionalInfoAlcoholScreenViewModel = hiltViewModel<AdditionalInfoAlcoholScreenViewModel>()
@@ -86,13 +84,6 @@ fun EditMain (
     val religionEditInfoScreenViewModel = hiltViewModel<AdditionalInfoReligionScreenViewModel>()
     val matchingEditInfoScreenViewModel = hiltViewModel<MatchingEditInfoScreenViewModel>()
     val interestEditInfoScreenViewModel = hiltViewModel<InterestEditInfoScreenViewModel>()
-
-    // 사진 수정 화면에 해당 값 삽입
-    if(preSavedStateHandle != null && preSavedStateHandle.getString("photo") != null){
-        photoEditInfoScreenViewModel.fetch(13L)
-    }
-
-
 
     // 종교 화면에 해당 값 삽입
     if(preSavedStateHandle != null && preSavedStateHandle.getString("religion") != null){
@@ -166,7 +157,11 @@ fun EditMain (
                         naviToMyPage = {navigateToMyPage()},
                         action = listOf(
                             // 사진 0
-                            {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route)},
+                            {
+                                // 포토에 list 값을 보냄
+                                photoEditInfoScreenViewModel.fetch(mainEditInfoScreenViewModel.userImages)
+                                navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route)
+                            },
                             // 음성 1
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route)},
                             // 위치 2
@@ -191,15 +186,18 @@ fun EditMain (
                 // 사진 수정
 
                 val user = mainEditInfoScreenViewModel.uiState.value.receiverUsersModel
-
-                if (user != null){
-                    photoEditInfoScreenViewModel.fetch(userId = user.id)
-                }
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route) {
                     PotoEditInfoScreen(
                         viewModel = photoEditInfoScreenViewModel
                     ) {
-                        navController.popBackStack()
+                        val editAllNotNull = !photoEditInfoScreenViewModel.capturedImages.value.all { it.edited == null }
+                        // 완료 될 경우
+                        if (editAllNotNull) {
+                            // 비어있지 않은 경우에만 main의 프로필과 사진을 바꿔준다
+                            d("userImages","${photoEditInfoScreenViewModel.capturedImages.value}")
+                            mainEditInfoScreenViewModel.userImages(photoEditInfoScreenViewModel.capturedImages.value)
+                            navController.popBackStack()
+                        }
                     }
                 }
                 //음성 수정

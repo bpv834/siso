@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 
@@ -32,7 +33,7 @@ fun MyPageRoute(
     setting: () -> Unit = {},
     actionSnackbar: () -> Unit = {}
 ) {
-    MyPageMainScreen( mainEdit = mainEdit, setting = setting)
+    MyPageMainScreen(mainEdit = mainEdit, setting = setting)
 }
 
 
@@ -43,6 +44,8 @@ fun MyPageMainScreen(
     setting: () -> Unit = {},
 ) {
     var appBarTitle by remember { mutableStateOf("내 정보") }
+    val myPageViewModel = hiltViewModel<MyPageViewModel>()
+    myPageViewModel.getUsers(13L)
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -70,7 +73,9 @@ fun MyPageMainScreen(
         },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(top = innerPadding.calculateTopPadding())) {
-            MyPageScreen(mainEdit = {
+            MyPageScreen(
+                viewModel = myPageViewModel,
+                mainEdit = {
                 mainEdit()
             })
         }

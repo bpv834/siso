@@ -5,6 +5,7 @@ import android.R.attr.contentDescription
 import android.R.attr.textColor
 import android.annotation.SuppressLint
 import android.util.Log.d
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -53,7 +54,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -81,6 +84,7 @@ import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
+import com.likelion.ui.component.photo_layout.ImageItem
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
@@ -173,6 +177,7 @@ fun MainEditInfoScreen(
             )
         )
     }
+    val profileImage = uiState.editImage
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
 
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
@@ -260,11 +265,25 @@ fun MainEditInfoScreen(
                             potoNavigation()
                         }
                 ) {
-                    AsyncImage(
-                        modifier = Modifier.size(120.dp, 120.dp),
-                        model = uiState.receiverUsersModel?.userImages ?: "",
-                        contentDescription = ""
-                    )
+                    when(profileImage) {
+                        is ImageItem.UrlImage ->
+                        AsyncImage(
+                            modifier = Modifier.size(120.dp, 120.dp)
+                                .clip(CircleShape),
+                            model = profileImage.url,
+                            contentScale = ContentScale.Crop,
+                            contentDescription = ""
+                        )
+                        is ImageItem.BitmapImage ->
+                        Image(
+                            bitmap = profileImage.bitmap.asImageBitmap(),
+                            modifier = Modifier.size(120.dp, 120.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = ""
+                        )
+
+                    }
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)

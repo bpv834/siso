@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,11 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.ui.R
@@ -53,11 +57,15 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPageScreen(
+    viewModel: MyPageViewModel = hiltViewModel<MyPageViewModel>(),
     mainEdit: () -> Unit = {},
     actionSnackbar: () -> Unit = {}
 )  {
-
-    val progressValue by remember { mutableFloatStateOf(.36F) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val progressValue = uiState.progressValue
+    val nickname = uiState.nickname
+    val age = uiState.age
+    val location = uiState.location
 
     val profileOption = listOf(
         "차단 / 신고한 인연" to {},
@@ -73,7 +81,8 @@ fun MyPageScreen(
         Row {
             ProfileCircle(
                 padding = 8.dp,
-                processFloat = progressValue
+                processFloat = progressValue,
+                profileImage = uiState.userImages
             )
             Column(
                 modifier = Modifier
@@ -82,13 +91,13 @@ fun MyPageScreen(
             ) {
                 Spacer(modifier = Modifier.size(size = 6.dp))
                 Text(
-                    text = "따뜻한 봄날",
+                    text = nickname,
                     style = SisoTypoTokens.Title2,
                     color = SisoColorTokens.Gray90,
                 )
                 Spacer(modifier = Modifier.size(size = 2.dp))
                 Text(
-                    text = "56세",
+                    text = "${age}세",
                     style = SisoTypoTokens.Title3,
                     color = SisoColorTokens.Gray70,
                 )
@@ -101,7 +110,7 @@ fun MyPageScreen(
                     )
                     Spacer(modifier = Modifier.size(size = 2.dp))
                     Text(
-                        text = "서울 중구",
+                        text = location,
                         style = SisoTypoTokens.Label1,
                         color = SisoColorTokens.Gray90,
                     )
@@ -162,6 +171,7 @@ fun MyPageScreen(
 fun ProfileCircle(
     padding: Dp,
     processFloat: Float,
+    profileImage: String = "",
     completeEdit: ()->Unit = {}
 ) {
     var progress by remember { mutableFloatStateOf(processFloat) }
@@ -172,8 +182,10 @@ fun ProfileCircle(
     ) { // 박스 우선 순위 아래 부터 그려짐
         // 2 이미지가 다음으로 그러졈
         AsyncImage(
-            modifier = Modifier.size(120.dp, 120.dp),
-            model = R.drawable.example_profile,
+            modifier = Modifier.size(120.dp, 120.dp)
+                .clip(CircleShape),
+            model = profileImage.ifBlank { R.drawable.example_profile },
+            contentScale = ContentScale.Crop,
             contentDescription = ""
         )
         // 1 서클이 먼저 그려짐

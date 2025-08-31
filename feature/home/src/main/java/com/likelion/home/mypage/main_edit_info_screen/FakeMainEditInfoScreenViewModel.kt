@@ -7,9 +7,12 @@ import android.net.Uri
 import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.ui.component.photo_layout.EditableImage
+import com.likelion.ui.component.photo_layout.ImageItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +28,9 @@ class FakeMainEditInfoScreenViewModel(
 
     private var _uiState = MutableStateFlow(EditUiState())
     override val uiState = _uiState.asStateFlow()
+
+    private val _userImages = mutableStateListOf<EditableImage>()
+    override val userImages: SnapshotStateList<EditableImage> = _userImages
 
     override fun fistContinueBooleanUpdate() = _uiState.update {
         val newUi = it.copy(

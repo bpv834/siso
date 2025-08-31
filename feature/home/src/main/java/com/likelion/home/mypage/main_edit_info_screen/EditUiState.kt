@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
 import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.ui.component.photo_layout.ImageItem
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 
@@ -25,6 +26,7 @@ data class EditUiState(
 
     val firstContinueBoolean : Boolean = false,
     val receiverUsersModel: UsersFullModel? = null,
+    val editImage : ImageItem = ImageItem.UrlImage(""),
     val editUsersModel: UsersFullModel = UsersFullModel(
         id = 0,
         userImages = "",
