@@ -6,6 +6,9 @@ import com.likelion.domain.image.usecase.UploadImageUseCase
 import com.likelion.domain.login.usecase.AddProfileUseCase
 import com.likelion.domain.login.usecase.GetTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
+import com.likelion.domain.notification.model.FcmToken
+import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
+import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
 import com.likelion.domain.voice.usecase.UploadVoiceSampleUseCase
 import com.likelion.login.event.UiEvent
 import com.likelion.login.state.UiState
@@ -31,7 +34,9 @@ class LastLoginInfoScreenViewModel @Inject constructor(
     private val getTokenAllUseCase: GetTokenAllUseCase,
     private val addProfileUseCase: AddProfileUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
-    private val uploadVoiceSampleUseCase: UploadVoiceSampleUseCase
+    private val uploadVoiceSampleUseCase: UploadVoiceSampleUseCase,
+    private val sendFcmTokenUseCase: SendFcmTokenUseCase,
+    private val getFcmTokenUseCase: GetFcmTokenUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
@@ -55,6 +60,7 @@ class LastLoginInfoScreenViewModel @Inject constructor(
             _uiEvent.collect { event ->
                 when (event) {
                     is UiEvent.UploadProfile -> uploadProfile()
+                    UiEvent.UploadFcmToken -> uploadFcmToken()
                 }
             }
         }
@@ -89,20 +95,20 @@ class LastLoginInfoScreenViewModel @Inject constructor(
             }
             workList.add(work1)
 
-     /*       // 이미지 업로드
-            if (user.photoPaths.isNotEmpty()) {
-                val work2: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
-                    runCatching {
-                        uploadImageUseCase.execute(
-                            eccessToken = accessToken,
-                            imgList = user.photoPaths
-                        )
-                    }
-                }
-                workList.add(work2)
-            }*/
+            /*       // 이미지 업로드
+                   if (user.photoPaths.isNotEmpty()) {
+                       val work2: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
+                           runCatching {
+                               uploadImageUseCase.execute(
+                                   eccessToken = accessToken,
+                                   imgList = user.photoPaths
+                               )
+                           }
+                       }
+                       workList.add(work2)
+                   }*/
 
-            // 음성 업로드
+       /*     // 음성 업로드
             if (user.voicePath.isNotBlank()) {
                 val work3: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
                     runCatching {
@@ -113,7 +119,7 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                     }
                 }
                 workList.add(work3)
-            }
+            }*/
 
             // 병렬 수행
             val results = workList.awaitAll()
@@ -125,11 +131,21 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                     UiState.Error(failure.exceptionOrNull()?.message ?: "Unknown error")
             } else {
                 _uiState.value = UiState.Success
+                // 성공하면 fcm 토큰까지 서버로 보내기위한 이벤트 발생시키기
+                _uiEvent.emit(UiEvent.UploadFcmToken)
             }
 
         } catch (e: Exception) {
             Timber.e(e, "프로필 등록 실패")
             _uiState.value = UiState.Error(e.message ?: "Unknown exception")
         }
+    }
+
+    // 저장소에 있는 fcm 토큰을 서버에 id와 매핑하기위해 보내는 메서드
+    private suspend fun uploadFcmToken() {
+        val fcmTokenString = getFcmTokenUseCase.invoke().firstOrNull()
+        Timber.d("fcmToken = $fcmTokenString")
+        val fcmToken = FcmToken(token = fcmTokenString!!)
+        sendFcmTokenUseCase.invoke(fcmToken)
     }
 }
