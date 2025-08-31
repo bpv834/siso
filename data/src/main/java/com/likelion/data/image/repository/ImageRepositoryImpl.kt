@@ -38,7 +38,7 @@ class ImageRepositoryImpl @Inject constructor(
 
     override suspend fun upLoadImage(
         imgPathList: List<String>,
-        refreshToken: String
+        eccessToken: String
     ): Result<Unit> {
         return try {
             for (path in imgPathList) {
@@ -55,7 +55,7 @@ class ImageRepositoryImpl @Inject constructor(
                 // TODO: imageApiService의 업로드 메서드 시그니처와 일치시키세요.
                 // 이 예시에서는 refreshToken을 헤더로 넘기는 것을 가정합니다.
                 val response = imageApiService.uploadProfileImage(
-                    files = imagePart, refreshToken = refreshToken
+                    files = imagePart, refreshToken = eccessToken
                 )
 
                 if (!response.isSuccessful) {

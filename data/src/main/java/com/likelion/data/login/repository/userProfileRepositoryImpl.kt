@@ -7,11 +7,7 @@ import com.likelion.data.login.mapper.toUserProfileRequest
 import com.likelion.domain.login.model.UserSignUpProfile
 import com.likelion.domain.login.repository.UserProfileRepository
 import com.likelion.remote.api.UserApiService
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import timber.log.Timber
-import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
@@ -22,7 +18,7 @@ class userProfileRepositoryImpl @Inject constructor(
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun addProfile(
-        refreshToken: String,
+        accessToken: String,
         profile: UserSignUpProfile
     ) {
         try {
@@ -32,7 +28,7 @@ class userProfileRepositoryImpl @Inject constructor(
 
             // 2. API 호출
             val response = userApiService.registerUserProfile(
-                refreshToken = "Bearer $refreshToken",
+                refreshToken = "Bearer $accessToken",
                 request = userProfileRequest
             )
 

@@ -72,7 +72,7 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                 return
             }
 
-            val refreshToken = tokenResult.refreshToken
+            val accessToken = tokenResult.accessToken
 
             val workList = mutableListOf<Deferred<Result<Unit>>>()
 
@@ -82,25 +82,25 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                 // runCatching은 코드 블록에서 예외가 발생해도 앱이 터지지 않도록 감싸주는 함수
                 runCatching {
                     addProfileUseCase.execute(
-                        refreshToken = refreshToken,
+                        refreshToken = accessToken,
                         user = user
                     )
                 }
             }
             workList.add(work1)
 
-            // 이미지 업로드
+     /*       // 이미지 업로드
             if (user.photoPaths.isNotEmpty()) {
                 val work2: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
                     runCatching {
                         uploadImageUseCase.execute(
-                            refreshToke = refreshToken,
+                            eccessToken = accessToken,
                             imgList = user.photoPaths
                         )
                     }
                 }
                 workList.add(work2)
-            }
+            }*/
 
             // 음성 업로드
             if (user.voicePath.isNotBlank()) {
@@ -108,7 +108,7 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                     runCatching {
                         uploadVoiceSampleUseCase.execute(
                             path = user.voicePath,
-                            refreshToken = refreshToken
+                            refreshToken = accessToken
                         )
                     }
                 }
