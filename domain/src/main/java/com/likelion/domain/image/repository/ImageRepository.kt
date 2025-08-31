@@ -4,5 +4,5 @@ import com.likelion.domain.image.model.ImageModel
 
 interface ImageRepository {
     suspend fun getImagesByUserId(userId : String,refreshToken: String) : Result<List<ImageModel>>
-    suspend fun upLoadImage(imgPathList: List<String>, refreshToken: String): Result<Unit>
+    suspend fun upLoadImage(imgPathList: List<String>, eccessToken: String): Result<Unit>
 }

@@ -4,8 +4,8 @@ import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
-import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.domain.login.repository.InMemoryUserSignUpRepository
+import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.domain.login.repository.UserProfileRepository
 import com.likelion.domain.login.usecase.AddProfileUseCase
 import com.likelion.domain.login.usecase.ClearTemporaryUserProfileUseCase
@@ -96,4 +96,7 @@ object UseCaseModule {
     ): AddProfileUseCase {
         return AddProfileUseCase(repository)
     }
+
+
+
 }
