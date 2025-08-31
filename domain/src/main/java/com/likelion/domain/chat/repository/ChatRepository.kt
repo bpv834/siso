@@ -11,4 +11,10 @@ interface ChatRepository {
     suspend fun getMsgList(): Flow<List<ChatHistory>>
     suspend fun sendChat(msg: String): MyChat
     suspend fun getChat(): Flow<List<PartnerChat>>
+    suspend fun removeChatRoom(id: Long)
+    suspend fun removeCallHistory(id: Long)
+    suspend fun limitSendChat(chatRoomId: Long, msg: String): MyChat
+
+    // 하위부터 api연결
+    suspend fun getChatRoomList()
 }
