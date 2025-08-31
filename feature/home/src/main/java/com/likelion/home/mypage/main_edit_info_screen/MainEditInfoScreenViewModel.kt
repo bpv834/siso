@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.R.attr.duration
+import android.R.attr.name
 import android.R.id.input
 import android.annotation.SuppressLint
 import android.content.Context
@@ -232,6 +233,19 @@ class MainEditInfoScreenViewModel @Inject constructor (
         }
     }
 
+    fun setVoiceUrl(voiceUrl: String){
+        viewModelScope.launch {
+            d("audio",voiceUrl)
+            _uiState.update {
+                it.copy(voicePath = voiceUrl,
+                    playTime = getAudioDurationFromFilePath(voiceUrl) ?: 0)
+            }
+            d("audio","${_uiState.value}")
+            d("audio","${uiState.value}")
+        }
+
+    }
+
     override fun updateUsers(usersModel: UsersFullModel) {
         _uiState.update {
             it.copy(editUsersModel = usersModel)
@@ -249,6 +263,21 @@ class MainEditInfoScreenViewModel @Inject constructor (
             try {
                 val retriever = MediaMetadataRetriever()
                 retriever.setDataSource(url, HashMap()) // 네트워크 URL 가능
+                val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                retriever.release()
+                durationStr?.toInt() // 밀리초 단위
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
+    suspend fun getAudioDurationFromFilePath(filePath: String): Int? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val retriever = MediaMetadataRetriever()
+                retriever.setDataSource(filePath) // 로컬 파일 경로 그대로 전달
                 val durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
                 retriever.release()
                 durationStr?.toInt() // 밀리초 단위

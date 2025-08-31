@@ -17,10 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +44,8 @@ import com.likelion.home.mypage.mbti_edit_info_screen.MBTIEditInfoScreen
 import com.likelion.home.mypage.mbti_edit_info_screen.MBTIEditInfoScreenViewModel
 import com.likelion.home.mypage.poto_edit_info_screen.PotoEditInfoScreen
 import com.likelion.home.mypage.poto_edit_info_screen.PotoEditInfoScreenViewModel
+import com.likelion.home.mypage.record_edit_info_screen.RecordEditInfoScreen
+import com.likelion.home.mypage.record_edit_info_screen.RecordEditInfoScreenViewModel
 import com.likelion.home.navigation.getString
 import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.R
@@ -71,6 +75,7 @@ fun EditMain (
 ) {
     val title = stringResource(com.likelion.home.R.string.main_edit)
     val navController = rememberNavController()
+    val context = LocalContext.current
     var appBarTitle by remember { mutableStateOf(title) }
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
     val preSavedStateHandle = navController.previousBackStackEntry?.savedStateHandle
@@ -78,12 +83,17 @@ fun EditMain (
     val mainEditInfoScreenViewModel = hiltViewModel<MainEditInfoScreenViewModel>()
     mainEditInfoScreenViewModel.fetchUsers(13L,13L) // 유저 정보를 가져오는 곳
     val photoEditInfoScreenViewModel = hiltViewModel<PotoEditInfoScreenViewModel>()
+    val recordEditInfoScreenViewModel = hiltViewModel<RecordEditInfoScreenViewModel>()
     val additionalInfoSmokingScreenViewModel = hiltViewModel<AdditionalInfoSmokingScreenViewModel>()
     val additionalInfoAlcoholScreenViewModel = hiltViewModel<AdditionalInfoAlcoholScreenViewModel>()
     val mbtiEditInfoScreenViewModel = hiltViewModel<MBTIEditInfoScreenViewModel>()
     val religionEditInfoScreenViewModel = hiltViewModel<AdditionalInfoReligionScreenViewModel>()
     val matchingEditInfoScreenViewModel = hiltViewModel<MatchingEditInfoScreenViewModel>()
     val interestEditInfoScreenViewModel = hiltViewModel<InterestEditInfoScreenViewModel>()
+
+    recordEditInfoScreenViewModel.fetchAudioBytes(
+        mainEditInfoScreenViewModel.uiState.value.receiverUsersModel?.voiceUrl ?: ""
+    )
 
     // 종교 화면에 해당 값 삽입
     if(preSavedStateHandle != null && preSavedStateHandle.getString("religion") != null){
@@ -163,7 +173,9 @@ fun EditMain (
                                 navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route)
                             },
                             // 음성 1
-                            {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route)},
+                            {
+                                navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route)
+                            },
                             // 위치 2
                             {navController.navigate(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route)},
                             // 종교 3
@@ -184,8 +196,6 @@ fun EditMain (
 
                 // 내 정보 수정
                 // 사진 수정
-
-                val user = mainEditInfoScreenViewModel.uiState.value.receiverUsersModel
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.PotoEditScreen.route) {
                     PotoEditInfoScreen(
                         viewModel = photoEditInfoScreenViewModel
@@ -202,7 +212,13 @@ fun EditMain (
                 }
                 //음성 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.VoiceEditScreen.route) {
-
+                    RecordEditInfoScreen(
+                        recordEditInfoScreenViewModel,
+                    ){ voice ->
+                        recordEditInfoScreenViewModel.fetchAudioBytes(voice)
+                        mainEditInfoScreenViewModel.setVoiceUrl(voiceUrl = voice)
+                        navController.popBackStack()
+                    }
                 }
                 // 위치 수정
                 composable(NavigationRoute.MyPageScreen.MainEditScreen.LocationEditScreen.route) {

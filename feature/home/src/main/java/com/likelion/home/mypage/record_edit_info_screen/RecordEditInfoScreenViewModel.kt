@@ -41,15 +41,24 @@ class RecordEditInfoScreenViewModel @Inject constructor(
 
     private var recordingJob: Job? = null
 
-    init {
-        _receiverUrl.update { "" } // 주소를 받아옴
-        val url = _receiverUrl.value!!
-        if (url.isNotBlank()) {
-            _recordingEditState.update { RecordingEditState.RE_EDIT } // 녹음 상태를 받아옴
+    override fun fetchAudioBytes(voiceUrl: String) {
+        if (voiceUrl.isNotBlank()) {
+            _receiverUrl.update { voiceUrl } // 주소를 받아옴
+            val url = _receiverUrl.value!!
+            _recordingEditState.update {
+                if (url.isNotBlank()) {
+                    RecordingEditState.RE_EDIT // 녹음 상태를 받아옴
+                } else {
+                    RecordingEditState.IDLE // 녹음 상태를 받아옴
+                }
+            }
         }else{
-            _recordingEditState.update { RecordingEditState.IDLE } // 녹음 상태를 받아옴
+            _recordingEditState.update {
+                RecordingEditState.IDLE // 녹음 상태를 받아옴
+            }
         }
     }
+
 
     // 다음 페이지 메서드
     override fun onClickNextButton() {

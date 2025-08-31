@@ -140,7 +140,11 @@ fun MainEditInfoScreen(
                 userImages = uiState.editUsersModel.userImages,
                 nickname = nameState,
                 age = ageText.toInt(),
-                voiceUrl = uiState.receiverUsersModel?.voiceUrl!!,
+                voiceUrl = if (saveHandle.getString("voice").isNullOrBlank()) {
+                    uiState.receiverUsersModel?.voiceUrl!!
+                }else{
+                    saveHandle.getString("voice")!!
+                },
                 introduce = introduceText,
                 sex = uiState.myRadioButtons.first { it.second }.first,
 

@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -43,7 +44,7 @@ import java.io.FileOutputStream
 @Composable
 fun RecordEditInfoScreen(
     viewModel: RecordEditInfoScreenViewModelType,
-    onNavigateNext: () -> Unit
+    onNavigateNext: (String) -> Unit
 ) {
     // val context = LocalContext.current
 
@@ -77,19 +78,31 @@ fun RecordEditInfoScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(color = SisoColorTokens.White)
-            .verticalScroll(rememberScrollState()) // 이 부분을 추가
+            .fillMaxSize()
     ) {
-
+        Spacer(Modifier.size(84.dp))
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            text = "내 목소리를 들려주세요",
+            style = SisoTypoTokens.Title2,
+            color = SisoColorTokens.Gray90
+        )
+        Spacer(Modifier.size(8.dp))
+        Text(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            text = "직접 전하는 목소리는 신뢰를 더해줍니다. \n상대방이 회원님을 더 깊이 이해하고 좋은 인상을 받을 수 있도록, 간단한 인사말을 15초 내로 녹음하여 나를 알려주세요.",
+            style = SisoTypoTokens.Body4,
+            color = SisoColorTokens.Gray90
+        )
         when (isRecording) {
             RecordingEditState.RE_EDIT -> {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .verticalScroll(rememberScrollState()), // 이 부분을 추가
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // 183  0.96
-                    Spacer(Modifier.size(183.dp))
+                    Spacer(Modifier.size(97.dp))
                     // Lottie Animation
                     RecordingCircle(
                         onClickIcon = {},
@@ -110,10 +123,10 @@ fun RecordEditInfoScreen(
                         style = SisoTypoTokens.Body1,
                         color = SisoColorTokens.Gray90
                     )
-                    Spacer(Modifier.size(191.dp))
+                    Spacer(Modifier.size(39.dp))
                 }
                 Column(
-                    modifier = Modifier.background(SisoColorTokens.White)
+                    modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
                 ) {
                     Spacer(Modifier.size(4.dp))
@@ -127,7 +140,8 @@ fun RecordEditInfoScreen(
             RecordingEditState.IDLE -> {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()), // 이 부분을 추가
                     horizontalAlignment = Alignment.CenterHorizontally // 이 부분을 추가
                 ) {
                     Spacer(Modifier.size(97.dp))
@@ -142,9 +156,10 @@ fun RecordEditInfoScreen(
                         style = SisoTypoTokens.Body1,
                         color = SisoColorTokens.Gray90
                     )
+                    Spacer(Modifier.size(39.dp))
                 }
                 Column(
-                    modifier = Modifier.background(SisoColorTokens.White)
+                    modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
                 ) {
                     Spacer(Modifier.size(4.dp))
@@ -166,7 +181,8 @@ fun RecordEditInfoScreen(
             // 녹음중
             RecordingEditState.RECORDING -> {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .verticalScroll(rememberScrollState()), // 이 부분을 추가
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(Modifier.size(81.dp))
@@ -206,7 +222,7 @@ fun RecordEditInfoScreen(
                     )
                 }
                 Column(
-                    modifier = Modifier.background(SisoColorTokens.White)
+                    modifier = Modifier
                         .padding(start = 16.dp, end = 16.dp)
                 ) {
                     Spacer(Modifier.size(74.dp))
@@ -220,7 +236,8 @@ fun RecordEditInfoScreen(
             // 녹음 완료
             else -> {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .verticalScroll(rememberScrollState()), // 이 부분을 추가
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(Modifier.size(97.dp))
@@ -247,17 +264,20 @@ fun RecordEditInfoScreen(
                 }
 
                 Column(
-                    modifier = Modifier.background(SisoColorTokens.White)
-                        .padding(start = 16.dp, end = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                 ) {
                     Spacer(Modifier.size(43.dp))
-                    CommonActiveButton(text = "완료하기", onClick = {
-                        onNavigateNext()
-                        /*           val arr =  viewModel.getAudioBytes()
-                                     playAacFromByteArray(context = context, audioBytes =arr!!)*/
+                    CommonActiveButton(
+                        modifier = null,
+                        text = "완료하기", onClick = {
+                        onNavigateNext(filePath ?: "")
+                        /*          val arr =  viewModel.getAudioBytes()
+                                    playAacFromByteArray(context = context, audioBytes =arr!!)*/
                     })
                     Spacer(Modifier.size(8.dp))
-                    CommonActiveButton(text = "다시 녹음하기", onClick = {
+                    CommonActiveButton(
+                        modifier = null,
+                        text = "다시 녹음하기", onClick = {
                         viewModel.startRecording()
                     })
                     Spacer(Modifier.size(8.dp))
