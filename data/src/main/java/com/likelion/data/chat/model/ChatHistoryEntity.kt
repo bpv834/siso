@@ -1,6 +1,7 @@
 package com.likelion.data.chat.model
 
 data class ChatHistoryEntity(
+    val chatRoomId: Long,
     val profileImage: String,
     val currentMsg: String,
     val nickName: String,
