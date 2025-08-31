@@ -1,5 +1,6 @@
 package com.likelion.login.login_end
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.image.usecase.UploadImageUseCase
@@ -108,18 +109,18 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                        workList.add(work2)
                    }*/
 
-       /*     // 음성 업로드
-            if (user.voicePath.isNotBlank()) {
-                val work3: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
-                    runCatching {
-                        uploadVoiceSampleUseCase.execute(
-                            path = user.voicePath,
-                            refreshToken = accessToken
-                        )
-                    }
-                }
-                workList.add(work3)
-            }*/
+            /*     // 음성 업로드
+                 if (user.voicePath.isNotBlank()) {
+                     val work3: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
+                         runCatching {
+                             uploadVoiceSampleUseCase.execute(
+                                 path = user.voicePath,
+                                 refreshToken = accessToken
+                             )
+                         }
+                     }
+                     workList.add(work3)
+                 }*/
 
             // 병렬 수행
             val results = workList.awaitAll()
@@ -130,22 +131,45 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                 _uiState.value =
                     UiState.Error(failure.exceptionOrNull()?.message ?: "Unknown error")
             } else {
-                _uiState.value = UiState.Success
-                // 성공하면 fcm 토큰까지 서버로 보내기위한 이벤트 발생시키기
-                _uiEvent.emit(UiEvent.UploadFcmToken)
+                _uiState.value = UiState.SuccessUploadProfile
             }
 
         } catch (e: Exception) {
+
             Timber.e(e, "프로필 등록 실패")
             _uiState.value = UiState.Error(e.message ?: "Unknown exception")
+
         }
     }
 
-    // 저장소에 있는 fcm 토큰을 서버에 id와 매핑하기위해 보내는 메서드
+    // 저장소에 있는 fcm 토큰을 서버에 id와 매핑하기 위해 보내는 메서드
     private suspend fun uploadFcmToken() {
+        // 1. 저장소에서 FCM 토큰을 가져옵니다.
         val fcmTokenString = getFcmTokenUseCase.invoke().firstOrNull()
-        Timber.d("fcmToken = $fcmTokenString")
-        val fcmToken = FcmToken(token = fcmTokenString!!)
-        sendFcmTokenUseCase.invoke(fcmToken)
+
+        // 2. 토큰이 null이거나 비어있는지 확인하여 예외를 방지합니다.
+        if (fcmTokenString.isNullOrBlank()) {
+            Timber.d("FCM 토큰을 찾을 수 없습니다. 업로드를 건너뜁니다.")
+            return
+        }
+
+        // 3. 토큰이 존재하면 데이터 모델 객체를 생성합니다.
+        val fcmToken = FcmToken(token = fcmTokenString)
+
+        // 4. UseCase를 호출하여 서버에 토큰을 전송합니다.
+        val result = sendFcmTokenUseCase.invoke(fcmToken)
+
+        // 5. 'Result' 객체의 성공/실패 여부에 따라 로직을 분기합니다.
+        if (result.isSuccess) {
+            Timber.d("FCM 토큰이 성공적으로 업로드되었습니다.")
+            _uiState.value = UiState.SuccessUploadFcmToken
+        } else {
+            val exception = result.exceptionOrNull()
+            Timber.e(exception, "FCM 토큰 업로드 실패")
+        }
+    }
+    // 업로드 프로필 이벤트 발생 메서드
+    suspend fun emitUploadFcmToken() {
+        _uiEvent.emit(UiEvent.UploadProfile)
     }
 }

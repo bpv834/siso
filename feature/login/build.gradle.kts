@@ -73,5 +73,9 @@ dependencies {
     // 로티 애니메이션
     implementation("com.airbnb.android:lottie-compose:6.0.0")
 
+    // 코루틴 추가
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
 
 }
