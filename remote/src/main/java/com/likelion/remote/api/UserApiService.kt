@@ -24,7 +24,7 @@ interface UserApiService {
     suspend fun registerUserProfile(
         @Header("Authorization") refreshToken: String,
         @Body request: UserProfileRequest
-    ): Response<UserProfileResponseDto>
+    ): Response<UserProfileRequest>
 
 
 }
