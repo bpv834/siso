@@ -20,15 +20,15 @@ class FcmTokenRepositoryImpl @Inject constructor(
     override suspend fun sendToken(token: FcmToken) {
         // flow라서 first() 로 받음
         val user = getTokenUse.invoke().first()
-        val refreshToken = user?.refreshToken
+        val accessToken = user?.accessToken
 
         Timber.d("user = $user")
-        Timber.d("refreshToken= $refreshToken")
+        Timber.d("accessToken= $accessToken")
         val request = FcmTokenRequest(
             userId = user?.userInfo!!.id,
             token = token.token
         )
-        fcmApiService.sendToken(jwt = "Bearer $refreshToken", body = request)
+        fcmApiService.sendToken(jwt = "Bearer $accessToken", body = request)
     }
 
 }
