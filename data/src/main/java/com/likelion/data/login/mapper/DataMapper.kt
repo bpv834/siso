@@ -13,6 +13,7 @@ import com.likelion.remote.model.response.UserInfoResponseDto
 
 fun BasicTokenResponseDto.toDomain(): BasicToken {
     return BasicToken(
+        accessToken = this.accessToken,
         refreshToken = this.refreshToken,
         userStatus = when (this.registrationStatus) {
             RegistrationStatus.REGISTER -> UserStatus.REGISTER
@@ -24,6 +25,7 @@ fun BasicTokenResponseDto.toDomain(): BasicToken {
 
 fun BasicToken.toRemote(): BasicTokenEntity {
     return BasicTokenEntity(
+        accessToken = this.accessToken,
         refreshToken = this.refreshToken,
         status = this.userStatus.name,
         hasProfile = this.hasProfile
@@ -32,6 +34,7 @@ fun BasicToken.toRemote(): BasicTokenEntity {
 
 fun BasicTokenEntity.toDomain(): BasicToken {
     return BasicToken(
+        accessToken = this.accessToken,
         refreshToken = this.refreshToken,
         userStatus = when (this.status) {
             "LOGIN" -> UserStatus.LOGIN
