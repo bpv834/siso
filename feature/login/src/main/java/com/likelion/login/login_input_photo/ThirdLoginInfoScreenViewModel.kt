@@ -44,7 +44,7 @@ class ThirdLoginInfoScreenViewModel @Inject constructor(
         _showBottomSheet.value = false
     }
 
-    override fun addImageFromAlbum(newImage: Bitmap) {
+    override fun addImageToCaptures(newImage: Bitmap) {
         _capturedImages.value = _capturedImages.value + newImage
     }
 

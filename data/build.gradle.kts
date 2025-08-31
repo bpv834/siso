@@ -35,12 +35,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
 
     // Gson 컨버터
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation(libs.converter.gson.v300)
 
-    // Gson 라이브러리
-    implementation("com.google.code.gson:gson:2.10.1")
-
-
+    //위치 기반 서비스
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    
     // DI
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

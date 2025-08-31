@@ -10,7 +10,7 @@ interface ThirdLoginInfoScreenViewModelType {
     fun showPhotoUploadBottomSheet()
     fun hidePhotoUploadBottomSheet()
     fun uploadImagesToServer()
-    fun addImageFromAlbum(newImage: Bitmap)
+    fun addImageToCaptures(newImage: Bitmap)
     fun deleteBitMap(deleteMitMap : Bitmap)
 
     // 테스트용 더미 비트맵 리스트를 생성하는 메서드 추가

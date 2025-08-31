@@ -1,8 +1,11 @@
 package com.likelion.remote.di
 
 import com.likelion.remote.api.CallApiService
+import com.likelion.remote.api.FcmApiService
+import com.likelion.remote.api.ImageApiService
 import com.likelion.remote.api.KakaoAuthApiService
-import com.likelion.remote.fake_api.FakeCallApiService
+import com.likelion.remote.api.UserApiService
+import com.likelion.remote.api.VoiceApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,4 +34,45 @@ object RemoteModule {
         // return FakeCallApiService() // 👈  가짜 구현체 반환
          return retrofit.create(CallApiService::class.java) // 실제 서버 통신 시 사용
     }
+
+    @Singleton
+    @Provides
+    fun provideUserApiService(
+        // 이 모듈은 Retrofit 인스턴스를 주입받아 실제 API 서비스를 만들지만,
+        // 현재는 FakeCallApiService를 사용하기 위해 Retrofit 매개변수를 주석 처리합니다.
+        // 실제 서버 통신 시에는 retrofit: Retrofit 매개변수를 활성화하세요.
+        retrofit: Retrofit
+    ): UserApiService {
+        // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
+        return retrofit.create(UserApiService::class.java) // 실제 서버 통신 시 사용
+    }
+
+    @Singleton
+    @Provides
+    fun provideImageApiService(
+        retrofit: Retrofit
+    ): ImageApiService {
+        // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
+        return retrofit.create(ImageApiService::class.java) // 실제 서버 통신 시 사용
+    }
+
+    @Singleton
+    @Provides
+    fun provideVoiceSampleApiService(
+        retrofit: Retrofit
+    ): VoiceApiService {
+        // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
+        return retrofit.create(VoiceApiService::class.java) // 실제 서버 통신 시 사용
+    }
+
+    @Singleton
+    @Provides
+    fun provideFcmApiServiceApiService(
+        retrofit: Retrofit
+    ): FcmApiService {
+        // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
+        return retrofit.create(FcmApiService::class.java) // 실제 서버 통신 시 사용
+    }
+
+
 }

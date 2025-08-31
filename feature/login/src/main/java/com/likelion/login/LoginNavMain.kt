@@ -73,8 +73,6 @@ fun LoginMainScreen(
                 // Exit register flow: reset state then go to login root
                 onExitRegister()
                 onNavigateInit()
-
-                Log.d("Nav", "초기화(BackHandler)")
             }
             "main" -> {
                 onNavigateUp()
@@ -88,7 +86,6 @@ fun LoginMainScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SisoColorTokens.White,
                     titleContentColor = SisoColorTokens.Gray90
                 ),
                 title = {
@@ -144,7 +141,7 @@ fun LoginMainScreen(
                 FirstLoginInfoScreen(
                     hiltViewModel<FirstLoginInfoScreenViewModel>(),
                     onNavigateNext = {
-                        navController.navigate("screen2")
+                        navController.navigate("screen3")
                     })
             }
             composable("screen2") {

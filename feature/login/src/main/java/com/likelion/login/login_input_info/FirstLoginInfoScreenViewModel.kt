@@ -70,7 +70,28 @@ class FirstLoginInfoScreenViewModel @Inject constructor(
 
     override fun inputUserInfo(nick : String, age : Int, sex : String, preSex : String){
         // 1. UserSignUpProfile 객체 생성 및 속성 설정
-        val user = UserSignUpProfile(nickname = nick,age=age, gender = sex, preferenceSex = preSex)
+        val serverSex = if (sex == "남성") "MALE" else "FEMALE"
+
+        val serverPreSex = when {
+            // Heterosexual (이성)
+            preSex == "이성" && sex == "남성" -> "FEMALE"
+            preSex == "이성" && sex == "여성" -> "MALE"
+
+            // Homosexual (동성)
+            preSex == "동성" && sex == "남성" -> "MALE"
+            preSex == "동성" && sex == "여성" -> "FEMALE"
+
+            // Default or other cases (e.g., "Any")
+            else -> "FEMALE"
+        }
+
+        val user = UserSignUpProfile(
+            nickname = nick,
+            age = age,
+            gender = serverSex,
+            preferenceSex = serverPreSex
+        )
+
         viewModelScope.launch {
             saveTemporaryUserProfileUseCase.execute(user)
         }

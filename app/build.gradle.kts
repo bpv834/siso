@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("com.google.gms.google-services")
 }
 
 val property = Properties().apply {
@@ -69,10 +70,7 @@ dependencies {
     implementation(project(":core:util"))
     implementation(project(":core:network"))
     implementation(project(":feature:call"))
-
-
-
-
+    implementation(project(":core:notification"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -87,6 +85,7 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 
     // DI
     implementation(libs.hilt.android)

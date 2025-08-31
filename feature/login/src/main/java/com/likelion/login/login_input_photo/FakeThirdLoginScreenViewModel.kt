@@ -36,7 +36,7 @@ class FakeThirdLoginScreenViewModel(
         _showBottomSheet.value = false
     }
     // 앨범에서 비트맵 리스트에 담는 메서드
-    override fun addImageFromAlbum(newImage: Bitmap) {
+    override fun addImageToCaptures(newImage: Bitmap) {
         _capturedImages.value = _capturedImages.value + newImage
     }
     // 사진 삭제 메서드

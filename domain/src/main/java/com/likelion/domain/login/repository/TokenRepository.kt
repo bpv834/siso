@@ -11,4 +11,6 @@ interface TokenRepository {
     suspend fun saveRefreshToken(token: BasicToken)
     suspend fun getTokenAll(): Flow<User?>
     suspend fun saveTokenAll(user: User)
+    suspend fun getFcmToken() : Flow<String?>
+    suspend fun saveFcmToken(token : String)
 }

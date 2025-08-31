@@ -79,9 +79,11 @@ fun FullScreenCallEndReview(
                 color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(84.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            
+            Row (modifier = Modifier
+                .wrapContentSize()
+            //fillMaxWidth().height(150.dp)
+            ){
                 CommonOutlinedButtonWithIconVertical(
                     modifier = Modifier
                         .size(142.dp),

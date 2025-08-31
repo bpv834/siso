@@ -7,7 +7,7 @@ import com.likelion.domain.login.model.PostKakaoResult
 import com.likelion.domain.login.model.User
 import com.likelion.domain.login.repository.LoginRepository
 import com.likelion.remote.api.KakaoAuthApiService
-import com.likelion.remote.model.KakaoAccessTokenRequestDto
+import com.likelion.remote.model.response.KakaoAccessTokenRequestDto
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(

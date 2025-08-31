@@ -28,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -57,20 +58,24 @@ fun ChatRoute(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
     onNavigateAlarm: () -> Unit = {},
+    onNavigateChatRoom: (String) -> Unit = {},
     viewModel: ChatViewModel = hiltViewModel()
 ) {
     ChatScreen(
         viewModel = viewModel,
-        onNavigateAlarm = { onNavigateAlarm() }
+        onNavigateAlarm = { onNavigateAlarm() },
+        onNavigateChatRoom = { nickname -> onNavigateChatRoom(nickname) }
     )
 }
 
 @Composable
 fun ChatScreen(
     onNavigateAlarm: () -> Unit,
+    onNavigateChatRoom: (String) -> Unit,
     viewModel: ChatViewModel
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    //val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = viewModel.uiState.collectAsState().value
     Column(
         modifier = Modifier.background(SisoColorTokens.Gray5)
     ) {
@@ -155,7 +160,8 @@ fun ChatScreen(
                     ChatHistoryPage(
                         items = uiState.chatHistory,
                         isLoading = uiState.isChatHistoryLoading,
-                        onDelete = { id -> viewModel.handleEvent(ChatEvent.RemoveChatHistory(id)) }
+                        onDelete = { id -> viewModel.handleEvent(ChatEvent.RemoveChatHistory(id)) },
+                        onNavigateChatRoom = onNavigateChatRoom
                     )
                     Timber.d("${uiState.chatHistory}")
                 }
@@ -169,6 +175,7 @@ fun ChatScreen(
 fun ChatHistoryPage(
     items: List<ChatHistory>,
     isLoading: Boolean,
+    onNavigateChatRoom: (String) -> Unit,
     onDelete: (Long) -> Unit
 ) {
     if (isLoading) {
@@ -180,7 +187,8 @@ fun ChatHistoryPage(
     } else {
         ChatHistoryList(
             items = items,
-            onDelete = onDelete
+            onDelete = onDelete,
+            onNavigateChatRoom = onNavigateChatRoom
         )
     }
 }
@@ -209,7 +217,8 @@ fun CallHistoryPage(
 @Composable
 fun ChatHistoryList(
     items: List<ChatHistory>,
-    onDelete: (Long) -> Unit
+    onDelete: (Long) -> Unit,
+    onNavigateChatRoom: (String) -> Unit,
 ) {
     LazyColumn(Modifier.fillMaxSize()) {
         itemsIndexed(items) { _, contact ->
@@ -223,7 +232,13 @@ fun ChatHistoryList(
                     )
                 },
             ) {
-                Row(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            onNavigateChatRoom(contact.nickName)
+                        }
+                ) {
                     AsyncImage(
                         model =
                             contact.profileImage,
@@ -231,7 +246,7 @@ fun ChatHistoryList(
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
-                            .align(Alignment.CenterVertically)
+                            .align(Alignment.CenterVertically),
                     )
                     Column(
                         modifier = Modifier
@@ -283,7 +298,7 @@ fun ChatHistoryList(
 @Composable
 private fun CallHistoryList(
     items: List<CallHistory>,
-    onDelete: (Long) -> Unit
+    onDelete: (Long) -> Unit,
 ) {
     LazyColumn(Modifier.fillMaxSize()) {
         itemsIndexed(items) { _, contact ->
@@ -299,7 +314,10 @@ private fun CallHistoryList(
                     )
                 },
             ) {
-                Row(Modifier.padding(horizontal = 16.dp)) {
+                Row(
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                ) {
                     AsyncImage(
                         model = contact.profileImage,
                         contentDescription = "",
@@ -499,7 +517,8 @@ private fun ChatHistoryPreview() {
     SisoTheme {
         ChatHistoryList(
             items = previewList,
-            onDelete = {}
+            onDelete = {},
+            onNavigateChatRoom = { _ -> }
         )
     }
 }
