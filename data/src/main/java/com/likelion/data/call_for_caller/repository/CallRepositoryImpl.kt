@@ -57,14 +57,15 @@ class CallRepositoryImpl @Inject constructor(
      * 이 함수는 suspend 키워드가 붙어 있어 코루틴 내에서 비동기적으로 실행됩니다.
      */
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    override suspend fun startCall(callerId: Long, receiverId: Long): Result<CallInfoModel> {
+    override suspend fun startCall(receiverId: Long, accessToken: String): Result<CallInfoModel> {
         Timber.d("CallRepositoryImpl: 통화 시작 요청. CallApiService를 통해 서버 통화 정보 요청 중...")
 
         val request = CallRequest(receiverId = receiverId)
 
         return try {
             // 채널명 토큰을 서버에서 불러옴
-            val response: Response<CallInfoDto> = callApiService.requestCallSession(request)
+            val response: Response<CallInfoDto> =
+                callApiService.requestCallSession(authorization = accessToken, request = request)
             // 통신이 성공했다면
             if (response.isSuccessful) {
                 val callInfoDto = response.body() ?: throw Exception("서버 응답 본문이 비어있습니다.")
@@ -72,7 +73,10 @@ class CallRepositoryImpl @Inject constructor(
                 // ⭐️ 매퍼를 사용하여 Remote 모델을 Domain 모델로 변환
                 val callInfoModel = callInfoDto.toDomainModel()
 
-                agoraVoiceManager.joinChannel(token = callInfoModel.token, channelName = callInfoModel.channelName)
+                agoraVoiceManager.joinChannel(
+                    token = callInfoModel.token,
+                    channelName = callInfoModel.channelName
+                )
                 Result.success(callInfoModel)
             } else {
                 val errorBody = response.errorBody()?.string()
