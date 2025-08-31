@@ -61,13 +61,16 @@ class LastLoginInfoScreenViewModel @Inject constructor(
     }
 
     private suspend fun uploadProfile() {
+        Timber.d("uploadProfile")
         _uiState.value = UiState.Loading
 
         try {
             val user = getTemporaryUserProfileUseCase.execute()
             val tokenResult = getTokenAllUseCase().firstOrNull()
 
-            if (tokenResult?.refreshToken.isNullOrBlank()) {
+            Timber.d("tokenResult ${tokenResult?.accessToken}")
+
+            if (tokenResult?.accessToken.isNullOrBlank()) {
                 _uiState.value = UiState.Error("Refresh token not found")
                 return
             }
@@ -88,19 +91,21 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                 }
             }
             workList.add(work1)
+            Timber.d("프로필넣기")
 
-     /*       // 이미지 업로드
-            if (user.photoPaths.isNotEmpty()) {
-                val work2: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
-                    runCatching {
-                        uploadImageUseCase.execute(
-                            eccessToken = accessToken,
-                            imgList = user.photoPaths
-                        )
-                    }
-                }
-                workList.add(work2)
-            }*/
+            /*       // 이미지 업로드
+                   if (user.photoPaths.isNotEmpty()) {
+                       val work2: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
+                           runCatching {
+                               uploadImageUseCase.execute(
+                                   eccessToken = accessToken,
+                                   imgList = user.photoPaths
+                               )
+                           }
+                       }
+                       workList.add(work2)
+                   }*/
+            Timber.d("이미지")
 
             // 음성 업로드
             if (user.voicePath.isNotBlank()) {
@@ -115,8 +120,11 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                 workList.add(work3)
             }
 
+            Timber.d("음성")
+
             // 병렬 수행
             val results = workList.awaitAll()
+            Timber.d("result size = ${results.size}")
 
             // 실패가 하나라도 있으면 Error
             val failure = results.firstOrNull { it.isFailure }
