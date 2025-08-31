@@ -113,6 +113,13 @@ fun MainEditInfoScreen(
                 saveHandle.getString(key)!!
             }
         }
+
+    val newValueUpdate =
+        { emptyText:String, editValue:String, receiverValue: String->
+            if(receiverValue == editValue){
+                receiverValue
+            }else editValue
+        }
     val textColor = {blank:Boolean, receiver: Boolean->
         if (blank){
             SisoColorTokens.Gray50
@@ -152,7 +159,7 @@ fun MainEditInfoScreen(
                 sex = uiState.myRadioButtons.first { it.second }.first,
 
                 preferenceSex = uiState.pairRadioButtons.first { it.second }.first,
-                location = valueUpdate("지역을 입력해주세요","location", if(uiState.receiverUsersModel == null)""
+                location = newValueUpdate("지역을 입력해주세요",uiState.editUsersModel.location, if(uiState.receiverUsersModel == null)""
                 else uiState.receiverUsersModel!!.location),
 
                 drinkingCapacity = valueUpdate("정보를 입력해주세요","alchol", if(uiState.receiverUsersModel == null)""

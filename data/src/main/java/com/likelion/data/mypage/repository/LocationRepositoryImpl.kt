@@ -1,7 +1,8 @@
 package com.likelion.data.mypage.repository
 
-import com.likelion.ui.R
+import com.likelion.local.R
 import android.content.Context
+import android.util.Log.d
 import com.google.gson.Gson
 import com.likelion.data.mypage.mapper.toBottomDomain
 import com.likelion.data.mypage.mapper.toTopDomain
@@ -13,14 +14,12 @@ import javax.inject.Inject
 class LocationRepositoryImpl @Inject constructor(
     context : Context
 ): LocationRepository {
-
+    private var locationList = LocationEntity(listOf())// 무조건 먼저 초기화
     init {
         val inputStream = context.resources.openRawResource(R.raw.korea_regions_ordered)
         val jsonString  = inputStream.bufferedReader().use { it.readText() }
         setJson(jsonString)
     }
-
-    private var locationList = LocationEntity(listOf())
 
     override fun setJson(json: String) {
         locationList = Gson().fromJson(json, LocationEntity::class.java)

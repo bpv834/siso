@@ -55,9 +55,15 @@ class PotoEditInfoScreenViewModel @Inject constructor(
     }
 
     override fun addImageFromAlbum(newImage: Bitmap) {
+        var count = 0
+        val newImageItem = EditableImage(null, ImageItem.BitmapImage(newImage))
 
-        val imageItem = EditableImage(null, ImageItem.BitmapImage(newImage))
-        _capturedImages.value = _capturedImages.value + imageItem
+        _capturedImages.update {
+            it.map { imageItem -> if(imageItem.edited == null && count == 0){
+                count += 1
+                newImageItem.copy(original = imageItem.original)
+            }else imageItem }
+        }
     }
 
     // 사진 삭제 메서드

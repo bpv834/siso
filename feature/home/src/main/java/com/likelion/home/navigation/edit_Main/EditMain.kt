@@ -225,10 +225,7 @@ fun EditMain (
                 LocationEditInfoScreen(
                     viewModel = hiltViewModel<LocationEditInfoScreenViewModel>(),
                     popBackStack = {location->
-                        navController
-                            .previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("location", location)
+                        mainEditInfoScreenViewModel.setLocation(location)
                         navController.popBackStack()
                     }
                     )

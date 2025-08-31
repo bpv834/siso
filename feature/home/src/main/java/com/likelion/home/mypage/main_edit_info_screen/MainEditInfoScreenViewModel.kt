@@ -254,6 +254,14 @@ class MainEditInfoScreenViewModel @Inject constructor (
 
     }
 
+    fun setLocation(location: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(location = location)
+            )
+        }
+    }
+
     override fun updateUsers(usersModel: UsersFullModel) {
         _uiState.update {
             it.copy(editUsersModel = usersModel)

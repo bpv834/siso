@@ -22,13 +22,12 @@ import javax.inject.Inject
 class APILocationRepositoryImpl @Inject constructor(
     context: Context
 ): APILocationRepository {
-
+    private var fusedLocationClient : FusedLocationProviderClient? = null
+    private var geocoder : Geocoder? = null
     init {
         setContext(context)
     }
 
-    private var fusedLocationClient : FusedLocationProviderClient? = null
-    private var geocoder : Geocoder? = null
     fun setContext(context: Context){
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         geocoder = Geocoder(context, Locale.getDefault())
