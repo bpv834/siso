@@ -4,29 +4,37 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
+import com.likelion.domain.login.usecase.GetLocalTokenUseCase
+import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getAllUsersUseCase: GetAllUsersUseCase,
+    private val getTokenAllUseCase: GetTokenAllUseCase,
 ) : ViewModel(), HomeScreenViewModelType {
     val _userList = MutableStateFlow<List<UsersModel>>(emptyList())
-    override val userList : StateFlow<List<UsersModel>> = _userList.asStateFlow()
+    override val userList: StateFlow<List<UsersModel>> = _userList.asStateFlow()
 
 
     init {
         getUserList()
     }
 
-   @Override
-   override fun getUserList(){
+    @Override
+    override fun getUserList() {
         viewModelScope.launch {
-            _userList.value = getAllUsersUseCase.execute()
+            val user = getTokenAllUseCase.invoke().first()
+            val result = getAllUsersUseCase.execute(user?.accessToken?:"")
+            if (result.isSuccess) {
+                result.map { _userList.value = it }
+            }
         }
     }
 
