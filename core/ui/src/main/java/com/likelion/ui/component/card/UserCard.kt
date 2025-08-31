@@ -56,7 +56,7 @@ fun UserCard(
     user: UsersModel,
     onImageClick: (imageUrl: String) -> Unit,
     onClickButtonCall: (receiverId: Long) -> Unit, // 상대 유저 uid를 얻어오는 메서드
-    toCallScreen: (Long, Long) -> Unit,
+    toCallScreen: (Long) -> Unit,
     isPossibleMessage: Boolean,
 ) {
 
@@ -307,7 +307,7 @@ fun UserCardPreview() {
         user = sampleUser,
         {},
         {},
-        { id1, id2 -> },
+        { id1,  -> },
         false
     )
 }
