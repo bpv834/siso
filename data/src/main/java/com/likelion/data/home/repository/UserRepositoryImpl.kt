@@ -1,10 +1,5 @@
 package com.likelion.data.home.repository
 
-import com.likelion.data.home.api.test.FakeImagesApi
-import com.likelion.data.home.api.test.FakeInterestApi
-import com.likelion.data.home.api.test.FakeProfileApi
-import com.likelion.data.home.api.test.FakeUserApi
-import com.likelion.data.home.api.test.FakeVoiceApi
 import com.likelion.data.home.mapper.toDomain
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.home.repository.UsersRepository
