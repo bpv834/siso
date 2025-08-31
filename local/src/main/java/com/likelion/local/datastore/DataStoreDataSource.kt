@@ -34,12 +34,14 @@ class DataStoreDataSource @Inject constructor(
     // 저장해 놓은 토큰 값 확인
     override suspend fun getToken(): Flow<BasicTokenEntity?> {
         return dataStore.data.map { prefs ->
+            val access = prefs[PreferencesKey.ACCESS_TOKEN]
             val refresh = prefs[PreferencesKey.REFRESH_TOKEN]
             val status = prefs[PreferencesKey.USER_STATUS]
             val profile = prefs[PreferencesKey.HAS_PROFILE]
             if (status.isNullOrBlank() && refresh.isNullOrBlank()) {
                 null
             } else BasicTokenEntity(
+                accessToken = access!!,
                 refreshToken = refresh!!,
                 status = status!!,
                 hasProfile = profile!!
@@ -61,6 +63,7 @@ class DataStoreDataSource @Inject constructor(
     override suspend fun saveToken(token: BasicTokenEntity) {
         Log.d("saveRefresh", "${token}")
         dataStore.edit { prefs ->
+            prefs[PreferencesKey.ACCESS_TOKEN] = token.accessToken
             prefs[PreferencesKey.REFRESH_TOKEN] = token.refreshToken
             prefs[PreferencesKey.USER_STATUS] = token.status
             prefs[PreferencesKey.HAS_PROFILE] = token.hasProfile
