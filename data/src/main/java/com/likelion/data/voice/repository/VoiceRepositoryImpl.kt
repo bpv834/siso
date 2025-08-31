@@ -42,7 +42,7 @@ class VoiceRepositoryImpl @Inject constructor(
     // 2. 음성 샘플 업로드
     override suspend fun uploadVoiceSample(
         path: String,
-        refreshToken: String
+        accessToken: String
     ) {
         val file = File(path)
         if (!file.exists()) {
@@ -62,7 +62,7 @@ class VoiceRepositoryImpl @Inject constructor(
         val multipart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
         val response = voiceApiService.uploadVoiceSample(
-            refreshToken = "Bearer $refreshToken",
+            refreshToken = "Bearer $accessToken",
             file = multipart
         )
 

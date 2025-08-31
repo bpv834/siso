@@ -7,6 +7,6 @@ class UploadVoiceSampleUseCase @Inject constructor(
     val repository: VoiceRepository
 ) {
     suspend fun execute(path: String, refreshToken: String) {
-        return repository.uploadVoiceSample(path = path, refreshToken = refreshToken)
+        return repository.uploadVoiceSample(path = path, accessToken = refreshToken)
     }
 }
