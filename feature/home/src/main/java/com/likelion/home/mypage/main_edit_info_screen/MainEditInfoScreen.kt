@@ -64,6 +64,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
@@ -141,7 +142,9 @@ fun MainEditInfoScreen(
                 nickname = nameState,
                 age = ageText.toInt(),
                 voiceUrl = if (saveHandle.getString("voice").isNullOrBlank()) {
+                    if (uiState.receiverUsersModel?.voiceUrl!! == uiState.editUsersModel.voiceUrl)
                     uiState.receiverUsersModel?.voiceUrl!!
+                    else uiState.editUsersModel.voiceUrl
                 }else{
                     saveHandle.getString("voice")!!
                 },
@@ -230,7 +233,7 @@ fun MainEditInfoScreen(
     val sliderVectorPadding = 7.75.dp
     val playtimeSize = DpSize(52.dp,23.dp)
     // 여러 같은 패딩 x 5 + slider 사이드 x 2 + 아이콘 + 재생시간 크기 를 모두 뺸 사이즈
-    val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize *2 + playtimeSize.width)
+    val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize + 35.dp + playtimeSize.width)
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
     )
@@ -390,7 +393,7 @@ fun MainEditInfoScreen(
                 Box(
                     modifier = Modifier
                         .height(44.dp)
-                        .fillMaxWidth(0.889F)
+                        .fillMaxWidth(0.862F)
                         .clip(RoundedCornerShape(999.dp))
                         .background(SisoColorTokens.Gray60),
                 ) {
@@ -463,20 +466,17 @@ fun MainEditInfoScreen(
                     }
                 }
                 Spacer(Modifier.size(16.dp))
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
+                Text(
+                    text = "수정",
+                    style = SisoTypoTokens.Body2,
+                    color = SisoColorTokens.Gray60,
+                    modifier = Modifier.size(36.dp,28.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null
                         ) {
                             voiceNavigation()
                         },
-                    imageVector = ImageVector.vectorResource(
-                        R.drawable.ic_text_edit
-                    ),
-                    tint = SisoColorTokens.Gray60,
-                    contentDescription = ""
                 )
             }
 
@@ -697,6 +697,7 @@ fun MainEditInfoScreen(
                 modifier = null,
                 text = "수정완료"
             ) {
+                // 수정 된 값을 보내는 곳
                 naviToMyPage()
             }
             Spacer(Modifier.size(72.dp))

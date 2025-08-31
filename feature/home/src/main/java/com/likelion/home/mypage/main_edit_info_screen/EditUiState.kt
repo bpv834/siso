@@ -20,7 +20,7 @@ data class EditUiState(
         Pair(first = "상관없음", second = false),
     ),
     val playTime : Int = 0,
-    val voicePath :String = "",
+    val voicePath : String =  "",
     val playJob : Job? = null,
     val playState : Boolean = false,
 

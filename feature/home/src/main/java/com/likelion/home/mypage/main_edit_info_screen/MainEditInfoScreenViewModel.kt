@@ -176,7 +176,13 @@ class MainEditInfoScreenViewModel @Inject constructor (
                             if (newModel.introduce.length > 50)
                                 newModel.introduce.substring(0, 50)
                             else newModel.introduce
-                    ),/* get user */
+                    ),
+                        editUsersModel = newModel.copy(
+                            introduce =
+                                if (newModel.introduce.length > 50)
+                                    newModel.introduce.substring(0, 50)
+                                else newModel.introduce
+                        ),/* get user */
                         myRadioButtons = listOf(
                             male to (male == newModel.sex),
                             feMale to (feMale == newModel.sex)
@@ -237,7 +243,9 @@ class MainEditInfoScreenViewModel @Inject constructor (
         viewModelScope.launch {
             d("audio",voiceUrl)
             _uiState.update {
-                it.copy(voicePath = voiceUrl,
+                it.copy(
+                    editUsersModel = uiState.value.editUsersModel.copy(voiceUrl = voiceUrl),
+                    voicePath = voiceUrl,
                     playTime = getAudioDurationFromFilePath(voiceUrl) ?: 0)
             }
             d("audio","${_uiState.value}")
