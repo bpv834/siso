@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class BasicTokenResponseDto(
+    val accessToken: String,
     val refreshToken: String,
     val registrationStatus: RegistrationStatus,
     val hasProfile: Boolean,
