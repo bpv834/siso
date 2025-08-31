@@ -1,5 +1,6 @@
 package com.likelion.home.mypage
 
+import android.util.Log.d
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.mypage.usecase.UsersFullUseCase
@@ -26,48 +27,50 @@ class MyPageViewModel@Inject constructor(
                 nickname = usersFullModel.nickname,
                 age = usersFullModel.age.toString(),
                 location = usersFullModel.location,
-                progressValue =  if (usersFullModel.userImages.isNotBlank()) { // 0.02
-                    0.02F
-                } else 0F
-                        +if (usersFullModel.nickname.isNotBlank()) {
-                    0.02F
-                } else 0F
-                        +if (usersFullModel.age > 0) {
-                    0.02F
-                } else 0F
-                        +if (usersFullModel.voiceUrl.isNotBlank())
-                    0.02F
-                else 0F
-                        +if (usersFullModel.introduce.isNotBlank())
-                    0.02F
-                else 0F
-                        +if (usersFullModel.sex.isNotBlank())// 0.1
-                    0.1F
-                else 0F
-                        +if (usersFullModel.preferenceSex.isNotBlank())
-                    0.1F
-                else 0F
-                        +if (usersFullModel.location.isNotBlank())
-                    0.1F
-                else 0F
-                        +if (usersFullModel.religion.isNotBlank())// 0.075
-                    0.075F
-                else 0F
-                        +if (usersFullModel.isSmoke.isNotBlank())
-                    0.075F
-                else 0F
-                        +if (usersFullModel.drinkingCapacity.isNotBlank())
-                    0.075F
-                else 0F
-                        +if (usersFullModel.mbti.isNotBlank())// 0.075
-                    0.075F
-                else 0F
-                        +if (usersFullModel.interests.isNotEmpty())// 0.15
-                    0.15F
-                else 0F
-                        +if (usersFullModel.meeting.isNotEmpty())// 0.15
-                    0.15F
-                else 0F,
+                progressValue =
+                    (if (usersFullModel.userImages.isNotBlank()) { // 0.02
+                    0.02
+                } else { 0.0
+                } + if (usersFullModel.nickname.isNotBlank()) {
+                    0.02
+                } else { 0.0
+                } +if (usersFullModel.age > 0) {
+                    0.02
+                } else { 0.0
+                } +if (usersFullModel.voiceUrl.isNotBlank()) {
+                    0.02
+                }else { 0.0
+                } +if (usersFullModel.introduce.isNotBlank()) {
+                    0.02
+                } else { 0.0
+                } +if (usersFullModel.sex.isNotBlank()) {// 0.1
+                    0.1
+                } else { 0.0
+                } +if (usersFullModel.preferenceSex.isNotBlank()) {
+                    0.1
+                } else { 0.0
+                } +if (usersFullModel.location.isNotBlank()) {
+                    0.1
+                } else { 0.0
+                } +if (usersFullModel.religion.isNotBlank()) {// 0.075
+                    0.075
+                } else { 0.0
+                } +if (usersFullModel.isSmoke.isNotBlank()) {
+                    0.075
+                } else { 0.0
+                } +if (usersFullModel.drinkingCapacity.isNotBlank()) {
+                    0.075
+                } else { 0.0
+                } +if (usersFullModel.mbti.isNotBlank()) {// 0.075
+                    0.075
+                } else { 0.0
+                } +if (usersFullModel.interests.isNotEmpty()) {// 0.15
+                    0.15
+                } else { 0.0
+                } +if (usersFullModel.meeting.isNotEmpty()) {
+                    0.15
+                } else { 0.0
+                }).toFloat(),
             ) }
         }
 

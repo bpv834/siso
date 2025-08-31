@@ -6,11 +6,14 @@ import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -31,6 +34,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,6 +45,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -57,12 +63,13 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPageScreen(
-    viewModel: MyPageViewModel = hiltViewModel<MyPageViewModel>(),
+    viewModel: MyPageViewModelType,
     mainEdit: () -> Unit = {},
     actionSnackbar: () -> Unit = {}
 )  {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val progressValue = uiState.progressValue
+    val userImages = uiState.userImages
     val nickname = uiState.nickname
     val age = uiState.age
     val location = uiState.location
@@ -82,8 +89,10 @@ fun MyPageScreen(
             ProfileCircle(
                 padding = 8.dp,
                 processFloat = progressValue,
-                profileImage = uiState.userImages
-            )
+                profileImage = userImages
+            ){
+                mainEdit()
+            }
             Column(
                 modifier = Modifier
                     .offset(x = ((-2).dp))
@@ -174,7 +183,7 @@ fun ProfileCircle(
     profileImage: String = "",
     completeEdit: ()->Unit = {}
 ) {
-    var progress by remember { mutableFloatStateOf(processFloat) }
+    d("progressText", "${(processFloat*100).toInt()} $processFloat")
     Box(
         modifier = Modifier
             .padding(start = padding)
@@ -190,7 +199,7 @@ fun ProfileCircle(
         )
         // 1 서클이 먼저 그려짐
         CircularProgressIndicator(
-            progress = { progress },
+            progress = { processFloat },
             modifier = Modifier
                 .size(128.dp)
                 .offset(x = (-4).dp, y = (-4).dp),
@@ -214,9 +223,10 @@ fun ProfileCircle(
                 ) {
                     Spacer(Modifier.size(12.dp))
                     Text(
-                        text = "36%",
+                        text = "${(processFloat*100).toInt()}%",
                         style = SisoTypoTokens.Button1,
                         color = SisoColorTokens.Black,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
                             .width(41.dp)
                             .padding(top = 8.dp, bottom = 8.dp),
@@ -234,32 +244,43 @@ fun ProfileCircle(
 
             }
         else
-            Row(
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .size(117.dp, 44.dp)
                     .border(2.dp, SisoColorTokens.Gold40, RoundedCornerShape(99.dp))
                     .background(SisoColorTokens.Gray5, RoundedCornerShape(99.dp))
-                    .clickable {
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                    ) {
                         completeEdit()
                     }
             ) {
-                Text(
-                    text = "수정하기",
-                    style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.Black,
-                    modifier = Modifier
-                        .size(width = 61.dp, height = 23.dp)
-                        .padding(start = 12.dp, top = 8.dp, bottom = 8.dp),
-                )
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
-                    tint = SisoColorTokens.Gray70,
-                    contentDescription = ""
-                )
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Spacer(Modifier.size(12.dp))
+                    Text(
+                        text = "수정하기",
+                        style = SisoTypoTokens.SubTitle1,
+                        color = SisoColorTokens.Black,
+                        modifier = Modifier
+                            .width(64.dp)
+                            .padding(top = 9.dp, bottom = 9.dp),
+                    )
+                    Spacer(Modifier.size(4.dp))
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
+                        tint = SisoColorTokens.Gray70,
+                        contentDescription = ""
+                    )
+                    Spacer(Modifier.size(12.dp))
+                }
             }
-
 
     }
 
@@ -301,7 +322,8 @@ fun ProfileText(
 fun MyPageScreenPreview() {
     SisoTheme {
         Surface{
-            MyPageScreen()
+            val viewModel = FakeMyPageViewModel()
+            MyPageScreen(viewModel)
         }
 
     }
