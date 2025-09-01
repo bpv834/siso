@@ -58,6 +58,9 @@ fun MainNavHost(
                 // ui event 트리거 변경만 해준다
                 is FcmEvent.Call -> viewModel.onFcmCallEvent(call = event.toCall())
                 is FcmEvent.Message -> TODO()
+                is FcmEvent.Reject ->{
+
+                }
             }
         }
     }

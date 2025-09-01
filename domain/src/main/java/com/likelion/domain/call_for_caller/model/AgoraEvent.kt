@@ -17,6 +17,8 @@ sealed class AgoraEvent {
     // 발신자(caller)가 채널에서 성공적으로 나갔을 때
     object CallerLeftChannel : AgoraEvent()
 
+    object CallRejected : AgoraEvent()
+
     // 통화 중 발생한 에러
     data class CallError(val errorCode: Int, val message: String) : AgoraEvent()
 }

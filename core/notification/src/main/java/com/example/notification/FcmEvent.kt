@@ -14,4 +14,6 @@ sealed class FcmEvent {
         val senderImage: String,
         val messageText: String
     ) : FcmEvent()
+
+    object Reject : FcmEvent()
 }

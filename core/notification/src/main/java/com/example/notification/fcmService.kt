@@ -69,6 +69,13 @@ class FcmService @Inject constructor(
                     //   FcmEventBus.send(FcmEvent.Message(senderId, messageId))
                 }
             }
+
+            "CALL_REJECT" ->{
+                // 메시지는 알림 클릭 시 상세 데이터를 서버에서 조회
+                CoroutineScope(Dispatchers.IO).launch {
+                    FcmEventBus.send(FcmEvent.Reject)
+                }
+            }
         }
     }
 
