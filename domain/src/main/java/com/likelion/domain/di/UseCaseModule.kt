@@ -4,11 +4,17 @@ import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
-import com.likelion.domain.login.repository.UserSignUpRepository
+import com.likelion.domain.login.repository.InMemoryUserSignUpRepository
+import com.likelion.domain.login.repository.TokenRepository
+import com.likelion.domain.login.repository.UserProfileRepository
+import com.likelion.domain.login.usecase.AddProfileUseCase
 import com.likelion.domain.login.usecase.ClearTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.GetTemporaryUserProfileUseCase
-import com.likelion.domain.login.usecase.RegisterProfileToServerUseCase
 import com.likelion.domain.login.usecase.SaveTemporaryUserProfileUseCase
+import com.likelion.domain.notification.repository.FcmTokenRepository
+import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
+import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
+import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +44,7 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideClearTemporaryUserProfileUseCase(
-        userRepository: UserSignUpRepository
+        userRepository: InMemoryUserSignUpRepository
     ): ClearTemporaryUserProfileUseCase {
         return ClearTemporaryUserProfileUseCase(userRepository)
     }
@@ -46,24 +52,51 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideGetTemporaryUserProfileUseCase(
-        userRepository: UserSignUpRepository
+        userRepository: InMemoryUserSignUpRepository
     ): GetTemporaryUserProfileUseCase {
         return GetTemporaryUserProfileUseCase(userRepository)
     }
 
     @Provides
     @Singleton
-    fun provideRegisterProfileToServerUseCase(
-        userRepository: UserSignUpRepository
-    ): RegisterProfileToServerUseCase {
-        return RegisterProfileToServerUseCase(userRepository)
+    fun provideSaveTemporaryUserProfileUseCase(
+        userRepository: InMemoryUserSignUpRepository
+    ): SaveTemporaryUserProfileUseCase {
+        return SaveTemporaryUserProfileUseCase(userRepository)
     }
 
     @Provides
     @Singleton
-    fun provideSaveTemporaryUserProfileUseCase(
-        userRepository: UserSignUpRepository
-    ): SaveTemporaryUserProfileUseCase {
-        return SaveTemporaryUserProfileUseCase(userRepository)
+    fun provideSendFcmTokenUseCase(
+        fcmTokenRepository: FcmTokenRepository
+    ): SendFcmTokenUseCase {
+        return SendFcmTokenUseCase(fcmTokenRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideSaveFcmTokenUseCase(
+        tokenRepository: TokenRepository
+    ): SaveFcmTokenUseCase {
+        return SaveFcmTokenUseCase(tokenRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetFcmTokenUseCase(
+        tokenRepository: TokenRepository
+    ): GetFcmTokenUseCase {
+        return GetFcmTokenUseCase(tokenRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddProfileUseCase(
+        repository: UserProfileRepository
+    ): AddProfileUseCase {
+        return AddProfileUseCase(repository)
+    }
+
+
+
 }

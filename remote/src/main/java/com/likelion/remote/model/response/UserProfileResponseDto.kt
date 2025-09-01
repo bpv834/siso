@@ -10,9 +10,9 @@ data class UserProfileResponseDto(
     @SerializedName("age") val age: Int =31,
     @SerializedName("nickname") val nickname: String="test",
     @SerializedName("introduce") val introduce: String,
-    @SerializedName("preferenceContact") val preferenceContact: String = "Call",
     @SerializedName("location") val location: String = "Seoul",
-    @SerializedName("sex") val sex: String = "Male",
-    @SerializedName("preferenceSex") val preferenceSex: String = "Male",
-    @SerializedName("profileImages") val profileImages: List<ImageResponseDto> // ImageResponseDto 리스트
+    @SerializedName("sex") val sex: String = "MALE",
+    @SerializedName("preferenceSex") val preferenceSex: String = "MALE",
+    @SerializedName("profileImages") val profileImages: List<ImageResponse>,// ImageResponseDto 리스트
+    @SerializedName("meetings") val meetings : List<String> = listOf("CLUB_ACTIVITY","VOLUNTEER_ACTIVITY","HOBBY_GROUP")
 )

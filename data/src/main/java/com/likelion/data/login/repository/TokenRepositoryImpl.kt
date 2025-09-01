@@ -8,6 +8,7 @@ import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.local.datastore.DataStoreDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
@@ -33,5 +34,14 @@ class TokenRepositoryImpl @Inject constructor(
 
     override suspend fun saveTokenAll(user: User) {
         data.saveTokenAll(user)
+    }
+
+    override suspend fun getFcmToken(): Flow<String?> {
+       return data.getFcmToken()
+    }
+
+    override suspend fun saveFcmToken(token: String) {
+        Timber.d("repoImpl에서 저장하기 fcm 토큰 저장하기 $token")
+        data.saveFcmToken(token)
     }
 }

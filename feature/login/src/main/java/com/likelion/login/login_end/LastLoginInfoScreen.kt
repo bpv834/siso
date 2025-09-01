@@ -10,12 +10,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import coil3.compose.AsyncImage
+import com.likelion.login.event.UiEvent
+import com.likelion.login.state.UiState
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -26,6 +32,22 @@ fun LastLoginInfoScreen(
     onNavigation: () -> Unit,
     viewModel: LastLoginInfoScreenViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(uiState) {
+        // fcm 토큰 업로드 트리거
+        when (uiState) {
+            is UiState.Error -> {}
+            UiState.Idle -> {}
+            UiState.Loading -> {}
+            // 토큰 완료 상태면 화면을 전환한다
+            UiState.SuccessUploadFcmToken -> onNavigation()
+            // 프로필 완료 상태면 업로드프로필 이벤트 발생시킨다
+            UiState.SuccessUploadProfile -> viewModel.emitUploadFcmToken()
+
+        }
+    }
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -57,8 +79,7 @@ fun LastLoginInfoScreen(
                 .padding(horizontal = 16.dp),
             text = "인연 만나기",
             onClick = {
-                viewModel.onClick()
-                onNavigation()
+                viewModel.onProfileUploadClicked()
             },
         )
         Spacer(Modifier.size(72.dp))

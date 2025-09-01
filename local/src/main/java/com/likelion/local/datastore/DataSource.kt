@@ -1,6 +1,5 @@
 package com.likelion.local.datastore
 
-import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.User
 import com.likelion.local.model.BasicTokenEntity
 import kotlinx.coroutines.flow.Flow
@@ -12,4 +11,6 @@ interface DataSource {
     suspend fun saveToken(token: BasicTokenEntity)
     suspend fun saveTokenAll(user: User)
     suspend fun getTokenAll(): Flow<User?>
+    suspend fun saveFcmToken(token: String)
+    fun getFcmToken(): Flow<String?>
 }

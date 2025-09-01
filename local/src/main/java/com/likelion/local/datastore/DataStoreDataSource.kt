@@ -24,6 +24,7 @@ class DataStoreDataSource @Inject constructor(
         val USER_STATUS = stringPreferencesKey("USER_STATUS")
         val USER_JSON = stringPreferencesKey("USER_JSON")
         val HAS_PROFILE = booleanPreferencesKey("IS_PROFILE")
+        val FCM_TOKEN = stringPreferencesKey("FCM_TOKEN")
 
     }
 
@@ -57,6 +58,7 @@ class DataStoreDataSource @Inject constructor(
             prefs.remove(PreferencesKey.USER_STATUS)
             prefs.remove(PreferencesKey.USER_JSON)
             prefs.remove(PreferencesKey.HAS_PROFILE)
+            prefs.remove(PreferencesKey.FCM_TOKEN)
         }
     }
 
@@ -97,6 +99,20 @@ class DataStoreDataSource @Inject constructor(
                     adapter.fromJson(json)
                 }.getOrNull()
             }
+        }
+    }
+
+    // FCM 토큰 저장
+    override suspend fun saveFcmToken(token: String) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKey.FCM_TOKEN] = token
+        }
+    }
+
+    // FCM 토큰 가져오기
+    override fun getFcmToken(): Flow<String?> {
+        return dataStore.data.map { prefs ->
+            prefs[PreferencesKey.FCM_TOKEN]
         }
     }
 
