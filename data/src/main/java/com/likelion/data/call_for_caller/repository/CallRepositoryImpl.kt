@@ -139,6 +139,7 @@ class CallRepositoryImpl @Inject constructor(
         }
     }
 
+    // 사용자가 전화 알림왔을때 전화를 거부할때 동작하는 메서드
     override suspend fun denyCall(
         accessToken: String,
         request: CallModel
