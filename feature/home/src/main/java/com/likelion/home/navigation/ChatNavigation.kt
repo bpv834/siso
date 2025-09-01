@@ -14,9 +14,25 @@ import com.likelion.navigation.NavigationRoute
 
 // 상단 키 정의
 private const val ARG_NICKNAME = "nickname"
+private const val ARG_CHATROOMID = "chatRoomId"
 
 fun NavController.navigateToChat(navOptions: NavOptions? = null) =
     navigate(NavigationRoute.ChatScreen.route, navOptions)
+
+fun NavController.navigateToChatRoom(
+    // 채팅방 id api넣어야함
+    userId: Long,
+    userNickName: String,
+    chatRoomId: Long,
+    navOptions: NavOptions? = null
+) {
+    val encodedNick = Uri.encode(userNickName)
+    return navigate(
+        NavigationRoute.ChatScreen.ChatRoomScreen.route +
+                "?$ARG_NICKNAME=$encodedNick&$ARG_CHATROOMID=$chatRoomId",
+        navOptions
+    )
+}
 
 fun NavGraphBuilder.chatNavigation(
     navController: NavController,
@@ -32,10 +48,11 @@ fun NavGraphBuilder.chatNavigation(
                     launchSingleTop = true
                 }
             },
-            onNavigateChatRoom = { nickname: String ->
+            onNavigateChatRoom = { nickname: String, chatRoomId: Long ->
                 val encoded = Uri.encode(nickname)
                 navController.navigate(
-                    NavigationRoute.ChatScreen.ChatRoomScreen.route + "?$ARG_NICKNAME=$encoded"
+                    NavigationRoute.ChatScreen.ChatRoomScreen.route +
+                            "?$ARG_NICKNAME=$encoded&$ARG_CHATROOMID=$chatRoomId"
                 ) {
                     launchSingleTop = true
                 }
@@ -49,17 +66,25 @@ fun NavGraphBuilder.chatNavigation(
         )
     }
     composable(
-        route = NavigationRoute.ChatScreen.ChatRoomScreen.route + "?$ARG_NICKNAME={$ARG_NICKNAME}",
+        route = NavigationRoute.ChatScreen.ChatRoomScreen.route +
+                "?$ARG_NICKNAME={$ARG_NICKNAME}&$ARG_CHATROOMID={$ARG_CHATROOMID}",
         arguments = listOf(
             navArgument(ARG_NICKNAME) {
                 type = NavType.StringType
-                defaultValue = ""
+                defaultValue = ""           // 필요 시 nullable = false 로 변경 가능
+            },
+            navArgument(ARG_CHATROOMID) {
+                type = NavType.LongType
+                defaultValue = -1L          // nullable=false로 쓰려면 default 제거하고 반드시 전달
             }
         )
     ) { backStackEntry ->
-        val nickname = backStackEntry.arguments?.getString(ARG_NICKNAME)
+        val nickname = backStackEntry.arguments?.getString(ARG_NICKNAME).orEmpty()
+        val chatRoomId = backStackEntry.arguments?.getLong(ARG_CHATROOMID) ?: -1L
+
         ChatRoomRoute(
-            nickname = nickname!!,
+            nickname = nickname,
+            chatRoomId = chatRoomId,
             onNavigateUp = { navController.popBackStack() },
         )
     }
