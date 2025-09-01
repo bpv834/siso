@@ -7,8 +7,8 @@ import javax.inject.Inject
 class AddProfileUseCase @Inject constructor(
     private val repository : UserProfileRepository
 ) {
-    suspend fun execute(refreshToken : String, user : UserSignUpProfile){
-        repository.addProfile(refreshToken = refreshToken, profile = user)
+    suspend fun execute(accessToken : String, user : UserSignUpProfile){
+        repository.addProfile(accessToken = accessToken, profile = user)
     }
 
 }
