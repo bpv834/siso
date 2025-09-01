@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
+import com.likelion.domain.login.usecase.GetLocalTokenUseCase
+import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.lion.call.call_for_caller.CallUiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CallForCallerScreenViewModel @Inject constructor(
     // uscase
+    private val getTokenAllUseCase: GetTokenAllUseCase,
     private val startCallUseCase: StartCallUseCase,
     private val observeCallEventsUseCase: ObserveCallEventsUseCase // AgoraEvent 관찰 유스케이스 주입
 ) : ViewModel(), CallForCallerScreenViewModelType {
@@ -35,6 +39,10 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<CallUiEvent>()
     override val uiEvent = _uiEvent.asSharedFlow()
 
+    // 토큰변수, ui상태가 아니기때문에 따로 관리
+    private val _tokenState = MutableStateFlow<String?>(null)
+    val tokenState: StateFlow<String?> = _tokenState.asStateFlow()
+
 
     // 시간 관련 일 객체
     private var timerJob: Job? = null
@@ -43,10 +51,22 @@ class CallForCallerScreenViewModel @Inject constructor(
     // 전화 버튼 누르는 메서드
     override fun onClickCall(callerId: Long, receiverId: Long) {
         viewModelScope.launch {
-            // 현재 전화 상태 변경
+            // UI 로딩 상태를 업데이트
+            _uiState.update { it.copy(isLoading = true) }
+
+
+            val token = _tokenState.value
+
+            if (token.isNullOrEmpty()) {
+                // 토큰이 없으면 에러 처리
+                _uiState.update { it.copy(isLoading = false) }
+                _uiEvent.emit(CallUiEvent.ShowToast("유효한 토큰이 없어 통화를 시작할 수 없습니다."))
+                return@launch
+            }
             _callState.value = CallForCallerState.Calling // UI를 '통화 시도 중' 상태로 변경
 
-            val result = startCallUseCase.execute(callerId = callerId, receiverId = receiverId)
+
+            val result = startCallUseCase.execute(receiverId = receiverId, accessToken = "")
             result
                 .onSuccess { callInfo ->
                     Timber.d("HomeScreenViewModel: StartCallUseCase 성공적으로 실행됨: ${callInfo.channelName}")
@@ -63,6 +83,7 @@ class CallForCallerScreenViewModel @Inject constructor(
                 }
         }
     }
+
     // 전화 종료 버튼 클릭 이벤트
     override fun onClickEndCall() {
         // 이 코드는 `Unit`을 반환합니다.
@@ -93,20 +114,23 @@ class CallForCallerScreenViewModel @Inject constructor(
     }
 
     override fun resetCallState() {
-      _uiState.update { currentState->
-          currentState.copy(callProgressState = CallForCallerState.Idle)
-      }
+        _uiState.update { currentState ->
+            currentState.copy(callProgressState = CallForCallerState.Idle)
+        }
     }
 
     override fun onClickReportButton() {
-        _uiState.update { currentState->
+        _uiState.update { currentState ->
             currentState.copy(isOpenReportSheet = !currentState.isOpenReportSheet)
         }
     }
 
     override fun onClickConfirmPopup() {
-        _uiState.update { currentState->
-            currentState.copy(isOpenReportSheet = false, isOpenConfirmPopup = !currentState.isOpenConfirmPopup)
+        _uiState.update { currentState ->
+            currentState.copy(
+                isOpenReportSheet = false,
+                isOpenConfirmPopup = !currentState.isOpenConfirmPopup
+            )
         }
     }
 
@@ -147,6 +171,17 @@ class CallForCallerScreenViewModel @Inject constructor(
     init {
         // ViewModel의 생명주기에 맞춰 코루틴을 실행합니다.
         viewModelScope.launch {
+
+            // 토큰 Flow를 collect하여 최신 토큰을 항상 유지합니다.
+            getTokenAllUseCase.invoke().collect { token ->
+                _tokenState.value = token?.accessToken
+                // 토큰을 받으면 초기 로딩을 완료했음을 알립니다.
+                if (token != null) {
+                    _uiState.update { it.copy(isLoading = false) }
+                }
+            }
+
+
             observeCallEventsUseCase.execute().collect { event ->
                 when (event) {
                     // 발신자(Caller)가 채널에 성공적으로 참여했을 때
@@ -161,14 +196,14 @@ class CallForCallerScreenViewModel @Inject constructor(
                     // 통화 중 에러가 발생했을 때
                     is AgoraEvent.CallError -> {
                         Timber.e("HomeScreenViewModel: CallError 이벤트 수신 - ${event.message}")
-                      //  _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
-                       //  _uiEvent.emit(NavigateUp)
+                        //  _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
+                        //  _uiEvent.emit(NavigateUp)
 
                         //  연결중 상태로 테스트
-                      /*  _uiState.update { currentState ->
-                            currentState.copy(callProgressState = CallForCallerState.Calling) // 상태를 통화 시도로 변경
-                        }
-                        _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시*/
+                        /*  _uiState.update { currentState ->
+                              currentState.copy(callProgressState = CallForCallerState.Calling) // 상태를 통화 시도로 변경
+                          }
+                          _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시*/
 
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallActive) } // 상태를 활성 통화로 변경
                         _uiEvent.emit(ShowToast("수신자가 통화에 참여했습니다.")) // UI 토스트 표시

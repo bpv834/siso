@@ -7,7 +7,7 @@ import javax.inject.Inject
 class StartCallUseCase @Inject constructor(
     private val callRepository: CallRepository
 ) {
-    suspend fun execute(callerId: Long, receiverId: Long): Result<CallInfoModel> {
-        return callRepository.startCall(callerId = callerId, receiverId = receiverId)
+    suspend fun execute(receiverId: Long, accessToken : String): Result<CallInfoModel> {
+        return callRepository.startCall(receiverId = receiverId, accessToken = accessToken)
     }
 }

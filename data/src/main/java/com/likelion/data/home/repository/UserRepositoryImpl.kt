@@ -1,59 +1,22 @@
 package com.likelion.data.home.repository
 
-import com.likelion.data.home.api.test.FakeImagesApi
-import com.likelion.data.home.api.test.FakeInterestApi
-import com.likelion.data.home.api.test.FakeProfileApi
-import com.likelion.data.home.api.test.FakeUserApi
-import com.likelion.data.home.api.test.FakeVoiceApi
+import com.likelion.data.home.mapper.toDomain
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.home.repository.UsersRepository
+import com.likelion.remote.api.MatchingApiService
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val userApi: FakeUserApi,
-    private val profileApi: FakeProfileApi,
-    private val imagesApi: FakeImagesApi,
-    private val voiceApi: FakeVoiceApi, // 🎤 음성 API 추가
-    private val interestApi: FakeInterestApi // ❤️ 관심사 API 추가
+    val matchingApiService: MatchingApiService
 ) : UsersRepository {
-
-    override suspend fun getAllUsers(): List<UsersModel> {
-        val userEntities = userApi.getUsersEntity()
-        val profileEntities = profileApi.getProfileEntity()
-        val imagesEntities = imagesApi.getImagesEntity()
-        val voiceEntities = voiceApi.getVoiceSamplesEntity()
-        val interestsEntities = interestApi.getInterestsEntity()
-
-        // 🆔 사용자 ID를 키로 데이터를 매칭
-        val profileMap = profileEntities.associateBy { it.userId }
-        val imagesMap = imagesEntities.groupBy { it.userId }
-        val voiceMap = voiceEntities.associateBy { it.userId }
-        val interestsMap = interestsEntities.groupBy { it.userId }
-
-        return userEntities.mapNotNull { userEntity ->
-            val profile = profileMap[userEntity.id]
-            val images = imagesMap[userEntity.id]?.map { it.path ?: "" } ?: emptyList()
-            val voice = voiceMap[userEntity.id]
-            val interests = interestsMap[userEntity.id]?.map { it.interest } ?: emptyList()
-
-            if (profile != null) {
-                UsersModel(
-                    id = userEntity.id,
-                    isOnline = userEntity.isOnline,
-                    userImages = images,
-                    location = profile.location,
-                    nickname = profile.nickname,
-                    age = profile.age,
-                    voiceUrl = voice?.url ?: "", // 🎤 음성 URL 추가
-                    interests = interests, // ❤️ 관심사 목록 추가
-                    introduce = profile.introduce ?: ""
-                )
-            } else {
-                // 프로필 정보가 없는 유저는 제외
-                null
-            }
+    override suspend fun getAllUsers(eccessToken : String): Result<List<UsersModel>> {
+        return runCatching {
+            val matchingUsers = matchingApiService.getMatchingUsers(eccessToken)
+            val usersModelList = matchingUsers.map { it.toDomain() }
+            usersModelList
         }
     }
+
 
     override suspend fun getUserById(id: Long): UsersModel {
         val fakeUser = UsersModel(

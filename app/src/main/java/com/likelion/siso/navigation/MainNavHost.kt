@@ -139,9 +139,8 @@ fun MainNavHost(
             navController = appState.navController,
             // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
             // navigateToCallForCaller 함수에 이 값들을 전달합니다.
-            onNavigateToCaller = { userId, otherUserId ->
+            onNavigateToCaller = {  otherUserId ->
                 appState.navController.navigateToCallForCaller(
-                    userId = userId,
                     otherUserId = otherUserId,
                     navOptions = navOptions {
                         launchSingleTop = true
