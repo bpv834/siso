@@ -6,10 +6,12 @@ import androidx.annotation.RequiresExtension
 import com.likelion.data.home.mapper.toDomainModel
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.model.CallInfoModel
+import com.likelion.domain.call_for_caller.model.CallRejectModel
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
 import com.likelion.remote.model.request.CallRequest
+import com.likelion.remote.model.request.RejectCallRequest
 import com.likelion.remote.model.response.CallInfoDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -133,5 +135,11 @@ class CallRepositoryImpl @Inject constructor(
             Timber.e(e, "통화 거절 처리 중 에러 발생")
             Result.failure(e)
         }
+    }
+
+    override suspend fun denyCall(accessToken: String, request : Request): Result<CallRejectModel> {
+     /*   mapper ( domain -> request)
+        val request = RejectCallRequest()
+        val response =  callApiService.denyCall(authorization = "Bearer $accessToken", request = )*/
     }
 }
