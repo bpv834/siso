@@ -35,11 +35,13 @@ fun HomeRoute(
     actionSnackbar: () -> Unit = {},
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 명시
     onNavigateToCaller: ( otherUserId: Long) -> Unit
+    onNavigateToChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit,
 ) {
     // HomeScreen에 viewModel과 onNavigateToCaller 콜백을 그대로 전달
     HomeScreen(
         viewModel = hiltViewModel<HomeScreenViewModel>(),
-        toCaller = onNavigateToCaller
+        toCaller = onNavigateToCaller,
+        toChat = onNavigateToChat
     )
 }
 @OptIn(ExperimentalFoundationApi::class)
@@ -47,6 +49,9 @@ fun HomeRoute(
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
     toCaller: (otherUserId: Long) -> Unit
+    viewModel: HomeScreenViewModelType,
+    toChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit
+
 ) {
     // UI State를 Flow에서 collectAsStateWithLifecycle을 사용해 관찰합니다.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -126,6 +131,7 @@ fun HomeScreenPreview() {
         HomeScreen(
             viewModel = FakeHomeScreenViewModel(usecase),
             toCaller = {  otherUserId -> })
+            toChat = { userId, userNickName, chatRoomId -> })
     }
 }*/
 

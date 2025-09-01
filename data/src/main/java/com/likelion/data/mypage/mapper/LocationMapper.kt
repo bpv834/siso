@@ -1,5 +1,6 @@
 package com.likelion.data.mypage.mapper
 
+import android.util.Log.d
 import com.likelion.data.mypage.model.LocationEntity
 import com.likelion.domain.mypage.model.Location
 

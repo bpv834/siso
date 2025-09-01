@@ -15,6 +15,7 @@ fun NavGraphBuilder.homeNavigation(
     navController: NavController,
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 변경
     onNavigateToCaller: (otherUserId: Long) -> Unit,
+    onNavigateToChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit,
     action: () -> Unit,
 ) {
     composable(
@@ -25,7 +26,16 @@ fun NavGraphBuilder.homeNavigation(
             actionSnackbar = action,
             onNavigateToCaller = {  otherUser -> // HomeRoute에서 실제 값을 받아와서
                 onNavigateToCaller(otherUser) // 콜백에 전달
+            onNavigateToChat = { userId, userNickName, chatRoomId ->
+                onNavigateToChat(
+                    userId, userNickName, chatRoomId
+                )
             }
         )
+    }
+    composable(
+        route = NavigationRoute.ChatScreen.ChatRoomScreen.route
+    ) {
+
     }
 }

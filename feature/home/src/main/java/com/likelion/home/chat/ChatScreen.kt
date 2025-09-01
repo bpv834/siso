@@ -2,9 +2,11 @@ package com.likelion.home.chat
 
 import android.view.View
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,15 +30,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,34 +65,38 @@ fun ChatRoute(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
     onNavigateAlarm: () -> Unit = {},
-    onNavigateChatRoom: (String) -> Unit = {},
+    onNavigateChatRoom: (String, Long) -> Unit = { _, _ -> },
     viewModel: ChatViewModel = hiltViewModel()
 ) {
     ChatScreen(
         viewModel = viewModel,
         onNavigateAlarm = { onNavigateAlarm() },
-        onNavigateChatRoom = { nickname -> onNavigateChatRoom(nickname) }
+        onNavigateChatRoom = { nickname, chatRoomId ->
+            onNavigateChatRoom(nickname, chatRoomId)
+        }
     )
 }
 
 @Composable
 fun ChatScreen(
     onNavigateAlarm: () -> Unit,
-    onNavigateChatRoom: (String) -> Unit,
+    onNavigateChatRoom: (String, Long) -> Unit,
     viewModel: ChatViewModel
 ) {
-    //val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+    val pagerState = rememberPagerState(pageCount = { 2 })
+    val scope = rememberCoroutineScope()
+
+    var chatLoaded by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.background(SisoColorTokens.Gray5)
     ) {
-        val pagerState = rememberPagerState(pageCount = { 2 })
-        val scope = rememberCoroutineScope()
-        LaunchedEffect(
-            pagerState.currentPage == 1 &&
-                    uiState.chatHistory.isEmpty() && !uiState.isChatHistoryLoading
-        ) {
-            viewModel.handleEvent(ChatEvent.LoadChatHistory)
+        LaunchedEffect(pagerState.currentPage) {
+            if (pagerState.currentPage == 1 && !chatLoaded) {
+                chatLoaded = true
+                viewModel.handleEvent(ChatEvent.LoadChatHistory)
+            }
         }
         Box(
             modifier = Modifier
@@ -175,21 +186,29 @@ fun ChatScreen(
 fun ChatHistoryPage(
     items: List<ChatHistory>,
     isLoading: Boolean,
-    onNavigateChatRoom: (String) -> Unit,
+    onNavigateChatRoom: (String, Long) -> Unit,
     onDelete: (Long) -> Unit
 ) {
-    if (isLoading) {
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(8) {
-                SkeletonChatRow()
+    when {
+        isLoading -> {
+            LazyColumn(Modifier.fillMaxSize()) {
+                items(8) {
+                    SkeletonChatRow()
+                }
             }
         }
-    } else {
-        ChatHistoryList(
-            items = items,
-            onDelete = onDelete,
-            onNavigateChatRoom = onNavigateChatRoom
-        )
+
+        items.isEmpty() -> {
+            EmptyChatHistory()
+        }
+
+        else -> {
+            ChatHistoryList(
+                items = items,
+                onDelete = onDelete,
+                onNavigateChatRoom = onNavigateChatRoom
+            )
+        }
     }
 }
 
@@ -200,17 +219,23 @@ fun CallHistoryPage(
     isLoading: Boolean,
     onDelete: (Long) -> Unit
 ) {
-    if (isLoading) {
-        // 로딩 중엔 데이터와 무관한 고정 개수 스켈레톤
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(8) { SkeletonCallRow() }
+    when {
+        isLoading -> {
+            LazyColumn(Modifier.fillMaxSize()) {
+                items(8) { SkeletonCallRow() }
+            }
         }
-    } else {
-        // 로딩 종료 후 실제 리스트
-        CallHistoryList(
-            items = items,
-            onDelete = onDelete
-        )
+
+        items.isEmpty() -> {
+            EmptyCallHistory()
+        }
+
+        else -> {
+            CallHistoryList(
+                items = items,
+                onDelete = onDelete
+            )
+        }
     }
 }
 
@@ -218,75 +243,89 @@ fun CallHistoryPage(
 fun ChatHistoryList(
     items: List<ChatHistory>,
     onDelete: (Long) -> Unit,
-    onNavigateChatRoom: (String) -> Unit,
+    onNavigateChatRoom: (String, Long) -> Unit,
 ) {
-    LazyColumn(Modifier.fillMaxSize()) {
-        itemsIndexed(items) { _, contact ->
-            SwipeableItemWithActions(
-                isRevealed = contact.isDelete,
-                actions = {
-                    ActionIcon(
-                        onClick = { onDelete(contact.id) },
-                        backgroundColor = SisoColorTokens.Red60,
-                        modifier = Modifier.fillMaxHeight()
-                    )
-                },
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clickable {
-                            onNavigateChatRoom(contact.nickName)
-                        }
+    var expandedId by rememberSaveable { mutableStateOf<Long?>(null) }
+
+    // 리스트가 바뀌면(삭제 등) 자동으로 닫기
+    LaunchedEffect(items.size) { expandedId = null }
+
+    if (items.isEmpty()) {
+        EmptyChatHistory()
+    } else {
+        LazyColumn(Modifier.fillMaxSize()) {
+            itemsIndexed(
+                items,
+                key = { _, contact -> contact.chatRoomId }   // ✅ 안정 key 필수
+            ) { _, contact ->
+
+                val isRevealed = expandedId == contact.chatRoomId
+
+                SwipeableItemWithActions(
+                    isRevealed = isRevealed,
+                    onExpanded = { expandedId = contact.chatRoomId },              // ✅ '=' (대입)
+                    onCollapsed = { if (expandedId == contact.chatRoomId) expandedId = null },
+                    actions = {
+                        ActionIcon(
+                            text = "나가기",
+                            onClick = {
+                                expandedId = null          // ✅ 삭제 전에 닫기
+                                onDelete(contact.chatRoomId)
+                                Timber.d("ChatRoom: ${contact.chatRoomId}, ${contact.nickName}")
+                            },
+                            backgroundColor = SisoColorTokens.Red60,
+                            modifier = Modifier.fillMaxHeight()
+                        )
+                    },
                 ) {
-                    AsyncImage(
-                        model =
-                            contact.profileImage,
-                        contentDescription = "",
+                    Row(
                         modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .align(Alignment.CenterVertically),
-                    )
-                    Column(
-                        modifier = Modifier
-                            .padding(vertical = 13.dp)
-                            .padding(start = 8.dp)
+                            .padding(horizontal = 16.dp)
+                            .clickable {
+                                expandedId = null         // (선택) 탭 시 닫기
+                                onNavigateChatRoom(contact.nickName, contact.chatRoomId)
+                            }
                     ) {
-                        Text(
-                            text = contact.nickName,
-                            style = SisoTypoTokens.SubTitle1,
+                        AsyncImage(
+                            model = contact.profileImage,
+                            contentDescription = "",
                             modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .align(Alignment.CenterVertically),
                         )
-                        Spacer(modifier = Modifier.size(4.dp))
-                        Text(
-                            text = contact.currentMsg,
-                            style = SisoTypoTokens.Body4,
-                            color = SisoColorTokens.Gray50,
+                        Column(
                             modifier = Modifier
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    Column(
-                        modifier = Modifier
-                            .padding(vertical = 13.dp)
-                            .padding(start = 8.dp)
-                    ) {
-                        Text(
-                            text = contact.callTime,
-                            style = SisoTypoTokens.SubTitle1,
-                            modifier = Modifier
-                        )
-                        Spacer(modifier = Modifier.size(10.dp))
-                        if (contact.isNew) {
-                            AsyncImage(
-                                model = R.drawable.ic_new_msg,
-                                modifier = Modifier
-                                    .padding(end = 10.dp)
-                                    .align(Alignment.End)
-                                    .size(24.dp),
-                                contentDescription = ""
+                                .padding(vertical = 13.dp)
+                                .padding(start = 8.dp)
+                        ) {
+                            Text(text = contact.nickName, style = SisoTypoTokens.SubTitle1)
+                            Spacer(modifier = Modifier.size(4.dp))
+                            Text(
+                                text = contact.currentMsg,
+                                style = SisoTypoTokens.Body4,
+                                maxLines = 1,
+                                color = SisoColorTokens.Gray50,
                             )
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Column(
+                            modifier = Modifier
+                                .padding(vertical = 13.dp)
+                                .padding(start = 8.dp)
+                        ) {
+                            Text(text = contact.callTime, style = SisoTypoTokens.SubTitle1)
+                            Spacer(modifier = Modifier.size(10.dp))
+                            if (contact.isNew) {
+                                AsyncImage(
+                                    model = R.drawable.ic_new_msg,
+                                    modifier = Modifier
+                                        .padding(end = 10.dp)
+                                        .align(Alignment.End)
+                                        .size(24.dp),
+                                    contentDescription = ""
+                                )
+                            }
                         }
                     }
                 }
@@ -300,15 +339,30 @@ private fun CallHistoryList(
     items: List<CallHistory>,
     onDelete: (Long) -> Unit,
 ) {
+    var expandedId by rememberSaveable { mutableStateOf<Long?>(null) }
+
+    // 리스트가 바뀌면(삭제 등) 자동으로 닫기
+    LaunchedEffect(items.size) { expandedId = null }
+
     LazyColumn(Modifier.fillMaxSize()) {
-        itemsIndexed(items) { _, contact ->
+        itemsIndexed(
+            items,
+            key = { _, contact -> contact.callId }
+        ) { _, contact ->
+
+            val isRevealed = expandedId == contact.callId
+
             SwipeableItemWithActions(
-                isRevealed = contact.isDelete,
-                onExpanded = { /* 필요시 구현 */ },
-                onCollapsed = { },
+                isRevealed = isRevealed,
+                onExpanded = { expandedId = contact.callId },
+                onCollapsed = { if (expandedId == contact.callId) expandedId = null },
                 actions = {
                     ActionIcon(
-                        onClick = { onDelete(contact.id) },
+                        text = "인연끊기",
+                        onClick = {
+                            expandedId = null
+                            onDelete(contact.callId)
+                        },
                         backgroundColor = SisoColorTokens.Red60,
                         modifier = Modifier.fillMaxHeight()
                     )
@@ -345,7 +399,6 @@ private fun CallHistoryList(
         }
     }
 }
-
 
 @Composable
 private fun SkeletonChatRow() {
@@ -439,6 +492,7 @@ private fun SkeletonCallRow() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActionIcon(
+    text: String,
     onClick: () -> Unit,
     backgroundColor: Color,
     modifier: Modifier = Modifier,
@@ -446,11 +500,12 @@ fun ActionIcon(
     Box(
         modifier = modifier
             .size(width = 120.dp, height = 80.dp)
+            .background(backgroundColor)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "인연끊기",
+            text = text,
             style = SisoTypoTokens.Body2,
             color = SisoColorTokens.White,
             modifier = Modifier
@@ -464,16 +519,19 @@ fun ActionIcon(
 fun CallHistoryPreview() {
     val previewList = listOf(
         CallHistory(
+            callId = 0,
             profileImage = "https://picsum.photos/200/200",
             nickName = "코틀린",
             callTime = "12:10"
         ),
         CallHistory(
+            callId = 1,
             profileImage = "https://picsum.photos/200/201",
             nickName = "자바",
             callTime = "12:12"
         ),
         CallHistory(
+            callId = 2,
             profileImage = "https://picsum.photos/200/202",
             nickName = "씨",
             callTime = "12:13"
@@ -493,6 +551,7 @@ fun CallHistoryPreview() {
 private fun ChatHistoryPreview() {
     val previewList = listOf(
         ChatHistory(
+            chatRoomId = 0,
             profileImage = "https://picsum.photos/200/200",
             nickName = "코틀린",
             callTime = "12:10",
@@ -500,6 +559,7 @@ private fun ChatHistoryPreview() {
             isNew = true,
         ),
         ChatHistory(
+            chatRoomId = 1,
             profileImage = "https://picsum.photos/200/201",
             nickName = "자바",
             callTime = "12:12",
@@ -507,6 +567,7 @@ private fun ChatHistoryPreview() {
             isNew = true,
         ),
         ChatHistory(
+            chatRoomId = 2,
             profileImage = "https://picsum.photos/200/202",
             nickName = "씨",
             callTime = "12:13",
@@ -518,8 +579,64 @@ private fun ChatHistoryPreview() {
         ChatHistoryList(
             items = previewList,
             onDelete = {},
-            onNavigateChatRoom = { _ -> }
+            onNavigateChatRoom = { _, _ -> }
         )
+    }
+}
+
+
+@Composable
+@Preview
+private fun EmptyChatHistory() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Image(
+            painter = painterResource(R.drawable.coffeecup),
+            contentDescription = "",
+            contentScale = ContentScale.Fit
+        )
+        Spacer(modifier = Modifier.size(44.dp))
+        Text(
+            text =
+                "아직 대화한 기록이 없어요.\n 좋은 인연과 이야기를 나눠보세요.",
+            style = SisoTypoTokens.Body3,
+            color = SisoColorTokens.Gray70,
+            textAlign = TextAlign.Center
+        )
+
+    }
+}
+
+@Composable
+private fun EmptyCallHistory() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(R.drawable.smartphone),
+            contentDescription = "",
+            contentScale = ContentScale.Fit,
+        )
+        Spacer(modifier = Modifier.size(70.dp))
+        Text(
+            text = "첫 전화를 기다리고 있어요\n마음 맞는 분께 목소리로 인사해보세요.",
+            style = SisoTypoTokens.Body3,
+            color = SisoColorTokens.Gray70,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun EmptyCallHistoryPreview() {
+    SisoTheme {
+        EmptyCallHistory()
     }
 }
 

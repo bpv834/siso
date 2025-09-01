@@ -33,7 +33,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun AdditionalInfoAlcoholScreen(
     viewModel: AdditionalInfoAlcoholScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (String) -> Unit = {},
 ) {
     var receiver by remember {
         mutableStateOf("")
@@ -43,9 +43,9 @@ fun AdditionalInfoAlcoholScreen(
         receiver = viewModel.receiver.value
     }
     val smokingList = listOf(
-        "자주 마셔요 (주 3회이상)",
-        "가끔 마셔요 (주 1회~한 달에 한 번)",
-        "전혀 안 해요",
+        "자주 마심(주3회이상)",
+        "가끔 마심(주 1회 ~ 한달에 한번)",
+        "전혀 안함",
     )
 
     Box(
@@ -92,15 +92,15 @@ fun AdditionalInfoAlcoholScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
                 if (receiver.isNotBlank()) {
                     d("receiver", receiver)
+                    popBackStack(receiver)
                 }
-                popBackStack()
+
             }
             Spacer(Modifier.size(72.dp))
         }

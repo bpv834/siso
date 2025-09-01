@@ -6,16 +6,20 @@ import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,17 +34,23 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import com.likelion.ui.R
@@ -53,14 +63,18 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyPageScreen(
+    viewModel: MyPageViewModelType,
     mainEdit: () -> Unit = {},
     actionSnackbar: () -> Unit = {}
 )  {
-
-    val progressValue by remember { mutableFloatStateOf(.36F) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val progressValue = uiState.progressValue
+    val userImages = uiState.userImages
+    val nickname = uiState.nickname
+    val age = uiState.age
+    val location = uiState.location
 
     val profileOption = listOf(
-        "통화 기록" to {},
         "차단 / 신고한 인연" to {},
         "매칭 필터 설정" to {},
     )
@@ -74,8 +88,11 @@ fun MyPageScreen(
         Row {
             ProfileCircle(
                 padding = 8.dp,
-                processFloat = progressValue
-            )
+                processFloat = progressValue,
+                profileImage = userImages
+            ){
+                mainEdit()
+            }
             Column(
                 modifier = Modifier
                     .offset(x = ((-2).dp))
@@ -83,13 +100,13 @@ fun MyPageScreen(
             ) {
                 Spacer(modifier = Modifier.size(size = 6.dp))
                 Text(
-                    text = "따뜻한 봄날",
+                    text = nickname,
                     style = SisoTypoTokens.Title2,
                     color = SisoColorTokens.Gray90,
                 )
                 Spacer(modifier = Modifier.size(size = 2.dp))
                 Text(
-                    text = "56세",
+                    text = "${age}세",
                     style = SisoTypoTokens.Title3,
                     color = SisoColorTokens.Gray70,
                 )
@@ -102,7 +119,7 @@ fun MyPageScreen(
                     )
                     Spacer(modifier = Modifier.size(size = 2.dp))
                     Text(
-                        text = "서울 중구",
+                        text = location,
                         style = SisoTypoTokens.Label1,
                         color = SisoColorTokens.Gray90,
                     )
@@ -135,46 +152,6 @@ fun MyPageScreen(
 
                 } else
                     Spacer(modifier = Modifier.size(width = 190.dp, height = 48.dp))
-                /*                Box(
-                                modifier = Modifier.size(194.dp, 48.dp)
-                                    .padding(end = 10.dp)
-                            ){
-                                AsyncImage(
-                                    modifier = Modifier.align(Alignment.CenterStart)
-                                        .offset(x = (-10).dp)
-                                        .size(width = 15.dp, height = 16.dp),
-                                    model = com.likelion.ui.R.drawable.left_triangle,
-                                    contentDescription = ""
-                                )
-                                Box(
-                                    modifier = Modifier.padding(start = 5.dp)
-                                        .size(181.dp, 48.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(SisoColorTokens.Gold50),
-
-                                    ){
-
-                                    Row(
-                                        modifier = Modifier.padding(12.dp)
-                                            .align(Alignment.CenterStart)
-                                    ) {
-
-                                        Text(
-                                            modifier = Modifier.size(width = 125.dp, height = 23.dp),
-                                            text = "자기소개 완성하기",
-                                            style = SisoTypoTokens.SubTitle1,
-                                            color = SisoColorTokens.Black,
-                                        )
-                                        Spacer(modifier = Modifier.size(size = 8.dp))
-                                        AsyncImage(
-                                            modifier = Modifier.size(24.dp,24.dp),
-                                            model = com.likelion.ui.R.drawable.text_edit_gray70,
-                                            contentDescription = ""
-                                        )
-                                    }
-
-                                }
-                            }*/
             }
         }
         Spacer(modifier = Modifier.size(size = 27.dp))
@@ -203,9 +180,10 @@ fun MyPageScreen(
 fun ProfileCircle(
     padding: Dp,
     processFloat: Float,
+    profileImage: String = "",
     completeEdit: ()->Unit = {}
 ) {
-    var progress by remember { mutableFloatStateOf(processFloat) }
+    d("progressText", "${(processFloat*100).toInt()} $processFloat")
     Box(
         modifier = Modifier
             .padding(start = padding)
@@ -213,13 +191,15 @@ fun ProfileCircle(
     ) { // 박스 우선 순위 아래 부터 그려짐
         // 2 이미지가 다음으로 그러졈
         AsyncImage(
-            modifier = Modifier.size(120.dp, 120.dp),
-            model = R.drawable.example_profile,
+            modifier = Modifier.size(120.dp, 120.dp)
+                .clip(CircleShape),
+            model = profileImage.ifBlank { R.drawable.example_profile },
+            contentScale = ContentScale.Crop,
             contentDescription = ""
         )
         // 1 서클이 먼저 그려짐
         CircularProgressIndicator(
-            progress = { progress },
+            progress = { processFloat },
             modifier = Modifier
                 .size(128.dp)
                 .offset(x = (-4).dp, y = (-4).dp),
@@ -243,9 +223,10 @@ fun ProfileCircle(
                 ) {
                     Spacer(Modifier.size(12.dp))
                     Text(
-                        text = "36%",
+                        text = "${(processFloat*100).toInt()}%",
                         style = SisoTypoTokens.Button1,
                         color = SisoColorTokens.Black,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
                             .width(41.dp)
                             .padding(top = 8.dp, bottom = 8.dp),
@@ -263,32 +244,43 @@ fun ProfileCircle(
 
             }
         else
-            Row(
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .size(117.dp, 44.dp)
                     .border(2.dp, SisoColorTokens.Gold40, RoundedCornerShape(99.dp))
                     .background(SisoColorTokens.Gray5, RoundedCornerShape(99.dp))
-                    .clickable {
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                    ) {
                         completeEdit()
                     }
             ) {
-                Text(
-                    text = "수정하기",
-                    style = SisoTypoTokens.SubTitle1,
-                    color = SisoColorTokens.Black,
-                    modifier = Modifier
-                        .size(width = 61.dp, height = 23.dp)
-                        .padding(start = 12.dp, top = 8.dp, bottom = 8.dp),
-                )
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
-                    tint = SisoColorTokens.Gray70,
-                    contentDescription = ""
-                )
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Spacer(Modifier.size(12.dp))
+                    Text(
+                        text = "수정하기",
+                        style = SisoTypoTokens.SubTitle1,
+                        color = SisoColorTokens.Black,
+                        modifier = Modifier
+                            .width(64.dp)
+                            .padding(top = 9.dp, bottom = 9.dp),
+                    )
+                    Spacer(Modifier.size(4.dp))
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = rememberAsyncImagePainter(R.drawable.ic_text_edit),
+                        tint = SisoColorTokens.Gray70,
+                        contentDescription = ""
+                    )
+                    Spacer(Modifier.size(12.dp))
+                }
             }
-
 
     }
 
@@ -330,7 +322,8 @@ fun ProfileText(
 fun MyPageScreenPreview() {
     SisoTheme {
         Surface{
-            MyPageScreen()
+            val viewModel = FakeMyPageViewModel()
+            MyPageScreen(viewModel)
         }
 
     }

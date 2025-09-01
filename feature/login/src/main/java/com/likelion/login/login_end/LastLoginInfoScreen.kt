@@ -18,7 +18,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import coil3.compose.AsyncImage
+import com.likelion.login.event.UiEvent
 import com.likelion.login.state.UiState
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
@@ -31,14 +33,20 @@ fun LastLoginInfoScreen(
     viewModel: LastLoginInfoScreenViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     LaunchedEffect(uiState) {
-        if (uiState is UiState.Success) {
-            onNavigation() // 업로드 성공 시에만 이동
-        } else if (uiState is UiState.Error) {
-            // 필요하면 토스트/다이얼로그 띄우기
+        // fcm 토큰 업로드 트리거
+        when (uiState) {
+            is UiState.Error -> {}
+            UiState.Idle -> {}
+            UiState.Loading -> {}
+            // 토큰 완료 상태면 화면을 전환한다
+            UiState.SuccessUploadFcmToken -> onNavigation()
+            // 프로필 완료 상태면 업로드프로필 이벤트 발생시킨다
+            UiState.SuccessUploadProfile -> viewModel.emitUploadFcmToken()
+
         }
     }
-
 
     Column(
         modifier = Modifier

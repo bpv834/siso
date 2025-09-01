@@ -15,13 +15,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults.filledIconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -102,16 +104,20 @@ fun ChatTextField(
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        IconButton(
-            onClick = {
-                onEnter()
-            },
-            enabled = query.isNotBlank()
+        FilledIconButton(
+            onClick = { onEnter() },
+            enabled = query.isNotBlank(),
+            colors = filledIconButtonColors(
+                containerColor = SisoColorTokens.Gold30,
+                contentColor = SisoColorTokens.Gray90,
+                disabledContainerColor = SisoColorTokens.Gray20,
+                disabledContentColor = SisoColorTokens.Gray50
+            )
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_send),
                 contentDescription = "보내기",
-                tint = if (query.isNotBlank()) SisoColorTokens.Black else SisoColorTokens.Gray30
+                tint = if (query.isNotBlank()) SisoColorTokens.Gray90 else SisoColorTokens.Gray40
             )
         }
     }
@@ -132,6 +138,7 @@ fun ChatBox(chat: PartnerChat) {
             contentDescription = "프로필 사진",
             modifier = Modifier
                 .size(38.dp)
+                .clip(CircleShape)
         )
         Spacer(modifier = Modifier.size(8.dp))
         Box(
@@ -220,6 +227,7 @@ fun MyChatBoxPreview() {
     SisoTheme {
 
         val text = MyChat(
+            chatRoomId = 0,
             msg = "이건 바로 위에 있는 텍스트 박스입니다. 시간이 보이지 않아요",
             time = "12:25",
             true

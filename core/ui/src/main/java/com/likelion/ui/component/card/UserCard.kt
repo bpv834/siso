@@ -57,6 +57,7 @@ fun UserCard(
     onImageClick: (imageUrl: String) -> Unit,
     onClickButtonCall: (receiverId: Long) -> Unit, // 상대 유저 uid를 얻어오는 메서드
     toCallScreen: (Long) -> Unit,
+    onClickMessage: (Long, String, Long) -> Unit,
     isPossibleMessage: Boolean,
 ) {
 
@@ -239,6 +240,7 @@ fun UserCard(
                             .height(80.dp),
                         // IconButton 크기 설정,
                         onClick = {
+                            onClickMessage(user.id, user.nickname, 0)
                         },
                         colors = IconButtonDefaults.iconButtonColors(
                             // `isPossibleMessage` 상태에 따라 아이콘 색상을 변경합니다.
@@ -309,6 +311,7 @@ fun UserCardPreview() {
         {},
         {},
         { id1,  -> },
+        { userId, userNickName, chatRoomId -> },
         false
     )
 }

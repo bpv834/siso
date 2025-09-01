@@ -7,7 +7,9 @@ interface RecordEditInfoScreenViewModelType {
     val recordingEditState: StateFlow<RecordingEditState> // 녹음 상태를 노출하는 StateFlow 추가
     val secondsState : StateFlow<Int> // 초 상태 변수
     val recordedFilePath: StateFlow<String?> // 녹음 파일 경로
+    val receiverUrl: StateFlow<String?> // 서버에서 받은 음성 녹음 주소
 
+    fun fetchAudioBytes(voiceUrl: String) // 초기 값 세팅
     fun onClickNextButton() // 다음 클릭 메서드
     fun startRecording() // 녹음 시작 메서드
     fun stopRecording() // 녹음 중지 메서드

@@ -1,68 +1,118 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
+import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.viewModelScope
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.ui.component.photo_layout.EditableImage
+import com.likelion.ui.component.photo_layout.ImageItem
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class FakeMainEditInfoScreenViewModel(
 
     // usecase자리
 ): MainEditInfoScreenViewModelType {
 
-    init {
+    private var _uiState = MutableStateFlow(EditUiState())
+    override val uiState = _uiState.asStateFlow()
 
-    }
-    private val _nameState = MutableStateFlow("")
-    override val nameState : StateFlow<String> get() = _nameState.asStateFlow()
-    private val _ageState = MutableStateFlow("")
-    override val ageState: StateFlow<String> get() = _ageState.asStateFlow()
-    private val _heightState = MutableStateFlow("")
-    override val heightState : StateFlow<String> get() = _heightState.asStateFlow()
-    private val _weightState = MutableStateFlow("")
-    override val weightState: StateFlow<String> get() = _weightState.asStateFlow()
-    private val _myRadioButtons = MutableStateFlow(
-        mutableStateListOf(
-            Pair(first = "여성", second = false),
-            Pair(first = "남성", second = false),
-        )
-    )
-    override val myRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>> get() = _myRadioButtons.asStateFlow()
-    private val _pairRadioButtons = MutableStateFlow(
-        mutableStateListOf(
-            Pair(first = "이성", second = false),
-            Pair(first = "동성", second = false),
-            Pair(first = "상관없음", second = false),
-        )
-    )
-    override val pairRadioButtons : StateFlow<MutableList<Pair<String, Boolean>>> get() = _pairRadioButtons.asStateFlow()
-    private val _firstContinueBoolean = MutableStateFlow(false)
-    override val fistContinueBoolean : StateFlow<Boolean> get() = _firstContinueBoolean.asStateFlow()
-    override fun fistContinueBooleanUpdate() = _firstContinueBoolean.update {
-        val textBoolean = nameState.value.isNotBlank() && ageState.value.isNotBlank()
-        d("boolean","text $ageState")
-        d("boolean","text $nameState")
-        d("boolean","text $textBoolean")
+    private val _userImages = mutableStateListOf<EditableImage>()
+    override val userImages: SnapshotStateList<EditableImage> = _userImages
 
-        val tempBoolean = myRadioButtons.value.reduce { acc, pair ->
-            val boolean = acc.copy(second = pair.second || acc.second)
-            d("boolean","tempBoolean $pair")
-            boolean
-        }.second && textBoolean
-        val continueBoolean = pairRadioButtons.value.reduce { acc, pair ->
-            val boolean = acc.copy(second = pair.second || acc.second)
-            d("boolean","continueBoolean $pair")
-            boolean
-        }.second && tempBoolean
-        d("boolean","continueBoolean $continueBoolean")
-        continueBoolean
+    override fun fistContinueBooleanUpdate() = _uiState.update {
+        val newUi = it.copy(
+            firstContinueBoolean = it.fistContinueBooleanUpdate()
+        )
+        d("boolean","ui $newUi")
+        newUi
     }
 
-    override fun nameUpdate(input: String) {
-        _nameState.update { input }
-        fistContinueBooleanUpdate()
+    override fun nameUpdate(input: String) = _uiState.update {
+        val tempUi = it.copy(editUsersModel = it.editUsersModel.copy(nickname = input))
+        tempUi.copy(firstContinueBoolean = it.fistContinueBooleanUpdate())
+    }
+
+    override fun myRadioButtonsUpdate(sex: String) = _uiState.update {
+        val male = it.myRadioButtons[0].first
+        val feMale = it.myRadioButtons[1].first
+        it.copy(
+            myRadioButtons = listOf(
+                male to (male == sex),
+                feMale to (feMale == sex)
+            )
+        )
+    }
+
+    override fun pairRadioButtonsUpdate(pair: String) = _uiState.update {
+        val other = it.pairRadioButtons[0].first
+        val equil = it.pairRadioButtons[1].first
+        val nothing = it.pairRadioButtons[2].first
+        it.copy(
+            pairRadioButtons = listOf(
+                other to (other == pair),
+                equil to (equil == pair),
+                nothing to (nothing == pair)
+            )
+        )
+    }
+
+    @SuppressLint("DefaultLocale")
+    override fun playAudio(context: Context) {
+        try {
+            d("audio","playAudio")
+            val mediaPlayer = _uiState.value.mediaPlayer
+            mediaPlayer.setDataSource(context, Uri.parse(uiState.value.voicePath))
+
+            mediaPlayer.setOnPreparedListener{
+                it.start() // 재생 시작
+                runPlayingTimer()
+            }
+            mediaPlayer.prepareAsync()// 파일을 불러올 준비를 합니다.
+
+            // 재생이 끝나면 MediaPlayer 자원을 해제합니다.
+            mediaPlayer.setOnCompletionListener {
+                it.release()
+            }
+        } catch (e: Exception) {
+            // 오류 처리
+            e.printStackTrace()
+        }
+    }
+
+    override fun stopAudio() {
+        try {
+            val mediaPlayer = _uiState.value.mediaPlayer
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // 타이머 시작 메서드
+    override fun runPlayingTimer() {
+        // 기존 Job이 있다면 취소
+        uiState.value.playJob?.cancel()
+
+    }
+
+    override fun updateUsers(usersModel: UsersFullModel) {
+        _uiState.update {
+            it.copy(editUsersModel = usersModel)
+        }
     }
 }

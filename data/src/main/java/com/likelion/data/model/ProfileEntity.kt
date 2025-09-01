@@ -16,7 +16,7 @@ data class ProfileEntity(
     val religion: String?, // Enum (nullable)
 
     @SerializedName("is_smoke")
-    val isSmoke: Boolean?, // Boolean nullable
+    val isSmoke: String?, // Enum (nullable)
 
     @SerializedName("age")
     val age: Int, // Int, NOT NULL

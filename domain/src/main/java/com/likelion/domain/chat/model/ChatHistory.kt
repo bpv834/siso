@@ -1,7 +1,7 @@
 package com.likelion.domain.chat.model
 
 data class ChatHistory(
-    val id: Long=0,
+    val chatRoomId: Long,
     val nickName: String,
     val profileImage: String,
     val callTime: String,
