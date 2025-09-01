@@ -1,6 +1,7 @@
 package com.likelion.remote.di
 
 import com.likelion.remote.api.CallApiService
+import com.likelion.remote.api.ChatApiService
 import com.likelion.remote.api.KakaoAuthApiService
 import com.likelion.remote.api.UserSignUpApi
 import com.likelion.remote.fake_api.FakeCallApiService
@@ -19,6 +20,12 @@ object RemoteModule {
     fun provideKakaoAuthApiService(retrofit: Retrofit): KakaoAuthApiService =
         retrofit.create(KakaoAuthApiService::class.java)
 
+    @Singleton
+    @Provides
+    fun provideChatApiService(
+        retrofit: Retrofit
+    ): ChatApiService = retrofit.create(ChatApiService::class.java)
+
     // CallApiService를 제공하는 부분 (Fake 구현체 주입)
     @Singleton
     @Provides
@@ -30,7 +37,7 @@ object RemoteModule {
     ): CallApiService {
         // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
         // return FakeCallApiService() // 👈  가짜 구현체 반환
-         return retrofit.create(CallApiService::class.java) // 실제 서버 통신 시 사용
+        return retrofit.create(CallApiService::class.java) // 실제 서버 통신 시 사용
     }
 
     @Singleton

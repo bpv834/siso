@@ -11,6 +11,7 @@ import com.likelion.home.navigation.edit_Main.settingMainNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
+import com.likelion.home.navigation.navigateToChatRoom
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.login.navigation.inputNavigation
@@ -26,8 +27,8 @@ import com.lion.call.navigation.navigateToCallForCaller
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
-    startDestination: String = NavigationRoute.HomeScreen.route
-//    startDestination: String = NavigationRoute.LoginScreen.route
+   // startDestination: String = NavigationRoute.HomeScreen.route
+    startDestination: String = NavigationRoute.LoginScreen.route
 ) {
     val cotext = LocalContext.current
     NavHost(
@@ -68,7 +69,7 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToInput()
         }
-        homeNavigation (
+        homeNavigation(
             navController = appState.navController,
             // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
             // navigateToCallForCaller 함수에 이 값들을 전달합니다.
@@ -81,7 +82,14 @@ fun MainNavHost(
                     }
                 )
             },
-        ){
+            onNavigateToChat = { userId, userNickName,chatRoomId ->
+                appState.navController.navigateToChatRoom(
+                    userId = userId,
+                    userNickName = userNickName,
+                    chatRoomId = chatRoomId
+                )
+            },
+        ) {
             appState.navController.navigateToHome()
         }
         chatNavigation(
@@ -111,10 +119,10 @@ fun MainNavHost(
             navController = appState.navController
         ){
             appState.navController.navigateToMyPage(
-            navOptions {
-                appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
-                launchSingleTop = true
-            }
+                navOptions {
+                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
+                    launchSingleTop = true
+                }
             )
         }
 
@@ -123,7 +131,7 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToMyPage(
                 navOptions {
-                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
+                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
                     launchSingleTop = true
                 }
             )
