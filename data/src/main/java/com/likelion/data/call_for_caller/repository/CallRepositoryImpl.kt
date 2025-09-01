@@ -3,15 +3,17 @@ package com.likelion.data.call_for_caller.repository
 import android.net.http.HttpException
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import com.likelion.data.call_for_caller.mapper.toDomain
+import com.likelion.data.call_for_caller.mapper.toRemote
 import com.likelion.data.home.mapper.toDomainModel
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.model.CallInfoModel
-import com.likelion.domain.call_for_caller.model.CallRejectModel
+import com.likelion.domain.call_for_caller.model.CallModel
+import com.likelion.domain.call_for_caller.model.CallRejectResponseModel
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
 import com.likelion.remote.model.request.CallRequest
-import com.likelion.remote.model.request.RejectCallRequest
 import com.likelion.remote.model.response.CallInfoDto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -137,9 +139,32 @@ class CallRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun denyCall(accessToken: String, request : Request): Result<CallRejectModel> {
-     /*   mapper ( domain -> request)
-        val request = RejectCallRequest()
-        val response =  callApiService.denyCall(authorization = "Bearer $accessToken", request = )*/
+    override suspend fun denyCall(
+        accessToken: String,
+        request: CallModel
+    ): Result<CallRejectResponseModel> {
+        return try {
+            // 도메인 모델 → Remote DTO로 변환
+            val remoteRequest = request.toRemote()
+
+            // API 호출
+            val response = callApiService.denyCall(
+                authorization = "Bearer $accessToken",
+                request = remoteRequest
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Result.success(body.toDomain())
+                } else {
+                    Result.failure(Exception("Empty response body"))
+                }
+            } else {
+                Result.failure(Exception("HTTP ${response.code()} ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

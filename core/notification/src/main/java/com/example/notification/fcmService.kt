@@ -43,10 +43,13 @@ class FcmService @Inject constructor(
         when (type) {
             "CALL" -> {
                 // 전화는 UI 바로 띄우기 위해 모든 정보 포함 가능
+                val callerId = remoteMessage.data["callerId"]
                 val callerName = remoteMessage.data["callerName"]
                 val callerImage = remoteMessage.data["callerImage"]
                 val agoraChannel = remoteMessage.data["agoraChannel"]
                 val agoraToken = remoteMessage.data["agoraToken"]
+                val id = remoteMessage.data["id"]
+
 
                 CoroutineScope(Dispatchers.IO).launch {
                     FcmEventBus.send(
@@ -54,7 +57,9 @@ class FcmService @Inject constructor(
                             callerName = callerName ?: "",
                             callerImage = callerImage ?: "",
                             agoraChannel = agoraChannel ?: "",
-                            agoraToken = agoraToken ?: ""
+                            agoraToken = agoraToken ?: "",
+                            id = id.toString(),
+                            callerId = callerId.toString()
                         )
                     )
                 }

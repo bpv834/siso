@@ -8,5 +8,4 @@ data class RejectCallRequest(
     @SerializedName("token") val token: String,
     @SerializedName("callerId") val callerId: Long,
     @SerializedName("receiverId") val receiverId: Long,
-    @SerializedName("firstCall") val firstCall: Boolean
 )
