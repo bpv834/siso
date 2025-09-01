@@ -3,6 +3,7 @@ package com.likelion.home.home_page
 
 import android.view.View
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,8 +26,11 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.likelion.home.home_page.HomeScreenUiEvent.*
 import com.likelion.ui.component.card.UserCard
 import com.likelion.ui.component.full_screen.FullScreenImageDialog
+import com.likelion.ui.theme.SisoColorTokens
+import timber.log.Timber
 
 @Composable
 fun HomeRoute(
@@ -53,6 +57,7 @@ fun HomeScreen(
     toChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit
 
 ) {
+
     // UI State를 Flow에서 collectAsStateWithLifecycle을 사용해 관찰합니다.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -93,7 +98,7 @@ fun HomeScreen(
                         selectedImageUrl = imageUrl
                         showImageDialog = true
                     },
-                    onClickButtonCall = { receiverId -> viewModel.onEvent(HomeScreenUiEvent.OnClickCallButton(0L, receiverId)) },
+                    onClickButtonCall = { receiverId -> viewModel.onEvent(OnClickCallButton(0L, receiverId)) },
                     toCallScreen = { otherUserId: Long -> toCaller(otherUserId) },
                     onClickMessage = { userId: Long, userNickName: String, chatRoomId: Long ->
                         toChat(userId, userNickName, chatRoomId)
@@ -112,6 +117,12 @@ fun HomeScreen(
             ) {
                 Text(text = "오류 발생: $errorMessage", color = Color.Red)
             }
+        }
+
+        HomeScreenUiState.Idle ->   Box(
+            modifier = Modifier.fillMaxSize().background(color = SisoColorTokens.Green60),
+            contentAlignment = Alignment.Center
+        ) {
         }
     }
 

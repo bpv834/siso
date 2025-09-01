@@ -13,7 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,24 +41,35 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onEvent(event: HomeScreenUiEvent) {
         when (event) {
-            is HomeScreenUiEvent.GetTokenAndLoadUsers -> getTokenAndLoadUsers()
-            is HomeScreenUiEvent.OnClickCallButton -> onClickCallButton(
-                receiverId =  event.receiverId, accessToken = ""
-            )
+            is HomeScreenUiEvent.GetTokenAndLoadUsers -> {
+                Timber.d("getTokenAndLoadUsers")
+                getTokenAndLoadUsers()
+            }
+            is HomeScreenUiEvent.OnClickCallButton -> {
+                Timber.d("OnClickCallButton")
+
+                onClickCallButton(
+                    receiverId =  event.receiverId, accessToken = ""
+                )
+            }
         }
     }
 
     private fun getTokenAndLoadUsers() {
         viewModelScope.launch {
+            Timber.d("🔵 [getTokenAndLoadUsers] 토큰 로딩 시작")
             _uiState.value = HomeScreenUiState.LoadingToken
 
-            val userToken = getTokenAllUseCase.invoke().firstOrNull()?.accessToken
+            getTokenAllUseCase.invoke().collect { tokenInfo ->
+                val userToken = tokenInfo?.accessToken
+                Timber.d("🟡 [getTokenAndLoadUsers] 가져온 토큰 = $userToken")
 
-            if (userToken.isNullOrEmpty()) {
-                _uiState.value = HomeScreenUiState.Error("토큰을 가져오지 못했습니다.")
-            } else {
-                accessToken = userToken
-                loadUsers(userToken)
+                if (!userToken.isNullOrEmpty()) {
+                    Timber.d("✅ [getTokenAndLoadUsers] 토큰 정상, 유저 불러오기 시작")
+                    accessToken = userToken
+                    loadUsers(userToken)
+                    return@collect // 유저 불러온 뒤 종료
+                }
             }
         }
     }
