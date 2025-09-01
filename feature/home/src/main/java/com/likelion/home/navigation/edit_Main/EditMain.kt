@@ -129,7 +129,6 @@ fun EditMain (
             topBar = {
                 CenterAlignedTopAppBar(
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = SisoColorTokens.White,
                         titleContentColor = SisoColorTokens.Gray90
                     ),
                     title = {
