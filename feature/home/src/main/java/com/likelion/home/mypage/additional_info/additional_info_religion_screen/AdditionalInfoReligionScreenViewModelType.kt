@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 interface AdditionalInfoReligionScreenViewModelType {
-    val receiverList : StateFlow<List<String>>
-    fun updatePubList(list : List<String>,nav:(List<Pub>)->Unit)
+    val receiver : StateFlow<String>
+    val religionList : List<String>
+    fun complete(religion : String,nav:(String)->Unit)
+    fun fetch(religion : String)
 }

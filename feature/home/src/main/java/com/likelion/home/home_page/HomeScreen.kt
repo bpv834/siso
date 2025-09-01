@@ -31,12 +31,14 @@ fun HomeRoute(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 명시
-    onNavigateToCaller: (userId: Long, otherUserId: Long) -> Unit
+    onNavigateToCaller: (userId: Long, otherUserId: Long) -> Unit,
+    onNavigateToChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit,
 ) {
     // HomeScreen에 viewModel과 onNavigateToCaller 콜백을 그대로 전달
     HomeScreen(
         viewModel = hiltViewModel<HomeScreenViewModel>(),
-        toCaller = onNavigateToCaller
+        toCaller = onNavigateToCaller,
+        toChat = onNavigateToChat
     )
 }
 
@@ -44,7 +46,8 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModelType,
-    toCaller: (userId: Long, otherUserId: Long) -> Unit
+    toCaller: (userId: Long, otherUserId: Long) -> Unit,
+    toChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit
 ) {
     val userList by viewModel.userList.collectAsStateWithLifecycle()
     val pagerState = rememberPagerState(pageCount = { userList.size })
@@ -74,7 +77,11 @@ fun HomeScreen(
             },
             onClickButtonCall = { receiverIdId -> viewModel.onClickCallButton(0L, receiverIdId) },
             toCallScreen = { userId: Long, otherUserId: Long -> toCaller(userId, otherUserId) },
-            true)
+            onClickMessage = { userId: Long, userNickName: String, chatRoomId: Long ->
+                toChat(userId, userNickName, chatRoomId)
+            },
+            true
+        )
     }
 
     // ✅ 팝업을 조건부로 표시
@@ -97,7 +104,8 @@ fun HomeScreenPreview() {
         val usecase = GetAllUsersUseCase(FakeUsersRepositoryImpl())
         HomeScreen(
             viewModel = FakeHomeScreenViewModel(usecase),
-            toCaller = { userId, otherUserId -> })
+            toCaller = { userId, otherUserId -> },
+            toChat = { userId, userNickName, chatRoomId -> })
     }
 }
 

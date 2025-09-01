@@ -27,6 +27,7 @@ import com.likelion.home.navigation.edit_Main.settingMainNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
 import com.likelion.home.navigation.navigateToChat
+import com.likelion.home.navigation.navigateToChatRoom
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.login.navigation.inputNavigation
@@ -134,7 +135,7 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToInput()
         }
-        homeNavigation (
+        homeNavigation(
             navController = appState.navController,
             // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
             // navigateToCallForCaller 함수에 이 값들을 전달합니다.
@@ -147,7 +148,14 @@ fun MainNavHost(
                     }
                 )
             },
-        ){
+            onNavigateToChat = { userId, userNickName,chatRoomId ->
+                appState.navController.navigateToChatRoom(
+                    userId = userId,
+                    userNickName = userNickName,
+                    chatRoomId = chatRoomId
+                )
+            },
+        ) {
             appState.navController.navigateToHome()
         }
         chatNavigation(
@@ -166,28 +174,21 @@ fun MainNavHost(
         }
         myPageNavigation(
             navController = appState.navController,
-            navigateToHome ={appState.navController.popBackStack(NavigationRoute.MyPageScreen.route, inclusive = true)}
         ) {
 
         }
-        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
-        val jsonString  = inputStream.bufferedReader().use { it.readText() }
-        val locationRepository = LocationRepositoryImpl()
-        locationRepository.setJson(jsonString)
-
-        val apiLocationRepository = APILocationRepositoryImpl()
-        apiLocationRepository.setContext(cotext)
+//        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
+//        val jsonString  = inputStream.bufferedReader().use { it.readText() }
+//        val locationRepository = LocationRepositoryImpl()
+//        locationRepository.setJson(jsonString)
         editMainNavigation(
-            navController = appState.navController,
-            topLocationUseCase = TopLocationUseCase(locationRepository),
-            bottomLocationUseCase = BottomLocationUseCase(locationRepository),
-            currentLocationSetUseCase = CurrentLocationSetUseCase(apiLocationRepository)
+            navController = appState.navController
         ){
             appState.navController.navigateToMyPage(
-            navOptions {
-                appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
-                launchSingleTop = true
-            }
+                navOptions {
+                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
+                    launchSingleTop = true
+                }
             )
         }
 
@@ -196,7 +197,7 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToMyPage(
                 navOptions {
-                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route,inclusive = true)
+                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
                     launchSingleTop = true
                 }
             )

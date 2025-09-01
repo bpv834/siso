@@ -14,14 +14,12 @@ fun NavController.navigateToMyPage(navOptions: NavOptions? = null) =
 
 fun NavGraphBuilder.myPageNavigation(
     navController: NavController,
-    navigateToHome: () -> Unit,
     action: () -> Unit
 ) {
     composable(
         route = NavigationRoute.MyPageScreen.route
     ) {
         MyPageRoute(
-            navigateToHome = navigateToHome,
             mainEdit = {
                 navController.navigateToEditMain()
             },

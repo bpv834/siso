@@ -14,10 +14,10 @@ class AdditionalInfoSmokingScreenViewModel@Inject constructor (
     //usecase자리
 ): ViewModel(), AdditionalInfoSmokingScreenViewModelType {
     private var _receiver = MutableStateFlow("")
-    init {
-        _receiver.update {
-            it// 받아올 값 추가
-        }
-    }
+
     override val receiver: StateFlow<String> = _receiver.asStateFlow()
+
+    fun fetch(smoking : String){
+        _receiver.update { smoking }
+    }
 }

@@ -1,5 +1,6 @@
 package com.likelion.home.mypage.interest_edit_info_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,85 +21,41 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.util.CoilUtils.result
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun InterestEditInfoScreen(
     viewModel: InterestEditInfoScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (List<String>) -> Unit = {},
 ) {
-    val cultureReceiverList = remember {
-        mutableStateListOf<String>()
-    }
-    val exerciseReceiverList = remember {
-        mutableStateListOf<String>()
-    }
-    val leisureReceiverList = remember {
-        mutableStateListOf<String>()
-    }
+    val cultureReceiver by viewModel.cultureReceiverList.collectAsStateWithLifecycle()
+    val exerciseReceiver by viewModel.exerciseReceiverList.collectAsStateWithLifecycle()
+    val leisureReceiver by viewModel.leisureReceiverList.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
-        cultureReceiverList.addAll(viewModel.receiverList.value)
-    }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    val cultureList = remember {
-        mutableListOf(
-            "#음악감상 \uD83C\uDFA7",
-            "#사진촬영\uD83D\uDCF8",
-            "#서예\uD83D\uDD8C\uFE0F",
-            "#글쓰기✍\uFE0F",
-            "#영화감상\uD83C\uDFAC",
-            "#전시관람\uD83D\uDDBC\uFE0F",
-            "#클래식감상\uD83C\uDFBB",
-            "#노래부르기\uD83C\uDFA4",
-            "#댄스\uD83D\uDC83\uD83D\uDD7A"
-        )
-    }
+    val cultureList = viewModel.cultureList
 
-    val exerciseList = remember {
-        mutableListOf(
-            "#등산⛰\uFE0F",
-            "#낚시\uD83C\uDFA3",
-            "#요가\uD83E\uDDD8\u200D♀\uFE0F",
-            "#골프⛳\uFE0F",
-            "#자전거\uD83D\uDEB4\u200D♀\uFE0F",
-            "#캠핑\uD83C\uDFD5\uFE0F",
-            "#수영\uD83C\uDFCA\u200D♂\uFE0F",
-            "#바둑♟\uFE0F",
-            "#볼링\uD83C\uDFB3",
-            "#탁구\uD83C\uDFD3",
-            "#꽃꽂이\uD83D\uDC90",
-            "#드라이브\uD83D\uDE97"
-        )
-    }
+    val exerciseList = viewModel.exerciseList
 
-    val leisureList = remember {
-        mutableListOf(
-            "#독서\uD83D\uDCDA",
-            "#베이킹\uD83E\uDDC1",
-            "#뜨개질\uD83E\uDDF6",
-            "#원예\uD83C\uDF3F",
-            "#여행✈\uFE0F",
-            "#맛집\uD83C\uDF7D\uFE0F",
-            "#명상\uD83E\uDDD8",
-            "#와인\uD83C\uDF77",
-            "#요리\uD83C\uDF73",
-            "#탁구\uD83C\uDFD3",
-            "#인테리어\uD83E\uDE9F",
-        )
-    }
+    val leisureList = viewModel.leisureList
+
+
 
     Box(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
@@ -119,7 +76,10 @@ fun InterestEditInfoScreen(
             )
             InterestEditInfoChips(
                 list = cultureList,
-                receiverList = cultureReceiverList
+                receiverList = cultureReceiver,
+                onChipClick = {
+                    viewModel.setCultureReceiver(it)
+                }
             )
             Spacer(Modifier.size(12.dp))
             Text(
@@ -130,7 +90,10 @@ fun InterestEditInfoScreen(
             )
             InterestEditInfoChips(
                 list = exerciseList,
-                receiverList = exerciseReceiverList
+                receiverList = exerciseReceiver,
+                onChipClick = {
+                    viewModel.setExerciseReceiver(it)
+                }
             )
             Spacer(Modifier.size(12.dp))
             Text(
@@ -141,7 +104,11 @@ fun InterestEditInfoScreen(
             )
             InterestEditInfoChips(
                 list = leisureList,
-                receiverList = leisureReceiverList
+                receiverList = leisureReceiver
+                ,onChipClick = {
+                    viewModel.setLeisureReceiver(it)
+                }
+
             )
             // 버튼과 스크롤 겸치는 만큼 추가 패딩 22 + 126
             Spacer(Modifier.size(148.dp))
@@ -167,19 +134,24 @@ fun InterestEditInfoScreen(
             )
         }
         Column(
-            modifier = Modifier.align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(SisoColorTokens.White),
+            modifier = Modifier.align(Alignment.BottomCenter),
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                popBackStack()
+                val size = cultureReceiver.size + exerciseReceiver.size
+                + leisureReceiver.size
+                if (size > 3 && size < 8) {
+                    val result = mutableListOf<String>()
+                    result.addAll(cultureReceiver)
+                    result.addAll(exerciseReceiver)
+                    result.addAll(leisureReceiver)
+                    popBackStack(result)
+                }
             }
-            Spacer(Modifier.fillMaxWidth().height(72.dp - navbarBottomPadding))
+            Spacer(Modifier.fillMaxWidth().height(72.dp))
 
         }
     }
@@ -188,8 +160,9 @@ fun InterestEditInfoScreen(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InterestEditInfoChips(
-    list: MutableList<String>,
-    receiverList: SnapshotStateList<String>
+    list: List<String>,
+    receiverList: MutableList<String>,
+    onChipClick: (String) -> Unit = {}
 ){
     Spacer(Modifier.size(12.dp))
     FlowRow(
@@ -203,11 +176,7 @@ fun InterestEditInfoChips(
                     text = text,
                     isSelected = receiverList.contains(text),
                 ) {
-                    if (receiverList.contains(text)) {
-                        receiverList.remove(text)
-                    } else {
-                        receiverList.add(text)
-                    }
+                    onChipClick(text)
                 }
             }
         }

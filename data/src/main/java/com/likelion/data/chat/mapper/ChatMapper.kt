@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter
 fun CallHistoryEntity.toDomain(): CallHistory {
     val formattedTime = callTime.toFormattedTime()
     return CallHistory(
-        id = 0,
+        callId = this.callId,
         nickName = nickName,
         profileImage = profileImage,
         callTime = formattedTime,
@@ -30,7 +30,7 @@ fun CallHistoryEntity.toDomain(): CallHistory {
 fun ChatHistoryEntity.toDomain(): ChatHistory {
     val formattedTime = callTime.toFormattedTime()
     return ChatHistory(
-        id = 0,
+        chatRoomId = this.chatRoomId,
         nickName = nickName,
         profileImage = profileImage,
         callTime = formattedTime,
@@ -53,6 +53,7 @@ fun Long.toFormattedTime(
 @RequiresApi(Build.VERSION_CODES.O)
 fun MyChatEntity.toDomain(): MyChat {
     return MyChat(
+        chatRoomId = this.chatRoomId,
         msg = this.msg,
         time = this.time.toFormattedTime(),
         showTime = this.showTime

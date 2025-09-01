@@ -30,14 +30,21 @@ class LocationEditInfoScreenViewModel @Inject constructor (
     private val currentLocationSetUseCase: CurrentLocationSetUseCase,
 ): ViewModel(), LocationEditInfoScreenViewModelType {
     private val _completeState = MutableStateFlow("")
-    private val _topLocation = MutableStateFlow(topLocationUseCase.invoke())
+    private val _topLocation = MutableStateFlow(Location(name = listOf()))
     override val topLocation = _topLocation.asStateFlow()
     private val _bottomLocation = MutableStateFlow(Location(name = listOf()))
     override val bottomLocation = _bottomLocation.asStateFlow()
-    private val _locationState = MutableStateFlow<LocationState>(LocationState.Loading)
+    private val _locationState = MutableStateFlow<LocationState>(LocationState.Success(address = ""))
     override val locationState: StateFlow<LocationState> = _locationState
-    private var _currentLocation = mutableStateOf("")
-    override val currentLocation = _currentLocation.value
+    private var _currentLocation = MutableStateFlow("")
+    override val currentLocation :StateFlow<String> = _currentLocation.asStateFlow()
+
+    init {
+        // topLocation 초기화
+        val top = topLocationUseCase()
+        d("init","$top")
+        _topLocation.update { top }
+    }
 
     override fun setBottomLocation(input: String){
         val inputBottom = if(input != "")
@@ -53,12 +60,30 @@ class LocationEditInfoScreenViewModel @Inject constructor (
         }
     }
 
+    override fun setLocation(string:String){
+        _currentLocation.update {
+            string
+        }
+    }
+
     @SuppressLint("TimberArgCount")
     override fun fetchUserLocation() {
         viewModelScope.launch {
             currentLocationSetUseCase.invoke().collectLatest { state ->
-                _locationState.value = state
+                _locationState.update { LocationState.Loading }
+                when(state){
+                    is LocationState.Success -> {
+                        _locationState.update { LocationState.Success(address = state.address) }
+                        _currentLocation.update { state.address.split(" ").drop(1).take(2).reduce { acc, s -> "$acc $s" } }
+                        d("fetchUserLocation","${_currentLocation.value}")
+                    }
+                    else -> {
+                        if(state is LocationState.Loading)
+                            _locationState.update { LocationState.Loading }
+                    }
+                }
             }
+
             d("fetchUserLocation","${_locationState.value}")
         }
     }

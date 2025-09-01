@@ -6,6 +6,7 @@ import com.likelion.domain.chat.model.MyChat
 import com.likelion.domain.chat.model.PartnerChat
 
 data class ChatUiState(
+    val accessToken: String? = null,
     val isCallHistoryLoading: Boolean = false,
     val isChatHistoryLoading: Boolean = false,
     val isImagedLoaded: Boolean = false,

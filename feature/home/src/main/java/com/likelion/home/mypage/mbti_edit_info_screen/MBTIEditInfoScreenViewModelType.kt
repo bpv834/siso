@@ -4,4 +4,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface MBTIEditInfoScreenViewModelType {
     val receiver : StateFlow<String>
+    val nothing :String
+    fun setReceiver(receiver: String)
 }

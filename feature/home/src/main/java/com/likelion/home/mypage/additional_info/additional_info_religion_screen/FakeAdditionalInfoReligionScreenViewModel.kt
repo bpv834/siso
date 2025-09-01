@@ -8,20 +8,27 @@ import kotlinx.coroutines.flow.update
 class FakeAdditionalInfoReligionScreenViewModel(
     // usecase자리
 ): AdditionalInfoReligionScreenViewModelType {
-    private var _receiverList = MutableStateFlow(listOf<String>())
-    init {
-        // 초기 리스트 불러오는 부분
-        _receiverList.update {
-            listOf<String>()
-        }
-    }
-    override val receiverList = _receiverList.asStateFlow()
+    private var _receiver = MutableStateFlow("")
 
-    override fun updatePubList(list : List<String>,nav:(List<Pub>)->Unit){
-        if (list.size>3 && list.size<7){
-            nav(list.map { Pub(it) })
-        }else{
-            nav(receiverList.value.map { Pub(it) })
+    override val receiver = _receiver.asStateFlow()
+    override val religionList = listOf(
+        "기독교",
+        "불교",
+        "가톨릭",
+        "무교",
+        "기타"
+    )
+    override fun fetch(religion : String){
+        if (religion.isNotBlank() && religionList.contains(religion)){
+            _receiver.update { religion }
         }
     }
+
+    override fun complete(religion : String,nav:(String)->Unit){
+        if (religion.isNotBlank()){
+            _receiver.update { religion }
+            nav(religion)
+        }
+    }
+
 }
