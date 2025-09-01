@@ -116,9 +116,13 @@ fun MainEditInfoScreen(
 
     val newValueUpdate =
         { emptyText:String, editValue:String, receiverValue: String->
-            if(receiverValue == editValue){
-                receiverValue
-            }else editValue
+            if (receiverValue.isBlank() && editValue.isBlank()) {
+                emptyText
+            }else{
+                if(receiverValue == editValue)
+                    receiverValue
+                else editValue
+            }
         }
     val textColor = {blank:Boolean, receiver: Boolean->
         if (blank){
@@ -137,57 +141,56 @@ fun MainEditInfoScreen(
     var ageText by remember { mutableStateOf(uiState.receiverUsersModel?.age.toString()) }
     val ageTextRange = TextRange(0,3)
 
-
-    val interestBlank = saveHandle.get<List<String>>("interest") == null
-    val matchingBlank = saveHandle.get<List<String>>("matching") == null
+    val interestReceiveBlank =
 
     LaunchedEffect(Unit){
+        val (id,userImages,location,nickname,age,
+            sex,preferenceSex,voiceUrl,interests,introduce,
+            drinkingCapacity,religion,isSmoke,mbti,meeting) = uiState.editUsersModel
         viewModel.updateUsers(
             UsersFullModel(
-                id = uiState.editUsersModel.id,
-                userImages = uiState.editUsersModel.userImages,
+                id = id,
+                userImages = userImages,
                 nickname = nameState,
                 age = ageText.toInt(),
-                voiceUrl = if (saveHandle.getString("voice").isNullOrBlank()) {
-                    if (uiState.receiverUsersModel?.voiceUrl!! == uiState.editUsersModel.voiceUrl)
+                voiceUrl =
+                    if (uiState.receiverUsersModel?.voiceUrl!! == voiceUrl)
                     uiState.receiverUsersModel?.voiceUrl!!
-                    else uiState.editUsersModel.voiceUrl
-                }else{
-                    saveHandle.getString("voice")!!
-                },
+                    else voiceUrl,
                 introduce = introduceText,
                 sex = uiState.myRadioButtons.first { it.second }.first,
-
                 preferenceSex = uiState.pairRadioButtons.first { it.second }.first,
-                location = newValueUpdate("지역을 입력해주세요",uiState.editUsersModel.location, if(uiState.receiverUsersModel == null)""
+
+                location = newValueUpdate("지역을 입력해주세요",location, if(uiState.receiverUsersModel?.location.isNullOrBlank())""
                 else uiState.receiverUsersModel!!.location),
 
-                drinkingCapacity = valueUpdate("정보를 입력해주세요","alchol", if(uiState.receiverUsersModel == null)""
-                else uiState.receiverUsersModel!!.drinkingCapacity),
-
-                religion = valueUpdate("지역을 입력해주세요","religion", if(uiState.receiverUsersModel == null)""
+                religion = newValueUpdate("종교를 입력해주세요",religion, if(uiState.receiverUsersModel?.religion.isNullOrBlank())""
                 else uiState.receiverUsersModel!!.religion),
 
-                isSmoke = valueUpdate("정보를 입력해주세요","smoking", if(uiState.receiverUsersModel == null)""
+                drinkingCapacity = newValueUpdate("정보를 입력해주세요",drinkingCapacity, if(uiState.receiverUsersModel?.drinkingCapacity.isNullOrBlank())""
+                else uiState.receiverUsersModel!!.drinkingCapacity),
+
+                isSmoke = newValueUpdate("정보를 입력해주세요",isSmoke, if(uiState.receiverUsersModel?.isSmoke.isNullOrBlank())""
                 else uiState.receiverUsersModel!!.isSmoke),
-
+                mbti = newValueUpdate("정보를 입력해주세요",mbti, if(uiState.receiverUsersModel?.mbti.isNullOrBlank())""
+                else uiState.receiverUsersModel!!.mbti),
                 interests =
-                    if (interestBlank) {
-                        if (uiState.receiverUsersModel == null)
-                            emptyList()
-                        else
-                            uiState.receiverUsersModel?.interests!!
-                    } else saveHandle.get<List<String>>("interest")!!,
-
-                mbti = valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
-                else uiState.receiverUsersModel!!.mbti
-                ),
-
-                meeting = if (matchingBlank) {
-                    if (uiState.receiverUsersModel == null)
+                    if (uiState.receiverUsersModel?.interests.isNullOrEmpty() && interests.isEmpty()) {
                         emptyList()
-                    else uiState.receiverUsersModel!!.meeting
-                }else saveHandle.get<List<String>>("matching")!!
+                    }else{
+                        if(uiState.receiverUsersModel?.interests?.containsAll(interests) ?: false)
+                            uiState.receiverUsersModel?.interests!!
+                        else interests
+                    },
+
+                meeting =
+                    if (uiState.receiverUsersModel?.meeting.isNullOrEmpty() && meeting.isEmpty()) {
+                        emptyList()
+                    }else{
+                        if(uiState.receiverUsersModel?.meeting?.containsAll(meeting) ?: false)
+                            uiState.receiverUsersModel?.meeting!!
+                        else meeting
+                    }
             )
         )
     }
@@ -678,7 +681,6 @@ fun MainEditInfoScreen(
                 }
                 Spacer(Modifier.size(12.dp))
                 d("interestChipList", "$index ${interestChipList[index].first}")
-                d("interestChipList", "$index ${matchingBlank}")
                 d(
                     "interestChipList", "$index ${interestChipList[index].second}" +
                             "${uiState.receiverUsersModel}"

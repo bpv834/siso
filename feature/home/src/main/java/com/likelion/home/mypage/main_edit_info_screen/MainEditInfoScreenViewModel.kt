@@ -262,6 +262,54 @@ class MainEditInfoScreenViewModel @Inject constructor (
         }
     }
 
+    fun setReligion(religion: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(religion = religion)
+            )
+        }
+    }
+
+    fun setSmoking(smoking: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(isSmoke = smoking)
+            )
+        }
+    }
+
+    fun setAlcohol(alcohol: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(drinkingCapacity = alcohol)
+            )
+        }
+    }
+
+    fun setMbti(mbti: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(mbti = mbti)
+            )
+        }
+    }
+
+    fun setInterest(interest: List<String>){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(interests = interest)
+            )
+        }
+    }
+
+    fun setMatching(matching: List<String>){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(meeting = matching)
+            )
+        }
+    }
+
     override fun updateUsers(usersModel: UsersFullModel) {
         _uiState.update {
             it.copy(editUsersModel = usersModel)

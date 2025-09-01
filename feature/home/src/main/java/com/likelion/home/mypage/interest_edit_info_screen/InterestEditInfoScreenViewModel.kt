@@ -62,11 +62,19 @@ class InterestEditInfoScreenViewModel @Inject constructor (
     override val leisureReceiverList = _leisureReceiverList.asStateFlow()
 
     override fun fetch(list: List<String>){
+        val tempCulture = mutableListOf<String>()
+        val tempExercise = mutableListOf<String>()
+        val tempLeisure = mutableListOf<String>()
         list.forEach {
-            if (cultureList.contains(it)) cultureReceiverList.value.add(it)
-            else if(exerciseList.contains(it)) exerciseReceiverList.value.add(it)
-            else if(leisureList.contains(it)) leisureReceiverList.value.add(it)
+            when(it){
+                in cultureList -> tempCulture.add(it)
+                in exerciseList -> tempExercise.add(it)
+                in leisureList -> tempLeisure.add(it)
+            }
         }
+        _cultureReceiverList.update { tempCulture }
+        _exerciseReceiverList.update { tempExercise }
+        _leisureReceiverList.update { tempLeisure }
     }
 
     override fun setLeisureReceiver(input: String){
