@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="home">홈</string>
-	<string name="find">찾아요</string>
-	<string name="chat">채팅</string>
-	<string name="my_page">내정보</string>
-</resources>
