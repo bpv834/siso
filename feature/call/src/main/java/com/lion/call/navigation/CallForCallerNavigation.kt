@@ -9,10 +9,9 @@ import androidx.navigation.navArgument
 import com.lion.call.call_for_caller.CallerRouter
 
 fun NavController.navigateToCallForCaller(
-    userId: Long, // userId 인자 추가
     otherUserId: Long, // otherUserId 인자 추가
     navOptions: NavOptions? = null
-) = navigate("caller/$userId/$otherUserId", navOptions) // 경로에 인자 포함
+) = navigate("caller/$otherUserId", navOptions) // 경로에 인자 포함
 
 fun NavGraphBuilder.callerNavigation(
     action: () -> Unit,

@@ -3,8 +3,8 @@ package com.likelion.domain.home.repository
 import com.likelion.domain.home.model.UsersModel
 
 class FakeUsersRepositoryImpl : UsersRepository {
-    override suspend fun getAllUsers(): List<UsersModel> {
-        return fakeUsers.toList()
+    override suspend fun getAllUsers(eccessToken : String): Result<List<UsersModel> >{
+        return Result.success(fakeUsers)
     }
 
     override suspend fun getUserById(id: Long): UsersModel {

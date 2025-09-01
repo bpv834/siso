@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 // 여기서는 직접적인 DTO 정의보다는 API 인터페이스에서 MultipartBody.Part로 처리합니다.
 
 // 서버의 ImageResponseDto와 매칭
-data class ImageResponseDto(
+data class ImageResponse(
     @SerializedName("id") val id: Long,
     @SerializedName("userId") val userId: Long,
     @SerializedName("path") val path: String, // 이미지 접근 URL
