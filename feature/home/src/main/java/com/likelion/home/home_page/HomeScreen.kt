@@ -118,12 +118,6 @@ fun HomeScreen(
                 Text(text = "오류 발생: $errorMessage", color = Color.Red)
             }
         }
-
-        HomeScreenUiState.Idle ->   Box(
-            modifier = Modifier.fillMaxSize().background(color = SisoColorTokens.Green60),
-            contentAlignment = Alignment.Center
-        ) {
-        }
     }
 
     if (showImageDialog && selectedImageUrl != null) {
