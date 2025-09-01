@@ -4,7 +4,7 @@ import com.likelion.domain.login.model.UserSignUpProfile
 
 interface UserProfileRepository {
     suspend fun addProfile(
-        refreshToken: String,
+        accessToken: String,
         profile: UserSignUpProfile
     )
 

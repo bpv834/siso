@@ -34,7 +34,7 @@ fun HomeRoute(
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 명시
-    onNavigateToCaller: ( otherUserId: Long) -> Unit
+    onNavigateToCaller: (otherUserId: Long) -> Unit,
     onNavigateToChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit,
 ) {
     // HomeScreen에 viewModel과 onNavigateToCaller 콜백을 그대로 전달
@@ -44,12 +44,12 @@ fun HomeRoute(
         toChat = onNavigateToChat
     )
 }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    toCaller: (otherUserId: Long) -> Unit
-    viewModel: HomeScreenViewModelType,
+    toCaller: (otherUserId: Long) -> Unit,
     toChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit
 
 ) {
@@ -95,6 +95,9 @@ fun HomeScreen(
                     },
                     onClickButtonCall = { receiverId -> viewModel.onEvent(HomeScreenUiEvent.OnClickCallButton(0L, receiverId)) },
                     toCallScreen = { otherUserId: Long -> toCaller(otherUserId) },
+                    onClickMessage = { userId: Long, userNickName: String, chatRoomId: Long ->
+                        toChat(userId, userNickName, chatRoomId)
+                    },
                     true
                 )
             }

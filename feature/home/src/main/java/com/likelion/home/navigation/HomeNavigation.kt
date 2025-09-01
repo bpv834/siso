@@ -24,8 +24,9 @@ fun NavGraphBuilder.homeNavigation(
         // HomeRoute에 수정된 콜백 전달
         HomeRoute(
             actionSnackbar = action,
-            onNavigateToCaller = {  otherUser -> // HomeRoute에서 실제 값을 받아와서
+            onNavigateToCaller = { otherUser -> // HomeRoute에서 실제 값을 받아와서
                 onNavigateToCaller(otherUser) // 콜백에 전달
+            },
             onNavigateToChat = { userId, userNickName, chatRoomId ->
                 onNavigateToChat(
                     userId, userNickName, chatRoomId

@@ -92,7 +92,7 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                 // runCatching은 코드 블록에서 예외가 발생해도 앱이 터지지 않도록 감싸주는 함수
                 runCatching {
                     addProfileUseCase.execute(
-                        refreshToken = accessToken,
+                        accessToken = accessToken,
                         user = user
                     )
                 }

@@ -5,7 +5,7 @@ package com.likelion.data.login.repository.di
 
 import com.likelion.data.login.repository.InMemoryUserSignUpRepositoryImpl
 import com.likelion.data.login.repository.LoginRepositoryImpl
-import com.likelion.data.login.repository.userProfileRepositoryImpl
+import com.likelion.data.login.repository.UserProfileRepositoryImpl
 import com.likelion.data.login.repository.TokenRepositoryImpl
 import com.likelion.domain.login.repository.TokenRepository
 import com.likelion.domain.login.repository.LoginRepository
@@ -43,7 +43,7 @@ abstract class LoginDataModule {
     @Binds
     @Singleton
     abstract fun bindSignUpRepositoryImplRepository(
-        impl : userProfileRepositoryImpl
+        impl : UserProfileRepositoryImpl
     ) :  UserProfileRepository
 
 
