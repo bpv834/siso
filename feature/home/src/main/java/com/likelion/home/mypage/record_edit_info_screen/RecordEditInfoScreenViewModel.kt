@@ -1,17 +1,21 @@
 package com.likelion.home.mypage.record_edit_info_screen
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.likelion.home.mypage.isPlayableAudioUrl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +35,30 @@ class RecordEditInfoScreenViewModel @Inject constructor(
     private val _recordedFilePath = MutableStateFlow<String?>(null)
     override val recordedFilePath: StateFlow<String?> = _recordedFilePath.asStateFlow()
 
+    // 서버에서 받은 음성 녹음 주소
+    private val _receiverUrl = MutableStateFlow<String?>(null)
+    override val receiverUrl: StateFlow<String?> = _receiverUrl.asStateFlow()
+
     private var recordingJob: Job? = null
+
+    override fun fetchAudioBytes(voiceUrl: String) {
+        if (voiceUrl.isNotBlank()) {
+            _receiverUrl.update { voiceUrl } // 주소를 받아옴
+            val url = _receiverUrl.value!!
+            _recordingEditState.update {
+                if (url.isNotBlank()) {
+                    RecordingEditState.RE_EDIT // 녹음 상태를 받아옴
+                } else {
+                    RecordingEditState.IDLE // 녹음 상태를 받아옴
+                }
+            }
+        }else{
+            _recordingEditState.update {
+                RecordingEditState.IDLE // 녹음 상태를 받아옴
+            }
+        }
+    }
+
 
     // 다음 페이지 메서드
     override fun onClickNextButton() {

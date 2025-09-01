@@ -1,5 +1,6 @@
 package com.likelion.home.mypage.matching_edit_info_screen
 
+import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -38,42 +40,36 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun MatchingEditInfoScreen(
     viewModel: MatchingEditInfoScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (List<String>) -> Unit = {},
 ) {
-    val matchingReceiverList = remember {
-        mutableStateListOf<String>()
-    }
+    val matchingReceiverList by viewModel.receiverList.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
-        matchingReceiverList.addAll(viewModel.receiverList.value)
-    }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val matchingList = remember {
         mutableListOf(
-            "#동호회활동\uD83D\uDC65",
-            "#봉사활동\uD83E\uDD1D",
-            "#취미모임\uD83C\uDFAF",
-            "#문화생활\uD83C\uDFAD",
-            "#함께운동\uD83C\uDFCB\uFE0F\u200D♂\uFE0F",
-            "#산책동행\uD83D\uDEB6\u200D♀\uFE0F",
-            "#맛집탐방\uD83C\uDF7D\uFE0F",
-            "#차한잔☕\uFE0F",
-            "#여행동행\uD83C\uDF0D",
-            "#사진동행\uD83D\uDCF7",
-            "#골프동반⛳\uFE0F",
-            "#영화동행\uD83C\uDF9E\uFE0F",
-            "#콘서트동행\uD83C\uDFA4",
-            "#전시회동행\uD83D\uDDBC\uFE0F",
-            "#등산메이트\uD83E\uDD7E",
-            "#자전거메이트\uD83D\uDEB4\u200D♂\uFE0F",
-            "#독서모임\uD83D\uDCD6",
-            "#토크모임\uD83D\uDCAC",
-            "#취향공유\uD83D\uDC8C",
-            "#새로운인연\uD83C\uDF1F",
-            "#소통해요\uD83D\uDCF1",
-            "#함께하는시간⏳",
-            "#좋은사람과함께\uD83D\uDE0A",
-            "#인연만들기\uD83D\uDC9E"
+            "#동호회활동",
+            "#봉사활동",
+            "#취미모임",
+            "#문화생활",
+            "#함께운동",
+            "#산책동행",
+            "#맛집탐방",
+            "#차한잔",
+            "#여행동행",
+            "#사진동행",
+            "#골프동반",
+            "#영화동행",
+            "#콘서트동행",
+            "#전시회동행",
+            "#등산메이트",
+            "#자전거메이트",
+            "#독서모임",
+            "#토크모임",
+            "#취향공유",
+            "#새로운인연",
+            "#소통해요",
+            "#함께하는시간",
+            "#좋은사람과함께",
+            "#인연만들기"
         )
     }
 
@@ -90,7 +86,11 @@ fun MatchingEditInfoScreen(
             Spacer(Modifier.size((141).dp))
             MatchingEditInfoChips(
                 list = matchingList,
-                receiverList = matchingReceiverList
+                receiverList = matchingReceiverList,
+                onChipClick = {
+                    d("addString","onChipClick$it")
+                    viewModel.addString(it)
+                }
             )
             // 버튼과 스크롤 겸치는 만큼 추가 패딩 22 + 126
             Spacer(Modifier.size(148.dp))
@@ -117,18 +117,18 @@ fun MatchingEditInfoScreen(
         }
         Column(
             modifier = Modifier.align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(SisoColorTokens.White),
+                .fillMaxWidth(),
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                popBackStack()
+                if (matchingReceiverList.size >= 3) {
+                    popBackStack(matchingReceiverList)
+                }
             }
-            Spacer(Modifier.fillMaxWidth().height(72.dp - navbarBottomPadding))
+            Spacer(Modifier.fillMaxWidth().height(72.dp))
 
         }
     }
@@ -138,7 +138,8 @@ fun MatchingEditInfoScreen(
 @Composable
 fun MatchingEditInfoChips(
     list: MutableList<String>,
-    receiverList: SnapshotStateList<String>
+    receiverList: MutableList<String>,
+    onChipClick: (String) -> Unit = {}
 ){
     Spacer(Modifier.size(12.dp))
     FlowRow(
@@ -152,11 +153,7 @@ fun MatchingEditInfoChips(
                     text = text,
                     isSelected = receiverList.contains(text),
                 ) {
-                    if (receiverList.contains(text)) {
-                        receiverList.remove(text)
-                    } else {
-                        receiverList.add(text)
-                    }
+                    onChipClick(text)
                 }
             }
         }

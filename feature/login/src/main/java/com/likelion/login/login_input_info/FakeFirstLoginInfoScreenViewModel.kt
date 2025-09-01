@@ -25,8 +25,9 @@ class FakeFirstLoginInfoScreenViewModel(
     override val myRadioButtons : MutableList<Pair<String, Boolean>> get() = _myRadioButtons.value
     private val _pairRadioButtons = MutableStateFlow(
         mutableStateListOf(
-            Pair(first = "동성", second = false),
-            Pair(first = "이성", second = false),
+            Pair(first = "여성", second = false),
+            Pair(first = "남성", second = false),
+            Pair(first = "상관없음", second = false),
         )
     )
     override val pairRadioButtons : MutableList<Pair<String, Boolean>> get() = _pairRadioButtons.value

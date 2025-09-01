@@ -19,4 +19,8 @@ class AdditionalInfoAlcoholScreenViewModel @Inject constructor (
         }
     }
     override val receiver: StateFlow<String> = _receiver.asStateFlow()
+
+    fun fetch(alcohol : String){
+        _receiver.update { alcohol }
+    }
 }

@@ -2,6 +2,7 @@ package com.likelion.home.mypage.mbti_edit_info_screen
 
 import android.R.attr.text
 import android.R.id.input
+import android.annotation.SuppressLint
 import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,29 +41,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.AdditionalInfoSmokingScreen
-import com.likelion.home.mypage.additional_info.additional_info_smoking_screen.FakeAdditionalInfoSmokingScreenViewModel
 import com.likelion.ui.component.button.CommonActiveButton
-import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
+@SuppressLint("LogNotTimber")
 @Composable
 fun MBTIEditInfoScreen(
     viewModel: MBTIEditInfoScreenViewModelType,
-    popBackStack: () -> Unit = {},
+    popBackStack: (String) -> Unit = {},
 ) {
-    var receiver by remember {
-        mutableStateOf("")
-    }
-
-    LaunchedEffect(viewModel.receiver.collectAsStateWithLifecycle()) {
-        receiver = viewModel.receiver.value
-    }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val nothing = viewModel.nothing.split("|")
+    val receiver by viewModel.receiver.collectAsStateWithLifecycle()
     val receiverList = remember { if (receiver.isNotBlank())receiver.split("").toMutableStateList()
-    else mutableStateListOf("", "", "", "") }
+    else nothing.toMutableStateList() }
     val exInList = listOf(
         "E" to "에너지를 \n사람 만나서 얻는 편",
         "I" to "혼자 있을 때 \n충전되는 편",
@@ -90,18 +83,21 @@ fun MBTIEditInfoScreen(
         improPlanList
     )
 
-
     Box(
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp)
             .fillMaxSize()
     ) {
         Column(
-            modifier = Modifier.verticalScroll(rememberScrollState())
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
                 .fillMaxSize()
         ) {
             Spacer(Modifier.size(16.dp))
             Text(
-                modifier = Modifier.height(62.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .height(62.dp)
+                    .fillMaxWidth(),
                 text = "나의 성격유형(MBTI)을 \n" +
                         "선택해 주세요",
                 style = SisoTypoTokens.Title2,
@@ -109,7 +105,9 @@ fun MBTIEditInfoScreen(
             )
             Spacer(Modifier.size(13.dp))
             Text(
-                modifier = Modifier.height(108.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .height(108.dp)
+                    .fillMaxWidth(),
                 text = "성격유형(MBTI)은 나의 성격을 16가지로 구분하는 간단한 검사입니다.\n" +
                         "나와 비슷한 성격, 혹은 다른 성격을 가진 사람을 만나보는 데 도움이 될 수 있어요.",
                 style = SisoTypoTokens.Body4,
@@ -118,14 +116,17 @@ fun MBTIEditInfoScreen(
             Spacer(Modifier.size(32.dp))
             MBTIList.forEachIndexed { fourIdx, input ->
                 Row(
-                    modifier = Modifier.fillMaxWidth().height(111.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(111.dp)
                 ) {
                     input.forEachIndexed { idx, pair ->
                         val isChecked = if (receiverList[fourIdx].isNotBlank())
                             receiverList[fourIdx] == pair.first
                         else false
                         Column(
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier
+                                .weight(1f)
                                 .background(
                                     if (isChecked) SisoColorTokens.Gold40
                                     else SisoColorTokens.Gray20,
@@ -134,17 +135,12 @@ fun MBTIEditInfoScreen(
                                         bottomStart = 24.dp
                                     )
                                     else RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp)
-                                ).clickable(
+                                )
+                                .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
-                                ){
+                                ) {
                                     receiverList[fourIdx] = pair.first
-//                                   receiver = receiverList.joinToString("") {
-//                                       if (it.isNotBlank()) it
-//                                       else ""
-//
-//                                    }
-                                    d("receiver", receiver)
                                 },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
@@ -160,7 +156,8 @@ fun MBTIEditInfoScreen(
                             )
                             Spacer(Modifier.size(8.dp))
                             Text(
-                                modifier = Modifier.padding(start = 14.dp, end = 14.dp)
+                                modifier = Modifier
+                                    .padding(start = 14.dp, end = 14.dp)
                                     .height(46.dp),
                                 text = pair.second,
                                 textAlign = TextAlign.Center,
@@ -188,18 +185,25 @@ fun MBTIEditInfoScreen(
         ) {
             Spacer(Modifier.size(6.dp))
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
-                // 선택된 값을 보냄
-                if (receiver.isNotBlank()) {
-                    d("receiver", receiver)
 
+                val result = receiverList.reduce { acc, string ->
+                    acc + string
                 }
-                popBackStack()
+                d("receiver", result)
+                val resultTrue = receiver != result && !receiverList.contains("")
+                // 선택된 값을 보냄
+                if ( resultTrue ) {
+                    d("receiver", result)
+                    popBackStack(result)
+                }
+
             }
-            Spacer(Modifier.fillMaxWidth().height(68.dp - navbarBottomPadding)
+            Spacer(Modifier
+                .fillMaxWidth()
+                .height(68.dp)
                 .background(SisoColorTokens.Gray5))
         }
     }

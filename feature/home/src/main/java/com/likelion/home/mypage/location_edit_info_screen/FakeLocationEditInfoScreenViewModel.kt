@@ -27,8 +27,8 @@ class FakeLocationEditInfoScreenViewModel (
     override val bottomLocation = _bottomLocation.asStateFlow()
     private val _locationState = MutableStateFlow<LocationState>(LocationState.Loading)
     override val locationState: StateFlow<LocationState> = _locationState
-    private var _currentLocation = mutableStateOf("")
-    override val currentLocation = _currentLocation.value
+    private var _currentLocation = MutableStateFlow("")
+    override val currentLocation = _currentLocation.asStateFlow()
 
     init {
         _topLocation.update {
@@ -41,6 +41,11 @@ class FakeLocationEditInfoScreenViewModel (
             bottomLocationUseCase.invoke(input)
         else Location(name = listOf())
         _bottomLocation.update { inputBottom }
+    }
+    override fun setLocation(string:String){
+        _currentLocation.update {
+            string
+        }
     }
 
     override fun locationComplete(input: String, nav: (String) -> Unit) {

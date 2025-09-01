@@ -9,10 +9,12 @@ class FakeMBTIEditInfoScreenViewModel(
     // usecase자리
 ): MBTIEditInfoScreenViewModelType {
     private var _receiver = MutableStateFlow("")
-    init {
+    override val nothing :String = "|||"
+    override fun setReceiver(receiver: String) {
         _receiver.update {
-            it// 받아올 값 추가
+            receiver.ifBlank { nothing }
         }
     }
+
     override val receiver: StateFlow<String> = _receiver.asStateFlow()
 }

@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.additional_info.additional_info_religion_screen
 
 import android.annotation.SuppressLint
+import android.util.Log.d
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -57,38 +58,14 @@ import com.likelion.ui.theme.SisoTypoTokens
 @Composable
 fun AdditionalInfoReligionScreen(
     viewModel: AdditionalInfoReligionScreenViewModelType,
-    popBackStack: (List<Pub>) -> Unit = {},
+    popBackStack: (String) -> Unit = {},
 ) {
-    val receiverList = remember {
-        mutableStateListOf<String>()
-    }
+    val receiver by viewModel.receiver.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.receiverList.collectAsStateWithLifecycle()) {
-        receiverList.addAll(viewModel.receiverList.value)
+    val religionList = viewModel.religionList
+    var selectText by remember {
+        mutableStateOf(receiver)
     }
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-
-    val religionList = remember {
-        mutableListOf(
-            "기독교(개신교)",
-            "불교",
-            "가톨릭",
-            "원불교",
-            "무교",
-            "기타(직접입력)"
-        )
-    }
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-    val editText = remember {
-        mutableStateOf("")
-    }
-
-    var bottomState by remember {
-        mutableStateOf(false)
-    }
-
     Box(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp)
@@ -104,30 +81,32 @@ fun AdditionalInfoReligionScreen(
                 modifier = Modifier
                     .height(31.dp)
                     .fillMaxWidth(),
-                text = "종교가 있나요?",
+                text = receiver.ifBlank { "종교가 있나요?" },
                 style = SisoTypoTokens.Title2,
                 color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(32.dp))
             FlowRow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
             ){
                 religionList.forEach {text->
-                    CommonChip(
-                        text = text,
-                        isSelected = receiverList.contains(text),
-                    ) {
-                        if(text == "기타(직접입력)") {
-                            //입력창 오픈
-                            bottomState = true
-                        }else {
-                            if (receiverList.contains(text)) {
-                                receiverList.remove(text)
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 12.dp, bottom = 12.dp)
+                    ){
+                        CommonChip(
+                            text = text,
+                            isSelected = selectText == text,
+                        ) {
+                            if (selectText == text) {
+                                selectText = ""
                             } else {
-                                receiverList.add(text)
+                                selectText = text
                             }
                         }
                     }
+
                 }
             }
             Spacer(modifier = Modifier.size(366.dp))
@@ -136,42 +115,17 @@ fun AdditionalInfoReligionScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             CommonActiveButton(
-                modifier = Modifier
-                    .height(54.dp),
+                modifier = null,
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                viewModel.updatePubList(receiverList)
-                { pubList->
-                    popBackStack(pubList)
+                viewModel.complete(selectText)
+                { religion->
+                    popBackStack(religion)
                 }
 
             }
-            Spacer(Modifier.size(72.dp - navbarBottomPadding))
-        }
-
-
-        if (bottomState) {
-            BottomRegion(
-                sheetState = sheetState,
-                editText = editText,
-                onDismiss = {
-                    // 바텀 내리기
-                    bottomState = false
-                    // 입력창 초기화
-                    editText.value = ""
-                },
-                complete = {
-                    // 뷰에 추가
-                    religionList.add(religionList.size - 1, editText.value)
-                    // 해당 종교 선택
-                    receiverList.add(editText.value)
-                    // 입력창 초기화
-                    editText.value = ""
-                    // 바텀 내리기
-                    bottomState = false
-                }
-            )
+            Spacer(Modifier.size(72.dp))
         }
     }
 }

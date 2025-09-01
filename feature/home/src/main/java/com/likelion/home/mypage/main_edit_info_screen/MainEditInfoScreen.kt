@@ -1,7 +1,11 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
 import android.R.attr.action
+import android.R.attr.contentDescription
+import android.R.attr.textColor
+import android.annotation.SuppressLint
 import android.util.Log.d
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -50,13 +54,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,39 +72,162 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
+import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.home.mypage.getBitmapFromUrl
 import com.likelion.home.navigation.Pub
+import com.likelion.home.navigation.getString
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.chip.CommonChip
 import com.likelion.ui.component.outlined_textfield.CommonOutlinedTextFiled
+import com.likelion.ui.component.photo_layout.ImageItem
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
+import java.util.concurrent.TimeUnit
 import kotlin.collections.listOf
 
+@SuppressLint("LogNotTimber")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainEditInfoScreen(
     viewModel: MainEditInfoScreenViewModelType,
     saveHandle: SavedStateHandle,
+    naviToMyPage:()->Unit = {},
     action:List<()->Unit> = listOf()
 ) {
-    val navbarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val valueUpdate =
+        { emptyText:String, key:String, userValue: String->
+            if (saveHandle.getString(key).isNullOrBlank()) {
+                d("receiver", "$key is null")
+                userValue.ifBlank { emptyText }
+            }else{
+                d("receiver", "$key ${saveHandle.getString(key).isNullOrBlank()}")
+                saveHandle.getString(key)!!
+            }
+        }
+
+    val newValueUpdate =
+        { emptyText:String, editValue:String, receiverValue: String->
+            if(receiverValue == editValue){
+                receiverValue
+            }else editValue
+        }
+    val textColor = {blank:Boolean, receiver: Boolean->
+        if (blank){
+            SisoColorTokens.Gray50
+            if (receiver)
+                SisoColorTokens.Gray50
+            else
+                SisoColorTokens.Gray90
+        }
+        else SisoColorTokens.Gray90
+    }
+    var nameState by remember { mutableStateOf(uiState.receiverUsersModel?.nickname ?: "") }
+    val nameStateRange = TextRange(0,10)
+    var introduceText by remember { mutableStateOf(uiState.receiverUsersModel?.introduce ?: "") }
+    val introduceTextRange = TextRange(0,50)
+    var ageText by remember { mutableStateOf(uiState.receiverUsersModel?.age.toString()) }
+    val ageTextRange = TextRange(0,3)
+
+
+    val interestBlank = saveHandle.get<List<String>>("interest") == null
+    val matchingBlank = saveHandle.get<List<String>>("matching") == null
+
+    LaunchedEffect(Unit){
+        viewModel.updateUsers(
+            UsersFullModel(
+                id = uiState.editUsersModel.id,
+                userImages = uiState.editUsersModel.userImages,
+                nickname = nameState,
+                age = ageText.toInt(),
+                voiceUrl = if (saveHandle.getString("voice").isNullOrBlank()) {
+                    if (uiState.receiverUsersModel?.voiceUrl!! == uiState.editUsersModel.voiceUrl)
+                    uiState.receiverUsersModel?.voiceUrl!!
+                    else uiState.editUsersModel.voiceUrl
+                }else{
+                    saveHandle.getString("voice")!!
+                },
+                introduce = introduceText,
+                sex = uiState.myRadioButtons.first { it.second }.first,
+
+                preferenceSex = uiState.pairRadioButtons.first { it.second }.first,
+                location = newValueUpdate("지역을 입력해주세요",uiState.editUsersModel.location, if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.location),
+
+                drinkingCapacity = valueUpdate("정보를 입력해주세요","alchol", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.drinkingCapacity),
+
+                religion = valueUpdate("지역을 입력해주세요","religion", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.religion),
+
+                isSmoke = valueUpdate("정보를 입력해주세요","smoking", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.isSmoke),
+
+                interests =
+                    if (interestBlank) {
+                        if (uiState.receiverUsersModel == null)
+                            emptyList()
+                        else
+                            uiState.receiverUsersModel?.interests!!
+                    } else saveHandle.get<List<String>>("interest")!!,
+
+                mbti = valueUpdate("정보를 입력해주세요","mbti", if(uiState.receiverUsersModel == null)""
+                else uiState.receiverUsersModel!!.mbti
+                ),
+
+                meeting = if (matchingBlank) {
+                    if (uiState.receiverUsersModel == null)
+                        emptyList()
+                    else uiState.receiverUsersModel!!.meeting
+                }else saveHandle.get<List<String>>("matching")!!
+            )
+        )
+    }
+    val profileImage = uiState.editImage
     val potoNavigation = {if (action.isNotEmpty()) action[0]()}
+
     val voiceNavigation = { if (action.isNotEmpty()) action[1]() }
-    val locationBlank =
-        saveHandle.get<String>("location") == null
+
+    val locationColor = textColor(
+        saveHandle.getString("location") == null,
+        uiState.receiverUsersModel == null
+    )
     val locationNavigation = {if (action.isNotEmpty()) action[2]()}
-    val religionBlank =
-        saveHandle.get<String>("religion") == null
+
+    val religionColor = textColor(
+        saveHandle.getString("religion") == null,
+        uiState.receiverUsersModel == null
+    )
     val religionNavigation = {if (action.isNotEmpty()) action[3]()}
+
+    val smokingColor = textColor(
+        saveHandle.getString("smoking") == null,
+        uiState.receiverUsersModel == null
+    )
     val smokingNavigation = {if (action.isNotEmpty()) action[4]()}
+
+    val alcoholColor = textColor(
+        saveHandle.getString("alcohol") == null,
+        uiState.receiverUsersModel == null
+    )
     val alcoholNavigation = { if (action.isNotEmpty()) action[5]() }
+
+    val mbtiColor = textColor(
+        saveHandle.getString("mbti") == null,
+        uiState.receiverUsersModel == null
+    )
     val mbtiNavigation = {if (action.isNotEmpty()) action[6]()}
+
     val interestNavigation = {if (action.isNotEmpty()) action[7]() }
+
     val matchingNavigation = {if (action.isNotEmpty()) action[8]()}
 
     // LocalConfiguration을 사용하여 현재 구성 정보를 가져옵니다.
@@ -107,27 +238,12 @@ fun MainEditInfoScreen(
     val screenHeightDp = configuration.screenHeightDp.dp
     val playButtonSize = 24.dp
     val sliderVectorPadding = 7.75.dp
-    val playtimeSize = DpSize(48.5.dp,23.dp)
+    val playtimeSize = DpSize(52.dp,23.dp)
     // 여러 같은 패딩 x 5 + slider 사이드 x 2 + 아이콘 + 재생시간 크기 를 모두 뺸 사이즈
-    val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize *2 + playtimeSize.width)
-
-    var playState by remember { mutableStateOf(false) }
-
-    val myRadioButtons by viewModel.myRadioButtons.collectAsState()
-    val pairRadioButtons by viewModel.pairRadioButtons.collectAsState()
-    val fistContinueBoolean by viewModel.fistContinueBoolean.collectAsState()
-    val nameState by viewModel.nameState.collectAsState()
-    val nameStateRange = TextRange(0,10)
-    var introduceText by remember { mutableStateOf("") }
-    val introduceTextRange = TextRange(0,50)
-    var ageText by remember { mutableStateOf("") }
-    val ageTextRange = TextRange(0,3)
+    val sliderSizing = screenWidthDp - ((16*5).dp + sliderVectorPadding *2 + playButtonSize + 35.dp + playtimeSize.width)
     val sliderVectorList = listOf(
         12, 18, 12, 8, 12, 12, 18, 12, 6
     )
-
-    val appbarTitle = stringResource(com.likelion.home.R.string.main_edit)
-
 
     val interestList = listOf(
         "나의 관심사" to { interestNavigation() },
@@ -135,8 +251,8 @@ fun MainEditInfoScreen(
     )
 
     val interestChipList = listOf(
-        "나의 관심사를 골라주세요" to listOf<String>(),
-        "어떤 관계를 원하시나요?" to listOf()
+        "나의 관심사를 골라주세요" to uiState.editUsersModel.interests,
+        "어떤 관계를 원하시나요?" to uiState.editUsersModel.meeting,
     )
     Box(
         modifier = Modifier.fillMaxHeight()
@@ -163,11 +279,25 @@ fun MainEditInfoScreen(
                             potoNavigation()
                         }
                 ) {
-                    AsyncImage(
-                        modifier = Modifier.size(120.dp, 120.dp),
-                        model = R.drawable.example_profile,
-                        contentDescription = ""
-                    )
+                    when(profileImage) {
+                        is ImageItem.UrlImage ->
+                        AsyncImage(
+                            modifier = Modifier.size(120.dp, 120.dp)
+                                .clip(CircleShape),
+                            model = profileImage.url,
+                            contentScale = ContentScale.Crop,
+                            contentDescription = ""
+                        )
+                        is ImageItem.BitmapImage ->
+                        Image(
+                            bitmap = profileImage.bitmap.asImageBitmap(),
+                            modifier = Modifier.size(120.dp, 120.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = ""
+                        )
+
+                    }
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
@@ -213,11 +343,11 @@ fun MainEditInfoScreen(
                 placeholderText = "닉네임을 입력해주세요",
                 value = nameState, // collect된 실시간 변경된 스트링 값을 넣는다.
                 onValueChange = { newText -> // 새롭게 변경된 문자를 넘겨줌
-                    viewModel.nameUpdate(
+                    nameState =
                         if (newText.length > nameStateRange.length)
                             newText.substring(nameStateRange)
                         else newText
-                    )
+
                 }
             )
             Spacer(Modifier.size(24.dp))
@@ -270,7 +400,7 @@ fun MainEditInfoScreen(
                 Box(
                     modifier = Modifier
                         .height(44.dp)
-                        .fillMaxWidth(0.889F)
+                        .fillMaxWidth(0.862F)
                         .clip(RoundedCornerShape(999.dp))
                         .background(SisoColorTokens.Gray60),
                 ) {
@@ -283,20 +413,20 @@ fun MainEditInfoScreen(
                         IconButton(
                             modifier = Modifier.size(playButtonSize),
                             onClick = {
-                                playState = !playState
                                 // 재생 / 정지
-                                if (!playState) {
+                                if (!uiState.mediaPlayer.isPlaying) {
                                     // 재생하기
-
+                                    viewModel.playAudio(context = context)
                                 } else {
                                     // 중지하기
+                                    viewModel.stopAudio()
                                 }
                             }
                         ) {
                             Icon(
                                 tint = SisoColorTokens.Gray10,
                                 imageVector = ImageVector.vectorResource(
-                                    if (!playState) R.drawable.ic_play
+                                    if (!uiState.mediaPlayer.isPlaying) R.drawable.ic_play
                                     else R.drawable.ic_pause
                                 ),
                                 contentDescription = ""
@@ -330,9 +460,10 @@ fun MainEditInfoScreen(
                         }
                         // 박스 크기만큼 뺀 패딩 9 - 1.25
                         Spacer(Modifier.size(sliderVectorPadding))
+
                         Text(
                             modifier = Modifier.size(playtimeSize),
-                            text = "00:15",
+                            text = formatMillisToMinutesSeconds(uiState.playTime),
                             style = SisoTypoTokens.Label1,
                             color = SisoColorTokens.Gray10,
                             textAlign = TextAlign.Center
@@ -342,18 +473,17 @@ fun MainEditInfoScreen(
                     }
                 }
                 Spacer(Modifier.size(16.dp))
-                Icon(
-                    modifier = Modifier.size(24.dp).clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        voiceNavigation()
-                    },
-                    imageVector = ImageVector.vectorResource(
-                        R.drawable.ic_text_edit
-                    ),
-                    tint = SisoColorTokens.Gray60,
-                    contentDescription = ""
+                Text(
+                    text = "수정",
+                    style = SisoTypoTokens.Body2,
+                    color = SisoColorTokens.Gray60,
+                    modifier = Modifier.size(36.dp,28.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            voiceNavigation()
+                        },
                 )
             }
 
@@ -410,7 +540,9 @@ fun MainEditInfoScreen(
                 Row(
                     modifier = Modifier.height(24.dp)
                 ) {
-                    EditInfoRepeatRadioButton(myRadioButtons) {
+                    EditInfoRepeatRadioButton(uiState.myRadioButtons)
+                    { sex ->
+                        viewModel.myRadioButtonsUpdate(sex)
                         viewModel.fistContinueBooleanUpdate()
                     }
                 }
@@ -432,7 +564,9 @@ fun MainEditInfoScreen(
                 Row(
                     modifier = Modifier.height(24.dp)
                 ) {
-                    EditInfoRepeatRadioButton(pairRadioButtons) {
+                    EditInfoRepeatRadioButton(uiState.pairRadioButtons)
+                    {pair->
+                        viewModel.pairRadioButtonsUpdate(pair)
                         viewModel.fistContinueBooleanUpdate()
                     }
                 }
@@ -440,10 +574,8 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(32.dp))
             InfoEditScreenButton(
                 titleText = "지역",
-                selectText = if(locationBlank) "나의 지역을 등록해주세요"
-                else saveHandle.get<String>("location")!!,
-                color = if(locationBlank) SisoColorTokens.Gray50
-                else SisoColorTokens.Gray90,
+                selectText = uiState.editUsersModel.location,
+                color = locationColor,
             ) {
                 locationNavigation()
             }
@@ -484,28 +616,32 @@ fun MainEditInfoScreen(
             Spacer(Modifier.size(36.dp))
             InfoEditScreenButton(
                 titleText = "종교",
-                selectText = "정보를 입력해주세요"
+                selectText = uiState.editUsersModel.religion,
+                color = religionColor,
             ) {
                 religionNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "흡연",
-                selectText = "정보를 입력해주세요"
+                selectText = uiState.editUsersModel.isSmoke,
+                color = smokingColor,
             ) {
                 smokingNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "음주",
-                selectText = "정보를 입력해주세요"
+                selectText = uiState.editUsersModel.drinkingCapacity,
+                color = alcoholColor
             ) {
                 alcoholNavigation()
             }
             Spacer(Modifier.size(24.dp))
             InfoEditScreenButton(
                 titleText = "MBTI",
-                selectText = "정보를 입력해주세요"
+                selectText = uiState.editUsersModel.mbti,
+                color = mbtiColor
             ) {
                 mbtiNavigation()
             }
@@ -516,7 +652,14 @@ fun MainEditInfoScreen(
             interestList.forEachIndexed { index, (sub, onclick) ->
                 Spacer(Modifier.size(32.dp))
                 Row(
-                    modifier = Modifier.height(24.dp),
+                    modifier = Modifier
+                        .height(24.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onclick()
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -528,41 +671,43 @@ fun MainEditInfoScreen(
                         color = SisoColorTokens.Gray50,
                         textAlign = TextAlign.Start
                     )
-                    IconButton(
-                        modifier = Modifier.size(24.dp),
-                        onClick = {
-                            onclick()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
-                            contentDescription = ""
-                        )
-                    }
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_caret_right),
+                        contentDescription = ""
+                    )
                 }
                 Spacer(Modifier.size(12.dp))
                 d("interestChipList", "$index ${interestChipList[index].first}")
+                d("interestChipList", "$index ${matchingBlank}")
+                d(
+                    "interestChipList", "$index ${interestChipList[index].second}" +
+                            "${uiState.receiverUsersModel}"
+                )
                 InterestRepeatChip(
                     emptyText = interestChipList[index].first,
                     list = interestChipList[index].second,
+                    onClick = { onclick() }
                 )
+
             }
             // 59 + 62
             Spacer(Modifier.size(121.dp))
         }
 
         Column(
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .padding(start = 16.dp, end = 16.dp)
-                .background(SisoColorTokens.Gray5)
         ) {
             Spacer(Modifier.size(8.dp))
             CommonActiveButton(
+                modifier = null,
                 text = "수정완료"
             ) {
-
+                // 수정 된 값을 보내는 곳
+                naviToMyPage()
             }
-            Spacer(Modifier.size(72.dp - navbarBottomPadding))
+            Spacer(Modifier.size(72.dp))
         }
     }
 
@@ -607,8 +752,8 @@ fun TitleText(
 
 @Composable
 fun EditInfoRepeatRadioButton(
-    radios: MutableList<Pair<String, Boolean>>,
-    click: () -> Unit = {}
+    radios: List<Pair<String, Boolean>>,
+    click: (String) -> Unit = {}
 ) {
     radios.forEachIndexed { index, info ->
         Row(
@@ -617,12 +762,7 @@ fun EditInfoRepeatRadioButton(
             modifier = Modifier
                 .wrapContentSize()
                 .clickable {
-                    radios.replaceAll {
-                        it.copy(
-                            second = (it.first == info.first)
-                        )
-                    }
-                    click()
+                    click(info.first)
                 }
         ) {
             Text(
@@ -637,12 +777,7 @@ fun EditInfoRepeatRadioButton(
                     unselectedColor = SisoColorTokens.Gray30
                 ),
                 onClick = {
-                    radios.replaceAll {
-                        it.copy(
-                            second = (it.first == info.first)
-                        )
-                    }
-                    click()
+
                 }
             )
 
@@ -655,7 +790,6 @@ fun EditInfoRepeatRadioButton(
 fun InfoEditScreenButton(
     titleText: String,
     selectText: String,
-    pubList: List<Pub> = emptyList(),
     color: Color = SisoColorTokens.Gray50,
     icon: ImageVector = ImageVector.vectorResource(com.likelion.home.R.drawable.chevron_down),
     click: () -> Unit = {}
@@ -689,7 +823,7 @@ fun InfoEditScreenButton(
             Box(
                 modifier = Modifier
                     .height(28.dp)
-                    .fillMaxWidth(0.889F),
+                    .fillMaxWidth(0.89F),
             ) {
                 Text(
                     modifier = Modifier.fillMaxHeight(),
@@ -714,38 +848,65 @@ fun InfoEditScreenButton(
 @Composable
 fun InterestRepeatChip(
     emptyText: String,
-    list: List<String>
+    list: List<String>,
+    onClick : ()-> Unit = {}
 ){
-    if (list.isEmpty()||list.all { it.isBlank() })
-        Box(
-            modifier = Modifier
-                .height(48.dp)
-                .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp)),
-        ){
-            Text(
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 18.dp, end = 18.dp),
-                text = emptyText,
-                style = SisoTypoTokens.Body2,
-                color = SisoColorTokens.Gray70,
-                textAlign = TextAlign.Center
-            )
-        }
-
-    else
-        FlowRow(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.padding(12.dp)
-        ) {
-            list.forEach {
-                if (it.isNotBlank())
-                CommonChip(
-                    text = it,
-                    isSelected = false
-                ) { }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick()
             }
-        }
+    ) {
+        if (list.isEmpty()||list.all { it.isBlank() })
+            Box(
+                modifier = Modifier
+                    .height(48.dp)
+                    .background(SisoColorTokens.Gray20, RoundedCornerShape(999.dp)),
+            ){
+                Text(
+                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 18.dp, end = 18.dp),
+                    text = emptyText,
+                    style = SisoTypoTokens.Body2,
+                    color = SisoColorTokens.Gray50,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        else
+            FlowRow {
+                list.forEach {
+                    if (it.isNotBlank())
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 12.dp, bottom = 12.dp)
+                        ) {
+                            CommonChip(
+                                text = it,
+                                isSelected = false
+                            ) {
+                                onClick()
+                            }
+                        }
+
+                }
+            }
+    }
+
 }
 
+// 포맷 함수
+@SuppressLint("DefaultLocale")
+fun formatMillisToMinutesSeconds(millis: Int): String {
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(millis.toLong())
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(millis.toLong()) % 60
+    val formattedSeconds = String.format("%02d:%02d", minutes, seconds)
+    d("formatMillisToMinutesSeconds",formattedSeconds)
+    return formattedSeconds
+}
 
 @Preview
 @Composable

@@ -4,25 +4,45 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.likelion.domain.model.ImagesModel
+import com.likelion.domain.mypage.model.UserEditImageModel
+import com.likelion.domain.mypage.usecase.GetUserImagesUseCase
+import com.likelion.ui.component.photo_layout.EditableImage
+import com.likelion.home.mypage.getBitmapFromUrl
+import com.likelion.home.mypage.main_edit_info_screen.EditUiState
+import com.likelion.ui.component.photo_layout.ImageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PotoEditInfoScreenViewModel @Inject constructor(
     // usecase자리
+
 ) : ViewModel(), PotoEditInfoScreenViewModelType {
     // 바텀 시트의 표시 여부를 관리하는 StateFlow
     private val _showBottomSheet = MutableStateFlow(false)
     override val showBottomSheet: StateFlow<Boolean> = _showBottomSheet.asStateFlow()
 
     // 사진 리스트의 상태를 관리하는 StateFlow
-    private val _capturedImages = MutableStateFlow<List<Bitmap>>(emptyList())
-    override val capturedImages: StateFlow<List<Bitmap>> = _capturedImages.asStateFlow()
+    private val _capturedImages = MutableStateFlow<List<EditableImage>>(emptyList())
+    override val capturedImages: StateFlow<List<EditableImage>> = _capturedImages.asStateFlow()
 
+
+    fun fetch(imageItems: List<EditableImage>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _capturedImages.update {
+                // 사진 받는 선행 함수
+                imageItems
+            }
+        }
+    }
 
     // 바텀 시트 여는 메서드
     override fun showPhotoUploadBottomSheet() {
@@ -35,14 +55,28 @@ class PotoEditInfoScreenViewModel @Inject constructor(
     }
 
     override fun addImageFromAlbum(newImage: Bitmap) {
-        _capturedImages.value = _capturedImages.value + newImage
+        var count = 0
+        val newImageItem = EditableImage(null, ImageItem.BitmapImage(newImage))
+
+        _capturedImages.update {
+            it.map { imageItem -> if(imageItem.edited == null && count == 0){
+                count += 1
+                newImageItem.copy(original = imageItem.original)
+            }else imageItem }
+        }
     }
 
     // 사진 삭제 메서드
-    override fun deleteBitMap(delete: Bitmap) {
-        val mutableList = _capturedImages.value.toMutableList()
-        mutableList.remove(delete)
-        _capturedImages.value = mutableList
+    override fun deleteImageItem(delete: ImageItem) {
+        _capturedImages.update {
+            capturedImages.value.map { item ->
+                if (item.edited?.id == delete.id) {
+                    item.copy(edited = null)
+                } else {
+                    item
+                }
+            }
+        }
     }
 
     override fun createMockBitmapList(context: Context): List<coil3.Bitmap> {
