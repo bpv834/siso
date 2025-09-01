@@ -11,7 +11,7 @@ import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-class userProfileRepositoryImpl @Inject constructor(
+class UserProfileRepositoryImpl @Inject constructor(
     private val userApiService: UserApiService,
    // private val voiceApi: UserSignUpApi,
     ) : UserProfileRepository {
