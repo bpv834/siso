@@ -10,5 +10,4 @@ class AddProfileUseCase @Inject constructor(
     suspend fun execute(accessToken : String, user : UserSignUpProfile){
         repository.addProfile(accessToken = accessToken, profile = user)
     }
-
 }
