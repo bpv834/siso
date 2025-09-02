@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetVoiceSampleUseCase @Inject constructor(
     val repository: VoiceRepository
 ) {
-    suspend fun execute(userId: String, refreshToken: String): Result<VoiceSampleModel> {
-        return repository.getVoiceSample(userId = userId , refreshToken= refreshToken)
+    suspend fun execute(userId: String, accessToken: String): Result<VoiceSampleModel> {
+        return repository.getVoiceSample(userId = userId , accessToken= accessToken)
     }
 }

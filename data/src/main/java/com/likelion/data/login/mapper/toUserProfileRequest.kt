@@ -10,7 +10,6 @@ import com.likelion.util.Religion
 import com.likelion.util.Sex
 import timber.log.Timber
 
-
 // UserSignUpProfile을 UserProfileRequest로 변환하는 확장 함수
 fun UserSignUpProfile.toUserProfileRequest(): UserProfileRequest {
     val result =UserProfileRequest(
@@ -18,7 +17,7 @@ fun UserSignUpProfile.toUserProfileRequest(): UserProfileRequest {
         nickname = this.nickname,//this.nickname,
         introduce = this.introduce,
         sex = Sex.MALE.name, // 클라이언트의 gender를 서버의 sex로 매핑
-        preferenceSex = PreferenceSex.MALE.name,// this.preferenceSex,
+        preferenceSex = PreferenceSex.OTHER.name,// this.preferenceSex,
         mbti = Mbti.ENFJ.name,
         smoke = true,
         location = Location.GYEONGGI.name,

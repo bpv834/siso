@@ -10,6 +10,7 @@ import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.likelion.domain.notification.model.FcmToken
 import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
+import com.likelion.domain.voice.model.VoiceSampleModel
 import com.likelion.domain.voice.usecase.UploadVoiceSampleUseCase
 import com.likelion.login.event.UiEvent
 import com.likelion.login.state.UiState
@@ -67,8 +68,18 @@ class LastLoginInfoScreenViewModel @Inject constructor(
         }
     }
 
+    // ⚠️ 수정: 함수 실행 중 여부를 나타내는 플래그를 추가합니다.
+    private var isUploading = false
+
     private suspend fun uploadProfile() {
+        // ⚠️ 수정: 이미 로딩 중이라면 함수를 바로 종료합니다.
+        if (isUploading) {
+            Timber.d("업로드 이미 진행 중, 중복 호출 무시")
+            return
+        }
+
         Timber.d("uploadProfile")
+        isUploading = true // ⚠️ 업로드 시작 전에 플래그를 true로 설정
         _uiState.value = UiState.Loading
 
         try {
@@ -78,13 +89,14 @@ class LastLoginInfoScreenViewModel @Inject constructor(
             Timber.d("tokenResult ${tokenResult?.accessToken}")
 
             if (tokenResult?.accessToken.isNullOrBlank()) {
-                _uiState.value = UiState.Error("Refresh token not found")
+                _uiState.value = UiState.Error("accessToken token not found")
                 return
             }
 
             val accessToken = tokenResult.accessToken
 
-            val workList = mutableListOf<Deferred<Result<Unit>>>()
+            val workList = mutableListOf<Deferred<Result<Any>>>()
+
 
             // 프로필 추가
             // Deferred : Kotlin 코루틴에서 비동기 작업의 결과를 나타내는 타입이에요. 쉽게 말하면 나중에 완료될 값을 담고 있는 상자
@@ -100,8 +112,10 @@ class LastLoginInfoScreenViewModel @Inject constructor(
             workList.add(work1)
             Timber.d("프로필넣기")
 
-            /*       // 이미지 업로드
+                   // 이미지 업로드
                    if (user.photoPaths.isNotEmpty()) {
+                       Timber.d("user.photoPaths. :${user.photoPaths}")
+
                        val work2: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
                            runCatching {
                                uploadImageUseCase.execute(
@@ -111,20 +125,27 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                            }
                        }
                        workList.add(work2)
-                   }*/
+                   }
             Timber.d("이미지")
 
             // 음성 업로드
             if (user.voicePath.isNotBlank()) {
-                val work3: Deferred<Result<Unit>> = viewModelScope.async(Dispatchers.IO) {
-                    runCatching {
+                Timber.d("user.photoPaths. :${user.voicePath}")
+
+                // 음성 업로드
+                if (user.voicePath.isNotBlank()) {
+                    Timber.d("user.photoPaths. :${user.voicePath}")
+
+                    // ⚠️ 수정: work3의 타입을 VoiceSampleModel로 변경하고 runCatching 제거
+                    val work3: Deferred<Result<VoiceSampleModel>> = viewModelScope.async(Dispatchers.IO) {
                         uploadVoiceSampleUseCase.execute(
                             path = user.voicePath,
-                            refreshToken = accessToken
+                            accessToken = accessToken
                         )
                     }
+                    workList.add(work3)
                 }
-                workList.add(work3)
+
             }
 
             Timber.d("음성")
@@ -178,6 +199,6 @@ class LastLoginInfoScreenViewModel @Inject constructor(
     }
     // 업로드 프로필 이벤트 발생 메서드
     suspend fun emitUploadFcmToken() {
-        _uiEvent.emit(UiEvent.UploadProfile)
+        _uiEvent.emit(UiEvent.UploadFcmToken)
     }
 }

@@ -3,9 +3,13 @@ package com.likelion.data.call_for_caller.repository
 import android.net.http.HttpException
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import com.likelion.data.call_for_caller.mapper.toDomain
+import com.likelion.data.call_for_caller.mapper.toRemote
 import com.likelion.data.home.mapper.toDomainModel
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.model.CallInfoModel
+import com.likelion.domain.call_for_caller.model.CallModel
+import com.likelion.domain.call_for_caller.model.CallRejectResponseModel
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
@@ -73,6 +77,9 @@ class CallRepositoryImpl @Inject constructor(
                 // ⭐️ 매퍼를 사용하여 Remote 모델을 Domain 모델로 변환
                 val callInfoModel = callInfoDto.toDomainModel()
 
+                // 📡 서버 응답 성공 → 전화 시도 중 상태 이벤트 발행
+                _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
+
                 agoraVoiceManager.joinChannel(
                     token = callInfoModel.token,
                     channelName = callInfoModel.channelName
@@ -110,5 +117,55 @@ class CallRepositoryImpl @Inject constructor(
         agoraVoiceManager.destroy() // RtcEngine 리소스 해제
         Timber.d("CallRepositoryImpl: 통화 종료 및 Agora 리소스 해제 완료")
         // 통화 종료 이벤트는 AgoraVoiceManager에서 'CallerLeftChannel' 등으로 발행될 것입니다.
+    }
+
+    // 상대방이 거절할때 발생하는 usecase
+    override suspend fun rejectCall(): Result<Unit> {
+        return try {
+            Timber.d("CallRepositoryImpl: 상대방이 통화를 거절했습니다. 채널 종료 처리 중...")
+
+            // Agora 채널 나가기
+            agoraVoiceManager.leaveChannel()
+            agoraVoiceManager.destroy()
+
+            // 이벤트 발행 (UI가 거절 화면 표시 가능)
+            _agoraEvents.emit(AgoraEvent.CallRejected)
+
+            // 성공 리턴
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Timber.e(e, "통화 거절 처리 중 에러 발생")
+            Result.failure(e)
+        }
+    }
+
+    // 사용자가 전화 알림왔을때 전화를 거부할때 동작하는 메서드
+    override suspend fun denyCall(
+        accessToken: String,
+        request: CallModel
+    ): Result<CallRejectResponseModel> {
+        return try {
+            // 도메인 모델 → Remote DTO로 변환
+            val remoteRequest = request.toRemote()
+
+            // API 호출
+            val response = callApiService.denyCall(
+                authorization = "Bearer $accessToken",
+                request = remoteRequest
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Result.success(body.toDomain())
+                } else {
+                    Result.failure(Exception("Empty response body"))
+                }
+            } else {
+                Result.failure(Exception("HTTP ${response.code()} ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

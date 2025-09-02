@@ -10,16 +10,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.example.notification.FcmEvent
 import com.example.notification.FcmEventBus
-import com.likelion.data.mypage.repository.APILocationRepositoryImpl
-import com.likelion.data.mypage.repository.LocationRepositoryImpl
-import com.likelion.domain.mypage.usecase.BottomLocationUseCase
-import com.likelion.domain.mypage.usecase.CurrentLocationSetUseCase
-import com.likelion.domain.mypage.usecase.TopLocationUseCase
 import com.likelion.domain.notification.model.Call
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
@@ -35,10 +29,10 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
-import com.likelion.ui.R
 import com.likelion.ui.component.dialog.CallPopUpCard
 import com.lion.call.navigation.callerNavigation
 import com.lion.call.navigation.navigateToCallForCaller
+import timber.log.Timber
 
 
 @Composable
@@ -47,17 +41,28 @@ fun MainNavHost(
     appState: SisoAppState,
 //    startDestination: String = NavigationRoute.HomeScreen.route
     startDestination: String = NavigationRoute.LoginScreen.route,
-    viewModel : MainNavHostViewModel = hiltViewModel()
+    viewModel: MainNavHostViewModel = hiltViewModel()
 ) {
 
     val cotext = LocalContext.current
     // 컴퍼저블이 열리면 이벤트 구독
     LaunchedEffect(Unit) {
+        // event를 object로 만들어 싱글톤처럼 사용한다
+        // 어디서든 접근가능하다.
         FcmEventBus.events.collect { event ->
             when (event) {
                 // ui event 트리거 변경만 해준다
+                // 전화 왔을때 이벤트
                 is FcmEvent.Call -> viewModel.onFcmCallEvent(call = event.toCall())
-                is FcmEvent.Message -> TODO()
+
+                // 상대방이 거절했을 때 이벤트
+                is FcmEvent.Reject -> {
+                    // 발신자는 채널을 나간다
+                    // 채널 나가고 아고라 거절됨 이벤트 발생시키는 이벤트
+                    viewModel.onFcmRejectEvent()
+                }
+
+                is FcmEvent.Message ->{}
             }
         }
     }
@@ -69,10 +74,32 @@ fun MainNavHost(
     val uiEvent = viewModel.uiEvent.collectAsState(initial = null)
     LaunchedEffect(uiEvent.value) {
         when (val event = uiEvent.value) {
-            is UiEvent.IncomingCall -> incomingCall = event.call
-            UiEvent.CallDismissed -> incomingCall = null
-            UiEvent.MessageDismissed -> { /* 메시지 처리 */ }
-            else -> {}
+            is UiEvent.IncomingCall -> {
+                incomingCall = event.call
+            }
+
+            // 내가 거절했을 때
+            is UiEvent.CallRejectedByMe -> {
+                incomingCall = null // 팝업 내리기
+            }
+
+            // 전화 받았을때 화면전환 이벤트 일때
+            is UiEvent.NavigateToCallScreen -> {
+                incomingCall = null // 팝업 내리기
+                // Navigation으로 CallForCallerScreen 이동
+                appState.navController.navigateToCallForCaller(
+                    otherUserId = event.call.callerId.toLong(),
+                    navOptions = navOptions { launchSingleTop = true }
+                )
+            }
+
+            is UiEvent.Error -> {
+                Timber.e("에러 발생: ${event.message}")
+            }
+
+            // 상대방이 거절했을 때
+            UiEvent.CallReject -> {}
+            null -> {}
         }
     }
 
@@ -80,22 +107,21 @@ fun MainNavHost(
     incomingCall?.let { call ->
         CallPopUpCard(
             call = call,
-            onDismiss = {
-                incomingCall = null
-            }
+            onDismiss = { incomingCall = null },
+            callAccept = { viewModel.acceptIncomingCall(call) },
+            callDeny = { viewModel.rejectIncomingCall(call) }
         )
     }
 
-
     // 널체크 널이 아니면 전화 팝업 띄우기
     // 값 변화가 있을 때만 뜨지만, 이미 같은 값이 다시 들어오면 UI 반응이 없을 수 있음.
-  /*  uiState.call?.let { state ->
-        val currentCall = state  // 지역 변수에 복사
-        CallPopUpCard(
-            call = currentCall,
-            onDismiss = { viewModel.clearCall() }
-        )
-    }*/
+    /*  uiState.call?.let { state ->
+          val currentCall = state  // 지역 변수에 복사
+          CallPopUpCard(
+              call = currentCall,
+              onDismiss = { viewModel.clearCall() }
+          )
+      }*/
 
     NavHost(
         modifier = modifier,
@@ -105,7 +131,10 @@ fun MainNavHost(
         loginNavigation(
             navController = appState.navController,
             onNavigateToHome = {
-                appState.navController.popBackStack(NavigationRoute.LoginScreen.route, inclusive = true)
+                appState.navController.popBackStack(
+                    NavigationRoute.LoginScreen.route,
+                    inclusive = true
+                )
                 appState.navController.navigateToHome(
                     navOptions {
                         launchSingleTop = true
@@ -118,8 +147,14 @@ fun MainNavHost(
         inputNavigation(
             navController = appState.navController,
             onNavigateToHome = {
-                appState.navController.popBackStack(NavigationRoute.LoginScreen.route, inclusive = true)
-                appState.navController.popBackStack(NavigationRoute.InputScreen.route, inclusive = true)
+                appState.navController.popBackStack(
+                    NavigationRoute.LoginScreen.route,
+                    inclusive = true
+                )
+                appState.navController.popBackStack(
+                    NavigationRoute.InputScreen.route,
+                    inclusive = true
+                )
                 appState.navController.navigateToHome(
                     navOptions {
                         launchSingleTop = true
@@ -139,7 +174,7 @@ fun MainNavHost(
             navController = appState.navController,
             // onNavigateToCaller 콜백에 userId와 otherUserId 인자를 추가하고,
             // navigateToCallForCaller 함수에 이 값들을 전달합니다.
-            onNavigateToCaller = {  otherUserId ->
+            onNavigateToCaller = { otherUserId ->
                 appState.navController.navigateToCallForCaller(
                     otherUserId = otherUserId,
                     navOptions = navOptions {
@@ -147,7 +182,7 @@ fun MainNavHost(
                     }
                 )
             },
-            onNavigateToChat = { userId, userNickName,chatRoomId ->
+            onNavigateToChat = { userId, userNickName, chatRoomId ->
                 appState.navController.navigateToChatRoom(
                     userId = userId,
                     userNickName = userNickName,
@@ -182,10 +217,13 @@ fun MainNavHost(
 //        locationRepository.setJson(jsonString)
         editMainNavigation(
             navController = appState.navController
-        ){
+        ) {
             appState.navController.navigateToMyPage(
                 navOptions {
-                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
+                    appState.navController.popBackStack(
+                        NavigationRoute.MyPageScreen.MainEditScreen.route,
+                        inclusive = true
+                    )
                     launchSingleTop = true
                 }
             )
@@ -196,7 +234,10 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToMyPage(
                 navOptions {
-                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
+                    appState.navController.popBackStack(
+                        NavigationRoute.MyPageScreen.MainEditScreen.route,
+                        inclusive = true
+                    )
                     launchSingleTop = true
                 }
             )

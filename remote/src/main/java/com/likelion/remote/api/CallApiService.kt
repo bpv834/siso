@@ -1,7 +1,9 @@
 package com.likelion.remote.api
 
 import com.likelion.remote.model.request.CallRequest
+import com.likelion.remote.model.request.RejectCallRequest
 import com.likelion.remote.model.response.CallInfoDto
+import com.likelion.remote.model.response.RejectCallResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -18,7 +20,10 @@ interface CallApiService {
         @Body request: CallRequest // 통화 요청에 필요한 정보 (예: 발신자, 수신자 ID)
     ): Response<CallInfoDto>
 
-    // 다른 통화 관련 API (예: 현재 활성 채널 목록 가져오기 등)가 있다면 여기에 추가할 수 있습니다.
-    // @GET("call/activeChannels")
-    // suspend fun getActiveChannels(): List<ChannelDto>
+    // 수신 거절
+    @POST("/api/calls/deny") // 거절 API 엔드포인트
+    suspend fun denyCall(
+        @Header("Authorization") authorization: String,
+        @Body request: RejectCallRequest // 거절에 필요한 정보
+    ): Response<RejectCallResponse>
 }

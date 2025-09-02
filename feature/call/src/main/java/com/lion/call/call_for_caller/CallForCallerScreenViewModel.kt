@@ -229,6 +229,11 @@ class CallForCallerScreenViewModel @Inject constructor(
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) } // 상태를 통화 종료로 변경
                         _uiEvent.emit(ShowToast("수신자가 통화를 종료했습니다.")) // UI 토스트 표시
                     }
+
+                    AgoraEvent.CallRejected -> {
+                        Timber.d("HomeScreenViewModel: CallRejected 이벤트 수신 - 수신자 통화 거절")
+
+                    }
                 }
             }
         }

@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
+import com.likelion.domain.call_for_caller.model.CallModel
 import com.likelion.domain.notification.model.Call
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CustomButtonWithIcon
@@ -31,7 +32,7 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun CallPopUpCard(call: Call,onDismiss :()-> Unit ) {
+fun CallPopUpCard(call: Call,onDismiss :()-> Unit,callAccept : ()->Unit, callDeny : ()->Unit ) {
     Dialog(
         onDismissRequest = {
             onDismiss()
@@ -43,13 +44,13 @@ fun CallPopUpCard(call: Call,onDismiss :()-> Unit ) {
                 .height(198.dp),
             shape = RoundedCornerShape(24.dp),
             color = Color.White,
-            shadowElevation = 4.dp // Add a drop shadow like in the image
+            shadowElevation = 4.dp
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(4.dp)) // Top padding
+                Spacer(modifier = Modifier.height(4.dp))
 
                 Row(
                     modifier = Modifier
@@ -61,7 +62,7 @@ fun CallPopUpCard(call: Call,onDismiss :()-> Unit ) {
                         model = call.callerImage,
                         contentDescription = "Caller profile picture",
                         modifier = Modifier
-                            .size(80.dp) // Adjust size to match the image
+                            .size(80.dp)
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )
@@ -118,11 +119,15 @@ fun CallPopUpCardPreview() {
             callerImage = "",
             callerName = "",
             agoraToken = "",
-            agoraChannel = ""
+            agoraChannel = "",
+            callerId = "",
+            id = ""
         )
         CallPopUpCard(
             call = fakeCall,
-            onDismiss = {}
+            onDismiss = {},
+            callAccept = {},
+            callDeny = {},
         )
     }
 }
