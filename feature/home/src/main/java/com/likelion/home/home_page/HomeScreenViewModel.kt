@@ -45,11 +45,11 @@ class HomeScreenViewModel @Inject constructor(
                 Timber.d("getTokenAndLoadUsers")
                 getTokenAndLoadUsers()
             }
-            is HomeScreenUiEvent.OnClickCallButton -> {
-                Timber.d("OnClickCallButton")
 
+            is HomeScreenUiEvent.OnClickCallButton -> {
+                Timber.d("HomeScreenUiEvent.onClickCallButton ")
                 onClickCallButton(
-                    receiverId =  event.receiverId, accessToken = ""
+                    receiverId = event.receiverId,
                 )
             }
         }
@@ -66,7 +66,7 @@ class HomeScreenViewModel @Inject constructor(
 
                 if (!userToken.isNullOrEmpty()) {
                     Timber.d("✅ [getTokenAndLoadUsers] 토큰 정상, 유저 불러오기 시작")
-                    accessToken = userToken
+                    accessToken = userToken // 처음 토큰flow에 값을 넣어준다.
                     loadUsers(userToken)
                     return@collect // 유저 불러온 뒤 종료
                 }
@@ -91,18 +91,14 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun onClickCallButton(receiverId: Long, accessToken: String) {
+    private fun onClickCallButton(receiverId: Long) {
+        Timber.d("onClickCallButton receiverId : $receiverId / accessToken : $accessToken")
         viewModelScope.launch {
-            val token = accessToken
-            if (token != null) {
-                try {
-                    startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
-                    _sideEffect.emit(HomeScreenSideEffect.NavigateToCaller(receiverId))
-                } catch (e: Exception) {
-                    _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("통화 실패: ${e.message}"))
-                }
-            } else {
-                _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("유효한 토큰이 없어 통화를 시작할 수 없습니다."))
+            try {
+                startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken!!)
+                _sideEffect.emit(HomeScreenSideEffect.NavigateToCaller(receiverId))
+            } catch (e: Exception) {
+                _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("통화 실패: ${e.message}"))
             }
         }
     }

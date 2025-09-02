@@ -1,14 +1,5 @@
-*.iml
-.gradle
-/local.properties
-/.idea
-.kotlin
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties### Android template
+### Android template
+
 # Gradle files
 .gradle/
 build/
@@ -18,6 +9,7 @@ local.properties
 
 # Log/OS Files
 *.log
+.DS_Store
 
 # Android Studio generated files and folders
 captures/
@@ -29,14 +21,10 @@ output.json
 # IntelliJ
 *.iml
 .idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
 
-# Keystore files
+# Keystore files (보안상 절대 올리면 안 됨)
 *.jks
 *.keystore
 
 # Android Profiling
 *.hprof
-

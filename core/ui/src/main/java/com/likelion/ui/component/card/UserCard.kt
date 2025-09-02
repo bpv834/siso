@@ -1,6 +1,7 @@
 package com.likelion.ui.component.card
 
 import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +45,7 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 import com.likelion.domain.enums.PresentStatus
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun UserCard(
@@ -84,8 +86,8 @@ fun UserCard(
                         .size(10.dp)
                         .background(
                             color = when (user.presentStatus) {
-                                PresentStatus.OFFLINE -> SisoColorTokens.Green60
-                                PresentStatus.ONLINE -> Color.Gray
+                                PresentStatus.ONLINE -> SisoColorTokens.Green60
+                                PresentStatus.OFFLINE -> SisoColorTokens.Gray60
                                 PresentStatus.IN_CALL -> SisoColorTokens.Orange40
                             },
                             shape = CircleShape
@@ -144,6 +146,8 @@ fun UserCard(
                         }
                     }
                 }
+            }else{
+                Spacer(Modifier.size(256.dp))
             }
             Spacer(Modifier.size(16.dp))
 
@@ -190,6 +194,7 @@ fun UserCard(
                         color = SisoColorTokens.Gray60
                     )
                 }
+                if(user.voiceUrl.isNotEmpty())
                 AsyncImage(
                     model = R.drawable.ic_voicesample,
                     contentDescription = "",
@@ -202,6 +207,7 @@ fun UserCard(
 
             Spacer(Modifier.size(12.dp))
             // 관심사 목록
+            if(user.interests.isNotEmpty())
             Text(
                 text = user.interests.joinToString(separator = " #", prefix = "#"),
                 style = SisoTypoTokens.Label1,
