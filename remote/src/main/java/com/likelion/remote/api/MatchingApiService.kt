@@ -7,6 +7,6 @@ import retrofit2.http.Header
 interface MatchingApiService {
     @GET("/api/filter/matching")
     suspend fun getMatchingUsers(
-        @Header("Authorization") eccessToken: String,
+        @Header("Authorization") accessToken: String
     ): List<MatchingUserResponse>
 }

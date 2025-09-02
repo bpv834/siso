@@ -1,6 +1,5 @@
 package com.likelion.ui.component.full_screen
 
-import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -12,10 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +28,6 @@ import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
-import org.intellij.lang.annotations.JdkConstants
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -142,9 +138,8 @@ fun FullScreenCallingPreview() {
     SisoTheme {
         val caller = UsersModel(
             id = 4L,
-            isOnline = true,
             userImages = listOf(
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
+
             ),
             location = "America",
             nickname = "여덟글자닉네임자",
@@ -164,7 +159,10 @@ fun FullScreenCallingPreview() {
             ),
             introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다."
+                    " 안녕하세요. 코딩을 좋아하는 개발자입니다.",
+            presentStatus = com.likelion.domain.enums.PresentStatus.IN_CALL
+
+
         )
         FullScreenCalling(caller = caller)
     }

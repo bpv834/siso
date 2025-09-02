@@ -1,4 +1,4 @@
-package com.likelion.util
+package com.likelion.domain.enums
 
 enum class DrinkingCapacity(val code: Int, val description: String) {
     NEVER(0, "전혀 안함"),

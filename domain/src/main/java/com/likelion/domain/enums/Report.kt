@@ -1,4 +1,4 @@
-package com.likelion.util
+package com.likelion.domain.enums
 
 enum class Report(val code: Int, val description: String) {
     SPAM(0, "스팸성/글/메시지"),

@@ -125,11 +125,7 @@ fun FullScreenWhenCalledPreview() {
     SisoTheme {
         val fakeUser = UsersModel(
             id = 4L,
-            isOnline = true,
-            userImages = listOf(
-                "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-            ),
+            userImages = listOf(),
             location = "America",
             nickname = "코딩러",
             age = 65,
@@ -137,7 +133,10 @@ fun FullScreenWhenCalledPreview() {
             interests = listOf("풋볼", "영화", "음악"),
             introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다."
+                    " 안녕하세요. 코딩을 좋아하는 개발자입니다.",
+            presentStatus = com.likelion.domain.enums.PresentStatus.IN_CALL
+
+
         )
         FullScreenWhenCalled(user = fakeUser)
     }

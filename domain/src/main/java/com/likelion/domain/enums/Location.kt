@@ -1,4 +1,4 @@
-package com.likelion.util
+package com.likelion.domain.enums
 enum class Location(val code: Int, val koreanName: String) {
     SEOUL(0, "서울"),
     BUSAN(1, "부산"),

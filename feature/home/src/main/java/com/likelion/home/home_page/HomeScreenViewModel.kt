@@ -79,6 +79,7 @@ class HomeScreenViewModel @Inject constructor(
             _uiState.value = HomeScreenUiState.LoadingUsers
 
             val result = getAllUsersUseCase.execute(token)
+            Timber.d("result = ${result}")
 
             if (result.isSuccess) {
                 _uiState.value = HomeScreenUiState.Success(result.getOrThrow())

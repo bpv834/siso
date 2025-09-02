@@ -161,12 +161,14 @@ class LastLoginInfoScreenViewModel @Inject constructor(
                     UiState.Error(failure.exceptionOrNull()?.message ?: "Unknown error")
             } else {
                 _uiState.value = UiState.SuccessUploadProfile
+                isUploading = false
             }
 
         } catch (e: Exception) {
 
             Timber.e(e, "프로필 등록 실패")
             _uiState.value = UiState.Error(e.message ?: "Unknown exception")
+            isUploading = false
 
         }
     }

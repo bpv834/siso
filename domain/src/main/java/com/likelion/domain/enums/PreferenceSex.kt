@@ -1,4 +1,4 @@
-package com.likelion.util
+package com.likelion.domain.enums
 
 enum class PreferenceSex(val code: Int, val description: String) {
     MALE(0, "남성"),

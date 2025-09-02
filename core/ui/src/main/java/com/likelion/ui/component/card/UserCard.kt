@@ -1,7 +1,6 @@
 package com.likelion.ui.component.card
 
 import android.Manifest
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,14 +8,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,15 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.R
-import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
-import com.likelion.ui.component.button.CustomButtonWithIcon
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
+import com.likelion.domain.enums.PresentStatus
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -89,13 +83,21 @@ fun UserCard(
                     modifier = Modifier
                         .size(10.dp)
                         .background(
-                            if (user.isOnline) SisoColorTokens.Green60 else Color.Gray,
+                            color = when (user.presentStatus) {
+                                PresentStatus.OFFLINE -> SisoColorTokens.Green60
+                                PresentStatus.ONLINE -> Color.Gray
+                                PresentStatus.IN_CALL -> SisoColorTokens.Orange40
+                            },
                             shape = CircleShape
                         )
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = if (user.isOnline) "온라인" else "오프라인",
+                    text = when (user.presentStatus) {
+                        PresentStatus.OFFLINE -> PresentStatus.OFFLINE.name
+                        PresentStatus.ONLINE -> PresentStatus.ONLINE.name
+                        PresentStatus.IN_CALL -> PresentStatus.IN_CALL.name
+                    },
                     fontSize = 14.sp,
                     style = SisoTypoTokens.Label1,
                     color = SisoColorTokens.Gray90
@@ -109,15 +111,15 @@ fun UserCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    itemsIndexed(user.userImages) { index, imageUrl ->
+                    itemsIndexed(user.userImages) { index, path ->
                         Box {
                             AsyncImage(
-                                model = imageUrl,
+                                model = path,
                                 contentDescription = "",
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(242.dp)
-                                    .clickable { onImageClick(imageUrl) }
+                                    .clickable { onImageClick(path) }
                                     .clip(RoundedCornerShape(24.dp)),
                                 contentScale = ContentScale.Crop
                             )
@@ -297,20 +299,21 @@ fun UserCard(
 fun UserCardPreview() {
     val sampleUser = UsersModel(
         id = 1,
-        isOnline = true,
-        userImages = listOf("https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"),
+        userImages = listOf(),
         location = "서울 강남구",
         nickname = "강남멋쟁이",
         age = 30,
         voiceUrl = "voice_url",
         interests = listOf("독서", "영화", "헬스"),
-        introduce = "안녕하세요. 자기소개입니다. 저는 영화와 독서를 좋아합니다."
+        introduce = "안녕하세요. 자기소개입니다. 저는 영화와 독서를 좋아합니다.",
+        presentStatus = com.likelion.domain.enums.PresentStatus.IN_CALL
+
     )
     UserCard(
         user = sampleUser,
         {},
         {},
-        { id1,  -> },
+        { id1 -> },
         { userId, userNickName, chatRoomId -> },
         false
     )
