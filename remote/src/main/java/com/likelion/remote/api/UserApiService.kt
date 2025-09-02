@@ -13,7 +13,7 @@ import retrofit2.http.Path
 
 interface UserApiService {
 
-    @GET("/api/auth/info")
+    @GET("api/auth/info")
     suspend fun  getUserId(
         @Header("Authorization") refreshToken: String,
     ): UserInfoResponse

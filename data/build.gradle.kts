@@ -54,9 +54,6 @@ dependencies {
     testImplementation("com.google.truth:truth:1.4.2")
     implementation(kotlin("test"))
 
-    // OkHttp core
-    implementation("com.squareup.okhttp3:okhttp:4.11.0") // 최신 버전 확인
-    // Logging interceptor
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0") // 최신 버전 확인
+
 }
 

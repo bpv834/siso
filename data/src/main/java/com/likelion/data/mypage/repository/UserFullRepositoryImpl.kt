@@ -22,7 +22,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
@@ -41,25 +40,9 @@ class UserFullRepositoryImpl @Inject constructor(
     ): UsersFullModel {
 
         try {
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-
-            val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(AuthInterceptor { accessToken }) // 토큰 공급 함수
-                .addInterceptor(loggingInterceptor)
-                .build()
-
-// 3. Retrofit 생성
-            val retrofit = Retrofit.Builder()
-                .baseUrl("/api/auth/info")
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            retrofit.create(UserApiService::class.java).getUserId()
             // 유저 야이디를 불러옴
-//            val token = "Bearer $accessToken"
-//            val user = userApiService.getUserId(token)
+            val token = "Bearer $accessToken"
+            val user = userApiService.getUserId(token)
 
 
             return UsersFullModel(
