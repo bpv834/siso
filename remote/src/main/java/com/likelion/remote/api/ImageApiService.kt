@@ -14,17 +14,18 @@ import retrofit2.http.Path
 interface ImageApiService {
 
     // 이미지 등록
+    // 이미지 업로드 추가 (POST 요청)
     @Multipart
     @POST("/api/images/upload")
     suspend fun uploadProfileImage(
-        @Header("Authorization") refreshToken: String,
-        @Part files: MultipartBody.Part,        // 실제 이미지 파일
-    ): Response<Unit> // 서버 응답을 안 쓸 거면 Unit 으로 받기
+        @Header("Authorization") accessToken: String,
+        @Part files: List<MultipartBody.Part>
+    ): Response<List<ImageResponse>>
 
     // 사용자별 이미지 조회
     @GET("/api/images/user/{userId}")
     suspend fun getUserProfileImages(
-        refreshToken: String,
+        accessToken: String,
         @Path("userId") userId: String
     ): Response<List<ImageResponse>>
 
