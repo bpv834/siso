@@ -72,9 +72,9 @@ class InterestEditInfoScreenViewModel @Inject constructor (
                 in leisureList -> tempLeisure.add(it)
             }
         }
-        _cultureReceiverList.update { tempCulture }
-        _exerciseReceiverList.update { tempExercise }
-        _leisureReceiverList.update { tempLeisure }
+        _cultureReceiverList.update { old-> old.toMutableList().apply { addAll(tempCulture) } }
+        _exerciseReceiverList.update { old-> old.toMutableList().apply { addAll(tempExercise) } }
+        _leisureReceiverList.update { old-> old.toMutableList().apply { addAll(tempLeisure) } }
     }
 
     override fun setLeisureReceiver(input: String){

@@ -165,6 +165,7 @@ class MainEditInfoScreenViewModel @Inject constructor (
                 val profile = newImages.firstOrNull().let {
                     ImageItem.UrlImage(it?.path!!,it.serverImageName)
                 }
+                d("test","$newModel")
                 _uiState.update {
                     val male = it.myRadioButtons[0].first
                     val feMale = it.myRadioButtons[1].first

@@ -475,12 +475,12 @@ fun MainEditInfoScreen(
 
                     }
                 }
-                Spacer(Modifier.size(16.dp))
+                Spacer(Modifier.size(15.dp))
                 Text(
                     text = "수정",
                     style = SisoTypoTokens.Body2,
                     color = SisoColorTokens.Gray60,
-                    modifier = Modifier.size(36.dp,28.dp)
+                    modifier = Modifier.size(38.dp,28.dp)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null

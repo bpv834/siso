@@ -1,7 +1,6 @@
 package com.likelion.home.mypage.poto_edit_info_screen
 
 import android.Manifest
-import android.R.attr.bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -121,17 +120,12 @@ fun PotoEditInfoScreen(
         Spacer(modifier = Modifier.size(size = 68.dp))
         // derivedStateOf는 다른 상태에서 파생된 값을 안전하고 효율적으로 계산하고 싶을 때 쓰는 도구예요.
 
-        val isAddCapture by remember { derivedStateOf { edit.size < 5 } }
         CommonButtonWithState (text = "사진 추가하기 (${edit.size}/5)",
             onClick = {
-                if (edit.size < 5) {
-                    viewModel.showPhotoUploadBottomSheet()
-                    //onNavigateNext()
-                } else {
-                    // 5장 초과 시 처리 로직
-                }
+                // 5장 초과 시 처리 로직
+                viewModel.showPhotoUploadBottomSheet()
             },
-            isActive = isAddCapture
+            isActive = edit.size < 5
         )
         Spacer(Modifier.size(8.dp))
         if (capturedImages.isEmpty()) // 이미지가 없을때만 건너뛰기를 노출
@@ -148,7 +142,9 @@ fun PotoEditInfoScreen(
             }
         // 사진이 한개라도 있다면 다음으로 버튼 노출
         if (capturedImages.isNotEmpty())
-            CommonActiveButton(text = "다음으로", onClick = {
+            CommonActiveButton(
+                modifier = null,
+                text = "다음으로", onClick = {
                 onNavigateNext()
             })
     }
