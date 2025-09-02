@@ -22,7 +22,10 @@ class ImageRepositoryImpl @Inject constructor(
     ): Result<List<ImageModel>> {
         return try {
             val response: Response<List<ImageResponse>> =
-                imageApiService.getUserProfileImages(userId = userId, refreshToken = refreshToken)
+                imageApiService.getUserProfileImages(
+                    userId = userId,
+                    accessToken = "Bearer $refreshToken"
+                )
 
             if (response.isSuccessful) {
                 val imageResponseList = response.body() ?: emptyList()
@@ -38,37 +41,37 @@ class ImageRepositoryImpl @Inject constructor(
 
     override suspend fun upLoadImage(
         imgPathList: List<String>,
-        eccessToken: String
+        accessToken: String
     ): Result<Unit> {
         return try {
-            for (path in imgPathList) {
+            // 1. 파일 리스트를 MultipartBody.Part 리스트로 변환
+            val multipartParts = imgPathList.map { path ->
                 val file = File(path)
                 if (!file.exists()) {
-                    return Result.failure(IllegalArgumentException("File not found: $path"))
+                    throw IllegalArgumentException("File not found: $path")
                 }
-
-                // 파일 → MultipartBody.Part
+                // 파일 → RequestBody → MultipartBody.Part 변환
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-                val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
-
-                // API 호출
-                // TODO: imageApiService의 업로드 메서드 시그니처와 일치시키세요.
-                // 이 예시에서는 refreshToken을 헤더로 넘기는 것을 가정합니다.
-                val response = imageApiService.uploadProfileImage(
-                    files = imagePart, refreshToken = eccessToken
-                )
-
-                if (!response.isSuccessful) {
-                    return Result.failure(
-                        Exception("Image upload failed: ${response.code()} ${response.message()}")
-                    )
-                }
+                MultipartBody.Part.createFormData("files", file.name, requestFile)
             }
 
-            // 모든 업로드가 성공했을 때 Unit 반환
-            Result.success(Unit)
+            // 2. API 호출
+            val response = imageApiService.uploadProfileImage(
+                // 서버의 @RequestPart(value = "files")와 이름 일치
+                files = multipartParts,
+                accessToken = "Bearer $accessToken"
+            )
+
+            // 3. 응답 처리
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(
+                    Exception("Image upload failed: ${response.code()} ${response.message()}")
+                )
+            }
         } catch (e: Exception) {
-            // 업로드 중 발생하는 네트워크 오류, 타임아웃 등 예외 처리
+            // 업로드 중 발생하는 네트워크 오류 등 예외 처리
             Result.failure(e)
         }
     }
