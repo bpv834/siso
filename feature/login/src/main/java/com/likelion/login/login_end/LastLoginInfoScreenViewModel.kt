@@ -199,6 +199,6 @@ class LastLoginInfoScreenViewModel @Inject constructor(
     }
     // 업로드 프로필 이벤트 발생 메서드
     suspend fun emitUploadFcmToken() {
-        _uiEvent.emit(UiEvent.UploadProfile)
+        _uiEvent.emit(UiEvent.UploadFcmToken)
     }
 }
