@@ -6,3 +6,8 @@ import com.likelion.domain.auth.model.KakaoTokenResult
 interface KakaoAuthRepository {
     suspend fun fetchKakaoAccessToken(): KakaoTokenResult
 }
+
+// 서버 교환 전용
+interface KakaoAuthTestRepository {
+    suspend fun loginWithKakaoToken(): KakaoTokenResult
+}

@@ -3,6 +3,7 @@ package com.likelion.login.login_start
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.auth.model.KakaoTokenResult
+import com.likelion.domain.auth.usecase.ExchangeKakaoTokenUseCase
 import com.likelion.domain.auth.usecase.FetchKakaoTokenUseCase
 import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.PostKakaoResult
@@ -46,6 +47,8 @@ class LoginScreenViewModel @Inject constructor(
 
     private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
     private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
+
+    private val testKakao: ExchangeKakaoTokenUseCase
 
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -156,7 +159,7 @@ class LoginScreenViewModel @Inject constructor(
     // 1. 카카오한테 액세스 토큰을 받음
     fun fetchKakaoToken() {
         viewModelScope.launch {
-            val result = fetchKakaoTokenUseCase()
+            val result = testKakao()
             when (result) {
                 is KakaoTokenResult.Success -> {
                     Timber.d("카카오한테 액세스 토큰 받음 ${result.token}")
