@@ -16,6 +16,7 @@ class MainActivity : ComponentActivity() {
     lateinit var activityHolder: CurrentActivityHolder
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activityHolder.set(this)
         enableEdgeToEdge()
         setContent {
             SisoTheme {
@@ -24,8 +25,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        activityHolder.set(this)
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            activityHolder.clear()
+        }
     }
 }
