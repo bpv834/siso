@@ -79,7 +79,8 @@ fun EditMain (
     val start = NavigationRoute.MyPageScreen.MainEditScreen.route
 
     val mainViewModel = hiltViewModel<MainEditInfoScreenViewModel>()
-    mainViewModel.fetchUsers(13L,13L) // 유저 정보를 가져오는 곳
+    val tempAccess = "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6ImtnODQ4MEBnbWFpbC5jb20iLCJpYXQiOjE3NTY3ODAzNjEsImV4cCI6MTc1Nzk4OTk2MX0.7JD1bTDaEzO9bcrKJcit44JaWSg0HVcDeU76tfPZyqM"
+    mainViewModel.fetchUsers(tempAccess,13L) // 유저 정보를 가져오는 곳
     val photoEditInfoScreenViewModel = hiltViewModel<PotoEditInfoScreenViewModel>()
     val recordEditInfoScreenViewModel = hiltViewModel<RecordEditInfoScreenViewModel>()
     val additionalInfoSmokingScreenViewModel = hiltViewModel<AdditionalInfoSmokingScreenViewModel>()

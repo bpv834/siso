@@ -9,6 +9,6 @@ import javax.inject.Inject
 class UsersFullUseCase(
     private val usersFullRepository: UserFullRepository
 ) {
-    suspend operator fun invoke(id: Long): UsersFullModel =
-        usersFullRepository.getUserById(id)
+    suspend operator fun invoke(accessToken: String): UsersFullModel =
+        usersFullRepository.getUserById(accessToken)
 }

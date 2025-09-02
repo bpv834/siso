@@ -157,10 +157,10 @@ class MainEditInfoScreenViewModel @Inject constructor (
     }
 
     @SuppressLint("LogNotTimber")
-    fun fetchUsers(id: Long,imageId: Long) {
+    fun fetchUsers(accessToken: String,imageId: Long) {
         viewModelScope.launch {
             try {
-                val newModel = userFullUseCase(id)
+                val newModel = userFullUseCase(accessToken)
                 val newImages = getUserImagesUseCase(imageId)
                 val profile = newImages.firstOrNull().let {
                     ImageItem.UrlImage(it?.path!!,it.serverImageName)

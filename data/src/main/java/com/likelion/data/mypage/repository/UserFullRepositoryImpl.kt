@@ -2,33 +2,83 @@ package com.likelion.data.mypage.repository
 
 import android.net.http.HttpException
 import android.os.Build
+import android.util.Log.d
 import androidx.annotation.RequiresExtension
-import com.likelion.data.mypage.enum_model.DrinkingCapacity
-import com.likelion.data.mypage.enum_model.MBTI
-import com.likelion.data.mypage.enum_model.Meeting
-import com.likelion.data.mypage.enum_model.PreferenceSex
-import com.likelion.data.mypage.enum_model.Religion
-import com.likelion.data.mypage.enum_model.Sex
 import com.likelion.data.mypage.mapper.dataToDomain
+import com.likelion.util.Meeting
+import com.likelion.util.Interest
 import com.likelion.data.mypage.model.UsersFullEntity
 import com.likelion.domain.mypage.model.UsersFullModel
 import com.likelion.domain.mypage.repository.UserFullRepository
+import com.likelion.remote.api.InterestApiService
 import com.likelion.remote.api.UserApiService
+import com.likelion.remote.api.VoiceApiService
+import com.likelion.util.DrinkingCapacity
+import com.likelion.util.Mbti
+import com.likelion.util.PreferenceSex
+import com.likelion.util.Religion
+import com.likelion.util.Sex
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
 class UserFullRepositoryImpl @Inject constructor(
     private val userApiService: UserApiService,
+    private val voiceApiService: VoiceApiService,
+    private val interestApiService: InterestApiService
 ) : UserFullRepository {
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun getUserById(
         accessToken: String
     ): UsersFullModel {
-        val tempAccess = "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiYWNjZXNzIiwic3ViIjoia2c4NDgwQGdtYWlsLmNvbSIsImlhdCI6MTc1Njc4MDM2MSwiZXhwIjoxNzU2Nzg3NTYxfQ.8IBIoCgIdmDiDLdaWPg8Q4NRNcCEnYQ5QiGXBaVdL6s"
+
         try {
-            val user = userApiService.getUserId(tempAccess)
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(AuthInterceptor { accessToken }) // 토큰 공급 함수
+                .addInterceptor(loggingInterceptor)
+                .build()
+
+// 3. Retrofit 생성
+            val retrofit = Retrofit.Builder()
+                .baseUrl("/api/auth/info")
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            retrofit.create(UserApiService::class.java).getUserId()
+            // 유저 야이디를 불러옴
+//            val token = "Bearer $accessToken"
+//            val user = userApiService.getUserId(token)
+
+
+            return UsersFullModel(
+                id = 1,
+                age = 1,
+                nickname = "",
+                voiceUrl = "",
+                introduce = "",
+                location = "",
+                sex = "",
+                preferenceSex = "",
+                isSmoke = "",
+                drinkingCapacity = "",
+                religion = "",
+                mbti = "",
+                userImages = "",
+                interests = listOf(),
+                meeting = listOf(),
+            )
         } catch (e: IOException) {
             // 네트워크 문제 (인터넷 끊김 등)
             Timber.e(e, "네트워크 오류 발생")
@@ -42,36 +92,32 @@ class UserFullRepositoryImpl @Inject constructor(
             Timber.e(e, "예상치 못한 오류 발생")
             throw Exception("예기치 못한 오류: ${e.localizedMessage}")
         }
-        val fakeEntity = UsersFullEntity(
-            id = 4L,
-            userId = 12L,
-            profileImage = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-            location = "America",
-            nickname = "코딩러",
-            age = 65,
-            voiceUrl = "https://samplelib.com/lib/preview/mp3/sample-15s.mp3",
-            interest = listOf("#음악감상", "#영화감상", "#노래부르기"),
-            introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다.", // null ?: ""
-            drinkingCapacity = DrinkingCapacity.Never,
-            religion = Religion.Christianity,
-            isSmoke = false,
-            sex = Sex.Female,
-            preferenceSex = PreferenceSex.Female,
-            mbti = MBTI.INTJ,
-            meeting = listOf(
-                Meeting.CLUB_ACTIVITY,
-                Meeting.VOLUNTEER_ACTIVITY,
-                Meeting.HOBBY_GROUP,
-                Meeting.CULTURE_LIFE,
-                Meeting.TOGETHER_SPORTS,
-                Meeting.HIKING,
-                Meeting.FOOD_TRIP,
-            ),
-        )
 
-        val fakeUser = fakeEntity.dataToDomain()
-        return fakeUser
+
+
+    }
+
+    // 1. 토큰 자동 삽입 Interceptor
+    class AuthInterceptor(private val tokenProvider: () -> String?) : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val originalRequest: Request = chain.request()
+            val token = tokenProvider()
+
+            val requestBuilder = originalRequest.newBuilder()
+            if (!token.isNullOrEmpty()) {
+                requestBuilder.addHeader("Authorization", "Bearer $token")
+            }
+
+            val requestWithToken = requestBuilder.build()
+            val response = chain.proceed(requestWithToken)
+
+            // 401 디버깅
+            if (response.code == 401) {
+                println("⚠️ 401 Unauthorized 발생! 요청 헤더 확인 필요")
+                println("Request Headers: ${requestWithToken.headers}")
+            }
+
+            return response
+        }
     }
 }

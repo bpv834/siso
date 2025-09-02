@@ -1,30 +1,33 @@
 package com.likelion.data.mypage.mapper
 
-import com.likelion.data.mypage.enum_model.Religion
+
 import com.likelion.data.mypage.model.UsersFullEntity
 import com.likelion.domain.mypage.model.UsersFullModel
+import com.likelion.util.Interest
+import com.likelion.util.Meeting
+import com.likelion.util.Meeting.Companion.dataToDomain
 
 fun UsersFullEntity.dataToDomain() : UsersFullModel
 = this.run {
     UsersFullModel(
-        id = userId,
+        id = id,
         userImages = profileImage,
         location = location,
         nickname = nickname,
         age = age,
-        sex = sex.dataToDomain(),
-        preferenceSex = preferenceSex.dataToDomain(),
+        sex = sex.description,
+        preferenceSex = preferenceSex.description,
         voiceUrl = voiceUrl,
-        drinkingCapacity = drinkingCapacity.dataToDomain(),
-        interests = interest,
+        drinkingCapacity = drinkingCapacity.description,
+        interests = interest.map { it.description },
         introduce = introduce ?: "",
-        religion = religion.dataToDomain(),
+        religion = religion.description,
         isSmoke = when (isSmoke){
             true -> "흠연자"
             false -> "비흡연자"
         },
-        mbti = mbti.dataToDomain(),
-        meeting = meeting.map { "#${it.dataToDomain()}" },
+        mbti = mbti.value,
+        meeting = meeting.map { it.meeting },
     )
 
 }

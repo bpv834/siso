@@ -17,9 +17,9 @@ class MyPageViewModel@Inject constructor(
 ): ViewModel(),MyPageViewModelType{
     private val _uiState = MutableStateFlow(MyPageUiState())
     override val uiState : StateFlow<MyPageUiState> = _uiState.asStateFlow()
-    fun getUsers(id:Long){
+    fun getUsers(accessToken: String){
         viewModelScope.launch {
-            val usersFullModel = usersFullUseCase(id)
+            val usersFullModel = usersFullUseCase(accessToken = accessToken)
             _uiState.update { it.copy(
                 userImages = usersFullModel.userImages,
                 nickname = usersFullModel.nickname,

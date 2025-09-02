@@ -4,6 +4,7 @@ import com.likelion.remote.api.CallApiService
 import com.likelion.remote.api.FcmApiService
 import com.likelion.remote.api.ImageApiService
 import com.likelion.remote.api.ChatApiService
+import com.likelion.remote.api.InterestApiService
 import com.likelion.remote.api.KakaoAuthApiService
 import com.likelion.remote.api.MatchingApiService
 import com.likelion.remote.api.UserApiService
@@ -89,5 +90,14 @@ object RemoteModule {
     ): FcmApiService {
         // 실제 서버가 준비될 때까지 FakeCallApiService를 리턴합니다.
         return retrofit.create(FcmApiService::class.java) // 실제 서버 통신 시 사용
+    }
+
+    @Singleton
+    @Provides
+    fun provideInterestApiService(
+        retrofit: Retrofit
+    ): InterestApiService {
+        // 관심사 목록 API를 제공하는 서비스를 생성합니다.
+        return retrofit.create(InterestApiService::class.java)
     }
 }

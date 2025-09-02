@@ -1,6 +1,7 @@
 package com.likelion.remote.api
 
 import com.likelion.remote.model.request.UserProfileRequest
+import com.likelion.remote.model.response.UserInfo
 import com.likelion.remote.model.response.UserInfoResponse
 import com.likelion.remote.model.response.UserProfileResponseDto
 import retrofit2.Response
@@ -15,14 +16,14 @@ interface UserApiService {
     @GET("/api/auth/info")
     suspend fun  getUserId(
         @Header("Authorization") refreshToken: String,
-    ): Response<UserInfoResponse>
+    ): UserInfoResponse
+
 
     // 새 API: userId로 유저 프로필 가져오기
     @GET("api/users/{id}")
     suspend fun getUserProfile(
         @Header("Authorization") refreshToken: String,
         @Path("id") userId: Long,
-        @Body request: UserProfileResponseDto
     ): Response<UserProfileResponseDto>
 
 

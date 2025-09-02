@@ -687,7 +687,7 @@ fun MainEditInfoScreen(
                 )
                 InterestRepeatChip(
                     emptyText = interestChipList[index].first,
-                    list = interestChipList[index].second,
+                    list = interestChipList[index].second.map { it },
                     onClick = { onclick() }
                 )
 
