@@ -1,6 +1,7 @@
 package com.likelion.home.mypage.interest_edit_info_screen
 
 import android.annotation.SuppressLint
+import android.util.Log.d
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -141,9 +143,10 @@ fun InterestEditInfoScreen(
                 text = "완료하기"
             ) {
                 // 선택된 값을 보냄
-                val size = cultureReceiver.size + exerciseReceiver.size
-                + leisureReceiver.size
-                if (size > 3 && size < 8) {
+                d("test","${cultureReceiver.size + exerciseReceiver.size
+                        + leisureReceiver.size}")
+                if (cultureReceiver.size + exerciseReceiver.size
+                    + leisureReceiver.size >= 3) {
                     val result = mutableListOf<String>()
                     result.addAll(cultureReceiver)
                     result.addAll(exerciseReceiver)

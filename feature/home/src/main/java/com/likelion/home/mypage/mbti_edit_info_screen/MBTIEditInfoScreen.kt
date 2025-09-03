@@ -52,9 +52,9 @@ fun MBTIEditInfoScreen(
     viewModel: MBTIEditInfoScreenViewModelType,
     popBackStack: (String) -> Unit = {},
 ) {
-    val nothing = viewModel.nothing.split("|")
+    val nothing = viewModel.nothing.toList().map { it.toString() }
     val receiver by viewModel.receiver.collectAsStateWithLifecycle()
-    val receiverList = remember { if (receiver.isNotBlank())receiver.split("").toMutableStateList()
+    val receiverList = remember { if (receiver.isNotBlank())receiver.toList().map { it.toString() }.toMutableStateList()
     else nothing.toMutableStateList() }
     val exInList = listOf(
         "E" to "에너지를 \n사람 만나서 얻는 편",
@@ -193,7 +193,7 @@ fun MBTIEditInfoScreen(
                     acc + string
                 }
                 d("receiver", result)
-                val resultTrue = receiver != result && !receiverList.contains("")
+                val resultTrue = receiver != result && !receiverList.contains(nothing[0])
                 // 선택된 값을 보냄
                 if ( resultTrue ) {
                     d("receiver", result)

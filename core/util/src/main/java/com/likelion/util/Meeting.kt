@@ -1,4 +1,4 @@
-package com.likelion.data.mypage.enum_model
+package com.likelion.util
 
 enum class Meeting(val meeting: String) {
     CLUB_ACTIVITY("동호회활동"),
@@ -23,5 +23,10 @@ enum class Meeting(val meeting: String) {
     NEW_CONNECTION("새로운인연"),//
     COMMUNICATION("소통해요"),
     TOGETHER_TIME("함께하는시간"),
-    MAKE_CONNECTION("인연만들기")
+    MAKE_CONNECTION("인연만들기");
+
+    companion object{
+        fun dataToDomain(meeting: String) : String
+        = Meeting.valueOf(meeting).meeting
+    }
 }

@@ -10,6 +10,11 @@ data class UserInfoResponseDto(
     val token: ApiToken
 )
 
+@JsonClass(generateAdapter = true)
+data class UserInfo(
+    val data : UserInfoResponse,
+)
+
 
 @JsonClass(generateAdapter = true)
 data class UserInfoResponse(
