@@ -153,48 +153,48 @@ class ChatRepositoryImpl @Inject constructor(
                 currentMsg = "채팅방이 개설되었습니다",
                 isView = false,
             ),
-            ChatHistoryEntity(
-                chatRoomId = 3,
-                profileImage = "https://picsum.photos/200/202",
-                nickName = "씨",
-                callTime = System.currentTimeMillis(),
-                currentMsg = "채팅방이 개설되었습니다"
-            ),
-            ChatHistoryEntity(
-                chatRoomId = 4,
-                profileImage = "https://picsum.photos/200/203",
-                nickName = "씨플플",
-                callTime = System.currentTimeMillis(),
-                currentMsg = "채팅방이 개설되었습니다"
-            ),
-            ChatHistoryEntity(
-                chatRoomId = 5,
-                profileImage = "https://picsum.photos/200/204",
-                nickName = "스위프트",
-                callTime = System.currentTimeMillis(),
-                currentMsg = "채팅방이 개설되었습니다"
-            ),
-            ChatHistoryEntity(
-                chatRoomId = 6,
-                profileImage = "https://picsum.photos/200/205",
-                nickName = "삼성",
-                callTime = System.currentTimeMillis(),
-                currentMsg = "채팅방이 개설되었습니다"
-            ),
-            ChatHistoryEntity(
-                chatRoomId = 7,
-                profileImage = "https://picsum.photos/200/206",
-                nickName = "애플",
-                callTime = System.currentTimeMillis(),
-                currentMsg = "채팅방이 개설되었습니다"
-            ),
-            ChatHistoryEntity(
-                chatRoomId = 8,
-                profileImage = "https://picsum.photos/200/207",
-                nickName = "닉네임은여덟글자",
-                callTime = System.currentTimeMillis(),
-                currentMsg = "채팅방이 개설되었습니다"
-            )
+//            ChatHistoryEntity(
+//                chatRoomId = 3,
+//                profileImage = "https://picsum.photos/200/202",
+//                nickName = "씨",
+//                callTime = System.currentTimeMillis(),
+//                currentMsg = "채팅방이 개설되었습니다"
+//            ),
+//            ChatHistoryEntity(
+//                chatRoomId = 4,
+//                profileImage = "https://picsum.photos/200/203",
+//                nickName = "씨플플",
+//                callTime = System.currentTimeMillis(),
+//                currentMsg = "채팅방이 개설되었습니다"
+//            ),
+//            ChatHistoryEntity(
+//                chatRoomId = 5,
+//                profileImage = "https://picsum.photos/200/204",
+//                nickName = "스위프트",
+//                callTime = System.currentTimeMillis(),
+//                currentMsg = "채팅방이 개설되었습니다"
+//            ),
+//            ChatHistoryEntity(
+//                chatRoomId = 6,
+//                profileImage = "https://picsum.photos/200/205",
+//                nickName = "삼성",
+//                callTime = System.currentTimeMillis(),
+//                currentMsg = "채팅방이 개설되었습니다"
+//            ),
+//            ChatHistoryEntity(
+//                chatRoomId = 7,
+//                profileImage = "https://picsum.photos/200/206",
+//                nickName = "애플",
+//                callTime = System.currentTimeMillis(),
+//                currentMsg = "채팅방이 개설되었습니다"
+//            ),
+//            ChatHistoryEntity(
+//                chatRoomId = 8,
+//                profileImage = "https://picsum.photos/200/207",
+//                nickName = "닉네임은여덟글자",
+//                callTime = System.currentTimeMillis(),
+//                currentMsg = "채팅방이 개설되었습니다"
+//            )
         )
     }
 
@@ -218,30 +218,30 @@ class ChatRepositoryImpl @Inject constructor(
                 nickName = "씨",
                 callTime = System.currentTimeMillis() - 86_400_000
             ),
-            CallHistoryEntity(
-                callId = 3,
-                profileImage = "https://picsum.photos/200/203",
-                nickName = "씨플플",
-                callTime = System.currentTimeMillis() - 2 * 86_400_000
-            ),
-            CallHistoryEntity(
-                callId = 4,
-                profileImage = "https://picsum.photos/200/204",
-                nickName = "스위프트",
-                callTime = System.currentTimeMillis() - 3 * 86_400_000
-            ),
-            CallHistoryEntity(
-                callId = 5,
-                profileImage = "https://picsum.photos/200/205",
-                nickName = "삼성",
-                callTime = System.currentTimeMillis() - 4 * 86_400_000
-            ),
-            CallHistoryEntity(
-                callId = 6,
-                profileImage = "https://picsum.photos/200/206",
-                nickName = "애플",
-                callTime = System.currentTimeMillis() - 5 * 86_400_000
-            )
+//            CallHistoryEntity(
+//                callId = 3,
+//                profileImage = "https://picsum.photos/200/203",
+//                nickName = "씨플플",
+//                callTime = System.currentTimeMillis() - 2 * 86_400_000
+//            ),
+//            CallHistoryEntity(
+//                callId = 4,
+//                profileImage = "https://picsum.photos/200/204",
+//                nickName = "스위프트",
+//                callTime = System.currentTimeMillis() - 3 * 86_400_000
+//            ),
+//            CallHistoryEntity(
+//                callId = 5,
+//                profileImage = "https://picsum.photos/200/205",
+//                nickName = "삼성",
+//                callTime = System.currentTimeMillis() - 4 * 86_400_000
+//            ),
+//            CallHistoryEntity(
+//                callId = 6,
+//                profileImage = "https://picsum.photos/200/206",
+//                nickName = "애플",
+//                callTime = System.currentTimeMillis() - 5 * 86_400_000
+//            )
         )
     }
 }
