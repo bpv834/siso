@@ -129,7 +129,7 @@ class CallRepositoryImpl @Inject constructor(
 
         // API 호출이 예외를 던지지 않고 성공적으로 응답을 받았다면, SisoResponse의 data 필드를 확인합니다.
         if (response.data != null && response.errorMessage == null) {
-            val callResponseDto = response.data!!.first()
+            val callResponseDto = response.data!!
             val callResponseModel : CallResponseModel = callResponseDto.toDomain()
 
             return Result.success(callResponseModel)

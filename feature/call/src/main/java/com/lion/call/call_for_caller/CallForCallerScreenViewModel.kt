@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.model.CallModel
+import com.likelion.domain.call_for_caller.model.CallResponseModel
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
@@ -40,6 +41,7 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<CallUiEvent>()
     override val uiEvent = _uiEvent.asSharedFlow()
 
+
     // 토큰변수, ui상태가 아니기때문에 따로 관리
     private val _tokenState = MutableStateFlow<String?>(null)
     val tokenState: StateFlow<String?> = _tokenState.asStateFlow()
@@ -66,10 +68,10 @@ class CallForCallerScreenViewModel @Inject constructor(
 
             val result: Result<CallModel> = startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
             result
-                .onSuccess { callInfo ->
-                    Timber.d("HomeScreenViewModel: StartCallUseCase 성공적으로 실행됨: ${callInfo.channelName}")
+                .onSuccess { callModel ->
+                    Timber.d("HomeScreenViewModel: StartCallUseCase 성공적으로 실행됨: ${callModel.channelName}")
+                    evaluationUseCase.execute(callModel =callModel, isKeepGoing = true ,accessToken = accessToken)
                     _uiState.update { it.copy(callProgressState =CallForCallerState.Calling ) }
-
 
                 }
                 .onFailure { throwable ->
@@ -157,6 +159,10 @@ class CallForCallerScreenViewModel @Inject constructor(
     override fun stopCallTimer() {
         _timerJob?.cancel()
         _timerJob = null
+    }
+
+    override fun createChatRoom() {
+        TODO("Not yet implemented")
     }
 
     // ViewModel이 파괴될 때 자동으로 타이머를 중지합니다.

@@ -39,5 +39,5 @@ interface CallApiService {
         @Header("Authorization") accessToken: String,
         @Body callInfoDto: CallInfoDto,
         @Query("continueRelationship") continueRelationship: Boolean
-    ): SisoResponse<List<CallResponseDto>> // List<CallResponseDto> 형태로 지정
+    ): SisoResponse<CallResponseDto> // List<CallResponseDto> 형태로 지정
 }
