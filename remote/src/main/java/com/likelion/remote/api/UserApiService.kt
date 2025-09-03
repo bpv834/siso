@@ -16,7 +16,7 @@ interface UserApiService {
     @GET("api/auth/info")
     suspend fun  getUserId(
         @Header("Authorization") refreshToken: String,
-    ): UserInfoResponse
+    ): Response<UserInfo>
 
 
     // 새 API: userId로 유저 프로필 가져오기

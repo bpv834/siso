@@ -4,6 +4,7 @@ import android.net.http.HttpException
 import android.os.Build
 import android.util.Log.d
 import androidx.annotation.RequiresExtension
+import com.google.gson.annotations.SerializedName
 import com.likelion.data.mypage.mapper.dataToDomain
 import com.likelion.util.Meeting
 import com.likelion.util.Interest
@@ -13,6 +14,7 @@ import com.likelion.domain.mypage.repository.UserFullRepository
 import com.likelion.remote.api.InterestApiService
 import com.likelion.remote.api.UserApiService
 import com.likelion.remote.api.VoiceApiService
+import com.likelion.remote.model.response.ImageResponse
 import com.likelion.util.DrinkingCapacity
 import com.likelion.util.Mbti
 import com.likelion.util.PreferenceSex
@@ -43,8 +45,32 @@ class UserFullRepositoryImpl @Inject constructor(
             // 유저 야이디를 불러옴
             val token = "Bearer $accessToken"
             val user = userApiService.getUserId(token)
+            val id = user.body()?.data?.id ?: 1L
+            val userId = user.body()?.data?.email ?: ""
 
+            val userProfileResponse = userApiService.getUserProfile(token,id)
+            val userProfile = userProfileResponse.body()!!
+            val (drinkingCapacity, religion, smoke, age, nickname,introduce,
+                location, sex, preferenceSex, profileImages, meetings) = userProfile
 
+//            val userEntity = UsersFullEntity(
+//                id = id,
+//                userId = userId,
+//                age = 1,
+//                nickname = "",
+//                voiceUrl = TODO(),
+//                introduce = TODO(),
+//                profileImage = TODO(),
+//                location = TODO(),
+//                sex = TODO(),
+//                preferenceSex = TODO(),
+//                isSmoke = TODO(),
+//                drinkingCapacity = TODO(),
+//                religion = TODO(),
+//                mbti = TODO(),
+//                interest = TODO(),
+//                meeting = TODO()
+//            )
             return UsersFullModel(
                 id = 1,
                 age = 1,
@@ -73,7 +99,7 @@ class UserFullRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             // 그 외 예외
             Timber.e(e, "예상치 못한 오류 발생")
-            throw Exception("예기치 못한 오류: ${e.localizedMessage}")
+            throw Exception("예기치 못한 오류: ${e}")
         }
 
 
