@@ -64,6 +64,21 @@ fun HomeScreen(
     var showImageDialog by remember { mutableStateOf(false) }
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
 
+    // ✅ sideEffect collect
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collect { effect ->
+            when (effect) {
+                is HomeScreenSideEffect.NavigateToCaller -> {
+                    toCaller(effect.otherUserId)
+                }
+                is HomeScreenSideEffect.ShowSnackbar -> {
+                    // 예시: 스낵바 표시
+                    Timber.d("Snackbar: ${effect.message}")
+                }
+            }
+        }
+    }
+
 
     when (uiState) {
         // 토큰 또는 유저 정보를 로딩 중일 때 로딩 UI를 표시합니다.
@@ -98,7 +113,15 @@ fun HomeScreen(
                         selectedImageUrl = imageUrl
                         showImageDialog = true
                     },
-                    onClickButtonCall = { receiverId -> viewModel.onEvent(OnClickCallButton(0L, receiverId)) },
+                    // 버튼 누르면 UI -> viewModel 이벤트 전달
+                    // uiEvent
+                    onClickButtonCall = { receiverId ->
+                        viewModel.onEvent(
+                            OnClickCallButton(
+                                receiverId = receiverId
+                            )
+                        )
+                    },
                     toCallScreen = { otherUserId: Long -> toCaller(otherUserId) },
                     onClickMessage = { userId: Long, userNickName: String, chatRoomId: Long ->
                         toChat(userId, userNickName, chatRoomId)

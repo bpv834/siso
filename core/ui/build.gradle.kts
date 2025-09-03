@@ -38,6 +38,8 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":core:util"))
+
     // Compose
 
     implementation(libs.androidx.core.ktx)

@@ -1,6 +1,7 @@
 package com.likelion.remote.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.likelion.remote.model.enums.RemotePresentStatus
 
 
 data class MatchingUserResponse(
@@ -12,5 +13,5 @@ data class MatchingUserResponse(
     @SerializedName("introduce") val introduce: String?,
     @SerializedName("imageUrls") val imageUrls: List<String>,
     @SerializedName("voiceSampleUrl") val voiceSampleUrl: String?,
-    @SerializedName("presenseStatus") val presentStatus: String
+    @SerializedName("presenseStatus") val presenseStatus: RemotePresentStatus
 )

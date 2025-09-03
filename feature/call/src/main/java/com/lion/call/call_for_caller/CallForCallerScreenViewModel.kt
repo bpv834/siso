@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
-import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.lion.call.call_for_caller.CallUiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -55,9 +53,9 @@ class CallForCallerScreenViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
 
 
-            val token = _tokenState.value
+            val accessToken = _tokenState.value
 
-            if (token.isNullOrEmpty()) {
+            if (accessToken.isNullOrEmpty()) {
                 // 토큰이 없으면 에러 처리
                 _uiState.update { it.copy(isLoading = false) }
                 _uiEvent.emit(CallUiEvent.ShowToast("유효한 토큰이 없어 통화를 시작할 수 없습니다."))
@@ -66,7 +64,8 @@ class CallForCallerScreenViewModel @Inject constructor(
             _callState.value = CallForCallerState.Calling // UI를 '통화 시도 중' 상태로 변경
 
 
-            val result = startCallUseCase.execute(receiverId = receiverId, accessToken = "")
+
+            val result = startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
             result
                 .onSuccess { callInfo ->
                     Timber.d("HomeScreenViewModel: StartCallUseCase 성공적으로 실행됨: ${callInfo.channelName}")

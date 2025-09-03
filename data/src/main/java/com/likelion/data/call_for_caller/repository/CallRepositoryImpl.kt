@@ -15,6 +15,7 @@ import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
 import com.likelion.remote.model.request.CallRequest
 import com.likelion.remote.model.response.CallInfoDto
+import com.likelion.remote.model.response.SisoResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -62,22 +63,23 @@ class CallRepositoryImpl @Inject constructor(
      */
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun startCall(receiverId: Long, accessToken: String): Result<CallInfoModel> {
+        Timber.d("receiverId: $receiverId , accessToken : $accessToken ")
         Timber.d("CallRepositoryImpl: 통화 시작 요청. CallApiService를 통해 서버 통화 정보 요청 중...")
 
         val request = CallRequest(receiverId = receiverId)
 
         return try {
-            // 채널명 토큰을 서버에서 불러옴
-            val response: Response<CallInfoDto> =
-                callApiService.requestCallSession(authorization = accessToken, request = request)
-            // 통신이 성공했다면
-            if (response.isSuccessful) {
-                val callInfoDto = response.body() ?: throw Exception("서버 응답 본문이 비어있습니다.")
+            // 서버에서 바로 SisoResponse<CallInfoDto> 반환
+            val response: SisoResponse<CallInfoDto> =
+                callApiService.requestCallSession(accessToken = "Bearer $accessToken", request = request)
 
-                // ⭐️ 매퍼를 사용하여 Remote 모델을 Domain 모델로 변환
+
+                val callInfoDto = response.data
+                    ?: throw Exception("서버에서 통화 정보를 받지 못했습니다.")
+
                 val callInfoModel = callInfoDto.toDomainModel()
 
-                // 📡 서버 응답 성공 → 전화 시도 중 상태 이벤트 발행
+                // 서버 응답 성공 → 전화 시도 중 상태 이벤트 발행
                 _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
 
                 agoraVoiceManager.joinChannel(
@@ -85,14 +87,12 @@ class CallRepositoryImpl @Inject constructor(
                     channelName = callInfoModel.channelName
                 )
                 Result.success(callInfoModel)
-            } else {
-                val errorBody = response.errorBody()?.string()
-                val errorMessage = "서버 에러: ${response.code()} - ${errorBody ?: "내용 없음"}"
+
+                val errorMessage = "서버 응답 실패: ${response.errorMessage ?: "내용 없음"}"
                 Timber.e(errorMessage)
-                // 통화 시작 실패 시 에러 이벤트 발행
-                _agoraEvents.emit(AgoraEvent.CallError(response.code(), errorMessage))
+                _agoraEvents.emit(AgoraEvent.CallError(-4, errorMessage))
                 Result.failure(Exception(errorMessage))
-            }
+
         } catch (e: HttpException) {
             Timber.e(e, "HTTP 에러 발생: ${e.message}")
             _agoraEvents.emit(AgoraEvent.CallError(-1, "HTTP 에러: ${e.message}"))
@@ -139,33 +139,40 @@ class CallRepositoryImpl @Inject constructor(
         }
     }
 
-    // 사용자가 전화 알림왔을때 전화를 거부할때 동작하는 메서드
     override suspend fun denyCall(
         accessToken: String,
         request: CallModel
     ): Result<CallRejectResponseModel> {
-        return try {
-            // 도메인 모델 → Remote DTO로 변환
-            val remoteRequest = request.toRemote()
-
-            // API 호출
-            val response = callApiService.denyCall(
-                authorization = "Bearer $accessToken",
-                request = remoteRequest
-            )
-
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null) {
-                    Result.success(body.toDomain())
-                } else {
-                    Result.failure(Exception("Empty response body"))
-                }
-            } else {
-                Result.failure(Exception("HTTP ${response.code()} ${response.message()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        TODO("Not yet implemented")
     }
+
+    /* // 사용자가 전화 알림왔을때 전화를 거부할때 동작하는 메서드
+     override suspend fun denyCall(
+         accessToken: String,
+         request: CallModel
+     ): Result<CallRejectResponseModel> {
+         return try {
+             // 도메인 모델 → Remote DTO로 변환
+             val remoteRequest = request.toRemote()
+
+             // API 호출
+             val response = callApiService.denyCall(
+                 authorization = "Bearer $accessToken",
+                 request = remoteRequest
+             )
+
+             if (response.isSuccessful) {
+                 val body = response.body()
+                 if (body != null) {
+                     Result.success(body.toDomain())
+                 } else {
+                     Result.failure(Exception("Empty response body"))
+                 }
+             } else {
+                 Result.failure(Exception("HTTP ${response.code()} ${response.message()}"))
+             }
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }*/
 }

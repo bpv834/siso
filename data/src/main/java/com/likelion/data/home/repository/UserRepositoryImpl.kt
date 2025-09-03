@@ -4,6 +4,7 @@ import com.likelion.data.home.mapper.toDomain
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.remote.api.MatchingApiService
+import com.likelion.domain.enums.PresentStatus
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -11,7 +12,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UsersRepository {
     override suspend fun getAllUsers(eccessToken : String): Result<List<UsersModel>> {
         return runCatching {
-            val matchingUsers = matchingApiService.getMatchingUsers(eccessToken)
+            val matchingUsers = matchingApiService.getMatchingUsers("Bearer $eccessToken")
             val usersModelList = matchingUsers.map { it.toDomain() }
             usersModelList
         }
@@ -21,11 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserById(id: Long): UsersModel {
         val fakeUser = UsersModel(
             id = 4L,
-            isOnline = true,
-            userImages = listOf(
-                "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-            ),
+            userImages = listOf(),
             location = "America",
             nickname = "코딩러",
             age = 65,
@@ -33,7 +30,9 @@ class UserRepositoryImpl @Inject constructor(
             interests = listOf("풋볼", "영화", "음악"),
             introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다."
+                    " 안녕하세요. 코딩을 좋아하는 개발자입니다.",
+            presentStatus = PresentStatus.ONLINE
+
         )
         return fakeUser
     }

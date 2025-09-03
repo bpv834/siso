@@ -1,4 +1,4 @@
-package com.likelion.util
+package com.likelion.domain.enums
 
 enum class Mbti(val code: Int, val value: String) {
     INTJ(0, "INTJ"),
