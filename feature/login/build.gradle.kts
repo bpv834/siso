@@ -36,6 +36,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
+    implementation(project(":core:util"))
 
 
     implementation(libs.androidx.core.ktx)
@@ -60,7 +61,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // Coil
+    // 이미지 처리
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
@@ -68,4 +69,13 @@ dependencies {
 
     // 카카오
     implementation(libs.v2.user)
+
+    // 로티 애니메이션
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+    // 코루틴 추가
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
+
 }

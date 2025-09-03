@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 코드 난독화 방지
+-keep class io.agora.** { *; }
+-dontwarn io.agora.**

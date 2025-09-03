@@ -36,3 +36,8 @@ include(":feature:main")
 include(":core:network")
 include(":core:storage")
 include(":platform:kakao-auth")
+include(":core:datastore")
+include(":feature:mypage")
+include(":feature:call")
+
+include(":core:notification")

@@ -1,25 +1,57 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias (libs.plugins.ksp)
+    id("com.android.library")
+    kotlin("android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+
+android {
+    namespace = "com.likelion.data"
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 
 dependencies {
     implementation(project(":domain"))
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.hilt.core)
-    ksp(libs.hilt.compiler)
-    testImplementation(libs.junit)
+    implementation(project(":local"))
+    implementation(project(":remote"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:network"))
+    implementation(project(":core:util"))
+    implementation(project(":core:datastore"))
 
-    // Gson 임포트
-    implementation(libs.gson)
+
+    // Retrofit (최신 안정 버전)
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+
+    // Gson 컨버터
+    implementation(libs.converter.gson.v300)
+
+    //위치 기반 서비스
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    
+    // DI
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+
+    // test
+    testImplementation(libs.junit)
+    // Kotlin Coroutines Test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    // (옵션) Truth 같은 assertion 라이브러리
+    testImplementation("com.google.truth:truth:1.4.2")
+    implementation(kotlin("test"))
 }
 

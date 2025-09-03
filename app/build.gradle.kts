@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("com.google.gms.google-services")
 }
 
 val property = Properties().apply {
@@ -66,7 +67,10 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:login"))
     implementation(project(":platform:kakao-auth"))
-
+    implementation(project(":core:util"))
+    implementation(project(":core:network"))
+    implementation(project(":feature:call"))
+    implementation(project(":core:notification"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -81,6 +85,7 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 
     // DI
     implementation(libs.hilt.android)
@@ -103,4 +108,8 @@ dependencies {
 
     // 카카오
     implementation(libs.v2.user) // 카카오 로그인 API 모듈
+
+    // 권한 관리를 위한 최신 Accompanist 라이브러리 추가
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+
 }

@@ -7,8 +7,19 @@ enum class BottomNavigationDestination(
     val routeName: Int
 ) {
     Home(
-        icon = androidx.core.R.drawable.ic_call_answer,
+        icon = R.drawable.ic_home,
         routeName = R.string.home,
     ),
-
+//    Find(
+//        icon = R.drawable.ic_find,
+//        routeName = R.string.find,
+//    ),
+    Chat(
+        icon = R.drawable.ic_chat,
+        routeName = R.string.chat
+    ),
+    MyPage(
+        icon = R.drawable.ic_my_page,
+        routeName = R.string.my_page
+    )
 }

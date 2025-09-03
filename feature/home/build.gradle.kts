@@ -36,11 +36,13 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":core:navigation"))
     implementation(project(":core:ui"))
-
+    implementation(project(":core:util"))
+    implementation(project(":core:network"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.foundation)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -64,5 +66,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // 로티 애니메이션
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+    implementation(libs.timber)
     testImplementation(libs.junit)
 }

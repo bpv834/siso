@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.likelion.ui.theme.SisoColorTokens
+import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
@@ -31,8 +32,8 @@ fun SisoBottomNavigation(
     ) {
         NavigationBar(
             modifier = modifier,
-            containerColor = SisoColorTokens.PrimaryColor,
-            contentColor = SisoColorTokens.PrimaryColor,
+            containerColor = Color.Transparent,
+            contentColor = SisoColorTokens.Gray40,
             content = content
         )
     }
@@ -54,15 +55,15 @@ fun RowScope.BottomNavigationItems(
         label = {
             Text(
                 text = stringResource(label),
-                style = SisoTypoTokens.Caption,
-                color = if (selected) SisoColorTokens.White else SisoColorTokens.Black
+                style = SisoTypoTokens.Caption1,
+                color = if (selected) SisoColorTokens.Black else SisoColorTokens.Gray40
             )
         },
         alwaysShowLabel = true,
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = SisoColorTokens.White,
-            unselectedIconColor = SisoColorTokens.PrimaryColor,
-            indicatorColor = SisoColorTokens.PrimaryColor,
+            selectedIconColor = SisoColorTokens.Black,
+            unselectedIconColor = SisoColorTokens.Gray40,
+            indicatorColor = Color.Transparent,
         ),
     )
 }
@@ -71,19 +72,21 @@ fun RowScope.BottomNavigationItems(
 @Composable
 fun PreviewBottomNavigation() {
     val destinations = BottomNavigationDestination.values()
-    SisoBottomNavigation {
-        destinations.forEach { destination ->
-            BottomNavigationItems(
-                selected = true,
-                onClick = {},
-                icon = {
-                    Icon(
-                        painter = painterResource(id = destination.icon),
-                        contentDescription = null,
-                    )
-                },
-                label = destination.routeName
-            )
+    SisoTheme {
+        SisoBottomNavigation {
+            destinations.forEach { destination ->
+                BottomNavigationItems(
+                    selected = true,
+                    onClick = {},
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = destination.icon),
+                            contentDescription = null,
+                        )
+                    },
+                    label = destination.routeName
+                )
+            }
         }
     }
 }

@@ -1,17 +1,17 @@
 package com.likelion.siso.navigation
 
-import androidx.compose.material3.NavigationRail
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.likelion.home.navigation.navigateToChat
 import com.likelion.home.navigation.navigateToHome
+import com.likelion.home.navigation.navigateToMyPage
 import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.component.bottomnavigation.BottomNavigationDestination
 
@@ -43,6 +43,8 @@ class SisoAppState(
             }
         when (bottomNavigationDestination) {
             BottomNavigationDestination.Home -> navController.navigateToHome(bottomNavigationOption)
+            BottomNavigationDestination.Chat -> navController.navigateToChat(bottomNavigationOption)
+            BottomNavigationDestination.MyPage -> navController.navigateToMyPage(bottomNavigationOption)
         }
     }
 
@@ -50,8 +52,12 @@ class SisoAppState(
     fun isBottomBarVisible(): Boolean {
         return when (currentDestination?.route) {
             NavigationRoute.HomeScreen.route -> true
+            NavigationRoute.ChatScreen.route -> true
+            NavigationRoute.MyPageScreen.route -> true
             NavigationRoute.LoginScreen.route -> false
             NavigationRoute.InputScreen.route -> false
+            NavigationRoute.ChatScreen.AlarmScreen.route -> false
+            NavigationRoute.ChatScreen.ChatRoomScreen.route -> false
             else -> false
         }
     }

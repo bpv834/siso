@@ -37,6 +37,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":core:util"))
+
     // Compose
 
     implementation(libs.androidx.core.ktx)
@@ -47,9 +50,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material3:material3:1.2.1")
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.material3)
     val camerax_version = "1.4.2"
 
     implementation("androidx.camera:camera-core:$camerax_version")
@@ -59,5 +65,12 @@ dependencies {
 
     implementation(libs.junit)
     debugImplementation(libs.androidx.ui.tooling)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    // 권한 관리를 위한 최신 Accompanist 라이브러리 추가
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 
 }

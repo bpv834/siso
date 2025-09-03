@@ -37,4 +37,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+
+    // 로그 찍기 timber (api로 변경)
+    api("com.jakewharton.timber:timber:5.0.1")
 }

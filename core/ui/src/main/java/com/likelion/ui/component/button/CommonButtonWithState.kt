@@ -1,8 +1,7 @@
 package com.likelion.ui.component.button
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -20,27 +19,30 @@ fun CommonButtonWithState(
 
 ) {
     // isActive 상태에 따라 색상과 보더를 동적으로 결정
-    val containerColor = if (isActive) SisoColorTokens.Gold40 else SisoColorTokens.GrayScale30
-    val contentColor = if (isActive) SisoColorTokens.GrayScale90 else SisoColorTokens.GrayScale50
-    val borderColor = if (isActive) SisoColorTokens.Gold80 else SisoColorTokens.GrayScale40
+    val containerColor = if (isActive) SisoColorTokens.Gold40 else SisoColorTokens.Gray30
+    val contentColor = if (isActive) SisoColorTokens.Gray90 else SisoColorTokens.Gray50
 
     OutlinedButton(
-        onClick = onClick,
+        onClick = {
+            if (isActive) onClick()
+        },
         enabled = isActive, // isActive 상태에 따라 버튼 활성화/비활성화
-        border = BorderStroke(1.dp, borderColor),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor,
-            disabledContainerColor = SisoColorTokens.GrayScale30, // 비활성화 상태 색상
-            disabledContentColor = SisoColorTokens.GrayScale50 // 비활성화 상태 텍스트 색상
+            disabledContainerColor = SisoColorTokens.Gray30, // 비활성화 상태 색상
+            disabledContentColor = SisoColorTokens.Gray50 // 비활성화 상태 텍스트 색상
         ),
-        modifier = Modifier.fillMaxWidth()
-    ) {
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(54.dp),
+        border = null,
+
+        ) {
         Text(
             text = text,
             style = SisoTypoTokens.Button1,
             color = contentColor, // 여기서는 contentColor를 사용하여 텍스트 색상 결정
-            modifier = Modifier.padding(vertical = (15.5).dp)
         )
     }
 }

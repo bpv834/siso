@@ -1,1 +1,26 @@
-/build
+# Gradle
+.gradle/
+build/
+local.properties
+.DS_Store
+
+# Android Studio
+.idea/
+.idea/caches/
+.idea/gradle.xml
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/kotlinc.xml
+
+# KSP and KAPT generated files
+/build/generated/
+/build/intermediates/
+
+# Crashlytics
+crashlytics-build.properties
+fabric.properties
+
+# Log files
+*.log
+*.log.*

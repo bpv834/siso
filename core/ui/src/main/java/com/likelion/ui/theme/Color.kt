@@ -1,7 +1,6 @@
 package com.likelion.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 
 object SisoColorTokens {
     // PriamyColor
@@ -21,18 +20,20 @@ object SisoColorTokens {
     val Primary100 = Color(0xFF332500)
 
     // Gray Scale
-    val GrayScale5 = Color(0xFFFAFAFA)
-    val GrayScale10 = Color(0xFFF5F5F5)
-    val GrayScale20 = Color(0xFFF0F0F0)
-    val GrayScale30 = Color(0xFFD9D9D9)
-    val GrayScale40 = Color(0xFFBFBFBF)
-    val GrayScale50 = Color(0xFF8C8C8C)
-    val GrayScale60 = Color(0xFF595959)
-    val GrayScale70 = Color(0xFF434343)
-    val GrayScale80 = Color(0xFF262626)
-    val GrayScale90 = Color(0xFF1F1F1F)
-    val GrayScale95 = Color(0xFF141414)
-    val GrayScale100 = Color(0xFF000000)
+
+    val Gray5 = Color(0xFFFAFAFA)
+    val Gray10 = Color(0xFFF5F5F5)
+    val Gray20 = Color(0xFFF0F0F0)
+    val Gray30 = Color(0xFFD9D9D9)
+    val Gray40 = Color(0xFFBFBFBF)
+    val Gray50 = Color(0xFF8C8C8C)
+    val Gray55 = Color(0xFF9B9B9B) // R:155, G:155, B:155
+    val Gray60 = Color(0xFF595959)
+    val Gray70 = Color(0xFF434343)
+    val Gray80 = Color(0xFF262626)
+    val Gray90 = Color(0xFF1F1F1F)
+    val Gray95 = Color(0xFF141414)
+    val Gray100 = Color(0xFF000000)
 
     // Functional Color
     val ErrorColor = Color(0xFFFF4D4F)
@@ -93,6 +94,8 @@ object SisoColorTokens {
     val Green100 = Color(0xFF092B00)
 
     // Gold
+    val Gold30 = Color(0xFFFFE499)
     val Gold40 = Color(0xFFFFD666)
+    val Gold50 = Color(0xFFFFC833)
     val Gold80 = Color((0xFF997000))
 }

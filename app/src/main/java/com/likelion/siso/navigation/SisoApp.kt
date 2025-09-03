@@ -1,7 +1,8 @@
 package com.likelion.siso.navigation
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.likelion.navigation.NavigationRoute
 import com.likelion.ui.component.bottomnavigation.BottomNavigationDestination
 import com.likelion.ui.component.bottomnavigation.BottomNavigationItems
 import com.likelion.ui.component.bottomnavigation.SisoBottomNavigation
@@ -17,6 +19,7 @@ import com.likelion.ui.component.bottomnavigation.SisoBottomNavigation
 @Composable
 fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (appState.isBottomBarVisible()) {
                 SisoBottomBar(
@@ -26,11 +29,11 @@ fun SisoApp(appState: SisoAppState = rememberSisoAppState()) {
                 )
             }
         },
-        content = { paddingValues ->
+        content = { innerPadding ->
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) {
                 MainNavHost(
                     appState = appState
