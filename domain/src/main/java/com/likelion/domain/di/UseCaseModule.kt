@@ -2,6 +2,7 @@ package com.likelion.domain.di
 
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.domain.call_for_caller.usecase.DenyCallUseCase
+import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.RejectCallUseCase
 import com.likelion.domain.home.repository.UsersRepository
@@ -113,6 +114,14 @@ object UseCaseModule {
         repository: CallRepository
     ): DenyCallUseCase {
         return DenyCallUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEvaluationAfterCallUseCase(
+        repository: CallRepository
+    ): EvaluationAfterCallUseCase {
+        return EvaluationAfterCallUseCase(repository)
     }
 
 

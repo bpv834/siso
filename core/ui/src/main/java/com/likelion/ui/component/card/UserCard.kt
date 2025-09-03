@@ -44,6 +44,7 @@ import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 import com.likelion.domain.enums.PresentStatus
+import timber.log.Timber
 
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalPermissionsApi::class)
@@ -272,7 +273,10 @@ fun UserCard(
                         .weight(1f)
                         .background(
                             SisoColorTokens.Green60
-                        ),
+                        ).clickable{
+                            Timber.d("userId : ${user.id}")
+                            onClickButtonCall(user.id)
+                        },
                     contentAlignment = Alignment.Center // Box 내부의 콘텐츠를 정중앙에 배치
                 ) {
                     IconButton(
@@ -281,7 +285,7 @@ fun UserCard(
                             .clip(RoundedCornerShape(24.dp)),
                         // IconButton 크기 설정,
                         onClick = {
-                            onClickButtonCall(user.id)
+
                         },
                         colors = IconButtonDefaults.iconButtonColors(
                             // `isPossibleMessage` 상태에 따라 아이콘 색상을 변경합니다.
@@ -290,7 +294,7 @@ fun UserCard(
                         content = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_call),
-                                contentDescription = "메시지 보내기",
+                                contentDescription = "전화걸기",
                                 modifier = Modifier.size(40.dp)
                             )
                         }

@@ -3,6 +3,8 @@ package com.lion.call.call_for_caller
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
+import com.likelion.domain.call_for_caller.model.CallModel
+import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
@@ -25,11 +27,12 @@ class CallForCallerScreenViewModel @Inject constructor(
     // uscase
     private val getTokenAllUseCase: GetTokenAllUseCase,
     private val startCallUseCase: StartCallUseCase,
-    private val observeCallEventsUseCase: ObserveCallEventsUseCase // AgoraEvent 관찰 유스케이스 주입
+    private val observeCallEventsUseCase: ObserveCallEventsUseCase, // AgoraEvent 관찰 유스케이스 주입
+    private val evaluationUseCase : EvaluationAfterCallUseCase,
 ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
-    private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
-    val callState: StateFlow<CallForCallerState> = _callState.asStateFlow()
+  /*  private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
+    val callState: StateFlow<CallForCallerState> = _callState.asStateFlow()*/
 
     private val _uiState = MutableStateFlow<CallUiState>(CallUiState())
     override val uiState: StateFlow<CallUiState> = _uiState.asStateFlow()
@@ -52,7 +55,6 @@ class CallForCallerScreenViewModel @Inject constructor(
             // UI 로딩 상태를 업데이트
             _uiState.update { it.copy(isLoading = true) }
 
-
             val accessToken = _tokenState.value
 
             if (accessToken.isNullOrEmpty()) {
@@ -61,23 +63,19 @@ class CallForCallerScreenViewModel @Inject constructor(
                 _uiEvent.emit(CallUiEvent.ShowToast("유효한 토큰이 없어 통화를 시작할 수 없습니다."))
                 return@launch
             }
-            _callState.value = CallForCallerState.Calling // UI를 '통화 시도 중' 상태로 변경
 
-
-
-            val result = startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
+            val result: Result<CallModel> = startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
             result
                 .onSuccess { callInfo ->
                     Timber.d("HomeScreenViewModel: StartCallUseCase 성공적으로 실행됨: ${callInfo.channelName}")
-                    // CallActive 상태는 AgoraEvent.CallerJoinedChannel 콜백에서 처리될 것이므로,
-                    // 서버 통신 성공 후 바로 CallActive로 변경하지 않고 'Calling' 상태를 유지합니다.
-                    // Agora 채널 조인 성공 후 CallerJoinedChannel 이벤트가 오면 상태가 변경됩니다.
+                    _uiState.update { it.copy(callProgressState =CallForCallerState.Calling ) }
+
 
                 }
                 .onFailure { throwable ->
                     Timber.e(throwable, "HomeScreenViewModel: 통화 시작 실패 (서버 또는 네트워크 오류)")
-                    _callState.value = CallForCallerState.Idle // 통화 초기상태로 변경
                     // 필요하면 토스트 이벤트도 발생시킬 수 있음
+                    _uiState.update { it.copy(callProgressState =CallForCallerState.Idle ) }
                     _uiEvent.emit(CallUiEvent.ShowToast(throwable.message ?: "통화 시작 실패"))
                 }
         }

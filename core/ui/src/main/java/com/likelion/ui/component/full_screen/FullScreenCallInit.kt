@@ -23,7 +23,7 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun FullScreenCallSend(
+fun FullScreenCallInit(
     onClickConfirm: () -> Unit,
     onClickBackButton: () -> Unit,
     onClickCreateChatRoom : ()-> Unit,
@@ -107,11 +107,6 @@ fun FullScreenCallSend(
                 text = "확인했어요", onClick = {
                     onClickConfirm()
                 })
-            CommonActiveButton(
-                modifier = Modifier.fillMaxSize().height(54.dp),
-                text = "임시 채팅방 생성", onClick = {
-                    onClickConfirm()
-                })
         }
 
 
@@ -122,6 +117,6 @@ fun FullScreenCallSend(
 @Composable
 fun PreviewFullScreenCallSend() {
     SisoTheme {
-        FullScreenCallSend({}, {},{})
+        FullScreenCallInit({}, {},{})
     }
 }

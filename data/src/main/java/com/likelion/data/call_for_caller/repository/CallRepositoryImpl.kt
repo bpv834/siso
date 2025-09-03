@@ -71,31 +71,25 @@ class CallRepositoryImpl @Inject constructor(
         return try {
             // 서버에서 바로 SisoResponse<CallInfoDto> 반환
             val response: SisoResponse<CallInfoDto> =
-                callApiService.requestCallSession(
-                    accessToken = "Bearer $accessToken",
-                    request = request
+                callApiService.requestCallSession(accessToken = "Bearer $accessToken", request = request)
+
+
+            if (response.data != null && response.errorMessage == null) {
+                val callInfoModel = response.data!!.toDomainModel()
+
+                // 서버 응답 성공 → 전화 시도 중 상태 이벤트 발행
+                _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
+                agoraVoiceManager.joinChannel(
+                    token = callInfoModel.agoraToken,
+                    channelName = callInfoModel.channelName
                 )
-
-
-            val callInfoDto = response.data
-                ?: throw Exception("서버에서 통화 정보를 받지 못했습니다.")
-
-            val callInfoModel : CallModel = callInfoDto.toDomainModel()
-
-            // 서버 응답 성공 → 전화 시도 중 상태 이벤트 발행
-            _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
-
-            agoraVoiceManager.joinChannel(
-                token = callInfoModel.agoraToken,
-                channelName = callInfoModel.channelName
-            )
-            Result.success(callInfoModel)
-
-            val errorMessage = "서버 응답 실패: ${response.errorMessage ?: "내용 없음"}"
-            Timber.e(errorMessage)
-            _agoraEvents.emit(AgoraEvent.CallError(-4, errorMessage))
-            Result.failure(Exception(errorMessage))
-
+                Result.success(callInfoModel)
+            } else {
+                val errorMessage = response.errorMessage ?: "서버 응답 실패: 내용 없음"
+                Timber.e(errorMessage)
+                _agoraEvents.emit(AgoraEvent.CallError(-4, errorMessage))
+                Result.failure(Exception(errorMessage))
+            }
         } catch (e: HttpException) {
             Timber.e(e, "HTTP 에러 발생: ${e.message}")
             _agoraEvents.emit(AgoraEvent.CallError(-1, "HTTP 에러: ${e.message}"))

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.likelion.domain.call_for_caller.model.UsersModel
 import com.likelion.ui.R
+import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
@@ -153,6 +154,11 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
                 .fillMaxWidth()
                 .height(96.dp)
         )
+        CommonActiveButton(
+            modifier = Modifier.fillMaxSize().height(54.dp),
+            text = "임시 채팅방 생성", onClick = {
+
+            })
     }
 
 }
