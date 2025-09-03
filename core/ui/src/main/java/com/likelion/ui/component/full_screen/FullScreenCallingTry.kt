@@ -154,11 +154,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
                 .fillMaxWidth()
                 .height(96.dp)
         )
-        CommonActiveButton(
-            modifier = Modifier.fillMaxSize().height(54.dp),
-            text = "임시 채팅방 생성", onClick = {
 
-            })
     }
 
 }
