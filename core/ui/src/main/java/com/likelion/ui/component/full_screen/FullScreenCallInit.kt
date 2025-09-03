@@ -26,7 +26,6 @@ import com.likelion.ui.theme.SisoTypoTokens
 fun FullScreenCallInit(
     onClickConfirm: () -> Unit,
     onClickBackButton: () -> Unit,
-    onClickCreateChatRoom : ()-> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -117,6 +116,6 @@ fun FullScreenCallInit(
 @Composable
 fun PreviewFullScreenCallSend() {
     SisoTheme {
-        FullScreenCallInit({}, {},{})
+        FullScreenCallInit({}, {},)
     }
 }

@@ -1,6 +1,5 @@
 package com.lion.call.call_for_caller
 
-import com.likelion.domain.call_for_caller.model.CallResponseModel
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -23,6 +22,7 @@ interface CallForCallerScreenViewModelType {
     // 3. 타이머 관련 멤버
     fun startCallTimer()
     fun stopCallTimer()
+
 
     // 임시 채팅방생성
     fun createChatRoom()

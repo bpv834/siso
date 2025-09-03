@@ -2,7 +2,7 @@ package com.likelion.remote.model.request
 
 import com.google.gson.annotations.SerializedName
 
-data class RejectCallRequest(
+data class CallInfoRequest(
     @SerializedName("id") val id: Long,
     @SerializedName("channelName") val channelName: String,
     @SerializedName("token") val token: String,

@@ -7,12 +7,13 @@ import com.likelion.data.call_for_caller.mapper.toDomain
 import com.likelion.data.call_for_caller.mapper.toRemote
 import com.likelion.data.home.mapper.toDomainModel
 import com.likelion.domain.call_for_caller.model.AgoraEvent
-import com.likelion.domain.call_for_caller.model.CallInfoModel
 import com.likelion.domain.call_for_caller.model.CallModel
 import com.likelion.domain.call_for_caller.model.CallRejectResponseModel
+import com.likelion.domain.call_for_caller.model.CallResponseModel
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.network.util.AgoraVoiceManager
 import com.likelion.remote.api.CallApiService
+import com.likelion.remote.model.request.CallInfoRequest
 import com.likelion.remote.model.request.CallRequest
 import com.likelion.remote.model.response.CallInfoDto
 import com.likelion.remote.model.response.SisoResponse
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -62,7 +62,7 @@ class CallRepositoryImpl @Inject constructor(
      * 이 함수는 suspend 키워드가 붙어 있어 코루틴 내에서 비동기적으로 실행됩니다.
      */
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    override suspend fun startCall(receiverId: Long, accessToken: String): Result<CallInfoModel> {
+    override suspend fun startCall(receiverId: Long, accessToken: String): Result<CallModel> {
         Timber.d("receiverId: $receiverId , accessToken : $accessToken ")
         Timber.d("CallRepositoryImpl: 통화 시작 요청. CallApiService를 통해 서버 통화 정보 요청 중...")
 
@@ -70,29 +70,26 @@ class CallRepositoryImpl @Inject constructor(
 
         return try {
             // 서버에서 바로 SisoResponse<CallInfoDto> 반환
-            val response: SisoResponse<CallInfoDto> =
+            val response: SisoResponse<CallInfoRequest> =
                 callApiService.requestCallSession(accessToken = "Bearer $accessToken", request = request)
 
 
-                val callInfoDto = response.data
-                    ?: throw Exception("서버에서 통화 정보를 받지 못했습니다.")
-
-                val callInfoModel = callInfoDto.toDomainModel()
+            if (response.data != null && response.errorMessage == null) {
+                val callInfoModel : CallModel= response.data!!.toDomain()
 
                 // 서버 응답 성공 → 전화 시도 중 상태 이벤트 발행
                 _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
-
                 agoraVoiceManager.joinChannel(
-                    token = callInfoModel.token,
+                    token = callInfoModel.agoraToken,
                     channelName = callInfoModel.channelName
                 )
                 Result.success(callInfoModel)
-
-                val errorMessage = "서버 응답 실패: ${response.errorMessage ?: "내용 없음"}"
+            } else {
+                val errorMessage = response.errorMessage ?: "서버 응답 실패: 내용 없음"
                 Timber.e(errorMessage)
                 _agoraEvents.emit(AgoraEvent.CallError(-4, errorMessage))
                 Result.failure(Exception(errorMessage))
-
+            }
         } catch (e: HttpException) {
             Timber.e(e, "HTTP 에러 발생: ${e.message}")
             _agoraEvents.emit(AgoraEvent.CallError(-1, "HTTP 에러: ${e.message}"))
@@ -111,13 +108,38 @@ class CallRepositoryImpl @Inject constructor(
     /**
      * 통화를 종료하고 Agora 리소스를 해제합니다.
      */
-    override suspend fun endCall() {
-        // AgoraVoiceManager를 사용하여 채널에서 나갑니다.
-        agoraVoiceManager.leaveChannel()
-        agoraVoiceManager.destroy() // RtcEngine 리소스 해제
-        Timber.d("CallRepositoryImpl: 통화 종료 및 Agora 리소스 해제 완료")
-        // 통화 종료 이벤트는 AgoraVoiceManager에서 'CallerLeftChannel' 등으로 발행될 것입니다.
+    override suspend fun evaluationAfterEndCall(
+        callModel: CallModel,
+        isKeepGoing: Boolean,
+        accessToken: String
+    ): Result<CallResponseModel> {
+        Timber.d("CallRepositoryImpl: 통화 종료 요청. isKeepGoing: $isKeepGoing")
+
+        // 도메인 모델(CallModel)을 원격 모델(CallInfoDto)로 변환
+        val callEndRequest = callModel.toRemote()
+
+        // 서버에 통화 종료 API 호출
+        // 서버가 이 요청을 처리하면서 관계 유지 여부(isKeepGoing)를 함께 전달합니다.
+        val response = callApiService.endCall(
+            accessToken = "Bearer $accessToken",
+            callInfoRequest = callEndRequest,
+            continueRelationship = isKeepGoing
+        )
+
+        // API 호출이 예외를 던지지 않고 성공적으로 응답을 받았다면, SisoResponse의 data 필드를 확인합니다.
+        if (response.data != null && response.errorMessage == null) {
+            val callResponseDto = response.data!!
+            val callResponseModel : CallResponseModel = callResponseDto.toDomain()
+
+            return Result.success(callResponseModel)
+        } else {
+            return Result.failure(Exception(response.errorMessage))
+        }
     }
+
+    /**
+     * 통화를 종료하고 Agora 리소스를 해제합니다.
+     */
 
     // 상대방이 거절할때 발생하는 usecase
     override suspend fun rejectCall(): Result<Unit> {

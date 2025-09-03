@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.likelion.ui.component.bottomsheet.BottomSheetReport
 import com.likelion.ui.component.dialog.ReportPopUpDialog
 import com.likelion.ui.component.full_screen.FullScreenCallEndReview
-import com.likelion.ui.component.full_screen.FullScreenCallSend
+import com.likelion.ui.component.full_screen.FullScreenCallInit
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
 import com.likelion.ui.component.full_screen.FullScreenWhenCallActive
 import timber.log.Timber
@@ -71,9 +71,9 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         when (uiState.callProgressState) {
             // 전화 대기상태 초기 안내문 스크린
-            CallForCallerState.Idle -> FullScreenCallSend(
+            CallForCallerState.Idle -> FullScreenCallInit (
                 onClickConfirm = { viewModel.onClickCall(receiverId = otherUserId) },
-                onClickBackButton = { viewModel.onClickBackButton() }
+                onClickBackButton = { viewModel.onClickBackButton() },
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태
             CallForCallerState.Calling -> FullScreenCallingTry(
