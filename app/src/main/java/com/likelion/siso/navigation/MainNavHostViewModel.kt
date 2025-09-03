@@ -78,7 +78,7 @@ class MainNavHostViewModel @Inject constructor(
 
     fun callMapper(call: Call, receiverId: Long): CallModel {
         return CallModel(
-            id = call.id.toLong(),
+            id = call.id.toInt(),
             callerId = call.callerId.toLong(),
             channelName = call.agoraChannel,
             agoraToken = call.agoraToken,

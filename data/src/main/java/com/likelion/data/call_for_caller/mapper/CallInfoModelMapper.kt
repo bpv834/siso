@@ -1,15 +1,12 @@
 package com.likelion.data.call_for_caller.mapper
 
-import com.likelion.domain.call_for_caller.model.CallModel
+import com.likelion.domain.call_for_caller.model.CallInfoModel
 import com.likelion.remote.model.response.CallInfoDto
 
 
-fun CallInfoDto.toDomainModel(): CallModel {
-    return CallModel(
-        id = this.id,
+fun CallInfoDto.toDomainModel(): CallInfoModel {
+    return CallInfoModel(
         channelName = this.channelName,
-        receiverId = this.receiverId,
-        callerId = this.callerId,
-        agoraToken = this.token,
+        token = this.token
     )
 }

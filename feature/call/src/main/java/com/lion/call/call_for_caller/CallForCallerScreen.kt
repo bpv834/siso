@@ -5,8 +5,11 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.likelion.ui.component.bottomsheet.BottomSheetReport
 import com.likelion.ui.component.dialog.ReportPopUpDialog
 import com.likelion.ui.component.full_screen.FullScreenCallEndReview
-import com.likelion.ui.component.full_screen.FullScreenCallInit
+import com.likelion.ui.component.full_screen.FullScreenCallSend
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
 import com.likelion.ui.component.full_screen.FullScreenWhenCallActive
 import timber.log.Timber
@@ -68,11 +71,9 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         when (uiState.callProgressState) {
             // 전화 대기상태 초기 안내문 스크린
-            CallForCallerState.Idle -> FullScreenCallInit(
+            CallForCallerState.Idle -> FullScreenCallSend(
                 onClickConfirm = { viewModel.onClickCall(receiverId = otherUserId) },
-                onClickBackButton = { viewModel.onClickBackButton() },
-                onClickCreateChatRoom = {
-                }
+                onClickBackButton = { viewModel.onClickBackButton() }
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태
             CallForCallerState.Calling -> FullScreenCallingTry(
