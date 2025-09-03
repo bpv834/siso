@@ -23,6 +23,7 @@
 	<!-- 블루투스 이어폰 등을 위한 권한도 추가할 수 있습니다 (선택 사항) -->
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 	<application
 		android:name=".App"
 		android:allowBackup="true"
