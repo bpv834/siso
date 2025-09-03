@@ -113,7 +113,6 @@ class CallRepositoryImpl @Inject constructor(
         isKeepGoing: Boolean,
         accessToken: String
     ): Result<CallResponseModel> {
-        Timber.d("CallRepositoryImpl: 통화 종료 요청. isKeepGoing: $isKeepGoing")
 
         // 도메인 모델(CallModel)을 원격 모델(CallInfoDto)로 변환
         val callEndRequest = callModel.toRemote()
@@ -168,33 +167,4 @@ class CallRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    /* // 사용자가 전화 알림왔을때 전화를 거부할때 동작하는 메서드
-     override suspend fun denyCall(
-         accessToken: String,
-         request: CallModel
-     ): Result<CallRejectResponseModel> {
-         return try {
-             // 도메인 모델 → Remote DTO로 변환
-             val remoteRequest = request.toRemote()
-
-             // API 호출
-             val response = callApiService.denyCall(
-                 authorization = "Bearer $accessToken",
-                 request = remoteRequest
-             )
-
-             if (response.isSuccessful) {
-                 val body = response.body()
-                 if (body != null) {
-                     Result.success(body.toDomain())
-                 } else {
-                     Result.failure(Exception("Empty response body"))
-                 }
-             } else {
-                 Result.failure(Exception("HTTP ${response.code()} ${response.message()}"))
-             }
-         } catch (e: Exception) {
-             Result.failure(e)
-         }
-     }*/
 }

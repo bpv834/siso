@@ -12,6 +12,7 @@ interface CallRepository {
     suspend fun startCall(receiverId: Long, accessToken: String): Result<CallModel>
     suspend fun evaluationAfterEndCall(callModel: CallModel, isKeepGoing: Boolean, accessToken: String): Result<CallResponseModel>
     suspend fun rejectCall(): Result<Unit>
+    // 수신자가 전화를 받지 않는다고 서버에 전달하는것 발신자가 알림을 받기위함
     suspend fun denyCall(
         accessToken: String,
         request: CallModel
