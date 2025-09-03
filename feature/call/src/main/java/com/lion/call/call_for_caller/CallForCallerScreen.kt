@@ -73,7 +73,10 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
             // 전화 대기상태 초기 안내문 스크린
             CallForCallerState.Idle -> FullScreenCallSend(
                 onClickConfirm = { viewModel.onClickCall(receiverId = otherUserId) },
-                onClickBackButton = { viewModel.onClickBackButton() }
+                onClickBackButton = { viewModel.onClickBackButton() },
+                onClickCreateChatRoom = {
+
+                }
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태
             CallForCallerState.Calling -> FullScreenCallingTry(

@@ -4,6 +4,7 @@ import com.likelion.remote.model.request.CallRequest
 import com.likelion.remote.model.request.RejectCallRequest
 import com.likelion.remote.model.response.ApiToken
 import com.likelion.remote.model.response.CallInfoDto
+import com.likelion.remote.model.response.CallResponseDto
 import com.likelion.remote.model.response.RejectCallResponse
 import com.likelion.remote.model.response.SisoResponse
 import retrofit2.Response
@@ -28,14 +29,15 @@ interface CallApiService {
         @Body callInfo: CallInfoDto
     ): SisoResponse<CallInfoDto>
 
-/*    @POST("/api/calls/deny")
+ /*   @POST("/api/calls/deny")
     suspend fun denyCall(
         @Body callInfo: CallInfoDto
-    ): SisoResponse<CallInfoDto>
+    ): SisoResponse<CallInfoDto>*/
 
     @POST("/api/calls/end")
     suspend fun endCall(
-        @Body callInfo: CallInfoDto,
+        @Header("Authorization") accessToken: String,
+        @Body callInfoDto: CallInfoDto,
         @Query("continueRelationship") continueRelationship: Boolean
-    ): SisoResponse<CallInfoDto>*/
+    ): SisoResponse<List<CallResponseDto>> // List<CallResponseDto> 형태로 지정
 }

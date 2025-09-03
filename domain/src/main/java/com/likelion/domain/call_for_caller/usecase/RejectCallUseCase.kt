@@ -1,9 +1,7 @@
 package com.likelion.domain.call_for_caller.usecase
 
-import com.likelion.domain.call_for_caller.model.CallInfoModel
 import com.likelion.domain.call_for_caller.repository.CallRepository
 import javax.inject.Inject
-
 
 
 class RejectCallUseCase @Inject constructor(
