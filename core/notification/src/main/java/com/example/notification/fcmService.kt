@@ -48,7 +48,7 @@ class FcmService @Inject constructor(
                 val callerImage = remoteMessage.data["callerImage"]
                 val agoraChannel = remoteMessage.data["agoraChannel"]
                 val agoraToken = remoteMessage.data["agoraToken"]
-                val id = remoteMessage.data["id"]
+                val id = remoteMessage.data["id"] // call Id
 
 
                 CoroutineScope(Dispatchers.IO).launch {

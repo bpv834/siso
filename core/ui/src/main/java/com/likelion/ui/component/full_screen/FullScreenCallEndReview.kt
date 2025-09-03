@@ -79,11 +79,12 @@ fun FullScreenCallEndReview(
                 color = SisoColorTokens.Gray90
             )
             Spacer(Modifier.size(84.dp))
-            
-            Row (modifier = Modifier
-                .wrapContentSize()
-            //fillMaxWidth().height(150.dp)
-            ){
+
+            Row(
+                modifier = Modifier
+                    .wrapContentSize()
+                //fillMaxWidth().height(150.dp)
+            ) {
                 CommonOutlinedButtonWithIconVertical(
                     modifier = Modifier
                         .size(142.dp),
@@ -131,14 +132,11 @@ fun FullScreenCallReviewPreview() {
     SisoTheme {
         val caller = com.likelion.domain.call_for_caller.model.UsersModel(
             id = 4L,
-            isOnline = true,
-            userImages = listOf(
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-            ),
+            userImages =
+                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
             location = "America",
             nickname = "여덟글자닉네임자",
             age = 65,
-            voiceUrl = "https://example.com/voice1.mp3",
             interests = listOf(
                 "풋볼",
                 "영222화",
@@ -151,10 +149,8 @@ fun FullScreenCallReviewPreview() {
                 "영222화",
                 "영222화",
             ),
-            introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다."
-        )
+
+            )
         FullScreenCallEndReview(caller = caller, {}, {}, {})
     }
 }
