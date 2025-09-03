@@ -55,6 +55,7 @@ fun UserCard(
     toCallScreen: (Long) -> Unit,
     onClickMessage: (Long, String, Long) -> Unit,
     isPossibleMessage: Boolean,
+    imgList : List<String>
 ) {
 
     val context = LocalContext.current // Toast 메시지를 띄우기 위한 Context
@@ -321,6 +322,7 @@ fun UserCardPreview() {
         {},
         { id1 -> },
         { userId, userNickName, chatRoomId -> },
-        false
+        false,
+        emptyList()
     )
 }

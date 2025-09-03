@@ -33,12 +33,11 @@ fun CallerRouter(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
-    userId: Long,
     otherUserId: Long,
     onNavigateUp: () -> Unit
 ) {
 
-    Timber.d("userId${userId}/ otherUserId ${otherUserId}")
+    Timber.d("otherUserId ${otherUserId}")
     CallForCallerScreen(hiltViewModel<CallForCallerScreenViewModel>(), onNavigateUp)
 }
 

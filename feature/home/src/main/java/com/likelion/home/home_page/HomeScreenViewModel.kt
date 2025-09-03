@@ -22,7 +22,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val getAllUsersUseCase: GetAllUsersUseCase,
     private val getTokenAllUseCase: GetTokenAllUseCase,
-    private val startCallUseCase: StartCallUseCase
+    private val startCallUseCase: StartCallUseCase,
 ) : ViewModel() {
 
     // 외부에 노출되는 UI 상태 (데이터)
@@ -102,4 +102,5 @@ class HomeScreenViewModel @Inject constructor(
             }
         }
     }
+
 }
