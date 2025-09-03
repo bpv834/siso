@@ -17,7 +17,7 @@ class FakeImagesApi {
                 createdAt = "",
                 updatedAt = ""
             ),
-            ImagesEntity(id = 3L, userId = 2L, path =    "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg", serverImageName = "", originalName = "", createdAt = "", updatedAt = "")
+            ImagesEntity(id = 3L, userId = 2L, path = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg", serverImageName = "", originalName = "", createdAt = "", updatedAt = "")
         )
     }
 }

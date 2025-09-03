@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Collections.addAll
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,11 +63,19 @@ class InterestEditInfoScreenViewModel @Inject constructor (
     override val leisureReceiverList = _leisureReceiverList.asStateFlow()
 
     override fun fetch(list: List<String>){
+        val tempCulture = mutableListOf<String>()
+        val tempExercise = mutableListOf<String>()
+        val tempLeisure = mutableListOf<String>()
         list.forEach {
-            if (cultureList.contains(it)) cultureReceiverList.value.add(it)
-            else if(exerciseList.contains(it)) exerciseReceiverList.value.add(it)
-            else if(leisureList.contains(it)) leisureReceiverList.value.add(it)
+            when(it){
+                in cultureList -> tempCulture.add(it)
+                in exerciseList -> tempExercise.add(it)
+                in leisureList -> tempLeisure.add(it)
+            }
         }
+        _cultureReceiverList.update { old-> tempCulture  }
+        _exerciseReceiverList.update { old-> tempExercise }
+        _leisureReceiverList.update { old-> tempLeisure }
     }
 
     override fun setLeisureReceiver(input: String){

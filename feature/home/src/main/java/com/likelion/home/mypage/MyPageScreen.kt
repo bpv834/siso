@@ -1,6 +1,12 @@
 package com.likelion.home.mypage
 
 import android.R.attr.action
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Base64
+import android.util.Log
 import android.util.Log.d
 import android.view.View
 import androidx.compose.foundation.background
@@ -43,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -57,7 +64,9 @@ import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
-
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +82,7 @@ fun MyPageScreen(
     val nickname = uiState.nickname
     val age = uiState.age
     val location = uiState.location
-
+    val get = LocalContext.current
     val profileOption = listOf(
         "차단 / 신고한 인연" to {},
         "매칭 필터 설정" to {},
@@ -146,6 +155,9 @@ fun MyPageScreen(
                                 .clickable {
                                     d("click", "click navigateToMyPageMainEdit")
                                     mainEdit() // 수정 화면으로 이동
+
+//                                    getDebugKeyHash(get)
+//                                    getReleaseKeyHash(get)
                                 },
                         )
                     }
@@ -326,5 +338,75 @@ fun MyPageScreenPreview() {
             MyPageScreen(viewModel)
         }
 
+    }
+}
+
+// 디버그 키해시 받아오기
+@OptIn(ExperimentalEncodingApi::class)
+fun getDebugKeyHash(
+    context: Context
+) {
+    val packageInfo: PackageInfo? = try {
+        @Suppress("DEPRECATION")
+        context.packageManager.getPackageInfo(
+            context.packageName,
+            PackageManager.GET_SIGNATURES
+        )
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        null
+    }
+
+    if (packageInfo == null) {
+        Log.e("KeyHash", "KeyHash:null")
+        return
+    }
+
+    @Suppress("DEPRECATION")
+    for (signature in packageInfo.signatures!!) {
+        try {
+            val md: MessageDigest = MessageDigest.getInstance("SHA")
+            md.update(signature.toByteArray())
+            Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+        } catch (e: NoSuchAlgorithmException) {
+            Log.d("KeyHash", "Unable to get MessageDigest. signature=$signature")
+        }
+    }
+}
+
+// 릴리즈 키해시 받아오기
+@OptIn(ExperimentalEncodingApi::class)
+fun getReleaseKeyHash(
+    context : Context
+) {
+    try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNATURES
+            )
+        }
+
+        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.signingInfo?.apkContentsSigners
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.signatures
+        }
+
+        signatures?.forEach { signature ->
+            val md = MessageDigest.getInstance("SHA")
+            md.update(signature.toByteArray())
+            val keyHash = Base64.encodeToString(md.digest(), Base64.NO_WRAP)
+            Log.d("KeyHash", "릴리즈 키 해시: $keyHash")
+        }
+    } catch (e: Exception) {
+        Log.e("KeyHash", "키 해시 구하는 중 오류 발생", e)
     }
 }

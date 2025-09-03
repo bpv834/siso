@@ -13,7 +13,7 @@ class MBTIEditInfoScreenViewModel @Inject constructor (
     //usecase자리
 ): ViewModel(), MBTIEditInfoScreenViewModelType {
     private var _receiver = MutableStateFlow("")
-    override val nothing :String = "|||"
+    override val nothing :String = "____"
     override fun setReceiver(receiver: String) {
         _receiver.update {
             receiver.ifBlank { nothing }

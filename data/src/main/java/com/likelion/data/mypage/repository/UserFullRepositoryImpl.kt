@@ -1,56 +1,99 @@
 package com.likelion.data.mypage.repository
 
-import com.likelion.data.mypage.enum_model.DrinkingCapacity
-import com.likelion.data.mypage.enum_model.MBTI
-import com.likelion.data.mypage.enum_model.Meeting
-import com.likelion.data.mypage.enum_model.PreferenceSex
-import com.likelion.data.mypage.enum_model.Religion
-import com.likelion.data.mypage.enum_model.Sex
+import android.net.http.HttpException
+import android.os.Build
+import android.util.Log.d
+import androidx.annotation.RequiresExtension
+import com.google.gson.annotations.SerializedName
 import com.likelion.data.mypage.mapper.dataToDomain
+import com.likelion.util.Meeting
+import com.likelion.util.Interest
 import com.likelion.data.mypage.model.UsersFullEntity
 import com.likelion.domain.mypage.model.UsersFullModel
 import com.likelion.domain.mypage.repository.UserFullRepository
+import com.likelion.remote.api.InterestApiService
+import com.likelion.remote.api.UserApiService
+import com.likelion.remote.api.VoiceApiService
+import com.likelion.remote.model.response.ImageResponse
+import com.likelion.util.DrinkingCapacity
+import com.likelion.util.Mbti
+import com.likelion.util.PreferenceSex
+import com.likelion.util.Religion
+import com.likelion.util.Sex
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class UserFullRepositoryImpl @Inject constructor(
-//    private val userApi: FakeUserApi,
-//    private val profileApi: FakeProfileApi,
-//    private val imagesApi: FakeImagesApi,
-//    private val voiceApi: FakeVoiceApi, // 🎤 음성 API 추가
-//    private val interestApi: FakeInterestApi // ❤️ 관심사 API 추가
+    private val userApiService: UserApiService,
+    private val voiceApiService: VoiceApiService,
+    private val interestApiService: InterestApiService
 ) : UserFullRepository {
 
-    override suspend fun getUserById(id: Long): UsersFullModel {
-        val fakeEntity = UsersFullEntity(
-            id = 4L,
-            userId = 12L,
-            profileImage = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
-            location = "America",
-            nickname = "코딩러",
-            age = 65,
-            voiceUrl = "https://samplelib.com/lib/preview/mp3/sample-15s.mp3",
-            interest = listOf("#풋볼", "#영화", "#음악"),
-            introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
-                    " 안녕하세요. 코딩을 좋아하는 개발자입니다.", // null ?: ""
-            drinkingCapacity = DrinkingCapacity.Never,
-            religion = Religion.Christianity,
-            isSmoke = false,
-            sex = Sex.Female,
-            preferenceSex = PreferenceSex.Female,
-            mbti = MBTI.INTJ,
-            meeting = listOf(
-                Meeting.CLUB_ACTIVITY,
-                Meeting.VOLUNTEER_ACTIVITY,
-                Meeting.HOBBY_GROUP,
-                Meeting.CULTURE_LIFE,
-                Meeting.TOGETHER_SPORTS,
-                Meeting.HIKING,
-                Meeting.FOOD_TRIP,
-            ),
-        )
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    override suspend fun getUserById(
+        accessToken: String
+    ): UsersFullModel {
 
-        val fakeUser = fakeEntity.dataToDomain()
-        return fakeUser
+        try {
+//            // 유저 야이디를 불러옴
+//            val token = "Bearer $accessToken"
+//            val user = userApiService.getUserId(token)
+//            val id = user.body()?.data?.id ?: 1L
+//            val userId = user.body()?.data?.email ?: ""
+//            d("token","$id")
+//            d("token","$userId")
+//            val userProfileResponse = userApiService.getUserProfile(token,id)
+//            val userProfile = userProfileResponse.body()!!
+//            val (drinkingCapacity, religion, smoke, age, nickname,introduce,
+//                location, sex, preferenceSex, profileImages, meetings) = userProfile
+
+            val userEntity = UsersFullEntity(
+                id = 1L,
+                userId = "fdf",
+                age = 65,
+                nickname = "코딩러",
+                voiceUrl = "https://samplelib.com/lib/preview/mp3/sample-12s.mp3",
+                introduce = "65세 코딩러 입니다 \n 65세 코딩러 입니다 \n65세 코딩러 입니다 \n65세 코딩러 입니다 \n65세 코딩러 입니다 \n",
+                profileImage = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
+                location = "서울특별시 종로구",
+                sex = Sex.MALE,
+                preferenceSex = PreferenceSex.MALE,
+                isSmoke = true,
+                drinkingCapacity = DrinkingCapacity.OCCASIONALLY,
+                religion = Religion.CHRISTIANITY,
+                mbti = Mbti.ENFJ,
+                interest = listOf(
+                    Interest.INTERIOR,
+                    Interest.GOOD_RESTAURANT
+                ),
+                meeting = listOf(
+                    Meeting.CLUB_ACTIVITY,
+                    Meeting.BOOK_CLUB
+                )
+            )
+            return userEntity.dataToDomain()
+        } catch (e: IOException) {
+            // 네트워크 문제 (인터넷 끊김 등)
+            Timber.e(e, "네트워크 오류 발생")
+            throw Exception("네트워크 오류: ${e.localizedMessage}")
+        } catch (e: HttpException) {
+            // HTTP 프로토콜 에러
+            Timber.e(e, "HTTP 오류 발생")
+            throw Exception("서버 오류: ${e}")
+        } catch (e: Exception) {
+            // 그 외 예외
+            Timber.e(e, "예상치 못한 오류 발생")
+            throw Exception("예기치 못한 오류: ${e}")
+        }
+
+
+
     }
 }
