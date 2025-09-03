@@ -6,6 +6,7 @@ import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.image.repository.ImageRepository
 import com.likelion.domain.image.usecase.GetImagesUseCase
+import com.likelion.domain.image.usecase.GetPresignedImgsUseCase
 import com.likelion.domain.image.usecase.UploadImageUseCase
 import com.likelion.domain.login.repository.InMemoryUserSignUpRepository
 import com.likelion.domain.login.repository.TokenRepository
@@ -47,6 +48,17 @@ object ImageUseCaseModule {
     ): GetImagesUseCase {
         return GetImagesUseCase(repository)
     }
+
+
+    @Provides
+    @Singleton
+    fun provideGetPresignedImgUseCase(
+        repository: ImageRepository
+    ): GetPresignedImgsUseCase {
+        return GetPresignedImgsUseCase(repository)
+    }
+
+
 
 
 

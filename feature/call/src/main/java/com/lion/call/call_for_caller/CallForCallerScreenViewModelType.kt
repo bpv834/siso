@@ -10,7 +10,7 @@ interface CallForCallerScreenViewModelType {
     val uiEvent : SharedFlow<CallUiEvent>
 
     // 2. 사용자 액션
-    fun onClickCall(callerId: Long, receiverId: Long) // 발신자가 통화를 시작하는 액션
+    fun onClickCall( receiverId: Long) // 발신자가 통화를 시작하는 액션
     fun onClickEndCall() // 통화 종료 액션
     fun onClickBackButton() // 통화 화면에서 뒤로가기 액션
     fun toggleMute() // 음소거/음소거 해제 토글

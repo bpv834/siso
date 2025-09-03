@@ -71,6 +71,7 @@ fun HomeScreen(
                 is HomeScreenSideEffect.NavigateToCaller -> {
                     toCaller(effect.otherUserId)
                 }
+
                 is HomeScreenSideEffect.ShowSnackbar -> {
                     // 예시: 스낵바 표시
                     Timber.d("Snackbar: ${effect.message}")
@@ -126,8 +127,9 @@ fun HomeScreen(
                     onClickMessage = { userId: Long, userNickName: String, chatRoomId: Long ->
                         toChat(userId, userNickName, chatRoomId)
                     },
-                    true
-                )
+                    isPossibleMessage = true,
+                    imgList = emptyList()
+                    )
             }
         }
 

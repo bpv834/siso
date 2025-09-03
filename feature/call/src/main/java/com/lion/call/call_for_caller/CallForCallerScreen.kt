@@ -33,18 +33,17 @@ fun CallerRouter(
     modifier: Modifier = Modifier,
     view: View = LocalView.current,
     actionSnackbar: () -> Unit = {},
-    userId: Long,
     otherUserId: Long,
     onNavigateUp: () -> Unit
 ) {
 
-    Timber.d("userId${userId}/ otherUserId ${otherUserId}")
-    CallForCallerScreen(hiltViewModel<CallForCallerScreenViewModel>(), onNavigateUp)
+    Timber.d("otherUserId ${otherUserId}")
+    CallForCallerScreen(hiltViewModel<CallForCallerScreenViewModel>(), onNavigateUp, otherUserId = otherUserId)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateUp: () -> Unit) {
+fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateUp: () -> Unit, otherUserId: Long) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -73,7 +72,7 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
         when (uiState.callProgressState) {
             // 전화 대기상태 초기 안내문 스크린
             CallForCallerState.Idle -> FullScreenCallSend(
-                onClickConfirm = { viewModel.onClickCall(callerId = 0L, receiverId = 0L) },
+                onClickConfirm = { viewModel.onClickCall(receiverId = otherUserId) },
                 onClickBackButton = { viewModel.onClickBackButton() }
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태

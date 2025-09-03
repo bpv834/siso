@@ -19,20 +19,17 @@ fun NavGraphBuilder.callerNavigation(
 ) {
     composable(
         // 라우트 경로에 인자 플레이스홀더를 명시합니다.
-        route = "caller/{userId}/{otherUserId}",
+        route = "caller/{otherUserId}",
         arguments = listOf( // 인자들의 타입과 이름을 정의합니다.
-            navArgument("userId") { type = NavType.StringType },
             navArgument("otherUserId") { type = NavType.StringType }
         )
     ) { backStackEntry ->
         // NavBackStackEntry에서 인자를 가져옵니다.
-        val userId = backStackEntry.arguments?.getString("userId")
         val otherUserId = backStackEntry.arguments?.getString("otherUserId")
 
         // 인자를 CallerRouter로 전달합니다.
         CallerRouter(
             actionSnackbar = action,
-            userId = userId?.toLong()?:0L,
             otherUserId = otherUserId?.toLong()?:1L,
             onNavigateUp = onNavigateUp
         )

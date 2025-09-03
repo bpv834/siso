@@ -47,7 +47,7 @@ class CallForCallerScreenViewModel @Inject constructor(
 
 
     // 전화 버튼 누르는 메서드
-    override fun onClickCall(callerId: Long, receiverId: Long) {
+    override fun onClickCall(receiverId: Long) {
         viewModelScope.launch {
             // UI 로딩 상태를 업데이트
             _uiState.update { it.copy(isLoading = true) }

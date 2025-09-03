@@ -101,9 +101,11 @@ fun FullScreenCallSend(
                 )
             }
             Spacer(Modifier.size(165.dp))
-            CommonActiveButton(text = "확인했어요", onClick = {
-                onClickConfirm()
-            })
+            CommonActiveButton(
+                modifier = Modifier.fillMaxSize().height(54.dp),
+                text = "확인했어요", onClick = {
+                    onClickConfirm()
+                })
         }
 
 

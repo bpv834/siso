@@ -1,43 +1,50 @@
 package com.likelion.data.image.repository
 
-import com.likelion.data.image.mapper.toDomain
 import com.likelion.domain.image.model.ImageModel
 import com.likelion.domain.image.repository.ImageRepository
 import com.likelion.remote.api.ImageApiService
-import com.likelion.remote.model.response.ImageResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
 
 class ImageRepositoryImpl @Inject constructor(
     private val imageApiService: ImageApiService
 ) : ImageRepository {
-
     override suspend fun getImagesByUserId(
         userId: String,
-        refreshToken: String
+        accessToken: String
     ): Result<List<ImageModel>> {
-        return try {
-            val response: Response<List<ImageResponse>> =
-                imageApiService.getUserProfileImages(
-                    userId = userId,
-                    accessToken = "Bearer $refreshToken"
-                )
-
-            if (response.isSuccessful) {
-                val imageResponseList = response.body() ?: emptyList()
-                val domainList = imageResponseList.map { it.toDomain() }
-                Result.success(domainList)
-            } else {
-                Result.failure(Exception("API Error: HTTP ${response.code()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        TODO("Not yet implemented")
     }
+
+    /*    override suspend fun getImagesByUserId(
+            userId: String,
+            refreshToken: String
+        ): Result<List<ImageModel>> {
+            return try {
+                val response: Response<List<ImageResponse>> =
+                    imageApiService.getUserProfileImages(
+                        userId = userId,
+                        accessToken = "Bearer $refreshToken"
+                    )
+
+                if (response.isSuccessful) {
+                    val imageResponseList = response.body() ?: emptyList()
+                    val domainList = imageResponseList.map { it.toDomain() }
+                    Result.success(domainList)
+                } else {
+                    Result.failure(Exception("API Error: HTTP ${response.code()}"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }*/
 
     override suspend fun upLoadImage(
         imgPathList: List<String>,
@@ -74,5 +81,24 @@ class ImageRepositoryImpl @Inject constructor(
             // 업로드 중 발생하는 네트워크 오류 등 예외 처리
             Result.failure(e)
         }
+    }
+    override suspend fun getPresignedImgs(
+        imgIds: List<Long>,
+        accessToken: String
+    ): List<String> = coroutineScope {
+        val deferredList = imgIds.map { imgId ->
+            async(Dispatchers.IO) {
+                val response = imageApiService.getPresignedUserProfileImage(
+                    imgId = imgId,
+                    accessToken = "Bearer $accessToken"
+                )
+                if (response.isSuccessful) {
+                    response.body() ?: throw Exception("Empty presigned URL for imgId: $imgId")
+                } else {
+                    throw Exception("Failed to get presigned URL for imgId: $imgId, code: ${response.code()}")
+                }
+            }
+        }
+        deferredList.awaitAll()
     }
 }

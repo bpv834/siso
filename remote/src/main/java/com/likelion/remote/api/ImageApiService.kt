@@ -10,6 +10,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ImageApiService {
 
@@ -22,12 +23,6 @@ interface ImageApiService {
         @Part files: List<MultipartBody.Part>
     ): Response<List<ImageResponse>>
 
-    // 사용자별 이미지 조회
-    @GET("/api/images/user/{userId}")
-    suspend fun getUserProfileImages(
-        accessToken: String,
-        @Path("userId") userId: String
-    ): Response<List<ImageResponse>>
 
     // 이미지 삭제
     @Multipart
@@ -36,5 +31,12 @@ interface ImageApiService {
         @Header("Authorization") refreshToken: String,
         @Body imageId: String
     ): Response<ImageResponse>
+
+    // 이미지 변환
+    @GET("/api/images/presigned-url")
+    suspend fun getPresignedUserProfileImage(
+        @Header("Authorization") accessToken: String,
+        @Query("imagePath") imgId: Long
+    ): Response<String>
 
 }
