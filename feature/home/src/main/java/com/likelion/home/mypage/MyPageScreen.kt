@@ -154,10 +154,10 @@ fun MyPageScreen(
                                 .offset(x = 14.dp)
                                 .clickable {
                                     d("click", "click navigateToMyPageMainEdit")
-                                    //mainEdit() // 수정 화면으로 이동
+                                    mainEdit() // 수정 화면으로 이동
 
-                                    getDebugKeyHash(get)
-                                    getReleaseKeyHash(get)
+//                                    getDebugKeyHash(get)
+//                                    getReleaseKeyHash(get)
                                 },
                         )
                     }

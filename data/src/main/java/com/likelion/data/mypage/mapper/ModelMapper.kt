@@ -19,15 +19,15 @@ fun UsersFullEntity.dataToDomain() : UsersFullModel
         preferenceSex = preferenceSex.description,
         voiceUrl = voiceUrl,
         drinkingCapacity = drinkingCapacity.description,
-        interests = interest.map { it.description },
+        interests = interest.map { "#${it.description}" },
         introduce = introduce ?: "",
         religion = religion.description,
         isSmoke = when (isSmoke){
-            true -> "흠연자"
+            true -> "흡연자"
             false -> "비흡연자"
         },
         mbti = mbti.value,
-        meeting = meeting.map { it.meeting },
+        meeting = meeting.map { "#${it.meeting}" },
     )
 
 }

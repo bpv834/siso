@@ -42,52 +42,42 @@ class UserFullRepositoryImpl @Inject constructor(
     ): UsersFullModel {
 
         try {
-            // 유저 야이디를 불러옴
-            val token = "Bearer $accessToken"
-            val user = userApiService.getUserId(token)
-            val id = user.body()?.data?.id ?: 1L
-            val userId = user.body()?.data?.email ?: ""
+//            // 유저 야이디를 불러옴
+//            val token = "Bearer $accessToken"
+//            val user = userApiService.getUserId(token)
+//            val id = user.body()?.data?.id ?: 1L
+//            val userId = user.body()?.data?.email ?: ""
 
-            val userProfileResponse = userApiService.getUserProfile(token,id)
-            val userProfile = userProfileResponse.body()!!
-            val (drinkingCapacity, religion, smoke, age, nickname,introduce,
-                location, sex, preferenceSex, profileImages, meetings) = userProfile
+//            val userProfileResponse = userApiService.getUserProfile(token,id)
+//            val userProfile = userProfileResponse.body()!!
+//            val (drinkingCapacity, religion, smoke, age, nickname,introduce,
+//                location, sex, preferenceSex, profileImages, meetings) = userProfile
 
-//            val userEntity = UsersFullEntity(
-//                id = id,
-//                userId = userId,
-//                age = 1,
-//                nickname = "",
-//                voiceUrl = TODO(),
-//                introduce = TODO(),
-//                profileImage = TODO(),
-//                location = TODO(),
-//                sex = TODO(),
-//                preferenceSex = TODO(),
-//                isSmoke = TODO(),
-//                drinkingCapacity = TODO(),
-//                religion = TODO(),
-//                mbti = TODO(),
-//                interest = TODO(),
-//                meeting = TODO()
-//            )
-            return UsersFullModel(
-                id = 1,
-                age = 1,
-                nickname = "",
-                voiceUrl = "",
-                introduce = "",
-                location = "",
-                sex = "",
-                preferenceSex = "",
-                isSmoke = "",
-                drinkingCapacity = "",
-                religion = "",
-                mbti = "",
-                userImages = "",
-                interests = listOf(),
-                meeting = listOf(),
+            val userEntity = UsersFullEntity(
+                id = 1L,
+                userId = "fdf",
+                age = 65,
+                nickname = "코딩러",
+                voiceUrl = "https://samplelib.com/lib/preview/mp3/sample-12s.mp3",
+                introduce = "65세 코딩러 입니다 \n 65세 코딩러 입니다 \n65세 코딩러 입니다 \n65세 코딩러 입니다 \n65세 코딩러 입니다 \n",
+                profileImage = "http://www.civicnews.com/news/photo/201811/19147_26513_953.png",
+                location = "서울특별시 종로구",
+                sex = Sex.MALE,
+                preferenceSex = PreferenceSex.MALE,
+                isSmoke = true,
+                drinkingCapacity = DrinkingCapacity.OCCASIONALLY,
+                religion = Religion.CHRISTIANITY,
+                mbti = Mbti.ENFJ,
+                interest = listOf(
+                    Interest.INTERIOR,
+                    Interest.GOOD_RESTAURANT
+                ),
+                meeting = listOf(
+                    Meeting.CLUB_ACTIVITY,
+                    Meeting.BOOK_CLUB
+                )
             )
+            return userEntity.dataToDomain()
         } catch (e: IOException) {
             // 네트워크 문제 (인터넷 끊김 등)
             Timber.e(e, "네트워크 오류 발생")
@@ -104,29 +94,5 @@ class UserFullRepositoryImpl @Inject constructor(
 
 
 
-    }
-
-    // 1. 토큰 자동 삽입 Interceptor
-    class AuthInterceptor(private val tokenProvider: () -> String?) : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val originalRequest: Request = chain.request()
-            val token = tokenProvider()
-
-            val requestBuilder = originalRequest.newBuilder()
-            if (!token.isNullOrEmpty()) {
-                requestBuilder.addHeader("Authorization", "Bearer $token")
-            }
-
-            val requestWithToken = requestBuilder.build()
-            val response = chain.proceed(requestWithToken)
-
-            // 401 디버깅
-            if (response.code == 401) {
-                println("⚠️ 401 Unauthorized 발생! 요청 헤더 확인 필요")
-                println("Request Headers: ${requestWithToken.headers}")
-            }
-
-            return response
-        }
     }
 }
