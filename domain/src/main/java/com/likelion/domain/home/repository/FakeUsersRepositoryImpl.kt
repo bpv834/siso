@@ -13,7 +13,7 @@ class FakeUsersRepositoryImpl : UsersRepository {
 
     private val fakeUser = UsersModel(
         id = 4L,
-        userImages = listOf(
+        imageList = listOf(
 
         ),
         location = "America",
@@ -31,7 +31,7 @@ class FakeUsersRepositoryImpl : UsersRepository {
     private val fakeUsers = mutableListOf(
         UsersModel(
             id = 1L,
-            userImages = listOf(
+            imageList = listOf(
 
             ),
             location = "Seoul",
@@ -46,7 +46,7 @@ class FakeUsersRepositoryImpl : UsersRepository {
         ),
         UsersModel(
             id = 2L,
-            userImages = listOf(),
+            imageList = listOf(),
             location = "Busan",
             nickname = "안드로이드",
             age = 28,
@@ -58,7 +58,7 @@ class FakeUsersRepositoryImpl : UsersRepository {
         ),
         UsersModel(
             id = 3L,
-            userImages = listOf(),
+            imageList = listOf(),
             location = "DongDuCheon",
             nickname = "휴머노이드",
             age = 230,

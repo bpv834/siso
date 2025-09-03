@@ -7,7 +7,7 @@ import com.likelion.remote.model.enums.RemotePresentStatus
 
 fun MatchingUserResponse.toDomain(): UsersModel = UsersModel(
     id = this.userId.toLong(),
-    userImages = this.imageUrls,
+    imageList = this.imageUrls,
     location = this.location ?: "알 수 없음",
     nickname = this.nickname,
     age = this.age,

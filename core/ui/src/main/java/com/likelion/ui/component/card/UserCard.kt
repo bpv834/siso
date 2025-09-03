@@ -110,12 +110,12 @@ fun UserCard(
             Spacer(Modifier.size(19.dp))
 
             // 사용자 사진 목록
-            if (user.userImages.isNotEmpty()) {
+            if (user.imageList.isNotEmpty()) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    itemsIndexed(user.userImages) { index, path ->
+                    itemsIndexed(user.imageList) { index, path ->
                         Box {
                             AsyncImage(
                                 model = path,
@@ -139,7 +139,7 @@ fun UserCard(
                                     .height(31.dp)
                             ) {
                                 Text(
-                                    text = "${index + 1}/${user.userImages.size}", // ← 인덱스 활용
+                                    text = "${index + 1}/${user.imageList.size}", // ← 인덱스 활용
                                     style = SisoTypoTokens.Label1,
                                     color = SisoColorTokens.White,
                                     modifier = Modifier.align(Alignment.Center)
@@ -310,7 +310,7 @@ fun UserCard(
 fun UserCardPreview() {
     val sampleUser = UsersModel(
         id = 1,
-        userImages = listOf(),
+        imageList = listOf(),
         location = "서울 강남구",
         nickname = "강남멋쟁이",
         age = 30,

@@ -4,7 +4,7 @@ import com.likelion.domain.enums.PresentStatus
 
 data class UsersModel(
     val id: Long,
-    val userImages: List<String>, // 유저 이미지 목록
+    val imageList: List<String>, // 유저 이미지 목록
     val location: String, // 사는 위치
     val nickname: String, // 닉네임
     val age: Int, // 나이

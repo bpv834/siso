@@ -41,7 +41,7 @@ fun FullScreenCalling(caller: UsersModel) {
         Spacer(Modifier.size(16.dp))
         // 프로필 사진
         AsyncImage(
-            model = caller.userImages[0],
+            model = caller.imageList[0],
             contentDescription = "",
             modifier = Modifier
                 .size(160.dp)
@@ -138,7 +138,7 @@ fun FullScreenCallingPreview() {
     SisoTheme {
         val caller = UsersModel(
             id = 4L,
-            userImages = listOf(
+            imageList = listOf(
 
             ),
             location = "America",

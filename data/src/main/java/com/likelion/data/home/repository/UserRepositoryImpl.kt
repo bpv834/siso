@@ -22,7 +22,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserById(id: Long): UsersModel {
         val fakeUser = UsersModel(
             id = 4L,
-            userImages = listOf(),
+            imageList = listOf(),
             location = "America",
             nickname = "코딩러",
             age = 65,

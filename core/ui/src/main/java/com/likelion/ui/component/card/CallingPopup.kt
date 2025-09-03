@@ -148,7 +148,7 @@ fun CallingPopup(user: UsersModel) {
 fun CallingPopupPreview() {
     val fakeUser = UsersModel(
         id = 4L,
-        userImages = listOf(
+        imageList = listOf(
 
         ),
         location = "America",

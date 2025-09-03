@@ -44,7 +44,7 @@ fun FullScreenWhenCalled(user: UsersModel) {
         )
         Spacer(Modifier.size(24.dp))
         AsyncImage(
-            model = user.userImages[0],
+            model = user.imageList[0],
             contentDescription = null,
             contentScale = ContentScale.Crop, // 꽉 채워서 잘림
             modifier = Modifier
@@ -125,7 +125,7 @@ fun FullScreenWhenCalledPreview() {
     SisoTheme {
         val fakeUser = UsersModel(
             id = 4L,
-            userImages = listOf(),
+            imageList = listOf(),
             location = "America",
             nickname = "코딩러",
             age = 65,
