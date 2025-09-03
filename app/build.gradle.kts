@@ -109,4 +109,7 @@ dependencies {
     // 카카오
     implementation(libs.v2.user) // 카카오 로그인 API 모듈
 
+    // 권한 관리를 위한 최신 Accompanist 라이브러리 추가
+    implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+
 }
