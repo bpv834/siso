@@ -95,7 +95,7 @@ class HomeScreenViewModel @Inject constructor(
         Timber.d("onClickCallButton receiverId : $receiverId / accessToken : $accessToken")
         viewModelScope.launch {
             try {
-                startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken!!)
+               // startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken!!)
                 _sideEffect.emit(HomeScreenSideEffect.NavigateToCaller(receiverId))
             } catch (e: Exception) {
                 _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("통화 실패: ${e.message}"))
