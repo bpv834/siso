@@ -47,7 +47,8 @@ class UserFullRepositoryImpl @Inject constructor(
 //            val user = userApiService.getUserId(token)
 //            val id = user.body()?.data?.id ?: 1L
 //            val userId = user.body()?.data?.email ?: ""
-
+//            d("token","$id")
+//            d("token","$userId")
 //            val userProfileResponse = userApiService.getUserProfile(token,id)
 //            val userProfile = userProfileResponse.body()!!
 //            val (drinkingCapacity, religion, smoke, age, nickname,introduce,

@@ -297,6 +297,7 @@ class MainEditInfoScreenViewModel @Inject constructor (
 
     fun setInterest(interest: List<String>){
         _uiState.update {
+
             it.copy(
                 editUsersModel = uiState.value.editUsersModel.copy(interests = interest)
             )
