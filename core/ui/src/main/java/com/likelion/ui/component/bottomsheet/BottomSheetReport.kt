@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.likelion.domain.call_for_caller.model.UserProfileModel
 import com.likelion.domain.call_for_caller.model.UsersModel
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.radio_button_group.ReportReasonRadioGroup
@@ -43,7 +44,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetReport(
-    badUser: UsersModel,
+    badUser: UserProfileModel,
     onDismissRequest: () -> Unit,
     onClickReport: (String) -> Unit,
 ) {
@@ -84,7 +85,7 @@ fun BottomSheetReport(
 
         // User Profile Image
         AsyncImage(
-            model = badUser.userImages[0],
+            model = badUser.profileImageUrl,
             contentDescription = "User profile image",
             modifier = Modifier
                 .size(120.dp)
@@ -143,26 +144,12 @@ fun BottomSheetReport(
 @Preview(showBackground = true)
 @Composable
 fun BottomSheetReportPreview() {
-    val fakeUser = UsersModel(
-        id = 2L,
-
-            "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-        ,
-        location = "America",
-        nickname = "여덟글자닉네임자",
-        age = 65,
-        interests = listOf(
-            "풋볼",
-            "영222화",
-            "영222화",
-            "영222화",
-            "영222화",
-            "영222화",
-            "영222화",
-            "영222화",
-            "영222화",
-            "영222화",
-        ),
+    val fakeUser2 = UserProfileModel(
+        nickname = "닉네임은여덟글자",
+        profileImageUrl = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
+        age = 26,
+        location = "경기 동두천시",
+        interests = listOf("취미12")
     )
 
     // Using a Box with a background color to make the composable visible
@@ -172,7 +159,7 @@ fun BottomSheetReportPreview() {
             .background(Color.White) // A white background makes the UI clear
     ) {
         BottomSheetReport(
-            badUser = fakeUser,
+            badUser = fakeUser2,
             onDismissRequest = {},
             onClickReport = {}
         )

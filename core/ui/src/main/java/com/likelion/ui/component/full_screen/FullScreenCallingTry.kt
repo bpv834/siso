@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.likelion.domain.call_for_caller.model.UserProfileModel
 import com.likelion.domain.call_for_caller.model.UsersModel
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CommonActiveButton
@@ -32,7 +33,7 @@ import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
-fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit) {
+fun FullScreenCallingTry(otherUser: UserProfileModel, onClickButtonCallEnd: () -> Unit) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { 3 }
@@ -52,7 +53,7 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
         )
         Spacer(Modifier.size(22.dp))
         AsyncImage(
-            model = otherUser.userImages[0], contentDescription = "",
+            model = otherUser.profileImageUrl, contentDescription = "",
             modifier = Modifier
                 .clip(CircleShape)
                 .size(160.dp),
@@ -163,16 +164,12 @@ fun FullScreenCallingTry(otherUser: UsersModel, onClickButtonCallEnd: () -> Unit
 @Preview(showBackground = true)
 @Composable
 fun FullScreenCallingTryPreview() {
-    val fakeUser = UsersModel(
-        id = 4L,
-        userImages =
-            "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-        ,
-        location = "America",
-        nickname = "코딩러",
-        age = 65,
-        interests = listOf("풋볼", "영화", "음악"),
-
+    val fakeUser = UserProfileModel(
+        nickname = "닉네임은여덟글자",
+        profileImageUrl = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
+        age = 26,
+        location = "경기 동두천시",
+        interests = listOf("취미12")
     )
     FullScreenCallingTry(fakeUser, {})
 }

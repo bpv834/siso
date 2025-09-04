@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -41,11 +42,25 @@ fun CallForReceiverRouter(
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is CallUiEvent.ShowToast -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is CallUiEvent.ShowToast -> Toast.makeText(
+                    context,
+                    event.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+
                 is CallUiEvent.NavigateUp -> onNavigateUp()
-                is CallUiEvent.ShowError -> {/* 에러 처리 */ }
-                is CallUiEvent.ShowSnackbar -> {/* 스낵바 처리 */ }
-                is CallUiEvent.ShowReportSheet -> { /* 시트 관련 로직은 Screen에서 처리하는 게 더 좋습니다. */ }
+                is CallUiEvent.ShowError -> {/* 에러 처리 */
+                }
+
+                is CallUiEvent.ShowSnackbar -> {/* 스낵바 처리 */
+                }
+
+                is CallUiEvent.ShowReportSheet -> { /* 시트 관련 로직은 Screen에서 처리하는 게 더 좋습니다. */
+                }
+
+                is CallUiEvent.GetProfile -> {
+
+                }
             }
         }
     }
@@ -58,6 +73,7 @@ fun CallForReceiverRouter(
         otherUserId = otherUserId
     )
 }
+
 // CallForReceiverScreen.kt (완성된 스크린)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,12 +88,14 @@ fun CallForReceiverScreen(
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         when (uiState.callProgressState) {
             CallForCallerState.Idle -> {
-                // 수신자 입장에선 대기상태일때 안내문 화면이 없음
+                CircularProgressIndicator()
             }
+
             CallForCallerState.TryConnecting -> FullScreenCallingTry(
                 otherUser = DummyUser().fakeOtherUser,
                 onClickButtonCallEnd = { viewModel.onClickEndCall() }
             )
+
             CallForCallerState.CallActive -> FullScreenWhenCallActive(
                 user = DummyUser().fakeUser,
                 otherUser = DummyUser().fakeOtherUser,
@@ -90,6 +108,7 @@ fun CallForReceiverScreen(
                 onClickKeepGoing = {},
                 startCallTimer = { viewModel.startCallTimer() }
             )
+
             CallForCallerState.CallEnd -> FullScreenCallEndReview(
                 caller = DummyUser().fakeOtherUser,
                 onClickReport = { viewModel.onClickReportButton() },

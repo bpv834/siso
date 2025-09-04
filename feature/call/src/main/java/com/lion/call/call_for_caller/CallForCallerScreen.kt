@@ -59,6 +59,8 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
                 is CallUiEvent.ShowReportSheet -> {
                     viewModel.onClickReportButton() // 신고 이벤트를 발생시킨다. 상태가 변화되고 감지해서 시트를 띄움
                 }
+
+                CallUiEvent.GetProfile -> TODO()
             }
         }
     }
@@ -74,13 +76,13 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태
             CallForCallerState.TryConnecting -> FullScreenCallingTry(
-                otherUser = DummyUser().fakeOtherUser,
+                otherUser = uiState.otherUser!!,
                 onClickButtonCallEnd = { viewModel.onClickEndCall() })
 
             // 발신자 , 수신자 전부 입장한 상태
             CallForCallerState.CallActive -> FullScreenWhenCallActive(
-                user = DummyUser().fakeUser,
-                otherUser = DummyUser().fakeOtherUser,
+                user = uiState.myUser!!,
+                otherUser = uiState.otherUser!!,
                 callDuration = uiState.callDuration,
                 isMute = uiState.isMuted,
                 onClickCallEnd = { viewModel.onClickEndCall() },
@@ -93,7 +95,7 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
             )
             // 통화 종료 후 인연이어갈지 말지 선택하는 상태
             CallForCallerState.CallEnd -> FullScreenCallEndReview(
-                caller = DummyUser().fakeOtherUser,
+                caller =uiState.otherUser!!,
                 onClickReport = { viewModel.onClickReportButton() }, // 바텀시트 열기
                 onClickAnother = { viewModel.onClickEndCall() },
                 onClickKeepGoing = {}
@@ -107,7 +109,7 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
         )
     ) {
         BottomSheetReport(
-            badUser = DummyUser().fakeOtherUser,
+            badUser = uiState.otherUser!!,
             onDismissRequest = { viewModel.onClickReportButton() },
             onClickReport = { viewModel.onClickConfirmPopup() })
     }

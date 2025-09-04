@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.model.CallModel
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call_for_caller.usecase.GetUserProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
@@ -14,6 +15,7 @@ import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.lion.call.call_for_caller.CallUiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,7 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val leaveChannelUseCase: LeaveChannelUseCase,
     private val toggleSpeakerUseCase: ToggleSpeakerUseCase,
     private val toggleMuteUseCase: ToggleMuteUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
 ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
     /*  private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
@@ -51,6 +54,9 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val _tokenState = MutableStateFlow<String?>(null)
     val tokenState: StateFlow<String?> = _tokenState.asStateFlow()
 
+    private val _userIdState = MutableStateFlow<Long?>(null)
+
+
 
     // 시간 관련 일 객체
     private var timerJob: Job? = null
@@ -61,7 +67,6 @@ class CallForCallerScreenViewModel @Inject constructor(
         viewModelScope.launch {
             // UI 로딩 상태를 업데이트
             _uiState.update { it.copy(isLoading = true) }
-
             val accessToken = _tokenState.value
 
             if (accessToken.isNullOrEmpty()) {
@@ -71,11 +76,48 @@ class CallForCallerScreenViewModel @Inject constructor(
                 return@launch
             }
 
+            // 두 프로필을 비동기적으로 가져오기 시작 (병렬 처리)
+            val otherProfileDeferred = async {
+                getUserProfileUseCase.execute(
+                    accessToken = accessToken,
+                    userId = receiverId
+                )
+            }
+
+            val myProfileDeferred = async {
+                getUserProfileUseCase.execute(
+                    accessToken = accessToken,
+                    userId = _userIdState.value!!
+                )
+            }
+
+            // 두 작업이 모두 완료될 때까지 기다립니다.
+            val otherProfileResult = otherProfileDeferred.await()
+            val myProfileResult = myProfileDeferred.await()
+
+            // 프로필 로딩 성공 여부 확인 및 UI 업데이트
+            if (otherProfileResult.isSuccess && myProfileResult.isSuccess) {
+                _uiState.update {
+                    it.copy(
+                        otherUser = otherProfileResult.getOrThrow(),
+                        myUser = myProfileResult.getOrThrow(),
+                        isLoading = false
+                    )
+                }
+            } else {
+                // 하나라도 실패하면 에러 처리 후 종료
+                val exception = otherProfileResult.exceptionOrNull() ?: myProfileResult.exceptionOrNull()
+                Timber.e(exception, "프로필 로드 실패")
+                _uiState.update { it.copy(errorMessage = exception!!.message, isLoading = false) }
+                _uiEvent.emit(CallUiEvent.ShowToast(exception?.message ?: "프로필 로드 실패"))
+                return@launch
+            }
+
             val result: Result<CallModel> =
                 startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
             result
                 .onSuccess { callModel ->
-                    Timber.d("HomeScreenViewModel: StartCallUseCase 성공적으로 실행됨: ${callModel.channelName}")
+                    Timber.d(" StartCallUseCase 성공적으로 실행됨: ${callModel.channelName}")
                     evaluationUseCase.execute(
                         callModel = callModel,
                         isKeepGoing = true,
@@ -85,8 +127,7 @@ class CallForCallerScreenViewModel @Inject constructor(
 
                 }
                 .onFailure { throwable ->
-                    Timber.e(throwable, "HomeScreenViewModel: 통화 시작 실패 (서버 또는 네트워크 오류)")
-                    // 필요하면 토스트 이벤트도 발생시킬 수 있음
+                    Timber.e(throwable, " 통화 시작 실패 (서버 또는 네트워크 오류)")
                     _uiState.update { it.copy(callProgressState = CallForCallerState.Idle) }
                     _uiEvent.emit(CallUiEvent.ShowToast(throwable.message ?: "통화 시작 실패"))
                 }
@@ -197,6 +238,7 @@ class CallForCallerScreenViewModel @Inject constructor(
             // 토큰 Flow를 collect하여 최신 토큰을 항상 유지합니다.
             getTokenAllUseCase.invoke().collect { token ->
                 _tokenState.value = token?.accessToken
+                _userIdState.value = token?.userInfo?.id
                 // 토큰을 받으면 초기 로딩을 완료했음을 알립니다.
                 if (token != null) {
                     _uiState.update { it.copy(isLoading = false) }

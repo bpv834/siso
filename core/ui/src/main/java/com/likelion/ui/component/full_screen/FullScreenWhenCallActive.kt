@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.likelion.domain.call_for_caller.model.UserProfileModel
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.component.button.CustomOutlinedButton
@@ -37,8 +38,8 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FullScreenWhenCallActive(
-    user: com.likelion.domain.call_for_caller.model.UsersModel,
-    otherUser: com.likelion.domain.call_for_caller.model.UsersModel,
+    user: UserProfileModel,
+    otherUser: UserProfileModel,
     callDuration: Int,
     onClickKeepGoing: (UsersModel) -> Unit,
     onClickCallEnd: () -> Unit,
@@ -68,7 +69,7 @@ fun FullScreenWhenCallActive(
         ) {
             // 사진
             AsyncImage(
-                model = otherUser.userImages[0],
+                model = otherUser.profileImageUrl,
                 contentDescription = "",
                 modifier = Modifier
                     .size(100.dp)
@@ -232,49 +233,24 @@ fun FullScreenWhenCallActive(
 @Composable
 fun FullScreenWhenCallActivePreview() {
     SisoTheme {
-        val user = com.likelion.domain.call_for_caller.model.UsersModel(
-            id = 4L,
-            userImages =
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-            ,
-            location = "America",
-            nickname = "여덟글자닉네임자",
-            age = 65,
-            interests = listOf(
-                "풋볼",
-                "영1111화",
-                "영22222222222223화",
-                "영333화",
-                "영443333333333334화",
-                "영555화",
-                "영666666666666666666666666666화",
-            ),
-
+        val fakeUser = UserProfileModel(
+            nickname = "닉네임은여덟글자",
+            profileImageUrl = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
+            age = 26,
+            location = "경기 동두천시",
+            interests = listOf("취미12")
         )
 
-        val otherUser = com.likelion.domain.call_for_caller.model.UsersModel(
-            id = 4L,
-            userImages =
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg"
-           ,
-            location = "America",
-            nickname = "여덟글자닉네아더",
-            age = 65,
-            interests = listOf(
-                "풋볼",
-                "영1111화",
-                "영22222222222223화",
-                "영333화",
-                "영443333333333334화",
-                "영555화",
-                "영666666666666666666666666666화",
-
-                ),
-
+        val fakeUser2 = UserProfileModel(
+            nickname = "닉네임은여덟글자",
+            profileImageUrl = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
+            age = 26,
+            location = "경기 동두천시",
+            interests = listOf("취미12")
         )
         FullScreenWhenCallActive(
-            user = user,
-            otherUser = otherUser,
+            user = fakeUser,
+            otherUser = fakeUser2,
             onClickKeepGoing = {},
             onClickCallEnd = {},
             onClickMute = {},

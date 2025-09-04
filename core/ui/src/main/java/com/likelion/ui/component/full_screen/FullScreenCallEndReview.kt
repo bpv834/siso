@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.likelion.domain.call_for_caller.model.UserProfileModel
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.component.text_button.CommonTextButton
@@ -31,7 +32,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 
 @Composable
 fun FullScreenCallEndReview(
-    caller: com.likelion.domain.call_for_caller.model.UsersModel,
+    caller: UserProfileModel,
     onClickReport: () -> Unit,
     onClickAnother: () -> Unit,
     onClickKeepGoing: () -> Unit // 채팅창으로 가야해서 상대방 id도 받아야함
@@ -45,7 +46,7 @@ fun FullScreenCallEndReview(
         Spacer(Modifier.size(120.dp))
         // 프로필 사진
         AsyncImage(
-            model = caller.userImages[0],
+            model = caller.profileImageUrl,
             contentDescription = "",
             modifier = Modifier
                 .size(160.dp)
@@ -130,27 +131,15 @@ fun FullScreenCallEndReview(
 @Composable
 fun FullScreenCallReviewPreview() {
     SisoTheme {
-        val caller = com.likelion.domain.call_for_caller.model.UsersModel(
-            id = 4L,
-            userImages =
-                "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
-            location = "America",
-            nickname = "여덟글자닉네임자",
-            age = 65,
-            interests = listOf(
-                "풋볼",
-                "영222화",
-                "영222화",
-                "영222화",
-                "영222화",
-                "영222화",
-                "영222화",
-                "영222화",
-                "영222화",
-                "영222화",
-            ),
+        val fakeUser2 = UserProfileModel(
+            nickname = "닉네임은여덟글자",
+            profileImageUrl = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
+            age = 26,
+            location = "경기 동두천시",
+            interests = listOf("취미12")
+        )
 
-            )
-        FullScreenCallEndReview(caller = caller, {}, {}, {})
+
+        FullScreenCallEndReview(caller = fakeUser2, {}, {}, {})
     }
 }
