@@ -187,5 +187,15 @@ class CallRepositoryImpl @Inject constructor(
         }
     }
 
+    // 마이크 음소거/음소거 해제 기능
+    override fun toggleMute(isMuted: Boolean) {
+        agoraVoiceManager.toggleMute(isMuted)
+    }
+
+    // 스피커 온/오프 기능
+    override fun toggleSpeaker(isSpeakerOn: Boolean) {
+        agoraVoiceManager.toggleSpeaker(isSpeakerOn)
+    }
+
 
 }

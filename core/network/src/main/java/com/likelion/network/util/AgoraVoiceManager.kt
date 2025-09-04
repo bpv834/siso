@@ -174,4 +174,14 @@ class AgoraVoiceManager(
         // 이벤트를 더 이상 발행하지 않으므로 스코프를 취소할 필요는 없지만,
         // 필요에 따라 coroutineScope.cancel()을 호출하여 내부 코루틴 작업을 중단할 수 있습니다.
     }
+
+    fun toggleMute(isMuted: Boolean) {
+        rtcEngine?.muteLocalAudioStream(isMuted)
+        Timber.d("AgoraVoiceManager: 마이크 상태 변경, 음소거 여부: $isMuted")
+    }
+
+    fun toggleSpeaker(isSpeakerOn: Boolean) {
+        rtcEngine?.setEnableSpeakerphone(isSpeakerOn)
+        Timber.d("AgoraVoiceManager: 스피커 상태 변경, 스피커폰 사용 여부: $isSpeakerOn")
+    }
 }

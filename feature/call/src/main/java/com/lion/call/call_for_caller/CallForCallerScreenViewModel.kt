@@ -8,6 +8,8 @@ import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
+import com.likelion.domain.call_for_caller.usecase.ToggleMuteUseCase
+import com.likelion.domain.call_for_caller.usecase.ToggleSpeakerUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.lion.call.call_for_caller.CallUiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +33,8 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val observeCallEventsUseCase: ObserveCallEventsUseCase, // AgoraEvent 관찰 유스케이스 주입
     private val evaluationUseCase: EvaluationAfterCallUseCase,
     private val leaveChannelUseCase: LeaveChannelUseCase,
+    private val toggleSpeakerUseCase: ToggleSpeakerUseCase,
+    private val toggleMuteUseCase: ToggleMuteUseCase,
 ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
     /*  private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
@@ -115,12 +119,14 @@ class CallForCallerScreenViewModel @Inject constructor(
         _uiState.update { currentState ->
             currentState.copy(isMuted = !_uiState.value.isMuted)
         }
+        toggleMuteUseCase.execute(_uiState.value.isMuted)
     }
 
     override fun toggleSpeaker() {
         _uiState.update { currentState ->
             currentState.copy(isSpeakerOn = !_uiState.value.isSpeakerOn)
         }
+        toggleSpeakerUseCase.execute(_uiState.value.isSpeakerOn)
     }
 
     override fun resetCallState() {

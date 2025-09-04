@@ -6,6 +6,8 @@ import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.RejectCallUseCase
+import com.likelion.domain.call_for_caller.usecase.ToggleMuteUseCase
+import com.likelion.domain.call_for_caller.usecase.ToggleSpeakerUseCase
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.login.repository.InMemoryUserSignUpRepository
@@ -131,6 +133,22 @@ object UseCaseModule {
         repository: CallRepository
     ): LeaveChannelUseCase {
         return provideLeaveChannelUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideToggleSpeakerUseCase(
+        repository: CallRepository
+    ): ToggleSpeakerUseCase {
+        return ToggleSpeakerUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideToggleMuteUseCase(
+        repository: CallRepository
+    ): ToggleMuteUseCase {
+        return ToggleMuteUseCase(repository)
     }
 
 
