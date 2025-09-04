@@ -45,16 +45,12 @@ class LoginScreenViewModel @Inject constructor(
     private val clearLocalTokenUseCase: ClearLocalTokenUseCase,
     // 토큰 정보 로컬에 저장
     private val saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
-
+    //
     private val saveTokenAllUseCase: SaveTokenAllUseCase,
-    private val getTokenAllUseCase: GetTokenAllUseCase,
-
-    private val saveTokenUseCase: SaveRefreshTokenUseCase,
 
     private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
     private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
-
-    private val testKakao: ExchangeKakaoTokenUseCase,
+    // 온보딩상태 가져오기
     private val getOnBoardingSkipUseCase: GetOnBoardingSkipUseCase
 
 ) : ViewModel() {
@@ -83,41 +79,6 @@ class LoginScreenViewModel @Inject constructor(
         saveTokenAllUseCase(user)
     }
 
-    fun postRefreshToken(token: BasicToken) {
-        viewModelScope.launch {
-            try {
-                Timber.d("리프래시 토큰 요청!!")
-                val result = postRefreshTokenUseCase(token)
-                Timber.d("서버에서 받은 액세스: ${result.accessToken}")
-                Timber.d("서버에서 받은 리프레시: ${result.refreshToken}")
-                Timber.d("서버에서 받은 유저상태: ${result.userStatus}")
-                Timber.d("서버에서 받은 유저정보: ${result.userInfo}")
-                // 1) 로컬 저장을 먼저 완료 (레이스 방지)
-                saveTokenAll(result)
-
-                // 2) 그 다음 UI 상태 반영
-                _uiState.update {
-                    it.copy(
-                        accessToken = result.accessToken,
-                        refreshToken = result.refreshToken,
-                        userState = result.userStatus,
-                        hasProfile = result.hasProfile,
-                    )
-                }
-                // 3) 저장소에서 fcm 토큰 얻어와 서버에 전송 호준
-                sendFcmToken()
-            } catch (e: Exception) {
-                val msg = e.message.orEmpty()
-                if (msg.contains("401", true) || msg.contains("unauthorized", true)) {
-                    clearToken()
-                    _uiState.update { it.copy(error = "인증이 만료되었습니다. 다시 로그인 해주세요.") }
-                } else {
-                    _uiState.update { it.copy(error = "네트워크 오류: ${msg.ifBlank { "잠시 후 다시 시도해주세요." }}") }
-                }
-            }
-        }
-    }
-
     fun checkLocalToken() {
         viewModelScope.launch {
             val skip = try {
@@ -129,23 +90,15 @@ class LoginScreenViewModel @Inject constructor(
             _uiState.update { it.copy(isSkip = skip) }
             Timber.d("온보딩 스킵 상태: $skip")
 
-            val result = getTokenAllUseCase().firstOrNull()
+            val result = getLocalTokenUseCase().firstOrNull()
             Timber.d("로컬 저장소 확인...")
             Timber.d("로컬 액세스: ${result?.accessToken}")
             Timber.d("로컬 리프래시: ${result?.refreshToken}")
             Timber.d("로컬 유저상태 : ${result?.userStatus}")
             Timber.d("로컬 프로필상태 : ${result?.hasProfile}")
-            Timber.d("로컬 유저정보 : ${result?.userInfo}")
             if (result != null) {
                 Timber.d("로컬 정보가 비어있지 않음")
-                val user = postRefreshTokenUseCase(
-                    BasicToken(
-                        accessToken = result.accessToken,
-                        refreshToken = result.refreshToken,
-                        userStatus = result.userStatus,
-                        hasProfile = result.hasProfile
-                    )
-                )
+                val user = postRefreshTokenUseCase(result.refreshToken)
                 Timber.d("로컬토큰 확인 토큰 재발행 $user")
                 saveRefreshTokenUseCase(
                     BasicToken(
