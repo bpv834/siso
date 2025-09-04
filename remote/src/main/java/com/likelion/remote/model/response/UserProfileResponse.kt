@@ -1,6 +1,6 @@
 package com.likelion.remote.model.response
 
-data class UserProfile(
+data class UserProfileResponse(
     val nickname: String,
     val age: Int,
     val location: String?,
