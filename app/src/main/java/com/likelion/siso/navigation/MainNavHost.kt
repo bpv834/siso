@@ -187,7 +187,10 @@ fun MainNavHost(
         ) {
 
         }
-
+//        val inputStream = cotext.resources.openRawResource(R.raw.korea_regions_ordered)
+//        val jsonString  = inputStream.bufferedReader().use { it.readText() }
+//        val locationRepository = LocationRepositoryImpl()
+//        locationRepository.setJson(jsonString)
         editMainNavigation(
             navController = appState.navController
         ) {
