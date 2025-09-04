@@ -26,6 +26,7 @@ class DataStoreDataSource @Inject constructor(
         val HAS_PROFILE = booleanPreferencesKey("IS_PROFILE")
         val FCM_TOKEN = stringPreferencesKey("FCM_TOKEN")
         val ONBOARDING_SKIP = booleanPreferencesKey("SKIP")
+        val DIALOG_SKIP = booleanPreferencesKey("DIALOG")
 
     }
 
@@ -126,6 +127,18 @@ class DataStoreDataSource @Inject constructor(
     override suspend fun getOnBoardingSkip(): Flow<Boolean> {
         return dataStore.data.map { prefs ->
             prefs[PreferencesKey.ONBOARDING_SKIP] ?: false
+        }
+    }
+
+    override suspend fun changeDialogStatus(isDialog: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKey.DIALOG_SKIP] = isDialog
+        }
+    }
+
+    override suspend fun getDialogStatus(): Flow<Boolean> {
+        return dataStore.data.map { prefs ->
+            prefs[PreferencesKey.DIALOG_SKIP] ?: false
         }
     }
 
