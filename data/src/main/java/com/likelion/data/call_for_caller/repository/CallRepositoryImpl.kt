@@ -16,6 +16,7 @@ import com.likelion.remote.api.CallApiService
 import com.likelion.remote.model.request.CallInfoRequest
 import com.likelion.remote.model.request.CallRequest
 import com.likelion.remote.model.response.CallInfoDto
+import com.likelion.remote.model.response.CallResponseDto
 import com.likelion.remote.model.response.SisoResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -127,7 +128,7 @@ class CallRepositoryImpl @Inject constructor(
 
         // API 호출이 예외를 던지지 않고 성공적으로 응답을 받았다면, SisoResponse의 data 필드를 확인합니다.
         if (response.data != null && response.errorMessage == null) {
-            val callResponseDto = response.data!!
+            val callResponseDto : CallResponseDto = response.data!!
             val callResponseModel : CallResponseModel = callResponseDto.toDomain()
 
             return Result.success(callResponseModel)
