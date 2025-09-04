@@ -60,7 +60,6 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
                     viewModel.onClickReportButton() // 신고 이벤트를 발생시킨다. 상태가 변화되고 감지해서 시트를 띄움
                 }
 
-                CallUiEvent.GetProfile -> TODO()
             }
         }
     }

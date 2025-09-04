@@ -58,9 +58,6 @@ fun CallForReceiverRouter(
                 is CallUiEvent.ShowReportSheet -> { /* 시트 관련 로직은 Screen에서 처리하는 게 더 좋습니다. */
                 }
 
-                is CallUiEvent.GetProfile -> {
-
-                }
             }
         }
     }
