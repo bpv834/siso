@@ -4,4 +4,6 @@ package com.likelion.home.home_page
 sealed class HomeScreenUiEvent {
     object GetTokenAndLoadUsers : HomeScreenUiEvent()
     data class OnClickCallButton(val callerId: Long, val receiverId: Long) : HomeScreenUiEvent()
+    data class ChangeDialogStatus(val isDialog: Boolean) : HomeScreenUiEvent()
+    object GetDialogStatus : HomeScreenUiEvent()
 }

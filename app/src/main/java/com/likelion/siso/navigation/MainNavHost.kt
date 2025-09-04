@@ -17,6 +17,7 @@ import com.example.notification.FcmEventBus
 import com.likelion.domain.notification.model.Call
 import com.likelion.home.navigation.chatNavigation
 import com.likelion.home.navigation.edit_Main.editMainNavigation
+import com.likelion.home.navigation.edit_Main.navigateToEditMain
 import com.likelion.home.navigation.edit_Main.settingMainNavigation
 import com.likelion.home.navigation.homeNavigation
 import com.likelion.home.navigation.myPageNavigation
@@ -42,7 +43,6 @@ fun MainNavHost(
     appState: SisoAppState,
 //    startDestination: String = NavigationRoute.HomeScreen.route,
     startDestination: String = NavigationRoute.LoginScreen.route,
-//    startDestination: String = NavigationRoute.OnBoardingScreen.route,
     viewModel: MainNavHostViewModel = hiltViewModel()
 ) {
 
@@ -165,6 +165,13 @@ fun MainNavHost(
                     chatRoomId = chatRoomId
                 )
             },
+            onNavigateToEditProfile = {
+                appState.navController.navigateToEditMain(
+                    navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            }
         ) {
             appState.navController.navigateToHome()
         }

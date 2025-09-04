@@ -16,6 +16,7 @@ fun NavGraphBuilder.homeNavigation(
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 변경
     onNavigateToCaller: (otherUserId: Long) -> Unit,
     onNavigateToChat: (userId: Long, userNickName: String, chatRoomId: Long) -> Unit,
+    onNavigateToEditProfile: () -> Unit,
     action: () -> Unit,
 ) {
     composable(
@@ -31,6 +32,9 @@ fun NavGraphBuilder.homeNavigation(
                 onNavigateToChat(
                     userId, userNickName, chatRoomId
                 )
+            },
+            onNavigateToEditProfile = {
+                onNavigateToEditProfile()
             }
         )
     }
