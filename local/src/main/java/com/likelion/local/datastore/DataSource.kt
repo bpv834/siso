@@ -13,4 +13,9 @@ interface DataSource {
     suspend fun getTokenAll(): Flow<User?>
     suspend fun saveFcmToken(token: String)
     fun getFcmToken(): Flow<String?>
+
+    // 온보딩 설정
+    suspend fun changeOnBoardingSkip(isSkip: Boolean)
+    suspend fun getOnBoardingSkip(): Flow<Boolean>
+
 }

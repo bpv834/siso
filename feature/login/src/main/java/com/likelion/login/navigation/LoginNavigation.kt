@@ -14,6 +14,7 @@ fun NavController.navigateToLogin(navOptions: NavOptions? = null) =
 fun NavGraphBuilder.loginNavigation(
     navController: NavController,
     onNavigateToHome: () -> Unit,
+    onNavigateToOnBoarding: () -> Unit,
     action: () -> Unit
 ) {
     composable(
@@ -34,6 +35,7 @@ fun NavGraphBuilder.loginNavigation(
                 }
             },
             onHome = onNavigateToHome,
+            onBoarding = onNavigateToOnBoarding,
             actionSnackbar = action
         )
     }
