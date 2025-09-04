@@ -1,6 +1,5 @@
 package com.lion.call.call_for_receiver
 
-import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
@@ -13,21 +12,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.likelion.ui.component.bottomsheet.BottomSheetReport
 import com.likelion.ui.component.dialog.ReportPopUpDialog
 import com.likelion.ui.component.full_screen.FullScreenCallEndReview
-import com.likelion.ui.component.full_screen.FullScreenCallInit
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
 import com.likelion.ui.component.full_screen.FullScreenWhenCallActive
-import com.lion.call.call_for_caller.CallForCallerScreenViewModel
 import com.lion.call.call_for_caller.CallForCallerScreenViewModelType
 import com.lion.call.call_for_caller.CallForCallerState
 import com.lion.call.call_for_caller.CallUiEvent
 import com.lion.call.call_for_caller.CallUiState
 import com.lion.call.call_for_caller.DummyUser
+import timber.log.Timber
 
 @Composable
 fun CallForReceiverRouter(
@@ -36,6 +33,7 @@ fun CallForReceiverRouter(
     onNavigateUp: () -> Unit,
     viewModel: CallForCallerScreenViewModelType = hiltViewModel<CallForReceiverScreenViewModel>(),
 ) {
+    Timber.d("CallForReceiverRouter / otherUserId : $otherUserId")
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -73,11 +71,10 @@ fun CallForReceiverScreen(
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         when (uiState.callProgressState) {
-            CallForCallerState.Idle -> FullScreenCallInit(
-                onClickConfirm = { viewModel.onClickCall(receiverId = otherUserId) },
-                onClickBackButton = { viewModel.onClickBackButton() }
-            )
-            CallForCallerState.Calling -> FullScreenCallingTry(
+            CallForCallerState.Idle -> {
+                // 수신자 입장에선 대기상태일때 안내문 화면이 없음
+            }
+            CallForCallerState.TryConnecting -> FullScreenCallingTry(
                 otherUser = DummyUser().fakeOtherUser,
                 onClickButtonCallEnd = { viewModel.onClickEndCall() }
             )
