@@ -10,6 +10,7 @@ import com.likelion.domain.chat.usecase.GetPartnerChatUseCase
 import com.likelion.domain.chat.usecase.LimitSendChatUseCase
 import com.likelion.domain.chat.usecase.RemoveCallHistoryUseCase
 import com.likelion.domain.chat.usecase.RemoveChatRoomUseCase
+import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -35,8 +36,8 @@ class ChatViewModel @Inject constructor(
     private val removeCallHistoryUseCase: RemoveCallHistoryUseCase,
     private val limitSendChatUseCase: LimitSendChatUseCase,
     // 아래부터 api 연결 코드
-    private val getChatRoomUseCase: GetChatRoomUseCase
-
+    private val getChatRoomUseCase: GetChatRoomUseCase,
+    private val getLocalTokenUseCase: GetLocalTokenUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
@@ -93,7 +94,7 @@ class ChatViewModel @Inject constructor(
 
     private fun getAccessToken() {
         viewModelScope.launch {
-            val token = getTokenAllUseCase().firstOrNull()
+            val token = getLocalTokenUseCase().firstOrNull()
             _uiState.update {
                 it.copy(accessToken = token?.accessToken)
             }
