@@ -1,5 +1,6 @@
 package com.likelion.remote.api
 
+import com.likelion.remote.model.ApiResponse
 import com.likelion.remote.model.response.ChatRoomResponseDto
 import retrofit2.Response
 import retrofit2.http.GET
@@ -19,20 +20,4 @@ interface ChatApiService {
     suspend fun getChatRoom(
         @Header("Authorization") accessToken: String
     ): Response<ApiResponse<List<ChatRoomResponseDto>>>
-
-
 }
-
-data class ApiResponse<T>(
-    val success: Boolean,
-    val data: T?,
-    val errorMessage: String?,
-)
-
-data class PartnerChat(
-    val chat: String,
-)
-
-data class ChatRoom(
-    val chatRoomId: Long,
-)
