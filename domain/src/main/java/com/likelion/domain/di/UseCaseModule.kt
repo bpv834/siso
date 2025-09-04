@@ -4,6 +4,7 @@ import com.likelion.domain.call_for_caller.repository.CallRepository
 import com.likelion.domain.call_for_caller.repository.ProfileRepository
 import com.likelion.domain.call_for_caller.usecase.DenyCallUseCase
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call_for_caller.usecase.GetMyProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.GetUserProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
@@ -160,5 +161,16 @@ object UseCaseModule {
     ): GetUserProfileUseCase {
         return GetUserProfileUseCase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetMyProfileUseCase(
+        repository: ProfileRepository
+    ): GetMyProfileUseCase {
+        return GetMyProfileUseCase(repository)
+    }
+
+
+
 
 }

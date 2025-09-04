@@ -13,16 +13,22 @@ import retrofit2.http.Path
 interface UserApiService {
 
     @GET("api/auth/info")
-    suspend fun  getUserId(
+    suspend fun getUserId(
         @Header("Authorization") accessToken: String,
     ): Response<UserInfo>
 
 
     // 새 API: userId로 유저 프로필 가져오기
-    @GET("api/profiles/{id}")
+    @GET("/api/profiles/user/{targetUserId}")
     suspend fun getUserProfile(
         @Header("Authorization") accessToken: String,
-        @Path("id") userId: Long,
+        @Path("targetUserId") userId: Long,
+    ): Response<UserProfileResponse>
+
+    // 새 API: userId로 유저 프로필 가져오기
+    @GET("/api/profiles/me")
+    suspend fun getMyProfile(
+        @Header("Authorization") accessToken: String,
     ): Response<UserProfileResponse>
 
 
@@ -41,7 +47,6 @@ interface UserApiService {
         @Header("Authorization") accessToken: String, // AccessToken을 사용하도록 변경하는 것이 더 일반적입니다.
         @Body request: NotificationRequest
     ): Response<Unit> // 반환 값이 없으므로 Unit을 사용합니다.
-
 
 
 }
