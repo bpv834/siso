@@ -302,8 +302,7 @@ fun DocumentScreen(
     bottomId: Long = 0L
 ) {
     val bottomContent = listOf(
-
-        1L to "",
+        1L to "private_info_term.txt",
         2L to "use_term.txt" ,
         3L to "marketing_reception_term.txt",
     )

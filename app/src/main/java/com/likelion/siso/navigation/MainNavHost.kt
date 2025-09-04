@@ -24,6 +24,8 @@ import com.likelion.home.navigation.navigateToChat
 import com.likelion.home.navigation.navigateToChatRoom
 import com.likelion.home.navigation.navigateToHome
 import com.likelion.home.navigation.navigateToMyPage
+import com.likelion.home.navigation.navigateToOnboarding
+import com.likelion.home.navigation.onBoardingNavigation
 import com.likelion.login.navigation.inputNavigation
 import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
@@ -39,7 +41,7 @@ import timber.log.Timber
 fun MainNavHost(
     modifier: Modifier = Modifier,
     appState: SisoAppState,
-//    startDestination: String = NavigationRoute.HomeScreen.route
+//    startDestination: String = NavigationRoute.HomeScreen.route,
     startDestination: String = NavigationRoute.LoginScreen.route,
     viewModel: MainNavHostViewModel = hiltViewModel()
 ) {
@@ -62,7 +64,7 @@ fun MainNavHost(
                     viewModel.onFcmRejectEvent()
                 }
 
-                is FcmEvent.Message ->{}
+                is FcmEvent.Message -> {}
             }
         }
     }
@@ -113,6 +115,7 @@ fun MainNavHost(
         )
     }
 
+
     // 널체크 널이 아니면 전화 팝업 띄우기
     // 값 변화가 있을 때만 뜨지만, 이미 같은 값이 다시 들어오면 UI 반응이 없을 수 있음.
     /*  uiState.call?.let { state ->
@@ -136,6 +139,14 @@ fun MainNavHost(
                     inclusive = true
                 )
                 appState.navController.navigateToHome(
+                    navOptions {
+                        launchSingleTop = true
+                    }
+                )
+            },
+            onNavigateToOnBoarding = {
+                appState.navController.popBackStack(NavigationRoute.LoginScreen.route, inclusive = true)
+                appState.navController.navigateToOnboarding(
                     navOptions {
                         launchSingleTop = true
                     }
@@ -169,6 +180,11 @@ fun MainNavHost(
             }
         ) {
             appState.navController.navigateToInput()
+        }
+        onBoardingNavigation(
+            navController = appState.navController,
+        ) {
+            appState.navController.navigateToOnboarding()
         }
         homeNavigation(
             navController = appState.navController,
@@ -248,19 +264,5 @@ fun MainNavHost(
                 appState.navController.popBackStack()
             }
         )
-
-
-        /*
-        *
-        * onBoardingNavigation(
-            navigateToHome = { appState.navController.navigateToHome() },
-        )
-        homeNavigation {
-            appState.navController.navigateToSaveLink()
-        }
-        storageNavigation(appState.navController)
-        storageDetailNavigation(appState.navController)
-        saveLinkNavigation(appState.navController)
-        * */
     }
 }

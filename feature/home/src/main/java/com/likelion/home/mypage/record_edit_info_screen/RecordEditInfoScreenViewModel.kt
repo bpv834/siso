@@ -2,6 +2,7 @@ package com.likelion.home.mypage.record_edit_info_screen
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
+import android.util.Log.d
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.home.mypage.isPlayableAudioUrl
@@ -57,6 +58,7 @@ class RecordEditInfoScreenViewModel @Inject constructor(
                 RecordingEditState.IDLE // 녹음 상태를 받아옴
             }
         }
+        d("test","audio")
     }
 
 

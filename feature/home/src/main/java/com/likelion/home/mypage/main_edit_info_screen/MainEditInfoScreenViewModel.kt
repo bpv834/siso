@@ -1,47 +1,32 @@
 package com.likelion.home.mypage.main_edit_info_screen
 
-import android.R.attr.duration
-import android.R.attr.name
-import android.R.id.input
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
-import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import android.util.Log.d
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.net.toUri
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.likelion.domain.home.model.UsersModel
 import com.likelion.domain.mypage.model.UsersFullModel
 import com.likelion.domain.mypage.usecase.GetUserImagesUseCase
 import com.likelion.domain.mypage.usecase.UsersFullUseCase
 import com.likelion.ui.component.photo_layout.EditableImage
-import com.likelion.home.mypage.getBitmapFromUrl
 import com.likelion.ui.R
 import com.likelion.ui.component.photo_layout.ImageItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.reduce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.internal.wait
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.collections.get
 
 @HiltViewModel
 class MainEditInfoScreenViewModel @Inject constructor (
@@ -157,14 +142,15 @@ class MainEditInfoScreenViewModel @Inject constructor (
     }
 
     @SuppressLint("LogNotTimber")
-    fun fetchUsers(id: Long,imageId: Long) {
+    fun fetchUsers(accessToken: String,imageId: Long) {
         viewModelScope.launch {
             try {
-                val newModel = userFullUseCase(id)
+                val newModel = userFullUseCase(accessToken)
                 val newImages = getUserImagesUseCase(imageId)
                 val profile = newImages.firstOrNull().let {
                     ImageItem.UrlImage(it?.path!!,it.serverImageName)
                 }
+                d("test","$newModel")
                 _uiState.update {
                     val male = it.myRadioButtons[0].first
                     val feMale = it.myRadioButtons[1].first
@@ -227,8 +213,8 @@ class MainEditInfoScreenViewModel @Inject constructor (
             val imageItem =
                 newUserImages.first().edited
                     ?: ImageItem.UrlImage(
-                        "android.resource://com.example.app/${R.drawable.example_profile}".toUri().toString(),
-                        "android.resource://com.example.app/${R.drawable.example_profile}".toUri().toString()
+                        "android.resource://com.example.app/${R.drawable.img_example_profile}".toUri().toString(),
+                        "android.resource://com.example.app/${R.drawable.img_example_profile}".toUri().toString()
                     )
 
             _uiState.update {
@@ -258,6 +244,55 @@ class MainEditInfoScreenViewModel @Inject constructor (
         _uiState.update {
             it.copy(
                 editUsersModel = uiState.value.editUsersModel.copy(location = location)
+            )
+        }
+    }
+
+    fun setReligion(religion: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(religion = religion)
+            )
+        }
+    }
+
+    fun setSmoking(smoking: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(isSmoke = smoking)
+            )
+        }
+    }
+
+    fun setAlcohol(alcohol: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(drinkingCapacity = alcohol)
+            )
+        }
+    }
+
+    fun setMbti(mbti: String){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(mbti = mbti)
+            )
+        }
+    }
+
+    fun setInterest(interest: List<String>){
+        _uiState.update {
+
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(interests = interest)
+            )
+        }
+    }
+
+    fun setMatching(matching: List<String>){
+        _uiState.update {
+            it.copy(
+                editUsersModel = uiState.value.editUsersModel.copy(meeting = matching)
             )
         }
     }

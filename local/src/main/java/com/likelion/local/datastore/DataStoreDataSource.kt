@@ -25,6 +25,7 @@ class DataStoreDataSource @Inject constructor(
         val USER_JSON = stringPreferencesKey("USER_JSON")
         val HAS_PROFILE = booleanPreferencesKey("IS_PROFILE")
         val FCM_TOKEN = stringPreferencesKey("FCM_TOKEN")
+        val ONBOARDING_SKIP = booleanPreferencesKey("SKIP")
 
     }
 
@@ -113,6 +114,18 @@ class DataStoreDataSource @Inject constructor(
     override fun getFcmToken(): Flow<String?> {
         return dataStore.data.map { prefs ->
             prefs[PreferencesKey.FCM_TOKEN]
+        }
+    }
+
+    override suspend fun changeOnBoardingSkip(isSkip: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[PreferencesKey.ONBOARDING_SKIP] = isSkip
+        }
+    }
+
+    override suspend fun getOnBoardingSkip(): Flow<Boolean> {
+        return dataStore.data.map { prefs ->
+            prefs[PreferencesKey.ONBOARDING_SKIP] ?: false
         }
     }
 

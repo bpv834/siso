@@ -1,8 +1,12 @@
 package com.likelion.home.mypage
 
-import android.R.attr.action
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.os.Build
+import android.util.Base64
+import android.util.Log
 import android.util.Log.d
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,35 +25,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
@@ -57,7 +51,9 @@ import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
-
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +69,7 @@ fun MyPageScreen(
     val nickname = uiState.nickname
     val age = uiState.age
     val location = uiState.location
-
+    val get = LocalContext.current
     val profileOption = listOf(
         "차단 / 신고한 인연" to {},
         "매칭 필터 설정" to {},
@@ -146,6 +142,9 @@ fun MyPageScreen(
                                 .clickable {
                                     d("click", "click navigateToMyPageMainEdit")
                                     mainEdit() // 수정 화면으로 이동
+
+//                                    getDebugKeyHash(get)
+//                                    getReleaseKeyHash(get)
                                 },
                         )
                     }
@@ -193,7 +192,7 @@ fun ProfileCircle(
         AsyncImage(
             modifier = Modifier.size(120.dp, 120.dp)
                 .clip(CircleShape),
-            model = profileImage.ifBlank { R.drawable.example_profile },
+            model = profileImage.ifBlank { R.drawable.img_example_profile },
             contentScale = ContentScale.Crop,
             contentDescription = ""
         )
@@ -326,5 +325,75 @@ fun MyPageScreenPreview() {
             MyPageScreen(viewModel)
         }
 
+    }
+}
+
+// 디버그 키해시 받아오기
+@OptIn(ExperimentalEncodingApi::class)
+fun getDebugKeyHash(
+    context: Context
+) {
+    val packageInfo: PackageInfo? = try {
+        @Suppress("DEPRECATION")
+        context.packageManager.getPackageInfo(
+            context.packageName,
+            PackageManager.GET_SIGNATURES
+        )
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        null
+    }
+
+    if (packageInfo == null) {
+        Log.e("KeyHash", "KeyHash:null")
+        return
+    }
+
+    @Suppress("DEPRECATION")
+    for (signature in packageInfo.signatures!!) {
+        try {
+            val md: MessageDigest = MessageDigest.getInstance("SHA")
+            md.update(signature.toByteArray())
+            Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+        } catch (e: NoSuchAlgorithmException) {
+            Log.d("KeyHash", "Unable to get MessageDigest. signature=$signature")
+        }
+    }
+}
+
+// 릴리즈 키해시 받아오기
+@OptIn(ExperimentalEncodingApi::class)
+fun getReleaseKeyHash(
+    context : Context
+) {
+    try {
+        val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                PackageManager.GET_SIGNATURES
+            )
+        }
+
+        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.signingInfo?.apkContentsSigners
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.signatures
+        }
+
+        signatures?.forEach { signature ->
+            val md = MessageDigest.getInstance("SHA")
+            md.update(signature.toByteArray())
+            val keyHash = Base64.encodeToString(md.digest(), Base64.NO_WRAP)
+            Log.d("KeyHash", "릴리즈 키 해시: $keyHash")
+        }
+    } catch (e: Exception) {
+        Log.e("KeyHash", "키 해시 구하는 중 오류 발생", e)
     }
 }

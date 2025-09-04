@@ -45,12 +45,12 @@ fun MyPageMainScreen(
 ) {
     var appBarTitle by remember { mutableStateOf("내 정보") }
     val myPageViewModel = hiltViewModel<MyPageViewModel>()
-    myPageViewModel.getUsers(13L)
+    val tempAccess = "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6ImtnODQ4MEBnbWFpbC5jb20iLCJpYXQiOjE3NTY3ODAzNjEsImV4cCI6MTc1Nzk4OTk2MX0.7JD1bTDaEzO9bcrKJcit44JaWSg0HVcDeU76tfPZyqM"
+    myPageViewModel.getUsers(tempAccess)
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = SisoColorTokens.White,
                     titleContentColor = SisoColorTokens.Gray90
                 ),
                 title = {

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class PostRefreshTokenUseCase @Inject constructor(
     private val repository: LoginRepository
 ) {
-    suspend operator fun invoke(token: BasicToken): User {
+    suspend operator fun invoke(token: String): User {
         return repository.postRefreshToken(token)
     }
 }

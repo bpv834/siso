@@ -27,7 +27,7 @@ class UserRepositoryImpl @Inject constructor(
             nickname = "코딩러",
             age = 65,
             voiceUrl = "https://example.com/voice1.mp3",
-            interests = listOf("풋볼", "영화", "음악"),
+            interests = listOf("음악감상", "사진촬형", "음악"),
             introduce = "안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 / 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다 /" +
                     " 안녕하세요. 코딩을 좋아하는 개발자입니다.",

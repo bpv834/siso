@@ -19,7 +19,7 @@ abstract class KakaoAuthModule {
 
     @Binds
     abstract fun bindKakaoAuthTestRepository(
-        impl : KakaoAuthTestRepositoryImpl
+        impl: KakaoAuthTestRepositoryImpl
     ): KakaoAuthTestRepository
 
 }

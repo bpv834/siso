@@ -45,8 +45,4 @@ abstract class LoginDataModule {
     abstract fun bindSignUpRepositoryImplRepository(
         impl : UserProfileRepositoryImpl
     ) :  UserProfileRepository
-
-
-
-
 }
