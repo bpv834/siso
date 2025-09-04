@@ -71,4 +71,8 @@ dependencies {
 
     implementation(libs.timber)
     testImplementation(libs.junit)
+
+    // 페이지네이션
+    implementation("androidx.paging:paging-runtime:3.2.1")
+    implementation("androidx.paging:paging-compose:3.2.1")
 }
