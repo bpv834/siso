@@ -9,4 +9,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-/core/notification/build
+/core/notification/build/
