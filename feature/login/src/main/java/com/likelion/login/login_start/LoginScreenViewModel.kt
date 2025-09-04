@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.auth.model.KakaoTokenResult
 import com.likelion.domain.auth.usecase.ExchangeKakaoTokenUseCase
+import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.PostKakaoResult
 import com.likelion.domain.login.model.User
 import com.likelion.domain.login.usecase.ClearLocalTokenUseCase
@@ -38,11 +39,15 @@ class LoginScreenViewModel @Inject constructor(
     private val postKakaoAccessTokenUseCase: PostKakaoAccessTokenUseCase,
     // 리프래시 토큰 재발급
     private val postRefreshTokenUseCase: PostRefreshTokenUseCase,
+    // 토큰 전체 지우기
     private val clearLocalTokenUseCase: ClearLocalTokenUseCase,
+    // 토큰 정보 로컬에 저장
     private val saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
 
     private val saveTokenAllUseCase: SaveTokenAllUseCase,
     private val getTokenAllUseCase: GetTokenAllUseCase,
+
+    private val saveTokenUseCase: SaveRefreshTokenUseCase,
 
     private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
     private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
@@ -76,7 +81,7 @@ class LoginScreenViewModel @Inject constructor(
             Timber.d("로컬 refresh: ${local.refreshToken}")
             Timber.d("로컬 status: ${local.userStatus}")
             Timber.d("로컬 hasProfile: ${local.hasProfile}")
-
+            Timber.d("자동 로그인 시도")
             // 토큰이 있으면 자동로그인 시도
             autoLogin(local.refreshToken)
         }
@@ -92,12 +97,13 @@ class LoginScreenViewModel @Inject constructor(
             Timber.d("서버에서 받은 status: ${token.userStatus}")
             Timber.d("서베에서 받은 userInfo: ${token.userInfo}")
             Timber.d("서버에서 받은 hasProfile: ${token.hasProfile}")
-            saveTokenAll(
-                user = User(
+
+            Timber.d("서버에 저장")
+            saveRefreshTokenUseCase(
+                token = BasicToken(
                     accessToken = token.accessToken,
                     refreshToken = token.refreshToken,
                     userStatus = token.userStatus,
-                    userInfo = token.userInfo,
                     hasProfile = token.hasProfile
                 )
             )
@@ -133,16 +139,14 @@ class LoginScreenViewModel @Inject constructor(
                             Timber.d("서버에서 받은 hasProfile: ${fresh.hasProfile}")
 
                             // Local 저장
-                            saveTokenAll(
-                                user = User(
+                            saveRefreshTokenUseCase(
+                                token = BasicToken(
                                     accessToken = fresh.accessToken,
                                     refreshToken = fresh.refreshToken,
                                     userStatus = fresh.userStatus,
-                                    userInfo = fresh.userInfo,
                                     hasProfile = fresh.hasProfile
                                 )
                             )
-
                             _uiState.update {
                                 it.copy(
                                     accessToken = fresh.accessToken,
@@ -155,7 +159,7 @@ class LoginScreenViewModel @Inject constructor(
                         }
 
                         is PostKakaoResult.Error -> {
-                            Timber.d("서버 Error: ${access.message}")
+                            Timber.d("서버 Error: ${access.code}, ${access.message}")
                             _uiState.update {
                                 it.copy(
                                     error = access.message
@@ -184,10 +188,6 @@ class LoginScreenViewModel @Inject constructor(
         viewModelScope.launch {
             clearLocalTokenUseCase()
         }
-    }
-
-    private suspend fun saveTokenAll(user: User) {
-        saveTokenAllUseCase(user)
     }
 
 //    fun postRefreshToken(token: BasicToken) {
