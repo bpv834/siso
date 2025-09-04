@@ -1,6 +1,18 @@
-# Gradle
+That's frustrating when you get those "junk" commits. The files you've listed are all part of the normal development process for Android and Kotlin projects and shouldn't be committed to version control. Let's create a .gitignore file to prevent these files from being tracked.
+
+What is a .gitignore file?
+A .gitignore file is a special file used by Git to specify which files and directories should be ignored and not included in your repository. By listing certain files, you prevent Git from tracking changes to them, which keeps your commits clean and focused on your actual code. This is essential for collaborative projects and helps prevent merge conflicts on files that change frequently and are specific to each developer's machine or environment.
+
+Creating and using a .gitignore file
+To fix the issue of unwanted commits, follow these steps:
+
+Create the file: In the root directory of your project (the same folder where your app module and build.gradle file are located), create a new file named .gitignore. Be sure to include the leading dot.
+
+Add the contents: Copy and paste the following content into your new .gitignore file. This list is a standard starting point for most Android and Kotlin projects and includes all the files you mentioned, along with other common ones.
+
+# Gradle files
 .gradle/
-build/
+/build/
 local.properties
 .DS_Store
 
@@ -12,15 +24,39 @@ local.properties
 .idea/modules.xml
 .idea/workspace.xml
 .idea/kotlinc.xml
+.idea/navEditor.xml
+.idea/jarRepositories.xml
 
 # KSP and KAPT generated files
 /build/generated/
 /build/intermediates/
 
-# Crashlytics
+# Crashlytics and Firebase
 crashlytics-build.properties
 fabric.properties
+google-services.json
 
 # Log files
 *.log
 *.log.*
+
+# JetBrains IDEs
+# These files are for your IDE's internal use and shouldn't be committed.
+# They are typically specific to your machine.
+*.iml
+.idea/
+
+# Keystore
+# Keystore files should never be committed to a public repository.
+*.jks
+
+# Android Debug Bridge
+# The adb backup folder should be ignored.
+/adb/
+
+# Local build artifacts
+# These files are created during the build process and should be ignored.
+# The contents of these folders are specific to each build and should not be shared.
+/app/build/
+/gradle/wrapper/gradle-wrapper.jar
+.git/
