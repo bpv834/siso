@@ -33,7 +33,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
     // uscase
     private val getTokenAllUseCase: GetTokenAllUseCase,
     private val observeCallEventsUseCase: ObserveCallEventsUseCase, // AgoraEvent 관찰 유스케이스 주입
-    private val evaluationUseCase : EvaluationAfterCallUseCase,
+    private val evaluationUseCase: EvaluationAfterCallUseCase,
 ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
     /*  private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
@@ -125,6 +125,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
                 }
 
                 // 시간이 0이 되면 상태를 종료로 변경하고 이벤트를 발행합니다.
+
                 _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) }
                 stopCallTimer() // 타이머 정리
             }
@@ -176,14 +177,9 @@ class CallForReceiverScreenViewModel @Inject constructor(
                     // 통화 중 에러가 발생했을 때
                     is AgoraEvent.CallError -> {
                         Timber.e("CallError 이벤트 수신 - ${event.message}")
-                        //  _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
-                        //  _uiEvent.emit(NavigateUp)
+                        _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
+                        _uiEvent.emit(NavigateUp)
 
-                        //  연결중 상태로 테스트
-                        /*  _uiState.update { currentState ->
-                              currentState.copy(callProgressState = CallForCallerState.Calling) // 상태를 통화 시도로 변경
-                          }
-                          _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시*/
 
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) }
                         _uiEvent.emit(ShowToast("에러 발생 ${event.message}"))
@@ -192,7 +188,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
                     // 발신자(Caller)가 채널에서 나갔을 때
                     is AgoraEvent.CallerLeftChannel -> {
                         Timber.d("CallerLeftChannel 이벤트 수신 - 통화 종료")
-                        _uiEvent.emit(ShowToast("통화를 종료했습니다.")) // UI 토스트 표시
+                        _uiEvent.emit(ShowToast("발신자가 채널을 떠났습니다.")) // UI 토스트 표시
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) }
                     }
 

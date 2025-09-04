@@ -106,9 +106,8 @@ class CallRepositoryImpl @Inject constructor(
         }
     }
 
-    /**
-     * 통화를 종료하고 Agora 리소스를 해제합니다.
-     */
+
+     // 통화를 후 상대방과 이어나갈지 판단하는 메서드
     override suspend fun evaluationAfterEndCall(
         callModel: CallModel,
         isKeepGoing: Boolean,
@@ -141,7 +140,7 @@ class CallRepositoryImpl @Inject constructor(
      * 통화를 종료하고 Agora 리소스를 해제합니다.
      */
 
-    // 상대방이 거절할때 발생하는 usecase
+    // 상대방이 거절하면 발신자쪽에서 발생하는 메서드
     override suspend fun rejectCall(): Result<Unit> {
         return try {
             Timber.d("CallRepositoryImpl: 상대방이 통화를 거절했습니다. 채널 종료 처리 중...")
@@ -167,5 +166,26 @@ class CallRepositoryImpl @Inject constructor(
     ): Result<CallRejectResponseModel> {
         TODO("Not yet implemented")
     }
+
+    // 전화 사용자가 채널을 나갈때 사용하는 메서드
+    override suspend fun leaveChannel(): Result<Unit> {
+        return try {
+            Timber.d("CallRepositoryImpl: 발신자가 통화 종료를 요청했습니다. 채널 종료 처리 중...")
+
+            // Agora 채널에서 나가고, 리소스 해제
+            agoraVoiceManager.leaveChannel()
+            agoraVoiceManager.destroy()
+
+            // 발신자가 나갔다는 이벤트를 발행하여 ViewModel에 알림
+            _agoraEvents.emit(AgoraEvent.CallerLeftChannel)
+
+            // 성공적으로 처리되었음을 반환
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Timber.e(e, "통화 종료 처리 중 에러 발생")
+            Result.failure(e)
+        }
+    }
+
 
 }

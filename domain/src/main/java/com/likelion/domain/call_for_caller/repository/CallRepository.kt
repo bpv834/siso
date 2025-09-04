@@ -17,4 +17,6 @@ interface CallRepository {
         accessToken: String,
         request: CallModel
     ): Result<CallRejectResponseModel>
+
+    suspend fun leaveChannel(): Result<Unit> // 채널 이탈할 때 사용하는 메서드
 }
