@@ -2,13 +2,14 @@ package com.likelion.data.mypage.model
 
 import androidx.annotation.Size
 import com.google.gson.annotations.SerializedName
-import com.likelion.util.DrinkingCapacity
+import com.likelion.domain.enums.DrinkingCapacity
+import com.likelion.domain.enums.Mbti
+import com.likelion.domain.enums.PreferenceSex
+import com.likelion.domain.enums.Religion
+import com.likelion.domain.enums.Sex
 import com.likelion.util.Interest
-import com.likelion.util.Mbti
 import com.likelion.util.Meeting
-import com.likelion.util.PreferenceSex
-import com.likelion.util.Religion
-import com.likelion.util.Sex
+
 
 data class UsersFullEntity (
     @SerializedName("id")
