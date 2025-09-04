@@ -36,21 +36,32 @@ class FcmService @Inject constructor(
         }
     }
 
-    // * 앱이 FCM 메시지를 받을 때 호출됩니다.
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        // 모든 FCM 메시지가 들어올 때 기본 로그
+        Timber.d("===== FCM 메시지 수신 =====")
+        Timber.d("데이터: ${remoteMessage.data}") // 수신된 모든 데이터를 한 번에 출력
+
         val type = remoteMessage.data["type"]
+        Timber.d("메시지 타입: $type")
 
         when (type) {
             "CALL" -> {
-                // 전화는 UI 바로 띄우기 위해 모든 정보 포함 가능
                 val callerId = remoteMessage.data["callerId"]
                 val callerName = remoteMessage.data["callerName"]
                 val callerImage = remoteMessage.data["callerImage"]
                 val agoraChannel = remoteMessage.data["agoraChannel"]
                 val agoraToken = remoteMessage.data["agoraToken"]
-                val id = remoteMessage.data["id"] // call Id
+                val id = remoteMessage.data["id"]
 
+                Timber.d(">> 전화 알림 수신: CALL")
+                Timber.d(" - 발신자 ID: $callerId")
+                Timber.d(" - 발신자 이름: $callerName")
+                Timber.d(" - 발신자 이미지 URL: $callerImage")
+                Timber.d(" - 아고라 채널: $agoraChannel")
+                Timber.d(" - 아고라 토큰: $agoraToken (보안상 주의)")
+                Timber.d(" - 통화 ID: $id")
 
+                // 기존 로직 유지
                 CoroutineScope(Dispatchers.IO).launch {
                     FcmEventBus.send(
                         FcmEvent.Call(
@@ -66,20 +77,28 @@ class FcmService @Inject constructor(
             }
 
             "message" -> {
-                val senderId = remoteMessage.data["senderId"]?.toLongOrNull() ?: return
-                val messageId = remoteMessage.data["messageId"] ?: return
+                val senderId = remoteMessage.data["senderId"]?.toLongOrNull()
+                val messageId = remoteMessage.data["messageId"]
 
-                // 메시지는 알림 클릭 시 상세 데이터를 서버에서 조회
+                Timber.d(">> 일반 메시지 수신: message")
+                Timber.d(" - 발신자 ID: $senderId")
+                Timber.d(" - 메시지 ID: $messageId")
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    //   FcmEventBus.send(FcmEvent.Message(senderId, messageId))
+                    // FcmEventBus.send(FcmEvent.Message(senderId, messageId))
                 }
             }
 
-            "CALL_REJECT" ->{
-                // 메시지는 알림 클릭 시 상세 데이터를 서버에서 조회
+            "CALL_REJECT" -> {
+                Timber.d(">> 전화 거절 알림 수신: CALL_REJECT")
+
                 CoroutineScope(Dispatchers.IO).launch {
                     FcmEventBus.send(FcmEvent.Reject)
                 }
+            }
+
+            else -> {
+                Timber.w(">> 알 수 없는 메시지 타입 수신: $type")
             }
         }
     }

@@ -27,4 +27,17 @@ interface UserApiService {
     ): Response<UserProfileRequest>
 
 
+
+    // POST /api/profiles
+    // 사용자 프로필 정보를 등록합니다.
+    @POST("api/users/notification")
+    suspend fun updateNotification(
+        @Header("Authorization") accessToken: String, // AccessToken을 사용하도록 변경하는 것이 더 일반적입니다.
+        @Body request: NotificationRequest
+    ): Response<Unit> // 반환 값이 없으므로 Unit을 사용합니다.
+
+
+
+
+
 }
