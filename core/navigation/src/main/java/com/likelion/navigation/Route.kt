@@ -2,6 +2,7 @@ package com.likelion.navigation
 
 sealed class NavigationRoute(val route: String) {
     object OnBoardingScreen : NavigationRoute("onboarding")
+
     object LoginScreen : NavigationRoute("login")
     object InputScreen : NavigationRoute("input")
     object HomeScreen : NavigationRoute("home")

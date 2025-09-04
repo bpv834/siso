@@ -17,6 +17,7 @@ import com.likelion.domain.login.usecase.SaveRefreshTokenUseCase
 import com.likelion.domain.login.usecase.SaveTokenAllUseCase
 import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
+import com.likelion.domain.onboarding.usecase.GetOnBoardingSkipUseCase
 import com.likelion.login.event.LoginEvent
 import com.likelion.login.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +49,8 @@ class LoginScreenViewModel @Inject constructor(
     private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
     private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
 
-    private val testKakao: ExchangeKakaoTokenUseCase
+    private val testKakao: ExchangeKakaoTokenUseCase,
+    private val getOnBoardingSkipUseCase: GetOnBoardingSkipUseCase
 
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -113,6 +115,15 @@ class LoginScreenViewModel @Inject constructor(
 
     fun checkLocalToken() {
         viewModelScope.launch {
+            val skip = try {
+                getOnBoardingSkipUseCase().firstOrNull() ?: false
+            } catch (e: Exception) {
+                Timber.e("Error: ${e.message}")
+                false
+            }
+            _uiState.update { it.copy(isSkip = skip) }
+            Timber.d("온보딩 스킵 상태: $skip")
+
             val result = getTokenAllUseCase().firstOrNull()
             Timber.d("로컬 저장소 확인...")
             Timber.d("로컬 액세스: ${result?.accessToken}")

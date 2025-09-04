@@ -47,6 +47,7 @@ fun LoginRoute(
     onInput: () -> Unit = {},
     onHome: () -> Unit = {},
     onKakaoLogin: () -> Unit = {},
+    onBoarding: () -> Unit = {},
     onLogin: () -> Unit,
 ) {
     val viewModel: LoginScreenViewModel = hiltViewModel()
@@ -56,10 +57,17 @@ fun LoginRoute(
 
     LaunchedEffect(uiState.value.userState) {
         Timber.tag("유저상태").d("${uiState.value.userState}")
+
         when (uiState.value.userState) {
             UserStatus.LOGIN -> {
                 if (uiState.value.userState == UserStatus.LOGIN && uiState.value.hasProfile) {
-                    onHome()
+                    if (uiState.value.isSkip) {
+                        Timber.d("온보딩 ${uiState.value.isSkip}")
+                        onHome()
+                    } else {
+                        Timber.d("온보딩 ${uiState.value.isSkip}")
+                        onBoarding()
+                    }
                 } else {
                     onInput()
                 }

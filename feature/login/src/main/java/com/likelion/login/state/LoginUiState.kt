@@ -9,5 +9,6 @@ data class LoginUiState(
     val refreshToken: String? = null,
     val userState: UserStatus = UserStatus.NONE,
     val hasProfile: Boolean = false,
+    val isSkip: Boolean = false,
     val error: String? = null,
 )
