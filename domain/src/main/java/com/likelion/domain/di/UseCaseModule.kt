@@ -1,8 +1,10 @@
 package com.likelion.domain.di
 
 import com.likelion.domain.call_for_caller.repository.CallRepository
+import com.likelion.domain.call_for_caller.repository.ProfileRepository
 import com.likelion.domain.call_for_caller.usecase.DenyCallUseCase
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call_for_caller.usecase.GetUserProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.RejectCallUseCase
@@ -151,5 +153,12 @@ object UseCaseModule {
         return ToggleMuteUseCase(repository)
     }
 
+    @Provides
+    @Singleton
+    fun provideGetUserProfileUseCase(
+        repository: ProfileRepository
+    ): GetUserProfileUseCase {
+        return GetUserProfileUseCase(repository)
+    }
 
 }
