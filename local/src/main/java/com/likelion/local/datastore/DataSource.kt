@@ -18,4 +18,8 @@ interface DataSource {
     suspend fun changeOnBoardingSkip(isSkip: Boolean)
     suspend fun getOnBoardingSkip(): Flow<Boolean>
 
+    // 다이얼로그 설정
+    suspend fun changeDialogStatus(isDialog: Boolean)
+    suspend fun getDialogStatus(): Flow<Boolean>
+
 }
