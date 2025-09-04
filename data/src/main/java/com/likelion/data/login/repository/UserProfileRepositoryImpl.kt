@@ -28,7 +28,7 @@ class UserProfileRepositoryImpl @Inject constructor(
 
             // 2. API 호출
             val response = userApiService.registerUserProfile(
-                refreshToken = "Bearer $accessToken",
+                accessToken = "Bearer $accessToken",
                 request = userProfileRequest
             )
 

@@ -1,6 +1,5 @@
 package com.likelion.util
 
-import android.R.attr.description
 
 enum class Interest(val description: String, val category: InterestCategory) {
     // 문화 & 예술 (Culture & Arts)
