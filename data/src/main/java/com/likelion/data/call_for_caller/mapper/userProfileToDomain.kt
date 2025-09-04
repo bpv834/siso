@@ -9,6 +9,6 @@ fun UserProfileResponse.toDomain(): UserProfileModel {
         age = this.age,
         location = this.location?:"null",
         interests = this.interests?:emptyList(),
-        profileImageUrl = this.profileImageUrl
+        profileImageUrl = this.profileImageUrl?:"http"
     )
 }
