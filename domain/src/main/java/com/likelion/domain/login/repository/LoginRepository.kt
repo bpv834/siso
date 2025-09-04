@@ -9,5 +9,5 @@ interface LoginRepository {
     // 서버에 카카오sdk에서 받은 accessToken을 넘김
     suspend fun postKakaoAccessToken(token: String): PostKakaoResult
     // 서버에 리프레시 토큰 받음
-    suspend fun postRefreshToken(token: BasicToken): User
+    suspend fun postRefreshToken(token: String): User
 }

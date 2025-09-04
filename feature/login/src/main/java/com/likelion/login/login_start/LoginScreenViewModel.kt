@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.auth.model.KakaoTokenResult
 import com.likelion.domain.auth.usecase.ExchangeKakaoTokenUseCase
-import com.likelion.domain.auth.usecase.FetchKakaoTokenUseCase
-import com.likelion.domain.login.model.BasicToken
 import com.likelion.domain.login.model.PostKakaoResult
 import com.likelion.domain.login.model.User
 import com.likelion.domain.login.usecase.ClearLocalTokenUseCase
@@ -32,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
     // 카카오 accessToken 가져오기
-    private val fetchKakaoTokenUseCase: FetchKakaoTokenUseCase,
+    private val fetchKakaoSdkToken: ExchangeKakaoTokenUseCase,
+
     // 로컬 토큰 가져오기
     private val getLocalTokenUseCase: GetLocalTokenUseCase,
     // 카카오 액세스 토큰 서버에 보내기
@@ -48,21 +47,136 @@ class LoginScreenViewModel @Inject constructor(
     private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
     private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
 
-    private val testKakao: ExchangeKakaoTokenUseCase
-
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     init {
-        checkLocalToken()
+//        checkLocalToken()
+        checkLocalTokenTest()
         sendFcmToken()
     }
 
     fun handleEvent(event: LoginEvent) {
         when (event) {
-            LoginEvent.CheckLocalToken -> checkLocalToken()
-            LoginEvent.ClickLogin -> fetchKakaoToken()
+            LoginEvent.CheckLocalToken -> checkLocalTokenTest()//checkLocalToken()
+            LoginEvent.ClickLogin -> refreshTokenTest()//fetchKakaoToken()
+        }
+    }
+
+    // 로컬 토큰 확인
+    fun checkLocalTokenTest() {
+        viewModelScope.launch {
+            val local = getLocalTokenUseCase().firstOrNull()
+            if (local == null) {
+                Timber.d("로컬 정보가 비어있음")
+                return@launch
+            }
+            Timber.d("로컬 access: ${local.accessToken}")
+            Timber.d("로컬 refresh: ${local.refreshToken}")
+            Timber.d("로컬 status: ${local.userStatus}")
+            Timber.d("로컬 hasProfile: ${local.hasProfile}")
+
+            // 토큰이 있으면 자동로그인 시도
+            autoLogin(local.refreshToken)
+        }
+    }
+
+    // 자동로그인 로직
+    fun autoLogin(refreshToken: String) {
+        viewModelScope.launch {
+            Timber.d("자동로그인 로직 시작")
+            val token = postRefreshTokenUseCase(refreshToken)
+            Timber.d("서버에서 받은 access: ${token.accessToken}")
+            Timber.d("서버에서 받은 refresh: ${token.refreshToken}")
+            Timber.d("서버에서 받은 status: ${token.userStatus}")
+            Timber.d("서베에서 받은 userInfo: ${token.userInfo}")
+            Timber.d("서버에서 받은 hasProfile: ${token.hasProfile}")
+            saveTokenAll(
+                user = User(
+                    accessToken = token.accessToken,
+                    refreshToken = token.refreshToken,
+                    userStatus = token.userStatus,
+                    userInfo = token.userInfo,
+                    hasProfile = token.hasProfile
+                )
+            )
+            _uiState.update {
+                it.copy(
+                    accessToken = token.accessToken,
+                    refreshToken = token.refreshToken,
+                    userState = token.userStatus,
+                    hasProfile = token.hasProfile,
+                )
+            }
+        }
+    }
+
+    // 리프래시 토큰 발급 최초
+    fun refreshTokenTest() {
+        viewModelScope.launch {
+            Timber.d("리프래시 토큰 발급 최초")
+            val kakaoToken = fetchKakaoSdkToken()
+            when (kakaoToken) {
+                is KakaoTokenResult.Success -> {
+                    val access = postKakaoAccessTokenUseCase(
+                        token = kakaoToken.token
+                    )
+                    when (access) {
+                        is PostKakaoResult.Success -> {
+                            // 서버에서 api/auth/kakao 를 성공 했을 경우!
+                            val fresh = postRefreshTokenUseCase(access.token.refreshToken)
+                            Timber.d("서버에서 받은 access: ${fresh.accessToken}")
+                            Timber.d("서버에서 받은 refresh: ${fresh.refreshToken}")
+                            Timber.d("서버에서 받은 status: ${fresh.userStatus}")
+                            Timber.d("서버에서 받은 userInfo: ${fresh.userInfo}")
+                            Timber.d("서버에서 받은 hasProfile: ${fresh.hasProfile}")
+
+                            // Local 저장
+                            saveTokenAll(
+                                user = User(
+                                    accessToken = fresh.accessToken,
+                                    refreshToken = fresh.refreshToken,
+                                    userStatus = fresh.userStatus,
+                                    userInfo = fresh.userInfo,
+                                    hasProfile = fresh.hasProfile
+                                )
+                            )
+
+                            _uiState.update {
+                                it.copy(
+                                    accessToken = fresh.accessToken,
+                                    refreshToken = fresh.refreshToken,
+                                    userState = fresh.userStatus,
+                                    hasProfile = fresh.hasProfile
+                                )
+                            }
+
+                        }
+
+                        is PostKakaoResult.Error -> {
+                            Timber.d("서버 Error: ${access.message}")
+                            _uiState.update {
+                                it.copy(
+                                    error = access.message
+                                )
+                            }
+                        }
+
+                        is PostKakaoResult.Exception -> {
+                            "서버 Exception: ${access.throwable.message}"
+                            _uiState.update {
+                                it.copy(
+                                    error = access.throwable.message
+                                )
+                            }
+                        }
+                    }
+                }
+
+                KakaoTokenResult.Canceled -> Timber.d("카카오 취소")
+                is KakaoTokenResult.Error -> Timber.d("카카오 에러: ${kakaoToken.cause.message}")
+            }
         }
     }
 
@@ -76,144 +190,79 @@ class LoginScreenViewModel @Inject constructor(
         saveTokenAllUseCase(user)
     }
 
-    fun postRefreshToken(token: BasicToken) {
-        viewModelScope.launch {
-            try {
-                Timber.d("리프래시 토큰 요청!!")
-                val result = postRefreshTokenUseCase(token)
-                Timber.d("서버에서 받은 액세스: ${result.accessToken}")
-                Timber.d("서버에서 받은 리프레시: ${result.refreshToken}")
-                Timber.d("서버에서 받은 유저상태: ${result.userStatus}")
-                Timber.d("서버에서 받은 유저정보: ${result.userInfo}")
-                // 1) 로컬 저장을 먼저 완료 (레이스 방지)
-                saveTokenAll(result)
+//    fun postRefreshToken(token: BasicToken) {
+//        viewModelScope.launch {
+//            try {
+//                Timber.d("리프래시 토큰 요청!!")
+//                val result = postRefreshTokenUseCase(token)
+//                saveTokenAll(result)
+//                Timber.d("access: ${result.accessToken}")
+//                Timber.d("refresh: ${result.refreshToken}")
+//
+//                _uiState.update {
+//                    it.copy(
+//                        accessToken = result.accessToken,
+//                        refreshToken = result.refreshToken,
+//                        userState = result.userStatus,
+//                        hasProfile = result.hasProfile,
+//                    )
+//                }
+//                // 3) 저장소에서 fcm 토큰 얻어와 서버에 전송 호준
+//                sendFcmToken()
+//            } catch (e: Exception) {
+//                val msg = e.message.orEmpty()
+//                if (msg.contains("401", true) || msg.contains("unauthorized", true)) {
+//                    clearToken()
+//                    _uiState.update { it.copy(error = "인증이 만료되었습니다. 다시 로그인 해주세요.") }
+//                } else {
+//                    _uiState.update { it.copy(error = "네트워크 오류: ${msg.ifBlank { "잠시 후 다시 시도해주세요." }}") }
+//                }
+//            }
+//        }
+//    }
 
-                // 2) 그 다음 UI 상태 반영
-                _uiState.update {
-                    it.copy(
-                        accessToken = result.accessToken,
-                        refreshToken = result.refreshToken,
-                        userState = result.userStatus,
-                        hasProfile = result.hasProfile,
-                    )
-                }
-                // 3) 저장소에서 fcm 토큰 얻어와 서버에 전송 호준
-                sendFcmToken()
-            } catch (e: Exception) {
-                val msg = e.message.orEmpty()
-                if (msg.contains("401", true) || msg.contains("unauthorized", true)) {
-                    clearToken()
-                    _uiState.update { it.copy(error = "인증이 만료되었습니다. 다시 로그인 해주세요.") }
-                } else {
-                    _uiState.update { it.copy(error = "네트워크 오류: ${msg.ifBlank { "잠시 후 다시 시도해주세요." }}") }
-                }
-            }
-        }
-    }
+//    fun checkLocalToken() {
+//        viewModelScope.launch {
+//            val result = getTokenAllUseCase().firstOrNull()
+//            if (result != null) {
+//                Timber.d("로컬 정보가 비어있지 않음")
+//                val user = postRefreshTokenUseCase(
+//                    BasicToken(
+//                        accessToken = result.accessToken,
+//                        refreshToken = result.refreshToken,
+//                        userStatus = result.userStatus,
+//                        hasProfile = result.hasProfile
+//                    )
+//                )
+//                Timber.d("로컬토큰 확인 토큰 재발행 $user")
+//                saveRefreshTokenUseCase(
+//                    BasicToken(
+//                        accessToken = result.accessToken,
+//                        refreshToken = result.refreshToken,
+//                        userStatus = result.userStatus,
+//                        hasProfile = result.hasProfile
+//                    )
+//                )
+//                saveTokenAll(user)
+//                Timber.d("이전 값: ${result.refreshToken}")
+//                _uiState.update {
+//                    it.copy(
+//                        accessToken = user.accessToken,
+//                        refreshToken = user.refreshToken,
+//                        userState = user.userStatus,
+//                        hasProfile = user.hasProfile,
+//                    )
+//                }
+//                Timber.d("이후 값: ${_uiState.value.refreshToken}")
+//            } else {
+//                Timber.d("로컬 정보가 비어있음")
+//            }
+//        }
+//    }
 
-    fun checkLocalToken() {
-        viewModelScope.launch {
-            val result = getTokenAllUseCase().firstOrNull()
-            Timber.d("로컬 저장소 확인...")
-            Timber.d("로컬 액세스: ${result?.accessToken}")
-            Timber.d("로컬 리프래시: ${result?.refreshToken}")
-            Timber.d("로컬 유저상태 : ${result?.userStatus}")
-            Timber.d("로컬 프로필상태 : ${result?.hasProfile}")
-            Timber.d("로컬 유저정보 : ${result?.userInfo}")
-            if (result != null) {
-                Timber.d("로컬 정보가 비어있지 않음")
-                val user = postRefreshTokenUseCase(
-                    BasicToken(
-                        accessToken = result.accessToken,
-                        refreshToken = result.refreshToken,
-                        userStatus = result.userStatus,
-                        hasProfile = result.hasProfile
-                    )
-                )
-                Timber.d("로컬토큰 확인 토큰 재발행 $user")
-                saveRefreshTokenUseCase(
-                    BasicToken(
-                        accessToken = result.accessToken,
-                        refreshToken = result.refreshToken,
-                        userStatus = result.userStatus,
-                        hasProfile = result.hasProfile
-                    )
-                )
-                saveTokenAll(user)
-                Timber.d("이전 값: ${result.refreshToken}")
-                _uiState.update {
-                    it.copy(
-                        accessToken = user.accessToken,
-                        refreshToken = user.refreshToken,
-                        userState = user.userStatus,
-                        hasProfile = user.hasProfile,
-                    )
-                }
-                Timber.d("이후 값: ${_uiState.value.refreshToken}")
-            } else {
-                Timber.d("로컬 정보가 비어있음")
-            }
-        }
-    }
-
-    // 1. 카카오한테 액세스 토큰을 받음
-    fun fetchKakaoToken() {
-        viewModelScope.launch {
-            val result = testKakao()
-            when (result) {
-                is KakaoTokenResult.Success -> {
-                    Timber.d("카카오한테 액세스 토큰 받음 ${result.token}")
-                    // 2. 액세스 토큰을 서버에 던져준다.
-                    val postKakao = postKakaoAccessTokenUseCase(result.token)
-                    // 3. 서버에서 받은 값을 update한다.
-                    when (postKakao) {
-                        is PostKakaoResult.Success -> {
-                            _uiState.update {
-                                it.copy(
-                                    refreshToken = postKakao.token.refreshToken,
-                                    userState = postKakao.token.userStatus,
-                                    hasProfile = postKakao.token.hasProfile
-                                )
-                            }
-                            Timber.tag("LoginScreenViewModel").d("${postKakao.token}")
-                            // 리프래시 토큰 요청
-                            postRefreshToken(postKakao.token)
-                            // fcm 토큰을 가져와 서버에 전송한다
-
-                        }
-
-                        is PostKakaoResult.Error -> {
-                            _uiState.update {
-                                it.copy(
-                                    error = postKakao.message ?: "error"
-                                )
-                            }
-                        }
-
-                        is PostKakaoResult.Exception -> {
-                            _uiState.update {
-                                it.copy(
-                                    error = postKakao.throwable.message
-                                )
-                            }
-                        }
-                    }
-                }
-
-                is KakaoTokenResult.Error -> {
-                    Timber.d("카카오 Error: ${result.cause}")
-                }
-
-                KakaoTokenResult.Canceled -> {
-                    Timber.d("카카오 Canceled")
-                }
-
-            }
-        }
-    }
 
     // Fcm 토큰을 서버로 전송하는 메서드
-    fun sendFcmToken() {
+    private fun sendFcmToken() {
         viewModelScope.launch {
             try {
                 val fcmToken: String? = getFcmTokenUseCase().firstOrNull()
