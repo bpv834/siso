@@ -19,7 +19,7 @@ interface UserApiService {
 
 
     // 새 API: userId로 유저 프로필 가져오기
-    @GET("api/users/{id}")
+    @GET("api/profiles/{id}")
     suspend fun getUserProfile(
         @Header("Authorization") accessToken: String,
         @Path("id") userId: Long,
