@@ -594,7 +594,7 @@ private fun EmptyChatHistory() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
-            painter = painterResource(R.drawable.coffeecup),
+            painter = painterResource(R.drawable.img_coffeecup),
             contentDescription = "",
             contentScale = ContentScale.Fit
         )
