@@ -79,7 +79,7 @@ fun PartnerProfileScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             AsyncImage(
-                model = R.drawable.example_profile, contentDescription = "",
+                model = R.drawable.img_example_profile, contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(358.dp)
