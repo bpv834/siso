@@ -9,6 +9,7 @@ import com.likelion.data.chat.model.MyChatEntity
 import com.likelion.data.chat.model.PartnerChatEntity
 import com.likelion.domain.chat.model.CallHistory
 import com.likelion.domain.chat.model.ChatHistory
+import com.likelion.domain.chat.model.ChatRoom
 import com.likelion.domain.chat.model.MyChat
 import com.likelion.domain.chat.model.PartnerChat
 import com.likelion.domain.chat.repository.ChatRepository
@@ -16,9 +17,11 @@ import com.likelion.remote.api.ChatApiService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
+import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
@@ -108,8 +111,30 @@ class ChatRepositoryImpl @Inject constructor(
         return entity.toDomain()
     }
 
-    override suspend fun getChatRoomList() {
-        // 채팅방가져오기
+    override suspend fun getChatRoomList(accessToken: String): Flow<List<ChatRoom>> {
+        return flow {
+            try {
+                val res = data.getChatRoom("Bearer $accessToken")
+                if (res.isSuccessful) {
+                    val body = res.body()
+                    if (body?.success == true) {
+                        val rooms = body.data.orEmpty()
+                        val mapped = rooms.map { dto -> dto.toDomain() }
+                        emit(mapped)
+                    } else {
+                        Timber.d("실패1")
+                        emit(emptyList())
+                    }
+                } else {
+                    Timber.d("실패2")
+                    emit(emptyList())
+                }
+            } catch (e: Exception) {
+                Timber.e("실패: ${e.cause}")
+                // 네트워크 예외(타임아웃/연결오류 등) 발생 시 안전하게 빈 목록 방출
+                emit(emptyList())
+            }
+        }
     }
 
     private fun createDummyPartnerChat(): List<PartnerChatEntity> {

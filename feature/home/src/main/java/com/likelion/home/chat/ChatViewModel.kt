@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.chat.usecase.GetCallHistoryUseCase
 import com.likelion.domain.chat.usecase.GetChatHistoryUseCase
+import com.likelion.domain.chat.usecase.GetChatRoomUseCase
 import com.likelion.domain.chat.usecase.SendMyChatUseCase
 import com.likelion.domain.chat.usecase.GetPartnerChatUseCase
 import com.likelion.domain.chat.usecase.LimitSendChatUseCase
@@ -32,7 +33,10 @@ class ChatViewModel @Inject constructor(
     private val getTokenAllUseCase: GetTokenAllUseCase,
     private val removeChatRoomUseCase: RemoveChatRoomUseCase,
     private val removeCallHistoryUseCase: RemoveCallHistoryUseCase,
-    private val limitSendChatUseCase: LimitSendChatUseCase
+    private val limitSendChatUseCase: LimitSendChatUseCase,
+    // 아래부터 api 연결 코드
+    private val getChatRoomUseCase: GetChatRoomUseCase
+
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
@@ -40,6 +44,21 @@ class ChatViewModel @Inject constructor(
     init {
         handleEvent(ChatEvent.LoadCallHistory)
         getAccessToken()
+    }
+
+    fun testChatRoom(token: String) {
+        viewModelScope.launch {
+            getChatRoomUseCase(token)
+                .onStart {
+                    Timber.d("채팅방 조회 시작...")
+                }.catch { e ->
+                    Timber.e(e, "채팅방 조회 실패")
+                }.collect { rooms ->
+                    // _uiState.update{it.copt(chatRoom=rooms)} 추후 업데이트 연결..
+                    Timber.d("채팅방 조회 결과: $rooms")
+
+                }
+        }
     }
 
     fun handleEvent(event: ChatEvent) {
@@ -79,6 +98,12 @@ class ChatViewModel @Inject constructor(
                 it.copy(accessToken = token?.accessToken)
             }
             Timber.d("채팅방 내 accesToken: $token")
+            val accessToken = token?.accessToken
+            if (!accessToken.isNullOrBlank()) {
+                testChatRoom(accessToken)
+            } else {
+                Timber.w("액세스 없음")
+            }
         }
     }
 

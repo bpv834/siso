@@ -8,8 +8,10 @@ import com.likelion.data.chat.model.MyChatEntity
 import com.likelion.data.chat.model.PartnerChatEntity
 import com.likelion.domain.chat.model.CallHistory
 import com.likelion.domain.chat.model.ChatHistory
+import com.likelion.domain.chat.model.ChatRoom
 import com.likelion.domain.chat.model.MyChat
 import com.likelion.domain.chat.model.PartnerChat
+import com.likelion.remote.model.response.ChatRoomResponseDto
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -67,5 +69,17 @@ fun PartnerChatEntity.toDomain(): PartnerChat {
         partnerMsg = this.partnerMsg,
         partnerTime = this.partnerTime.toFormattedTime(),
         showTime = this.showTime
+    )
+}
+
+// 채팅방 매퍼
+fun ChatRoomResponseDto.toDomain(): ChatRoom {
+    return ChatRoom(
+        profileImage = this.otherUserProfileImagePath,
+        nickname = this.otherUserNickname,
+        chatTime = this.lastMessageSentAt,
+        hasUnreadMessages = this.unreadMessageCount > 0,
+        memberCount = this.memberCount,
+        lastChat = this.lastMessageContent,
     )
 }
