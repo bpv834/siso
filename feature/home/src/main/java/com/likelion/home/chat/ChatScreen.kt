@@ -1,5 +1,6 @@
 package com.likelion.home.chat
 
+import android.R.attr.onClick
 import android.view.View
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -66,6 +67,7 @@ fun ChatRoute(
     actionSnackbar: () -> Unit = {},
     onNavigateAlarm: () -> Unit = {},
     onNavigateChatRoom: (String, Long) -> Unit = { _, _ -> },
+    onNavigatePartner: () -> Unit = {},
     viewModel: ChatViewModel = hiltViewModel()
 ) {
     ChatScreen(
@@ -73,7 +75,8 @@ fun ChatRoute(
         onNavigateAlarm = { onNavigateAlarm() },
         onNavigateChatRoom = { nickname, chatRoomId ->
             onNavigateChatRoom(nickname, chatRoomId)
-        }
+        },
+        onNavigatePartner = { onNavigatePartner() }
     )
 }
 
@@ -81,6 +84,7 @@ fun ChatRoute(
 fun ChatScreen(
     onNavigateAlarm: () -> Unit,
     onNavigateChatRoom: (String, Long) -> Unit,
+    onNavigatePartner: () -> Unit,
     viewModel: ChatViewModel
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -162,7 +166,8 @@ fun ChatScreen(
                     CallHistoryPage(
                         items = uiState.callHistory,
                         isLoading = uiState.isCallHistoryLoading,
-                        onDelete = { id -> viewModel.handleEvent(ChatEvent.RemoveCallHistory(id)) }
+                        onDelete = { id -> viewModel.handleEvent(ChatEvent.RemoveCallHistory(id)) },
+                        onNavigatePartner = onNavigatePartner,
                     )
                     Timber.d("${uiState.callHistory}")
                 }
@@ -217,7 +222,8 @@ fun ChatHistoryPage(
 fun CallHistoryPage(
     items: List<CallHistory>,
     isLoading: Boolean,
-    onDelete: (Long) -> Unit
+    onDelete: (Long) -> Unit,
+    onNavigatePartner: () -> Unit
 ) {
     when {
         isLoading -> {
@@ -233,7 +239,8 @@ fun CallHistoryPage(
         else -> {
             CallHistoryList(
                 items = items,
-                onDelete = onDelete
+                onDelete = onDelete,
+                onNavigatePartner = onNavigatePartner
             )
         }
     }
@@ -338,6 +345,7 @@ fun ChatHistoryList(
 private fun CallHistoryList(
     items: List<CallHistory>,
     onDelete: (Long) -> Unit,
+    onNavigatePartner: () -> Unit
 ) {
     var expandedId by rememberSaveable { mutableStateOf<Long?>(null) }
 
@@ -371,6 +379,10 @@ private fun CallHistoryList(
                 Row(
                     Modifier
                         .padding(horizontal = 16.dp)
+                        .clickable(
+                            onClick = onNavigatePartner
+
+                        )
                 ) {
                     AsyncImage(
                         model = contact.profileImage,
@@ -540,7 +552,8 @@ fun CallHistoryPreview() {
     SisoTheme {
         CallHistoryList(
             items = previewList,
-            onDelete = {}
+            onDelete = {},
+            onNavigatePartner = {}
         )
     }
 }

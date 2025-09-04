@@ -149,7 +149,13 @@ fun ChatRoomScreen(
                     Text(text = nickName, style = SisoTypoTokens.Title2)
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onNavigateUp() }) {
+                    val isChatRoomClick = remember { mutableStateOf(false) }
+                    IconButton(onClick = {
+                        if (!isChatRoomClick.value) {
+                            isChatRoomClick.value = true
+                            onNavigateUp()
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_back),
                             contentDescription = "",

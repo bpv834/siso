@@ -10,11 +10,13 @@ import androidx.navigation.navArgument
 import com.likelion.home.chat.AlarmRoute
 import com.likelion.home.chat.ChatRoomRoute
 import com.likelion.home.chat.ChatRoute
+import com.likelion.home.chat.PartnerProfileScreenRoute
 import com.likelion.navigation.NavigationRoute
 
 // 상단 키 정의
 private const val ARG_NICKNAME = "nickname"
-private const val ARG_CHATROOMID = "chatRoomId"
+private const val ARG_CHATROOM_ID = "chatRoomId"
+private const val ARG_PARTNER_ID = "partnerId"
 
 fun NavController.navigateToChat(navOptions: NavOptions? = null) =
     navigate(NavigationRoute.ChatScreen.route, navOptions)
@@ -29,7 +31,7 @@ fun NavController.navigateToChatRoom(
     val encodedNick = Uri.encode(userNickName)
     return navigate(
         NavigationRoute.ChatScreen.ChatRoomScreen.route +
-                "?$ARG_NICKNAME=$encodedNick&$ARG_CHATROOMID=$chatRoomId",
+                "?$ARG_NICKNAME=$encodedNick&$ARG_CHATROOM_ID=$chatRoomId",
         navOptions
     )
 }
@@ -52,8 +54,13 @@ fun NavGraphBuilder.chatNavigation(
                 val encoded = Uri.encode(nickname)
                 navController.navigate(
                     NavigationRoute.ChatScreen.ChatRoomScreen.route +
-                            "?$ARG_NICKNAME=$encoded&$ARG_CHATROOMID=$chatRoomId"
+                            "?$ARG_NICKNAME=$encoded&$ARG_CHATROOM_ID=$chatRoomId"
                 ) {
+                    launchSingleTop = true
+                }
+            },
+            onNavigatePartner = {
+                navController.navigate(NavigationRoute.ChatScreen.PartnerProfileScreen.route) {
                     launchSingleTop = true
                 }
             },
@@ -66,21 +73,35 @@ fun NavGraphBuilder.chatNavigation(
         )
     }
     composable(
+        route = NavigationRoute.ChatScreen.PartnerProfileScreen.route +
+                "?$ARG_PARTNER_ID={$ARG_PARTNER_ID}",
+        arguments = listOf(
+            navArgument(ARG_PARTNER_ID) {
+                type = NavType.LongType
+                defaultValue = -1L
+            }
+        )
+    ) {
+        PartnerProfileScreenRoute(
+            onNavigateUp = { navController.popBackStack() }
+        )
+    }
+    composable(
         route = NavigationRoute.ChatScreen.ChatRoomScreen.route +
-                "?$ARG_NICKNAME={$ARG_NICKNAME}&$ARG_CHATROOMID={$ARG_CHATROOMID}",
+                "?$ARG_NICKNAME={$ARG_NICKNAME}&$ARG_CHATROOM_ID={$ARG_CHATROOM_ID}",
         arguments = listOf(
             navArgument(ARG_NICKNAME) {
                 type = NavType.StringType
                 defaultValue = ""           // 필요 시 nullable = false 로 변경 가능
             },
-            navArgument(ARG_CHATROOMID) {
+            navArgument(ARG_CHATROOM_ID) {
                 type = NavType.LongType
                 defaultValue = -1L          // nullable=false로 쓰려면 default 제거하고 반드시 전달
             }
         )
     ) { backStackEntry ->
         val nickname = backStackEntry.arguments?.getString(ARG_NICKNAME).orEmpty()
-        val chatRoomId = backStackEntry.arguments?.getLong(ARG_CHATROOMID) ?: -1L
+        val chatRoomId = backStackEntry.arguments?.getLong(ARG_CHATROOM_ID) ?: -1L
 
         ChatRoomRoute(
             nickname = nickname,
@@ -88,4 +109,5 @@ fun NavGraphBuilder.chatNavigation(
             onNavigateUp = { navController.popBackStack() },
         )
     }
+
 }
