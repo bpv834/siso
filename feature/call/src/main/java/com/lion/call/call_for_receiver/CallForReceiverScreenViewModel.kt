@@ -3,10 +3,9 @@ package com.lion.call.call_for_receiver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
-import com.likelion.domain.call_for_caller.model.CallModel
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
-import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.lion.call.call_for_caller.CallForCallerScreenViewModelType
 import com.lion.call.call_for_caller.CallForCallerState
@@ -34,6 +33,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
     private val getTokenAllUseCase: GetTokenAllUseCase,
     private val observeCallEventsUseCase: ObserveCallEventsUseCase, // AgoraEvent 관찰 유스케이스 주입
     private val evaluationUseCase: EvaluationAfterCallUseCase,
+    private val leaveChannelUseCase: LeaveChannelUseCase,
 ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
     /*  private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
@@ -169,7 +169,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
                     is AgoraEvent.CallerJoinedChannel -> {
                         Timber.d("- 통화 시도 중")
                         _uiState.update { currentState ->
-                            currentState.copy(callProgressState = CallForCallerState.Calling) // 상태를 통화 시도로 변경
+                            currentState.copy(callProgressState = CallForCallerState.TryConnecting) // 상태를 통화 시도로 변경
                         }
                         _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시
                     }
@@ -179,8 +179,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
                         Timber.e("CallError 이벤트 수신 - ${event.message}")
                         _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
                         _uiEvent.emit(NavigateUp)
-
-
+                        leaveChannelUseCase.execute() // 채널 탈출
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) }
                         _uiEvent.emit(ShowToast("에러 발생 ${event.message}"))
                     }
@@ -188,6 +187,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
                     // 발신자(Caller)가 채널에서 나갔을 때
                     is AgoraEvent.CallerLeftChannel -> {
                         Timber.d("CallerLeftChannel 이벤트 수신 - 통화 종료")
+                        leaveChannelUseCase.execute() // 채널 탈출
                         _uiEvent.emit(ShowToast("발신자가 채널을 떠났습니다.")) // UI 토스트 표시
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) }
                     }
@@ -202,12 +202,14 @@ class CallForReceiverScreenViewModel @Inject constructor(
                     // 수신자(Receiver)가 채널에서 나갔을 때
                     is AgoraEvent.ReceiverLeftChannel -> {
                         Timber.d("ReceiverLeftChannel 이벤트 수신 - 통화 종료")
+                        leaveChannelUseCase.execute() // 채널 탈출
                         _uiState.update { it.copy(callProgressState = CallForCallerState.CallEnd) } // 상태를 통화 종료로 변경
                         _uiEvent.emit(ShowToast("수신자가 통화를 종료했습니다.")) // UI 토스트 표시
                     }
 
                     AgoraEvent.CallRejected -> {
                         Timber.d("수신자쪽에서 거절당하나?")
+                        leaveChannelUseCase.execute()// 채널 탈출
                     }
                 }
             }
