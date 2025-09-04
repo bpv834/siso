@@ -10,7 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,11 +29,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.likelion.ui.R
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -127,7 +123,7 @@ fun OnboardingPage1(
         Spacer(modifier = Modifier.size(116.dp))
         Box {
             Image(
-                painter = painterResource(R.drawable.guide01), contentDescription = "",
+                painter = painterResource(R.drawable.img_guide01), contentDescription = "",
                 contentScale = ContentScale.Crop
             )
             Box(
@@ -188,7 +184,7 @@ fun OnboardingPage2(
         Spacer(modifier = Modifier.size(116.dp))
         Box {
             Image(
-                painter = painterResource(R.drawable.guide02), contentDescription = "",
+                painter = painterResource(R.drawable.img_guide02), contentDescription = "",
                 contentScale = ContentScale.Crop
             )
             Box(
@@ -248,7 +244,7 @@ fun OnboardingPage3(
         Spacer(modifier = Modifier.size(116.dp))
         Box {
             Image(
-                painter = painterResource(R.drawable.guide03), contentDescription = "",
+                painter = painterResource(R.drawable.img_guide03), contentDescription = "",
                 contentScale = ContentScale.Crop
             )
             Box(

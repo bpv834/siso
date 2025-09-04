@@ -107,7 +107,7 @@ fun LoginScreen(
     Scaffold { innerPadding ->
         AsyncImage(
             contentScale = ContentScale.Crop,
-            model = R.drawable.bg,
+            model = R.drawable.img_bg,
             contentDescription = "바탕화면"
         )
 
