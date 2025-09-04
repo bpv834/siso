@@ -132,7 +132,7 @@ object UseCaseModule {
     fun provideLeaveChannelUseCase(
         repository: CallRepository
     ): LeaveChannelUseCase {
-        return provideLeaveChannelUseCase(repository)
+        return LeaveChannelUseCase(repository)
     }
 
     @Provides

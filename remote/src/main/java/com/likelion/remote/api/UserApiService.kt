@@ -1,6 +1,7 @@
 package com.likelion.remote.api
 
 import com.likelion.remote.model.request.UserProfileRequest
+import com.likelion.remote.model.response.UserProfileResponse
 import com.likelion.remote.model.response.UserProfileResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,7 +16,7 @@ interface UserApiService {
     @GET("api/users/{id}")
     suspend fun getUserProfile(
         @Path("id") userId: Long
-    ): UserProfileResponseDto
+    ): UserProfileResponse
 
 
     // POST /api/profiles

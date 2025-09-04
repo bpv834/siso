@@ -11,6 +11,6 @@ data class CallResponseDto(
     val receiverId: Int,
     val callStatus: String, // 혹은 enum 클래스로 정의 가능
     val duration: Int,
-    val callerProfile: UserProfile,
-    val receiverProfile: UserProfile
+    val callerProfile: UserProfileResponse,
+    val receiverProfile: UserProfileResponse
 )
