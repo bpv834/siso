@@ -1,6 +1,8 @@
 package com.likelion.data.home.repository.di
 
+import com.likelion.data.home.repository.HomePageRepositoryImpl
 import com.likelion.data.home.repository.UserRepositoryImpl
+import com.likelion.domain.home.repository.HomePageRepository
 import com.likelion.domain.home.repository.UsersRepository
 import dagger.Binds
 import dagger.Module
@@ -18,4 +20,9 @@ abstract class RepositoryModule {
         userRepositoryImpl: UserRepositoryImpl
     ): UsersRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindHomePageRepository(
+        impl: HomePageRepositoryImpl
+    ): HomePageRepository
 }
