@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.model.CallModel
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call_for_caller.usecase.GetMyProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.GetUserProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
@@ -38,6 +39,7 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val toggleSpeakerUseCase: ToggleSpeakerUseCase,
     private val toggleMuteUseCase: ToggleMuteUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val getMyProfileUseCase: GetMyProfileUseCase,
 ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
     /*  private val _callState = MutableStateFlow<CallForCallerState>(CallForCallerState.Idle)
@@ -54,9 +56,6 @@ class CallForCallerScreenViewModel @Inject constructor(
     private val _tokenState = MutableStateFlow<String?>(null)
     val tokenState: StateFlow<String?> = _tokenState.asStateFlow()
 
-    private val _userIdState = MutableStateFlow<Long?>(null)
-
-
 
     // 시간 관련 일 객체
     private var timerJob: Job? = null
@@ -64,6 +63,7 @@ class CallForCallerScreenViewModel @Inject constructor(
 
     // 전화 버튼 누르는 메서드
     override fun onClickCall(receiverId: Long) {
+        Timber.d("onClickCall receiverId : $receiverId")
         viewModelScope.launch {
             // UI 로딩 상태를 업데이트
             _uiState.update { it.copy(isLoading = true) }
@@ -85,9 +85,8 @@ class CallForCallerScreenViewModel @Inject constructor(
             }
 
             val myProfileDeferred = async {
-                getUserProfileUseCase.execute(
+                getMyProfileUseCase.execute(
                     accessToken = accessToken,
-                    userId = _userIdState.value!!
                 )
             }
 
@@ -112,7 +111,6 @@ class CallForCallerScreenViewModel @Inject constructor(
                 _uiEvent.emit(CallUiEvent.ShowToast(exception?.message ?: "프로필 로드 실패"))
                 return@launch
             }
-
             val result: Result<CallModel> =
                 startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
             result
@@ -238,7 +236,6 @@ class CallForCallerScreenViewModel @Inject constructor(
             // 토큰 Flow를 collect하여 최신 토큰을 항상 유지합니다.
             getTokenAllUseCase.invoke().collect { token ->
                 _tokenState.value = token?.accessToken
-                _userIdState.value = token?.userInfo?.id
                 // 토큰을 받으면 초기 로딩을 완료했음을 알립니다.
                 if (token != null) {
                     _uiState.update { it.copy(isLoading = false) }

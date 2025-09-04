@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.likelion.domain.call_for_caller.model.AgoraEvent
 import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call_for_caller.usecase.GetMyProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.GetUserProfileUseCase
 import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
 import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
@@ -40,6 +41,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
     private val toggleSpeakerUseCase: ToggleSpeakerUseCase,
     private val toggleMuteUseCase: ToggleMuteUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val getMyProfileUseCase: GetMyProfileUseCase,
 
     ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
