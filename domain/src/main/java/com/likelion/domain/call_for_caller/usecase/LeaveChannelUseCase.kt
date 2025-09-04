@@ -6,7 +6,7 @@ import javax.inject.Inject
 class LeaveChannelUseCase @Inject constructor(
     private val callRepository: CallRepository
 ) {
-    suspend operator fun invoke(): Result<Unit> {
+    suspend  fun execute(): Result<Unit> {
         return callRepository.leaveChannel()
     }
 }
