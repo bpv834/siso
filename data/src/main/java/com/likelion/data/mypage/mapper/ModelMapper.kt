@@ -3,9 +3,8 @@ package com.likelion.data.mypage.mapper
 
 import com.likelion.data.mypage.model.UsersFullEntity
 import com.likelion.domain.mypage.model.UsersFullModel
-import com.likelion.util.Interest
-import com.likelion.util.Meeting
-import com.likelion.util.Meeting.Companion.dataToDomain
+
+import kotlin.collections.map
 
 fun UsersFullEntity.dataToDomain() : UsersFullModel
 = this.run {
