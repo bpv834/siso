@@ -10,7 +10,6 @@ import com.likelion.domain.enums.Sex
 import com.likelion.util.Interest
 import com.likelion.util.Meeting
 
-
 data class UsersFullEntity (
     @SerializedName("id")
     val id: Long,  // PRIMARY KEY, 숫자형
