@@ -79,6 +79,7 @@ class LoginScreenViewModel @Inject constructor(
         saveTokenAllUseCase(user)
     }
 
+    var flag = false
     fun checkLocalToken() {
         viewModelScope.launch {
             val skip = try {
@@ -96,7 +97,8 @@ class LoginScreenViewModel @Inject constructor(
             Timber.d("로컬 리프래시: ${result?.refreshToken}")
             Timber.d("로컬 유저상태 : ${result?.userStatus}")
             Timber.d("로컬 프로필상태 : ${result?.hasProfile}")
-            if (result != null) {
+            if (result != null &&!flag) {
+                flag = true
                 Timber.d("로컬 정보가 비어있지 않음")
                 val user = postRefreshTokenUseCase(result.refreshToken)
                 Timber.d("로컬토큰 확인 토큰 재발행 $user")
