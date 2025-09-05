@@ -8,6 +8,7 @@ import com.likelion.domain.login.model.User
 import com.likelion.domain.login.repository.LoginRepository
 import com.likelion.remote.api.KakaoAuthApiService
 import com.likelion.remote.model.response.KakaoAccessTokenRequestDto
+import timber.log.Timber
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
@@ -33,6 +34,7 @@ class LoginRepositoryImpl @Inject constructor(
 
     // 서버에 리프래시 토큰 재발급
     override suspend fun postRefreshToken(token: String): User {
+        Timber.d("postRefreshToken 메서드 호출했어")
         val response = kakaoApi.refreshServerToken("Bearer $token")
         if (response.isSuccessful) {
             val body = response.body() ?: throw IllegalStateException("Empty refresh body")
