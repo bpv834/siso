@@ -32,6 +32,7 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
+import com.likelion.ui.R
 import com.likelion.ui.component.dialog.CallPopUpCard
 import com.lion.call.navigation.callerNavigation
 import com.lion.call.navigation.navigateToCallForCaller
@@ -65,7 +66,7 @@ fun MainNavHost(
                     viewModel.onFcmRejectEvent()
                 }
 
-                is FcmEvent.Message -> {}
+                is FcmEvent.Message ->{}
             }
         }
     }
@@ -77,9 +78,7 @@ fun MainNavHost(
     val uiEvent = viewModel.uiEvent.collectAsState(initial = null)
     LaunchedEffect(uiEvent.value) {
         when (val event = uiEvent.value) {
-            is UiEvent.IncomingCall -> {
-                incomingCall = event.call
-            }
+            is UiEvent.IncomingCall -> incomingCall = event.call
 
             // 내가 거절했을 때
             is UiEvent.CallRejectedByMe -> {
@@ -258,10 +257,7 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToMyPage(
                 navOptions {
-                    appState.navController.popBackStack(
-                        NavigationRoute.MyPageScreen.MainEditScreen.route,
-                        inclusive = true
-                    )
+                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
                     launchSingleTop = true
                 }
             )
