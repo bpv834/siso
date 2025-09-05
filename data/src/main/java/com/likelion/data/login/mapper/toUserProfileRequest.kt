@@ -1,13 +1,13 @@
 package com.likelion.data.login.mapper
 
-import com.likelion.domain.login.model.UserSignUpProfile
-import com.likelion.remote.model.request.UserProfileRequest
 import com.likelion.domain.enums.DrinkingCapacity
 import com.likelion.domain.enums.Location
 import com.likelion.domain.enums.Mbti
 import com.likelion.domain.enums.PreferenceSex
 import com.likelion.domain.enums.Religion
 import com.likelion.domain.enums.Sex
+import com.likelion.domain.login.model.UserSignUpProfile
+import com.likelion.remote.model.request.UserProfileRequest
 import timber.log.Timber
 
 // UserSignUpProfile을 UserProfileRequest로 변환하는 확장 함수
