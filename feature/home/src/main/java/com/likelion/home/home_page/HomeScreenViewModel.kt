@@ -65,6 +65,7 @@ class HomeScreenViewModel @Inject constructor(
                 )
             }
 
+
             is HomeScreenUiEvent.ChangeDialogStatus -> changeDialogStatus(event.isDialog)
             HomeScreenUiEvent.GetDialogStatus -> getDialogStatus()
 

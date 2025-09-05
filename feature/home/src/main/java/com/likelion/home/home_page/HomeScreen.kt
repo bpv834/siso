@@ -93,6 +93,7 @@ fun HomeScreen(
 
     var showImageDialog by remember { mutableStateOf(false) }
 
+
     // ✅ sideEffect collect
     LaunchedEffect(Unit) {
         viewModel.sideEffect.collect { effect ->
@@ -110,13 +111,14 @@ fun HomeScreen(
     }
 
 
+
     when (uiState) {
         // 토큰 또는 유저 정보를 로딩 중일 때 로딩 UI를 표시합니다.
         is HomeScreenUiState.LoadingToken, is HomeScreenUiState.LoadingUsers -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ) {
+               ) {
                 CircularProgressIndicator() // 로딩 스피너
             }
         }
