@@ -13,40 +13,5 @@ build/
 # Local configuration file (sdk path, etc)
 local.properties
 
-# Log/OS Files
-*.log
-.DS_Store
+/core/notification/build/
 
-# Android Studio generated files and folders
-captures/
-.externalNativeBuild/
-output.json
-
-# IntelliJ
-*.iml
-.idea/
-
-# Keystore files (보안상 절대 올리면 안 됨)
-*.jks
-*.keystore
-
-# Android Profiling
-*.hprof
-
-# KSP and KAPT generated files
-/build/generated/
-/build/intermediates/
-
-# R8/ProGuard generated files
-/build/outputs/mapping/
-/build/reports/
-/build/dex/
-
-# App Bundles
-*.aab
-
-# 기타
-/build/tmp/
-.idea/gradle.xml
-.idea/modules.xml
-.idea/workspace.xml
