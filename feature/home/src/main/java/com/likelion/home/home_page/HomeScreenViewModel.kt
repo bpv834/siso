@@ -53,10 +53,17 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onEvent(event: HomeScreenUiEvent) {
         when (event) {
-            is HomeScreenUiEvent.GetTokenAndLoadUsers -> getTokenAndLoadUsers()
-            is HomeScreenUiEvent.OnClickCallButton -> onClickCallButton(
-                receiverId = event.receiverId, accessToken = ""
-            )
+            is HomeScreenUiEvent.GetTokenAndLoadUsers -> {
+                Timber.d("getTokenAndLoadUsers")
+                getTokenAndLoadUsers()
+            }
+
+            is HomeScreenUiEvent.OnClickCallButton -> {
+                Timber.d("HomeScreenUiEvent.onClickCallButton ")
+                onClickCallButton(
+                    receiverId = event.receiverId,
+                )
+            }
 
             is HomeScreenUiEvent.ChangeDialogStatus -> changeDialogStatus(event.isDialog)
             HomeScreenUiEvent.GetDialogStatus -> getDialogStatus()
@@ -89,15 +96,19 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun getTokenAndLoadUsers() {
         viewModelScope.launch {
+            Timber.d("🔵 [getTokenAndLoadUsers] 토큰 로딩 시작")
             _uiState.value = HomeScreenUiState.LoadingToken
 
-            val userToken = getTokenAllUseCase.invoke().firstOrNull()?.accessToken
+            getTokenAllUseCase.invoke().collect { tokenInfo ->
+                val userToken = tokenInfo?.accessToken
+                Timber.d("🟡 [getTokenAndLoadUsers] 가져온 토큰 = $userToken")
 
-            if (userToken.isNullOrEmpty()) {
-                _uiState.value = HomeScreenUiState.Error("토큰을 가져오지 못했습니다.")
-            } else {
-                accessToken = userToken
-                loadUsers(userToken)
+                if (!userToken.isNullOrEmpty()) {
+                    Timber.d("✅ [getTokenAndLoadUsers] 토큰 정상, 유저 불러오기 시작")
+                    accessToken = userToken // 처음 토큰flow에 값을 넣어준다.
+                    loadUsers(userToken)
+                    return@collect // 유저 불러온 뒤 종료
+                }
             }
         }
     }
@@ -107,6 +118,7 @@ class HomeScreenViewModel @Inject constructor(
             _uiState.value = HomeScreenUiState.LoadingUsers
 
             val result = getAllUsersUseCase.execute(token)
+            Timber.d("result = ${result}")
 
             if (result.isSuccess) {
                 _uiState.value = HomeScreenUiState.Success(result.getOrThrow())
@@ -118,18 +130,14 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun onClickCallButton(receiverId: Long, accessToken: String) {
+    private fun onClickCallButton(receiverId: Long) {
+        Timber.d("onClickCallButton receiverId : $receiverId / accessToken : $accessToken")
         viewModelScope.launch {
-            val token = accessToken
-            if (token != null) {
-                try {
-                    startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken)
-                    _sideEffect.emit(HomeScreenSideEffect.NavigateToCaller(receiverId))
-                } catch (e: Exception) {
-                    _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("통화 실패: ${e.message}"))
-                }
-            } else {
-                _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("유효한 토큰이 없어 통화를 시작할 수 없습니다."))
+            try {
+                // startCallUseCase.execute(receiverId = receiverId, accessToken = accessToken!!)
+                _sideEffect.emit(HomeScreenSideEffect.NavigateToCaller(receiverId))
+            } catch (e: Exception) {
+                _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("통화 실패: ${e.message}"))
             }
         }
     }
