@@ -15,3 +15,8 @@ local.properties
 
 /core/notification/build/
 
+# Android Studio / IntelliJ
+*.iml
+.idea/*
+*.iws
+out/
