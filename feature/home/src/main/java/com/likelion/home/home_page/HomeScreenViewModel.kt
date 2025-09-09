@@ -6,6 +6,7 @@ import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
 import com.likelion.domain.home.usecase.ChangeDialogStatusUseCase
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.home.usecase.GetDialogStatusUseCase
+import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getAllUsersUseCase: GetAllUsersUseCase,
-    private val getTokenAllUseCase: GetTokenAllUseCase,
+    private val getLocalTokenUseCase: GetLocalTokenUseCase,
     private val startCallUseCase: StartCallUseCase,
     private val getDialogStatusUseCase: GetDialogStatusUseCase,
     private val changeDialogStatusUseCase: ChangeDialogStatusUseCase
@@ -100,16 +102,13 @@ class HomeScreenViewModel @Inject constructor(
             Timber.d("🔵 [getTokenAndLoadUsers] 토큰 로딩 시작")
             _uiState.value = HomeScreenUiState.LoadingToken
 
-            getTokenAllUseCase.invoke().collect { tokenInfo ->
-                val userToken = tokenInfo?.accessToken
-                Timber.d("🟡 [getTokenAndLoadUsers] 가져온 토큰 = $userToken")
+            // → 이렇게 하면 null 값은 스킵하고, 실제 User 객체가 나올 때까지 대기합니다.
+            val tokenInfo = getLocalTokenUseCase().firstOrNull()
+            Timber.d("🟡 [getTokenAndLoadUsers] 가져온 토큰 = ${tokenInfo?.accessToken}")
 
-                if (!userToken.isNullOrEmpty()) {
-                    Timber.d("✅ [getTokenAndLoadUsers] 토큰 정상, 유저 불러오기 시작")
-                    accessToken = userToken // 처음 토큰flow에 값을 넣어준다.
-                    loadUsers(userToken)
-                    return@collect // 유저 불러온 뒤 종료
-                }
+            if (!tokenInfo?.accessToken.isNullOrEmpty()) {
+                accessToken = tokenInfo.accessToken
+                loadUsers(accessToken!!)
             }
         }
     }

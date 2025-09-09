@@ -51,7 +51,7 @@ class LoginScreenViewModel @Inject constructor(
     private val sendFcmTokenUseCase: SaveFcmTokenUseCase, // 서버로 fcm 토큰, user Id 보내는 메서드
     private val getFcmTokenUseCase: GetFcmTokenUseCase, // dataStore 에서 fcm 토큰을 가져오는 메서드
     // 온보딩상태 가져오기
-    private val getOnBoardingSkipUseCase: GetOnBoardingSkipUseCase
+    private val getOnBoardingSkipUseCase: GetOnBoardingSkipUseCase,
 
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -121,6 +121,7 @@ class LoginScreenViewModel @Inject constructor(
                     )
                 }
                 Timber.d("이후 값: ${_uiState.value.refreshToken}")
+
             } else {
                 Timber.d("로컬 정보가 비어있음")
             }
@@ -164,6 +165,7 @@ class LoginScreenViewModel @Inject constructor(
                                     hasProfile = fresh.hasProfile
                                 )
                             }
+
 
                         }
 

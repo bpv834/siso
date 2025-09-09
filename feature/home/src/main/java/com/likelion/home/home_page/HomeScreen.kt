@@ -115,6 +115,8 @@ fun HomeScreen(
     when (uiState) {
         // 토큰 또는 유저 정보를 로딩 중일 때 로딩 UI를 표시합니다.
         is HomeScreenUiState.LoadingToken, is HomeScreenUiState.LoadingUsers -> {
+            Timber.d("uiState = $uiState, ")
+
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
