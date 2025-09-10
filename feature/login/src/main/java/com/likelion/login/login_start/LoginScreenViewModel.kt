@@ -157,6 +157,20 @@ class LoginScreenViewModel @Inject constructor(
                                     hasProfile = fresh.hasProfile
                                 )
                             )
+
+                            saveTokenAll(
+                                User(
+                                    accessToken = fresh.accessToken,
+                                    refreshToken = fresh.refreshToken,
+                                    userStatus = fresh.userStatus,
+                                    hasProfile = fresh.hasProfile,
+                                    userInfo = fresh.userInfo
+                                )
+                            )
+
+
+
+
                             _uiState.update {
                                 it.copy(
                                     accessToken = fresh.accessToken,
