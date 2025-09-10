@@ -6,4 +6,5 @@ sealed class HomeScreenUiEvent {
     data class OnClickCallButton(val receiverId: Long) : HomeScreenUiEvent()
     data class ChangeDialogStatus(val isDialog: Boolean) : HomeScreenUiEvent()
     object GetDialogStatus : HomeScreenUiEvent()
+    data class PermissionChanged(val isGranted: Boolean) : HomeScreenUiEvent()
 }

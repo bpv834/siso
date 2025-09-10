@@ -1,7 +1,9 @@
 package com.likelion.home.home_page
 
 
+import android.os.Build
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,9 +46,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.likelion.ui.R
 import com.likelion.home.home_page.HomeScreenUiEvent.*
+import com.likelion.ui.component.Permission.NotificationPermissionRequester
 import com.likelion.ui.component.card.UserCard
 import com.likelion.ui.component.full_screen.FullScreenImageDialog
 import com.likelion.ui.theme.SisoColorTokens
@@ -54,6 +58,7 @@ import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
 import timber.log.Timber
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
@@ -73,6 +78,7 @@ fun HomeRoute(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
@@ -127,6 +133,16 @@ fun HomeScreen(
 
         // 유저 정보 로딩에 성공했을 때
         is HomeScreenUiState.Success -> {
+            // 권한 런처 호출
+            NotificationPermissionRequester(
+                onPermissionGranted = {
+                    viewModel.onEvent(HomeScreenUiEvent.PermissionChanged(true))
+                },
+                onPermissionDenied = {
+                    viewModel.onEvent(HomeScreenUiEvent.PermissionChanged(false))
+                }
+            )
+
             // Success 상태에서만 users 리스트에 접근합니다.
             val users = (uiState as HomeScreenUiState.Success).users
 

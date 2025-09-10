@@ -8,6 +8,11 @@ import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.home.usecase.GetDialogStatusUseCase
 import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
+import com.likelion.domain.notification.model.FcmToken
+import com.likelion.domain.notification.model.NotificationModel
+import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
+import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
+import com.likelion.domain.notification.usecase.UpdateUserAllowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,9 +31,12 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val getAllUsersUseCase: GetAllUsersUseCase,
     private val getLocalTokenUseCase: GetLocalTokenUseCase,
-    private val startCallUseCase: StartCallUseCase,
     private val getDialogStatusUseCase: GetDialogStatusUseCase,
-    private val changeDialogStatusUseCase: ChangeDialogStatusUseCase
+    private val changeDialogStatusUseCase: ChangeDialogStatusUseCase,
+    private val updateUserAllowUseCase: UpdateUserAllowUseCase,
+    private val sendFcmTokenUseCase: SendFcmTokenUseCase,
+    private val getFcmTokenUseCase : GetFcmTokenUseCase
+
 ) : ViewModel() {
 
     // 외부에 노출되는 UI 상태 (데이터)
@@ -51,8 +59,37 @@ class HomeScreenViewModel @Inject constructor(
     init {
         onEvent(HomeScreenUiEvent.GetTokenAndLoadUsers)
         getDialogStatus()
-    }
+        uploadFcmToken()
 
+    }
+    // 저장소에 있는 fcm 토큰을 서버에 id와 매핑하기 위해 보내는 메서드
+    private  fun uploadFcmToken() {
+        viewModelScope.launch {
+            // 1. 저장소에서 FCM 토큰을 가져옵니다.
+            val fcmTokenString = getFcmTokenUseCase.invoke().firstOrNull()
+
+            // 2. 토큰이 null이거나 비어있는지 확인하여 예외를 방지합니다.
+            if (fcmTokenString.isNullOrBlank()) {
+                Timber.d("FCM 토큰을 찾을 수 없습니다. 업로드를 건너뜁니다.")
+
+            }
+
+            // 3. 토큰이 존재하면 데이터 모델 객체를 생성합니다.
+            val fcmToken = FcmToken(token = fcmTokenString?:"")
+
+            // 4. UseCase를 호출하여 서버에 토큰을 전송합니다.
+            val result = sendFcmTokenUseCase.invoke(fcmToken)
+
+            // 5. 'Result' 객체의 성공/실패 여부에 따라 로직을 분기합니다.
+            if (result.isSuccess) {
+                Timber.d("FCM 토큰이 성공적으로 업로드되었습니다.")
+            } else {
+                val exception = result.exceptionOrNull()
+                Timber.e(exception, "FCM 토큰 업로드 실패")
+            }
+        }
+
+    }
     fun onEvent(event: HomeScreenUiEvent) {
         when (event) {
             is HomeScreenUiEvent.GetTokenAndLoadUsers -> {
@@ -67,13 +104,16 @@ class HomeScreenViewModel @Inject constructor(
                 )
             }
 
-
             is HomeScreenUiEvent.ChangeDialogStatus -> changeDialogStatus(event.isDialog)
             HomeScreenUiEvent.GetDialogStatus -> getDialogStatus()
 
+            is HomeScreenUiEvent.PermissionChanged -> {
+                updateUserAllow(event.isGranted)
+            }
         }
     }
 
+    // 온보딩 상태 상태 바꾸기
     private fun changeDialogStatus(isDialog: Boolean) {
         _showHomeDialog.value = isDialog
         _uiStateHomePage.update { it.copy(isDialog = isDialog) }
@@ -84,6 +124,7 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    // 온보딩 팝업띄우기
     private fun getDialogStatus() {
         viewModelScope.launch {
             val skip = try {
@@ -97,6 +138,7 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    // 로컬 토큰 가져오고 유저부르기
     private fun getTokenAndLoadUsers() {
         viewModelScope.launch {
             Timber.d("🔵 [getTokenAndLoadUsers] 토큰 로딩 시작")
@@ -113,6 +155,7 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    // 매칭유저 목록 불러오기
     private fun loadUsers(token: String) {
         viewModelScope.launch {
             _uiState.value = HomeScreenUiState.LoadingUsers
@@ -130,6 +173,7 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    // 전화버튼 누를때 서버와 통신하는 메서드
     private fun onClickCallButton(receiverId: Long) {
         Timber.d("onClickCallButton receiverId : $receiverId / accessToken : $accessToken")
         viewModelScope.launch {
@@ -139,6 +183,20 @@ class HomeScreenViewModel @Inject constructor(
             } catch (e: Exception) {
                 _sideEffect.emit(HomeScreenSideEffect.ShowSnackbar("통화 실패: ${e.message}"))
             }
+        }
+    }
+
+    // 사용자 동의 현황 서버에 전송하기
+    private fun updateUserAllow(isAllow: Boolean) {
+        viewModelScope.launch {
+            val notificationModel = NotificationModel(
+                subscribed = isAllow
+            )
+            val token = getLocalTokenUseCase().firstOrNull()?.accessToken
+            updateUserAllowUseCase(
+                accessToken = "Bearer $token",
+                notificationModel = notificationModel
+            )
         }
     }
 }
