@@ -1,5 +1,6 @@
 package com.likelion.data.notification.repository
 
+import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.likelion.domain.notification.model.FcmToken
 import com.likelion.domain.notification.repository.FcmTokenRepository
@@ -11,14 +12,14 @@ import javax.inject.Inject
 
 
 class FcmTokenRepositoryImpl @Inject constructor(
-    // private val api: FcmApiService,
     private val getTokenUse: GetTokenAllUseCase, // 앱에서 JWT 가져오는 usecase
     // fcm 토큰 서버로 보내는 usecase
-    val fcmApiService: FcmApiService,
+    private val fcmApiService: FcmApiService,
 ) : FcmTokenRepository {
     // 클라이언트 sdk 토큰을 따서 서버에 토큰을 매핑하는 메서드
     override suspend fun sendToken(token: FcmToken): Result<Unit> {
         return runCatching {
+            Timber.d("토큰매핑 메서드 impl 실행")
             // 이 코드 블록에서 발생하는 모든 예외(네트워크 오류, null 포인터 등)는
             // 'runCatching'에 의해 잡혀서 'Result.failure(e)'로 반환됩니다.
             val user = getTokenUse.invoke().first()
