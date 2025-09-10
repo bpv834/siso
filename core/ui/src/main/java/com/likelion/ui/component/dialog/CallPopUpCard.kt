@@ -30,9 +30,10 @@ import com.likelion.ui.component.button.CustomButtonWithIcon
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
 import com.likelion.ui.theme.SisoTypoTokens
+import timber.log.Timber
 
 @Composable
-fun CallPopUpCard(call: Call,onDismiss :()-> Unit,callAccept : ()->Unit, callDeny : ()->Unit ) {
+fun CallPopUpCard(call: Call, onDismiss: () -> Unit, callAccept: () -> Unit, callDeny: () -> Unit) {
     Dialog(
         onDismissRequest = {
             onDismiss()
@@ -58,14 +59,18 @@ fun CallPopUpCard(call: Call,onDismiss :()-> Unit,callAccept : ()->Unit, callDen
                         .height(89.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    AsyncImage(
-                        model = call.callerImage,
-                        contentDescription = "Caller profile picture",
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
+                    Timber.d("콜러 프로필 = ${call.callerImage}")
+                    val img =
+                        call.callerImage.ifBlank { "https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMzIg/MDAxNjA0MjI4ODc1Mjk4.q8rEdORC54OwRX0vaCnIvUARNo1Qv2Hfzzr271VAA7Eg.lQ_d9YJbtoAzpgI_J6Dd5tXxIBNvj6_jSB-mY7OL06cg.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%EC%B2%AD%EB%85%B9.jpg?type=w400" }
+                    if (call.callerImage == "")
+                        AsyncImage(
+                            model = img,
+                            contentDescription = "Caller profile picture",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
                     Spacer(Modifier.size(10.dp))
                     Text(
                         text = "${call.callerName}님으로부터 전화가 걸려왔어요",
@@ -86,7 +91,9 @@ fun CallPopUpCard(call: Call,onDismiss :()-> Unit,callAccept : ()->Unit, callDen
                         modifier = Modifier
                             .height(45.dp)
                             .weight(1f),
-                        onClick = {},
+                        onClick = {
+                            callDeny()
+                        },
                         icon = painterResource(R.drawable.ic_call_end),
                         iconTint = SisoColorTokens.White,
                         iconSize = 32.dp
@@ -94,7 +101,9 @@ fun CallPopUpCard(call: Call,onDismiss :()-> Unit,callAccept : ()->Unit, callDen
                     Spacer(Modifier.size(8.dp))
                     CustomButtonWithIcon(
                         containerColor = SisoColorTokens.Green60,
-                        onClick = {},
+                        onClick = {
+                            callAccept()
+                        },
                         icon = painterResource(R.drawable.ic_call),
                         iconTint = SisoColorTokens.White,
                         modifier = Modifier
