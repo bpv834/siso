@@ -56,7 +56,7 @@ fun UserCard(
     toCallScreen: (Long) -> Unit,
     onClickMessage: (Long, String, Long) -> Unit,
     isPossibleMessage: Boolean,
-    imgList : List<String>
+    imgList: List<String>
 ) {
 
     val context = LocalContext.current // Toast 메시지를 띄우기 위한 Context
@@ -148,8 +148,14 @@ fun UserCard(
                         }
                     }
                 }
-            }else{
-                Spacer(Modifier.size(256.dp))
+            } else {
+                AsyncImage(
+                    model = "https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMzIg/MDAxNjA0MjI4ODc1Mjk4.q8rEdORC54OwRX0vaCnIvUARNo1Qv2Hfzzr271VAA7Eg.lQ_d9YJbtoAzpgI_J6Dd5tXxIBNvj6_jSB-mY7OL06cg.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%EC%B2%AD%EB%85%B9.jpg?type=w400",
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(242.dp)
+                )
             }
             Spacer(Modifier.size(16.dp))
 
@@ -196,25 +202,25 @@ fun UserCard(
                         color = SisoColorTokens.Gray60
                     )
                 }
-                if(user.voiceUrl.isNotEmpty())
-                AsyncImage(
-                    model = R.drawable.ic_voicesample,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .width(130.dp)
-                        .height(44.dp)
-                )
+                if (user.voiceUrl.isNotEmpty())
+                    AsyncImage(
+                        model = R.drawable.ic_voicesample,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .width(130.dp)
+                            .height(44.dp)
+                    )
             }
 
 
             Spacer(Modifier.size(12.dp))
             // 관심사 목록
-            if(user.interests.isNotEmpty())
-            Text(
-                text = user.interests.joinToString(separator = " #", prefix = "#"),
-                style = SisoTypoTokens.Label1,
-                color = SisoColorTokens.Gray90
-            )
+            if (user.interests.isNotEmpty())
+                Text(
+                    text = user.interests.joinToString(separator = " #", prefix = "#"),
+                    style = SisoTypoTokens.Label1,
+                    color = SisoColorTokens.Gray90
+                )
             Spacer(Modifier.size(12.dp))
             // 자기소개
             Text(
@@ -273,7 +279,8 @@ fun UserCard(
                         .weight(1f)
                         .background(
                             SisoColorTokens.Green60
-                        ).clickable{
+                        )
+                        .clickable {
                             Timber.d("userId : ${user.id}")
                             onClickButtonCall(user.id)
                         },
