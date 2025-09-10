@@ -20,10 +20,12 @@ import com.likelion.domain.login.usecase.AddProfileUseCase
 import com.likelion.domain.login.usecase.ClearTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.GetTemporaryUserProfileUseCase
 import com.likelion.domain.login.usecase.SaveTemporaryUserProfileUseCase
+import com.likelion.domain.notification.repository.FcmRepository
 import com.likelion.domain.notification.repository.FcmTokenRepository
 import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SaveFcmTokenUseCase
 import com.likelion.domain.notification.usecase.SendFcmTokenUseCase
+import com.likelion.domain.notification.usecase.UpdateUserAllowUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -168,6 +170,14 @@ object UseCaseModule {
         repository: ProfileRepository
     ): GetMyProfileUseCase {
         return GetMyProfileUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserAllowUseCase(
+        repository: FcmRepository
+    ): UpdateUserAllowUseCase {
+        return UpdateUserAllowUseCase(repository)
     }
 
 
