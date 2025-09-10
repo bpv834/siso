@@ -32,10 +32,10 @@ import com.likelion.login.navigation.loginNavigation
 import com.likelion.login.navigation.navigateToInput
 import com.likelion.login.navigation.navigateToLogin
 import com.likelion.navigation.NavigationRoute
-import com.likelion.ui.R
 import com.likelion.ui.component.dialog.CallPopUpCard
 import com.lion.call.navigation.callerNavigation
 import com.lion.call.navigation.navigateToCallForCaller
+import com.lion.call.navigation.navigateToCallForReceiver
 import timber.log.Timber
 
 
@@ -86,13 +86,10 @@ fun MainNavHost(
             }
 
             // 전화 받았을때 화면전환 이벤트 일때
-            is UiEvent.NavigateToCallScreen -> {
+            is UiEvent.NavigateToReceiverScreen -> {
                 incomingCall = null // 팝업 내리기
                 // Navigation으로 CallForCallerScreen 이동
-                appState.navController.navigateToCallForCaller(
-                    otherUserId = event.call.callerId.toLong(),
-                    navOptions = navOptions { launchSingleTop = true }
-                )
+                appState.navController.navigateToCallForReceiver(event.call.callerId.toLong())
             }
 
             is UiEvent.Error -> {
