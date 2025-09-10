@@ -12,6 +12,7 @@ import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
 import com.likelion.domain.call_for_caller.usecase.ToggleMuteUseCase
 import com.likelion.domain.call_for_caller.usecase.ToggleSpeakerUseCase
+import com.likelion.domain.login.usecase.GetLocalTokenUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.lion.call.call_for_caller.CallUiEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CallForCallerScreenViewModel @Inject constructor(
     // uscase
-    private val getTokenAllUseCase: GetTokenAllUseCase,
+    private val getTokenAllUseCase: GetLocalTokenUseCase,
     private val startCallUseCase: StartCallUseCase,
     private val observeCallEventsUseCase: ObserveCallEventsUseCase, // AgoraEvent 관찰 유스케이스 주입
     private val evaluationUseCase: EvaluationAfterCallUseCase,
