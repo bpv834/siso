@@ -1,6 +1,8 @@
 package com.likelion.data.notification.repository.di
 
+import com.likelion.data.notification.repository.FcmRepositoryImpl
 import com.likelion.data.notification.repository.FcmTokenRepositoryImpl
+import com.likelion.domain.notification.repository.FcmRepository
 import com.likelion.domain.notification.repository.FcmTokenRepository
 import dagger.Binds
 import dagger.Module
@@ -18,4 +20,10 @@ abstract class NotificationDataModule {
     abstract fun bindFcmTokenRepository(
         impl : FcmTokenRepositoryImpl
     ) :  FcmTokenRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFcmRepository(
+        impl : FcmRepositoryImpl
+    ) :  FcmRepository
 }
