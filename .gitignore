@@ -13,10 +13,27 @@ build/
 # Local configuration file (sdk path, etc)
 local.properties
 
-/core/notification/build/
+# 모듈별 build 폴더 (예: core/notification/build 같은거)
+*/build/
+core/notification/build/
 
 # Android Studio / IntelliJ
 *.iml
 .idea/*
 *.iws
 out/
+
+# Log/Temp
+captures/
+.externalNativeBuild/
+.cxx/
+*.log
+
+# Keystore files (보안)
+*.jks
+*.keystore
+
+# 기타 캐시
+.gradle/
+app/release/
+app/debug/
