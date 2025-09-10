@@ -46,7 +46,7 @@ class MainNavHostViewModel @Inject constructor(
     // 화면 전환 이벤트 발행
     fun acceptIncomingCall(call: Call) {
         viewModelScope.launch {
-            _uiEvent.emit(UiEvent.NavigateToCallScreen(call = call))
+            _uiEvent.emit(UiEvent.NavigateToReceiverScreen(call = call))
         }
     }
 
