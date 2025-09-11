@@ -1,0 +1,36 @@
+package com.likelion.domain.call.repository
+
+import com.likelion.domain.call.model.AgoraEvent
+import com.likelion.domain.call.model.CallModel
+import com.likelion.domain.call.model.CallRejectResponseModel
+import com.likelion.domain.call.model.CallResponseModel
+import kotlinx.coroutines.flow.SharedFlow
+
+interface CallRepository {
+    val agoraEvents: SharedFlow<AgoraEvent> // 이벤트 Flow 추가
+    suspend fun startCall(receiverId: Long, accessToken: String): Result<CallModel>
+    suspend fun evaluationAfterEndCall(
+        callModel: CallModel,
+        isKeepGoing: Boolean,
+        accessToken: String
+    ): Result<CallResponseModel>
+
+    suspend fun rejectCall(): Result<Unit>
+
+    // 수신자가 전화를 받지 않는다고 서버에 전달하는것 발신자가 알림을 받기위함
+    suspend fun denyCall(
+        accessToken: String,
+        request: CallModel
+    ): Result<CallRejectResponseModel>
+
+    suspend fun joinCall(
+        agoraToken: String,
+        channelName: String,
+    )
+
+    suspend fun leaveChannel(): Result<Unit> // 채널 이탈할 때 사용하는 메서드
+
+    fun toggleMute(isMuted: Boolean)
+
+    fun toggleSpeaker(isSpeakerOn: Boolean)
+}

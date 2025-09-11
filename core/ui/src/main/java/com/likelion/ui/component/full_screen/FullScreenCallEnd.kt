@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTheme
@@ -33,7 +32,7 @@ import com.likelion.ui.theme.SisoTypoTokens
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FullScreenCallEnd(
-    otherUser: com.likelion.domain.call_for_caller.model.UsersModel,
+    otherUser: com.likelion.domain.call.model.UsersModel,
     onClickBackButton: () -> Unit
 ) {
     Column(
@@ -117,7 +116,7 @@ fun FullScreenCallEnd(
 @Composable
 fun FullScreenCallEndPreview() {
     SisoTheme {
-        val caller = com.likelion.domain.call_for_caller.model.UsersModel(
+        val caller = com.likelion.domain.call.model.UsersModel(
             id = 4L,
             userImages = "https://cdn.ntoday.co.kr/news/photo/202101/77115_50584_1928.jpg",
             location = "America",

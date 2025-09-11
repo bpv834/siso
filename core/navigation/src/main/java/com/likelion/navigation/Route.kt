@@ -29,8 +29,8 @@ sealed class NavigationRoute(val route: String) {
             object CallEditScreen : NavigationRoute("myPage/setting/call_edit")
         }
     }
-    object CallForCallerScreen : NavigationRoute("caller/{userId}/{otherUserId}")
-    object CallForReceiverScreen : NavigationRoute("receiver/{receiverId}")
+    object CallForCallerScreen : NavigationRoute("caller/{otherUserId}")
+    object CallForReceiverScreen : NavigationRoute("receiver")
 
     /*
     * object 보여줄화면: NavigationRoute("보여줄화면")

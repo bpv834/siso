@@ -1,16 +1,16 @@
 package com.likelion.domain.di
 
-import com.likelion.domain.call_for_caller.repository.CallRepository
-import com.likelion.domain.call_for_caller.repository.ProfileRepository
-import com.likelion.domain.call_for_caller.usecase.DenyCallUseCase
-import com.likelion.domain.call_for_caller.usecase.EvaluationAfterCallUseCase
-import com.likelion.domain.call_for_caller.usecase.GetMyProfileUseCase
-import com.likelion.domain.call_for_caller.usecase.GetUserProfileUseCase
-import com.likelion.domain.call_for_caller.usecase.LeaveChannelUseCase
-import com.likelion.domain.call_for_caller.usecase.ObserveCallEventsUseCase
-import com.likelion.domain.call_for_caller.usecase.RejectCallUseCase
-import com.likelion.domain.call_for_caller.usecase.ToggleMuteUseCase
-import com.likelion.domain.call_for_caller.usecase.ToggleSpeakerUseCase
+import com.likelion.domain.call.repository.CallRepository
+import com.likelion.domain.call.repository.ProfileRepository
+import com.likelion.domain.call.usecase.DenyCallUseCase
+import com.likelion.domain.call.usecase.EvaluationAfterCallUseCase
+import com.likelion.domain.call.usecase.GetMyProfileUseCase
+import com.likelion.domain.call.usecase.GetUserProfileUseCase
+import com.likelion.domain.call.usecase.LeaveChannelUseCase
+import com.likelion.domain.call.usecase.ObserveCallEventsUseCase
+import com.likelion.domain.call.usecase.RejectCallUseCase
+import com.likelion.domain.call.usecase.ToggleMuteUseCase
+import com.likelion.domain.call.usecase.ToggleSpeakerUseCase
 import com.likelion.domain.home.repository.UsersRepository
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.login.repository.InMemoryUserSignUpRepository

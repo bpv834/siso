@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
@@ -22,8 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.likelion.domain.call_for_caller.model.UserProfileModel
-import com.likelion.domain.home.model.UsersModel
+import com.likelion.domain.call.model.UserProfileModel
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.component.text_button.CommonTextButton
 import com.likelion.ui.theme.SisoColorTokens

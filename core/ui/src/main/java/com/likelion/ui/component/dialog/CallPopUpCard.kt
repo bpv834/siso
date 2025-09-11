@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
-import com.likelion.domain.call_for_caller.model.CallModel
 import com.likelion.domain.notification.model.Call
 import com.likelion.ui.R
 import com.likelion.ui.component.button.CustomButtonWithIcon

@@ -1,6 +1,6 @@
 package com.lion.call.call_for_caller
 
-import com.likelion.domain.call_for_caller.model.UserProfileModel
+import com.likelion.domain.call.model.UserProfileModel
 
 class DummyUser {
     val fakeUser = UserProfileModel(

@@ -1,5 +1,7 @@
 package com.likelion.home.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -11,6 +13,7 @@ import com.likelion.navigation.NavigationRoute
 fun NavController.navigateToHome(navOptions: NavOptions? = null) =
     navigate(NavigationRoute.HomeScreen.route, navOptions)
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun NavGraphBuilder.homeNavigation(
     navController: NavController,
     // onNavigateToCaller 콜백이 userId와 otherUserId를 인자로 받도록 변경

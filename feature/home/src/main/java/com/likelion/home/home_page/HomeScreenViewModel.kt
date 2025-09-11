@@ -2,12 +2,10 @@ package com.likelion.home.home_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.likelion.domain.call_for_caller.usecase.StartCallUseCase
 import com.likelion.domain.home.usecase.ChangeDialogStatusUseCase
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.home.usecase.GetDialogStatusUseCase
 import com.likelion.domain.login.usecase.GetLocalTokenUseCase
-import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.likelion.domain.notification.model.FcmToken
 import com.likelion.domain.notification.model.NotificationModel
 import com.likelion.domain.notification.usecase.GetFcmTokenUseCase
@@ -20,7 +18,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

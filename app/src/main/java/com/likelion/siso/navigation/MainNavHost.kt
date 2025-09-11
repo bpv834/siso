@@ -1,5 +1,7 @@
 package com.likelion.siso.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,9 +38,11 @@ import com.likelion.ui.component.dialog.CallPopUpCard
 import com.lion.call.navigation.callerNavigation
 import com.lion.call.navigation.navigateToCallForCaller
 import com.lion.call.navigation.navigateToCallForReceiver
+import com.lion.call.navigation.receiverNavigation
 import timber.log.Timber
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
@@ -261,6 +265,12 @@ fun MainNavHost(
         }
         callerNavigation(
             action = { },
+            onNavigateUp = {
+                appState.navController.popBackStack()
+            }
+        )
+        receiverNavigation(
+            action = {},
             onNavigateUp = {
                 appState.navController.popBackStack()
             }

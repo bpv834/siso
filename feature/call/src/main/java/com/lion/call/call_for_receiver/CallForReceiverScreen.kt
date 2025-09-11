@@ -21,20 +21,18 @@ import com.likelion.ui.component.full_screen.FullScreenCallEndReview
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
 import com.likelion.ui.component.full_screen.FullScreenWhenCallActive
 import com.lion.call.call_for_caller.CallForCallerScreenViewModelType
-import com.lion.call.call_for_caller.CallForCallerState
-import com.lion.call.call_for_caller.CallUiEvent
-import com.lion.call.call_for_caller.CallUiState
+import com.lion.call.CallState
+import com.lion.call.CallUiEvent
+import com.lion.call.CallUiState
 import com.lion.call.call_for_caller.DummyUser
 import timber.log.Timber
 
 @Composable
 fun CallForReceiverRouter(
     modifier: Modifier = Modifier,
-    otherUserId: Long,
     onNavigateUp: () -> Unit,
     viewModel: CallForCallerScreenViewModelType = hiltViewModel<CallForReceiverScreenViewModel>(),
 ) {
-    Timber.d("CallForReceiverRouter / otherUserId : $otherUserId")
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -67,7 +65,7 @@ fun CallForReceiverRouter(
         uiState = uiState,
         viewModel = viewModel,
         onNavigateUp = onNavigateUp,
-        otherUserId = otherUserId
+
     )
 }
 
@@ -78,24 +76,23 @@ fun CallForReceiverScreen(
     uiState: CallUiState,
     viewModel: CallForCallerScreenViewModelType,
     onNavigateUp: () -> Unit,
-    otherUserId: Long,
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         when (uiState.callProgressState) {
-            CallForCallerState.Idle -> {
+            CallState.Idle -> {
                 CircularProgressIndicator()
             }
 
-            CallForCallerState.TryConnecting -> FullScreenCallingTry(
-                otherUser = DummyUser().fakeOtherUser,
+            CallState.TryConnecting -> FullScreenCallingTry(
+                otherUser =uiState.otherUser!!,
                 onClickButtonCallEnd = { viewModel.onClickEndCall() }
             )
 
-            CallForCallerState.CallActive -> FullScreenWhenCallActive(
-                user = DummyUser().fakeUser,
-                otherUser = DummyUser().fakeOtherUser,
+            CallState.CallActive -> FullScreenWhenCallActive(
+                user = uiState.myUser!!,
+                otherUser = uiState.otherUser!!,
                 callDuration = uiState.callDuration,
                 isMute = uiState.isMuted,
                 onClickCallEnd = { viewModel.onClickEndCall() },
@@ -106,8 +103,8 @@ fun CallForReceiverScreen(
                 startCallTimer = { viewModel.startCallTimer() }
             )
 
-            CallForCallerState.CallEnd -> FullScreenCallEndReview(
-                caller = DummyUser().fakeOtherUser,
+            CallState.CallEnd -> FullScreenCallEndReview(
+                caller = uiState.otherUser!!,
                 onClickReport = { viewModel.onClickReportButton() },
                 onClickAnother = { viewModel.onClickEndCall() },
                 onClickKeepGoing = {}

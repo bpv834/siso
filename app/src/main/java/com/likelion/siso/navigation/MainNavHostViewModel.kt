@@ -2,9 +2,9 @@ package com.likelion.siso.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.likelion.domain.call_for_caller.model.CallModel
-import com.likelion.domain.call_for_caller.usecase.DenyCallUseCase
-import com.likelion.domain.call_for_caller.usecase.RejectCallUseCase
+import com.likelion.domain.call.model.CallModel
+import com.likelion.domain.call.usecase.DenyCallUseCase
+import com.likelion.domain.call.usecase.RejectCallUseCase
 import com.likelion.domain.login.usecase.GetTokenAllUseCase
 import com.likelion.domain.notification.model.Call
 import dagger.hilt.android.lifecycle.HiltViewModel

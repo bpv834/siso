@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.likelion.domain.call_for_caller.model.UserProfileModel
-import com.likelion.domain.call_for_caller.model.UsersModel
+import com.likelion.domain.call.model.UserProfileModel
 import com.likelion.ui.R
-import com.likelion.ui.component.button.CommonActiveButton
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.theme.SisoColorTokens
 import com.likelion.ui.theme.SisoTypoTokens

@@ -25,7 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.likelion.domain.call_for_caller.model.UserProfileModel
+import com.likelion.domain.call.model.UserProfileModel
 import com.likelion.domain.home.model.UsersModel
 import com.likelion.ui.component.button.CommonOutlinedButtonWithIconVertical
 import com.likelion.ui.component.button.CustomOutlinedButton

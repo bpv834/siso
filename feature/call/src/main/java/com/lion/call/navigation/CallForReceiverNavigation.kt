@@ -6,32 +6,30 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.likelion.navigation.NavigationRoute
 import com.lion.call.call_for_receiver.CallForReceiverRouter
-
 fun NavController.navigateToCallForReceiver(
-    receiverId: Long, // otherUserId 인자 추가
+    callerId: Long,
+    channelName: String,
     navOptions: NavOptions? = null
-) = navigate("receiver/$receiverId", navOptions) // 경로에 인자 포함
+) {
+    // 라우트 경로에는 인자 없이 단순히 "receiver"만 사용
+    currentBackStackEntry?.savedStateHandle?.set("callerId", callerId)
+    currentBackStackEntry?.savedStateHandle?.set("channelName", channelName)
+    navigate(NavigationRoute.CallForReceiverScreen.route, navOptions)
+}
 
+// NavGraphBuilder
 fun NavGraphBuilder.receiverNavigation(
     action: () -> Unit,
-    onNavigateUp : ()->Unit,
+    onNavigateUp: () -> Unit,
 ) {
     composable(
-        // 라우트 경로에 인자 플레이스홀더를 명시합니다.
-        route = "receiver/{receiverId}",
-        arguments = listOf( // 인자들의 타입과 이름을 정의합니다.
-            navArgument("receiverId") { type = NavType.StringType }
-        )
+        route = NavigationRoute.CallForReceiverScreen.route // 인자 없이 간단히
     ) { backStackEntry ->
-        // NavBackStackEntry에서 인자를 가져옵니다.
-        val otherUserId = backStackEntry.arguments?.getString("receiverId")
-
-        // 인자를 CallerRouter로 전달합니다.
+        // ViewModel이 SavedStateHandle로 값을 가져가므로 화면에서는 전달만
         CallForReceiverRouter(
-            otherUserId = otherUserId?.toLong()?:1L,
-            onNavigateUp = onNavigateUp,
-
+            onNavigateUp = onNavigateUp
         )
     }
 }

@@ -22,6 +22,8 @@ import com.likelion.ui.component.full_screen.FullScreenCallEndReview
 import com.likelion.ui.component.full_screen.FullScreenCallInit
 import com.likelion.ui.component.full_screen.FullScreenCallingTry
 import com.likelion.ui.component.full_screen.FullScreenWhenCallActive
+import com.lion.call.CallState
+import com.lion.call.CallUiEvent
 import timber.log.Timber
 
 
@@ -69,17 +71,17 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         when (uiState.callProgressState) {
             // 전화 대기상태 초기 안내문 스크린
-            CallForCallerState.Idle -> FullScreenCallInit (
+            CallState.Idle -> FullScreenCallInit (
                 onClickConfirm = { viewModel.onClickCall(receiverId = otherUserId) },
                 onClickBackButton = { viewModel.onClickBackButton() },
             )
             //  상대방과 연결중 채널에 발신자만 들어가있는상태
-            CallForCallerState.TryConnecting -> FullScreenCallingTry(
+            CallState.TryConnecting -> FullScreenCallingTry(
                 otherUser = uiState.otherUser!!,
                 onClickButtonCallEnd = { viewModel.onClickEndCall() })
 
             // 발신자 , 수신자 전부 입장한 상태
-            CallForCallerState.CallActive -> FullScreenWhenCallActive(
+            CallState.CallActive -> FullScreenWhenCallActive(
                 user = uiState.myUser!!,
                 otherUser = uiState.otherUser!!,
                 callDuration = uiState.callDuration,
@@ -93,7 +95,7 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
                 startCallTimer = { viewModel.startCallTimer() },
             )
             // 통화 종료 후 인연이어갈지 말지 선택하는 상태
-            CallForCallerState.CallEnd -> FullScreenCallEndReview(
+            CallState.CallEnd -> FullScreenCallEndReview(
                 caller =uiState.otherUser!!,
                 onClickReport = { viewModel.onClickReportButton() }, // 바텀시트 열기
                 onClickAnother = { viewModel.onClickEndCall() },
