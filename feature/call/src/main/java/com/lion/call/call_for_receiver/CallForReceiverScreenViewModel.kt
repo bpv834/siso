@@ -7,6 +7,7 @@ import com.likelion.domain.call.model.AgoraEvent
 import com.likelion.domain.call.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call.usecase.GetMyProfileUseCase
 import com.likelion.domain.call.usecase.GetUserProfileUseCase
+import com.likelion.domain.call.usecase.JoinCallUseCase
 import com.likelion.domain.call.usecase.LeaveChannelUseCase
 import com.likelion.domain.call.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call.usecase.ToggleMuteUseCase
@@ -46,6 +47,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getMyProfileUseCase: GetMyProfileUseCase,
     private val savedStateHandle: SavedStateHandle,
+    private val joinChannelUseCase: JoinCallUseCase,
 
     ) : ViewModel(), CallForCallerScreenViewModelType {
     // 홈 화면의 통화 관련 UI 상태를 관리하는 StateFlow
@@ -54,6 +56,14 @@ class CallForReceiverScreenViewModel @Inject constructor(
 
     private val initCallerId = savedStateHandle.get<String>("callerId")
     private val initChannelName = savedStateHandle.get<String>("channelName")
+    private val initAgoraToken: String? = savedStateHandle.get<String>("encodedToken")?.let { encoded ->
+        val decodedBytes = android.util.Base64.decode(
+            encoded,
+            android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP
+        )
+        String(decodedBytes, Charsets.UTF_8) // 실제 Agora Token
+    }
+
 
     private val _uiState = MutableStateFlow<CallUiState>(CallUiState())
     override val uiState: StateFlow<CallUiState> = _uiState.asStateFlow()
@@ -69,6 +79,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
 
     fun onEvent(event: CallReceiverEvent) {
         when (event) {
+            // 상대, 내 프로필 가져오는 이벤트
             is CallReceiverEvent.Init -> {
                 viewModelScope.launch {
                     val userDeferred = async { getUserProfile() }
@@ -76,20 +87,28 @@ class CallForReceiverScreenViewModel @Inject constructor(
 
                     try {
                         userDeferred.await()
-                    } catch (e: Exception) { /* 에러 처리 */ }
+                    } catch (e: Exception) { /* 에러 처리 */
+                    }
 
                     try {
                         myDeferred.await()
-                    } catch (e: Exception) { /* 에러 처리 */ }
-
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            callProgressState = CallState.TryConnecting
-                        )
+                    } catch (e: Exception) { /* 에러 처리 */
                     }
+
+                    joinChannel()
                 }
             }
+        }
+    }
+
+    suspend fun joinChannel() {
+        joinChannelUseCase.execute(agoraToken = initAgoraToken?:"", channelName = initChannelName?:"")
+
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                callProgressState = CallState.TryConnecting
+            )
         }
     }
 
@@ -98,9 +117,13 @@ class CallForReceiverScreenViewModel @Inject constructor(
 
     // 유저 가져오기
     suspend fun getUserProfile() {
+        Timber.d("agora = $initAgoraToken")
+        Timber.d("channel = $initChannelName")
+        Timber.d("callerId = $initCallerId")
+
         val profileResult = getUserProfileUseCase.execute(
             accessToken = _tokenState.value!!,
-            userId = initCallerId?.toLong() ?: 1L
+            userId = initCallerId?.toLong() ?: 9999L
         )
 
         // 2. Result 객체로 성공/실패 상태 처리

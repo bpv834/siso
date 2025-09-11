@@ -6,6 +6,7 @@ import com.likelion.domain.call.usecase.DenyCallUseCase
 import com.likelion.domain.call.usecase.EvaluationAfterCallUseCase
 import com.likelion.domain.call.usecase.GetMyProfileUseCase
 import com.likelion.domain.call.usecase.GetUserProfileUseCase
+import com.likelion.domain.call.usecase.JoinCallUseCase
 import com.likelion.domain.call.usecase.LeaveChannelUseCase
 import com.likelion.domain.call.usecase.ObserveCallEventsUseCase
 import com.likelion.domain.call.usecase.RejectCallUseCase
@@ -180,6 +181,13 @@ object UseCaseModule {
         return UpdateUserAllowUseCase(repository)
     }
 
+    @Provides
+    @Singleton
+    fun provideJoinCallUseCase(
+        repository: CallRepository
+    ): JoinCallUseCase {
+        return JoinCallUseCase(repository)
+    }
 
 
 

@@ -70,7 +70,7 @@ fun MainNavHost(
                     viewModel.onFcmRejectEvent()
                 }
 
-                is FcmEvent.Message ->{}
+                is FcmEvent.Message -> {}
             }
         }
     }
@@ -93,7 +93,11 @@ fun MainNavHost(
             is UiEvent.NavigateToReceiverScreen -> {
                 incomingCall = null // 팝업 내리기
                 // Navigation으로 CallForCallerScreen 이동
-                appState.navController.navigateToCallForReceiver(event.call.callerId.toLong())
+                appState.navController.navigateToCallForReceiver(
+                    callerId = event.call.callerId,
+                    channelName = event.call.agoraChannel,
+                    agoraToken = event.call.agoraToken
+                )
             }
 
             is UiEvent.Error -> {
@@ -146,7 +150,10 @@ fun MainNavHost(
                 )
             },
             onNavigateToOnBoarding = {
-                appState.navController.popBackStack(NavigationRoute.LoginScreen.route, inclusive = true)
+                appState.navController.popBackStack(
+                    NavigationRoute.LoginScreen.route,
+                    inclusive = true
+                )
                 appState.navController.navigateToOnboarding(
                     navOptions {
                         launchSingleTop = true
@@ -258,7 +265,10 @@ fun MainNavHost(
         ) {
             appState.navController.navigateToMyPage(
                 navOptions {
-                    appState.navController.popBackStack(NavigationRoute.MyPageScreen.MainEditScreen.route, inclusive = true)
+                    appState.navController.popBackStack(
+                        NavigationRoute.MyPageScreen.MainEditScreen.route,
+                        inclusive = true
+                    )
                     launchSingleTop = true
                 }
             )
