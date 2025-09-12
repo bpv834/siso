@@ -109,7 +109,7 @@ fun UserCard(
             }
             Spacer(Modifier.size(19.dp))
 
-            // 사용자 사진 목록
+           /* // 사용자 사진 목록
             if (user.imageList.isNotEmpty()) {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -156,7 +156,7 @@ fun UserCard(
                         .fillMaxWidth()
                         .height(242.dp)
                 )
-            }
+            }*/
             Spacer(Modifier.size(16.dp))
 
 

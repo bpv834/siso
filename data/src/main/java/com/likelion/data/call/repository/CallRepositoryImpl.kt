@@ -18,6 +18,7 @@ import com.likelion.remote.model.response.CallResponseDto
 import com.likelion.remote.model.response.SisoResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -211,25 +212,40 @@ class CallRepositoryImpl @Inject constructor(
     override fun toggleSpeaker(isSpeakerOn: Boolean) {
         agoraVoiceManager.toggleSpeaker(isSpeakerOn)
     }
+    // 초기화 재시도 관련 상수
+    private val MAX_RETRY_COUNT = 3
+    private val RETRY_DELAY_MS = 1000L
 
-    fun initialize() {
-        val isEngineInitialized = agoraVoiceManager.initializeEngine()
-        if (isEngineInitialized) {
-            // 엔진 초기화에 성공했을 때만 이벤트 수집을 시작
-            repositoryScope.launch {
+    override fun initialize() {
+        var isEngineInitialized = false
+        var retryCount = 0
+
+        repositoryScope.launch {
+            // 최대 재시도 횟수만큼 초기화를 시도
+            while (retryCount < MAX_RETRY_COUNT && !isEngineInitialized) {
+                isEngineInitialized = agoraVoiceManager.initializeEngine()
+                if (isEngineInitialized) {
+                    break // 성공하면 루프 종료
+                }
+                retryCount++
+                Timber.w("CallRepositoryImpl: AgoraVoiceManager 초기화 실패. 재시도 중... (${retryCount}/${MAX_RETRY_COUNT})")
+                delay(RETRY_DELAY_MS) // 1초 대기 후 재시도
+            }
+
+            if (isEngineInitialized) {
+                // 엔진 초기화에 성공했을 때만 이벤트 수집을 시작
                 agoraVoiceManager.agoraEvents.collect { event ->
                     _agoraEvents.emit(event)
                 }
-            }
-            Timber.d("CallRepositoryImpl: AgoraVoiceManager 초기화 및 이벤트 수집 시작.")
-        } else {
-            Timber.e("CallRepositoryImpl: AgoraVoiceManager 초기화 실패.")
-            // 초기화 실패 이벤트 발행 (UI에 알림)
-            repositoryScope.launch {
-                _agoraEvents.emit(AgoraEvent.CallError(-999, "Agora 엔진 초기화 실패"))
+                Timber.d("CallRepositoryImpl: AgoraVoiceManager 초기화 및 이벤트 수집 시작.")
+            } else {
+                Timber.e("CallRepositoryImpl: AgoraVoiceManager 초기화 최종 실패.")
+                // 최종 실패 시 에러 이벤트 발행 (UI에 알림)
+                _agoraEvents.emit(AgoraEvent.CallError(-999, "Agora 엔진 초기화 최종 실패"))
             }
         }
     }
+
 
 
 

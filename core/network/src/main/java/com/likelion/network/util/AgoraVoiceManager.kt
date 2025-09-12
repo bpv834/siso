@@ -123,7 +123,7 @@ class AgoraVoiceManager(
 
                 // 로그 레벨만 설정
                 mLogConfig = RtcEngineConfig.LogConfig().apply {
-                    level = Constants.LOG_LEVEL_INFO
+                    level = Constants.LOG_FILTER_DEBUG
                 }
             }
 

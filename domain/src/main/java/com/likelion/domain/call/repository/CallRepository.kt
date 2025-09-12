@@ -33,4 +33,5 @@ interface CallRepository {
     fun toggleMute(isMuted: Boolean)
 
     fun toggleSpeaker(isSpeakerOn: Boolean)
+    fun initialize()
 }
