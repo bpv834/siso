@@ -66,7 +66,9 @@ fun LoginRoute(
                         onHome()
                     } else {
                         Timber.d("온보딩 ${uiState.value.isSkip}")
-                        onBoarding()
+                       // onBoarding()
+                        onHome()
+
                     }
                 } else {
                     onInput()
