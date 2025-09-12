@@ -51,8 +51,7 @@ class AgoraVoiceManager(
          * @param elapsed 채널 참여까지 걸린 시간 (밀리초)
          */
         override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
-            Timber.d("AgoraVoiceManager: 채널 참여 성공: $channel, uid: $uid")
-            // 코루틴 스코프 내에서 이벤트 발행
+            Timber.d("AgoraVoiceManager: onJoinChannelSuccess -> channel: $channel, uid: $uid, elapsed: $elapsed ms")
             coroutineScope.launch {
                 _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
             }
@@ -89,8 +88,8 @@ class AgoraVoiceManager(
          * @param err 에러 코드
          */
         override fun onError(err: Int) {
-            Timber.e("AgoraVoiceManager: Agora SDK 에러 발생: $err")
-            // 코루틴 스코프 내에서 에러 이벤트 발행
+            Timber.e("AgoraVoiceManager: Agora SDK 에러 발생 -> err: $err")
+            Timber.e("AgoraVoiceManager: 채널 상태: ${rtcEngine?.let { "Engine exists" } ?: "Engine null"}")
             coroutineScope.launch {
                 _agoraEvents.emit(AgoraEvent.CallError(err, "Agora SDK Error: $err"))
             }
@@ -109,24 +108,35 @@ class AgoraVoiceManager(
     }
 
     init {
-        // RtcEngine 인스턴스를 생성합니다.
-        // 이 메서드는 앱 생명주기 동안 한 번만 호출하는 것이 권장됩니다.
-        // eventHandler는 config와 함께 create 메서드의 인자로 전달됩니다.
         try {
             val config = RtcEngineConfig().apply {
                 mContext = context
                 mAppId = appId
                 mEventHandler = eventHandler
+
+                // 로그 레벨을 DEBUG로 설정해서 SDK 내부 로그 확인
+                mLogConfig = RtcEngineConfig.LogConfig().apply {
+                    filePath = context.filesDir.absolutePath + "/agora_debug.log"
+                    level = Constants.LOG_LEVEL_INFO
+                }
             }
+
             rtcEngine = RtcEngine.create(config)
-            Timber.d("AgoraVoiceManager: RtcEngine 초기화 성공")
+            Timber.d("AgoraVoiceManager: RtcEngine 초기화 성공 -> rtcEngine is ${rtcEngine != null}")
+
+            // 디버깅용 추가 체크
+            Timber.d("AgoraVoiceManager: App ID = $appId")
         } catch (e: Exception) {
             Timber.e(e, "AgoraVoiceManager: RtcEngine 초기화 실패")
-            // 초기화 실패 시에도 에러 이벤트를 발행하여 상위 계층에 알릴 수 있습니다.
             coroutineScope.launch {
-                _agoraEvents.emit(AgoraEvent.CallError(-999, "RtcEngine 초기화 실패: ${e.message}"))
+                _agoraEvents.emit(
+                    AgoraEvent.CallError(-999, "RtcEngine 초기화 실패: ${e.message}")
+                )
             }
         }
+
+        // 엔진 상태 확인용 로그
+        Timber.d("AgoraVoiceManager: EventHandler attached? ${eventHandler != null}")
     }
 
     /**
