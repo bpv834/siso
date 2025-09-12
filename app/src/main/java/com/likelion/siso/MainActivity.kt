@@ -1,22 +1,14 @@
 package com.likelion.siso
 
-import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.likelion.kakao_auth.repository.CurrentActivityHolder
 import com.likelion.siso.navigation.SisoApp
-import com.likelion.ui.component.Permission.NotificationPermissionRequester
+import com.likelion.ui.component.Permission.AudioPermissionRequester
 import com.likelion.ui.theme.SisoTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,6 +23,8 @@ class MainActivity : ComponentActivity() {
         activityHolder.set(this)
         enableEdgeToEdge()
         setContent {
+            AudioPermissionRequester()
+
             SisoTheme {
                 SisoApp()
             }
