@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import timber.log.Timber
 import javax.inject.Singleton
 
 /**
@@ -26,9 +27,12 @@ object VoiceCallModule {
     @Provides
     @Singleton
     fun provideAgoraVoiceManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context // Hilt가 ApplicationContext 주입
     ): AgoraVoiceManager {
+        Timber.d("VoiceCallModule: AgoraVoiceManager 객체 생성,")
+        Timber.d("VoiceCallModule: context filesDir = ${context.filesDir.absolutePath}")
+        Timber.d("VoiceCallModule: context cacheDir = ${context.cacheDir.absolutePath}")
         val appId = "a914eda873c04f09a72ee7bd3e522300"
-        return AgoraVoiceManager(context, appId)
+        return AgoraVoiceManager(context = context, appId = appId)
     }
 }
