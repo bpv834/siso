@@ -24,7 +24,7 @@ import timber.log.Timber
  * @param appId Agora 애플리케이션 ID (생성자에서 주입받음)
  */
 class AgoraVoiceManager(
-    private val context: Context,
+    private val context: Context, // 여기 추가
     private val appId: String,
     // 이벤트를 발행할 코루틴 스코프를 외부에서 주입받도록 합니다.
     // 이는 AgoraVoiceManager의 생명주기를 관리하는 데 도움이 됩니다.
@@ -106,39 +106,55 @@ class AgoraVoiceManager(
             }
         }
     }
-
-    init {
+    /**
+     * RtcEngine을 초기화하는 메소드입니다. 이 메소드는 마이크 권한이 허용된 후에 호출되어야 합니다.
+     * @return 초기화 성공 여부
+     */
+    fun initializeEngine(): Boolean {
+        if (rtcEngine != null) {
+            Timber.d("AgoraVoiceManager: RtcEngine is already initialized.")
+            return true
+        }
         try {
             val config = RtcEngineConfig().apply {
                 mContext = context
                 mAppId = appId
                 mEventHandler = eventHandler
 
-                // 로그 레벨을 DEBUG로 설정해서 SDK 내부 로그 확인
+                // 로그 레벨만 설정
                 mLogConfig = RtcEngineConfig.LogConfig().apply {
-                    filePath = context.filesDir.absolutePath + "/agora_debug.log"
                     level = Constants.LOG_LEVEL_INFO
                 }
             }
 
+            // RtcEngine 초기화
             rtcEngine = RtcEngine.create(config)
-            Timber.d("AgoraVoiceManager: RtcEngine 초기화 성공 -> rtcEngine is ${rtcEngine != null}")
 
-            // 디버깅용 추가 체크
+            if (rtcEngine != null) {
+                Timber.d("AgoraVoiceManager: RtcEngine 초기화 성공")
+            } else {
+                Timber.e("AgoraVoiceManager: RtcEngine 초기화 실패 - RtcEngine 객체가 null")
+                coroutineScope.launch {
+                    _agoraEvents.emit(
+                        AgoraEvent.CallError(-999, "RtcEngine 초기화 실패: 객체가 null")
+                    )
+                }
+            }
             Timber.d("AgoraVoiceManager: App ID = $appId")
+            Timber.d("AgoraVoiceManager: EventHandler attached? ${eventHandler != null}")
+
+            return rtcEngine != null
+
         } catch (e: Exception) {
-            Timber.e(e, "AgoraVoiceManager: RtcEngine 초기화 실패")
+            Timber.e(e, "AgoraVoiceManager: RtcEngine 초기화 중 예외 발생")
             coroutineScope.launch {
                 _agoraEvents.emit(
                     AgoraEvent.CallError(-999, "RtcEngine 초기화 실패: ${e.message}")
                 )
             }
+            return false
         }
-
-        // 엔진 상태 확인용 로그
-        Timber.d("AgoraVoiceManager: EventHandler attached? ${eventHandler != null}")
     }
-
     /**
      * Agora 채널에 참여합니다.
      * @param token Agora 인증 토큰 (임시 토큰 또는 토큰 서버에서 발급받은 토큰)
@@ -159,8 +175,8 @@ class AgoraVoiceManager(
 
         // rtcEngine이 null이 아닌 경우에만 joinChannel 호출
         // 수정된 joinChannel 메서드는 uid와 options를 추가 인자로 받습니다.
-        rtcEngine?.joinChannel(token, channelName, uid, options)
-        Timber.d("AgoraVoiceManager: 채널 참여 시도: $channelName, uid: $uid")
+        val result = rtcEngine?.joinChannel(token, channelName, uid, options)
+        Timber.d("result = $result AgoraVoiceManager: 채널 참여 시도: $channelName, uid: $uid")
     }
 
     /**
