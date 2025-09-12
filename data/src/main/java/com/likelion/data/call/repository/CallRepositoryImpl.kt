@@ -62,6 +62,7 @@ class CallRepositoryImpl @Inject constructor(
      */
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun startCall(receiverId: Long, accessToken: String): Result<CallModel> {
+
         Timber.d("receiverId: $receiverId , accessToken : $accessToken ")
         Timber.d("CallRepositoryImpl: 통화 시작 요청. CallApiService를 통해 서버 통화 정보 요청 중...")
 
@@ -210,6 +211,26 @@ class CallRepositoryImpl @Inject constructor(
     override fun toggleSpeaker(isSpeakerOn: Boolean) {
         agoraVoiceManager.toggleSpeaker(isSpeakerOn)
     }
+
+    fun initialize() {
+        val isEngineInitialized = agoraVoiceManager.initializeEngine()
+        if (isEngineInitialized) {
+            // 엔진 초기화에 성공했을 때만 이벤트 수집을 시작
+            repositoryScope.launch {
+                agoraVoiceManager.agoraEvents.collect { event ->
+                    _agoraEvents.emit(event)
+                }
+            }
+            Timber.d("CallRepositoryImpl: AgoraVoiceManager 초기화 및 이벤트 수집 시작.")
+        } else {
+            Timber.e("CallRepositoryImpl: AgoraVoiceManager 초기화 실패.")
+            // 초기화 실패 이벤트 발행 (UI에 알림)
+            repositoryScope.launch {
+                _agoraEvents.emit(AgoraEvent.CallError(-999, "Agora 엔진 초기화 실패"))
+            }
+        }
+    }
+
 
 
 }
