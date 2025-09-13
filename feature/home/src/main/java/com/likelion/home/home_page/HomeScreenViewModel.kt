@@ -34,7 +34,7 @@ class HomeScreenViewModel @Inject constructor(
     private val updateUserAllowUseCase: UpdateUserAllowUseCase,
     private val sendFcmTokenUseCase: SendFcmTokenUseCase,
     private val getFcmTokenUseCase : GetFcmTokenUseCase,
-    private val initCallUseCase: InitCallUseCase,
+
 
 ) : ViewModel() {
 
@@ -59,13 +59,10 @@ class HomeScreenViewModel @Inject constructor(
         onEvent(HomeScreenUiEvent.GetTokenAndLoadUsers)
         getDialogStatus()
         uploadFcmToken()
-        initAgora()
 
 
     }
-    private fun initAgora(){
-        initCallUseCase.execute()
-    }
+
     // 저장소에 있는 fcm 토큰을 서버에 id와 매핑하기 위해 보내는 메서드
     private  fun uploadFcmToken() {
         viewModelScope.launch {

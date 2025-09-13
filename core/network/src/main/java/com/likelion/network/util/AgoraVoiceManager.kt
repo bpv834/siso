@@ -42,6 +42,9 @@ class AgoraVoiceManager(
     // 외부에 노출되는 읽기 전용 SharedFlow
     val agoraEvents: SharedFlow<AgoraEvent> = _agoraEvents.asSharedFlow()
 
+    init {
+        initializeEngine()
+    }
     // Agora SDK 이벤트 핸들러
     private val eventHandler = object : IRtcEngineEventHandler() {
         /**
