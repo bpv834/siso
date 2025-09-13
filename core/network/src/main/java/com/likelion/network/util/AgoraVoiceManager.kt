@@ -24,8 +24,8 @@ import timber.log.Timber
  * @param appId Agora 애플리케이션 ID (생성자에서 주입받음)
  */
 class AgoraVoiceManager(
-    private val context: Context, // 여기 추가
-    private val appId: String,
+    private val hiltContext: Context, // 여기 추가
+    private val myAppId: String,
     // 이벤트를 발행할 코루틴 스코프를 외부에서 주입받도록 합니다.
     // 이는 AgoraVoiceManager의 생명주기를 관리하는 데 도움이 됩니다.
 
@@ -117,16 +117,14 @@ class AgoraVoiceManager(
         }
         try {
             val config = RtcEngineConfig().apply {
-                mContext = context
-                mAppId = appId
+                mContext = hiltContext  // 반드시 ApplicationContext
+                mAppId = myAppId
                 mEventHandler = eventHandler
-
-                // 로그 레벨만 설정
                 mLogConfig = RtcEngineConfig.LogConfig().apply {
+                    filePath = context.filesDir.absolutePath + "/agora.log"
                     level = Constants.LOG_FILTER_DEBUG
                 }
             }
-
             // RtcEngine 초기화
             rtcEngine = RtcEngine.create(config)
 
@@ -140,7 +138,7 @@ class AgoraVoiceManager(
                     )
                 }
             }
-            Timber.d("AgoraVoiceManager: App ID = $appId")
+            Timber.d("AgoraVoiceManager: App ID = $myAppId")
             Timber.d("AgoraVoiceManager: EventHandler attached? ${eventHandler != null}")
 
             return rtcEngine != null

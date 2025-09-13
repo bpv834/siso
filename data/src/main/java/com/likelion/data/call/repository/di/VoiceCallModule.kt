@@ -33,6 +33,6 @@ object VoiceCallModule {
         Timber.d("VoiceCallModule: context filesDir = ${context.filesDir.absolutePath}")
         Timber.d("VoiceCallModule: context cacheDir = ${context.cacheDir.absolutePath}")
         val appId = "a914eda873c04f09a72ee7bd3e522300"
-        return AgoraVoiceManager(context = context, appId = appId)
+        return AgoraVoiceManager(hiltContext = context, myAppId = appId)
     }
 }
