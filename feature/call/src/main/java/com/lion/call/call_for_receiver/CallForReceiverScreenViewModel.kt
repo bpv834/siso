@@ -253,7 +253,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
 
     init {
         // ViewModel의 생명주기에 맞춰 코루틴을 실행합니다.
-        viewModelScope.launch {
+
             viewModelScope.launch {
                 // 초기 로딩 상태
                 _uiState.update {
@@ -273,6 +273,7 @@ class CallForReceiverScreenViewModel @Inject constructor(
                 onEvent(CallReceiverEvent.Init(token.accessToken))
 
             }
+        viewModelScope.launch {
             observeCallEventsUseCase.execute().collect { event ->
                 when (event) {
                     // 발신자(Caller)가 채널에 성공적으로 참여했을 때

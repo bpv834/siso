@@ -34,7 +34,8 @@ class CallRepositoryImpl @Inject constructor(
 ) : CallRepository {
 
     // 내부에서 이벤트를 발행하기 위한 MutableSharedFlow
-    private val _agoraEvents = MutableSharedFlow<AgoraEvent>()
+    // 우체통 리플래이 =1 만들어놓기
+    private val _agoraEvents = MutableSharedFlow<AgoraEvent>(replay = 1)
 
     // 인터페이스에서 노출하는 SharedFlow (읽기 전용)
     override val agoraEvents: SharedFlow<AgoraEvent> = _agoraEvents.asSharedFlow()
@@ -44,18 +45,6 @@ class CallRepositoryImpl @Inject constructor(
     // 여기서는 예시를 위해 SupervisorJob과 IO 디스패처를 사용합니다.
     private val repositoryScope = CoroutineScope(SupervisorJob())
 
-    init {
-
-        // AgoraVoiceManager로부터 이벤트를 수집하여 _agoraEvents로 전달
-        repositoryScope.launch {
-            // agoraVoiceManager.agoraEvents.collect { event -> ... }
-            //  SharedFlow의 핵심적인 '수집(collect)' 또는 '구독(subscribe)' 연산입니다.
-            // 호출되면 SharedFlow가 종료되거나, 자신이 속한 코루틴이 취소될 때까지 계속해서 새로운 이벤트가 방출(emit)되기를 기다립니다.
-            agoraVoiceManager.agoraEvents.collect { event ->
-                _agoraEvents.emit(event)
-            }
-        }
-    }
 
     /**
      * 통화를 시작하고, 서버로부터 통화 정보를 받아 Agora 채널에 참여합니다.
@@ -86,7 +75,6 @@ class CallRepositoryImpl @Inject constructor(
                     token = callInfoModel.agoraToken,
                     channelName = callInfoModel.channelName
                 )
-                _agoraEvents.emit(AgoraEvent.CallerJoinedChannel)
                 Result.success(callInfoModel)
             } else {
                 val errorMessage = response.errorMessage ?: "서버 응답 실패: 내용 없음"
@@ -150,7 +138,6 @@ class CallRepositoryImpl @Inject constructor(
 
             // Agora 채널 나가기
             agoraVoiceManager.leaveChannel()
-            agoraVoiceManager.destroy()
 
             // 이벤트 발행 (UI가 거절 화면 표시 가능)
            // _agoraEvents.emit(AgoraEvent.CallRejected)
@@ -190,7 +177,6 @@ class CallRepositoryImpl @Inject constructor(
 
             // Agora 채널에서 나가고, 리소스 해제
             agoraVoiceManager.leaveChannel()
-            agoraVoiceManager.destroy()
 
             // 발신자가 나갔다는 이벤트를 발행하여 ViewModel에 알림
         //    _agoraEvents.emit(AgoraEvent.CallerLeftChannel)
@@ -212,41 +198,23 @@ class CallRepositoryImpl @Inject constructor(
     override fun toggleSpeaker(isSpeakerOn: Boolean) {
         agoraVoiceManager.toggleSpeaker(isSpeakerOn)
     }
-    // 초기화 재시도 관련 상수
-    private val MAX_RETRY_COUNT = 3
-    private val RETRY_DELAY_MS = 1000L
 
-    override fun initialize() {
-        var isEngineInitialized = false
-        var retryCount = 0
-
+    init {
+        Timber.d("콜레포임펠 이닛")
+        // AgoraVoiceManager로부터 이벤트를 수집하여 _agoraEvents로 전달
         repositoryScope.launch {
-            // 최대 재시도 횟수만큼 초기화를 시도
-            while (retryCount < MAX_RETRY_COUNT && !isEngineInitialized) {
-                isEngineInitialized = agoraVoiceManager.initializeEngine()
-                if (isEngineInitialized) {
-                    break // 성공하면 루프 종료
-                }
-                retryCount++
-                Timber.w("CallRepositoryImpl: AgoraVoiceManager 초기화 실패. 재시도 중... (${retryCount}/${MAX_RETRY_COUNT})")
-                delay(RETRY_DELAY_MS) // 1초 대기 후 재시도
-            }
+            Timber.d("스코프 ")
 
-            if (isEngineInitialized) {
-                // 엔진 초기화에 성공했을 때만 이벤트 수집을 시작
-                agoraVoiceManager.agoraEvents.collect { event ->
-                    _agoraEvents.emit(event)
-                }
-                Timber.d("CallRepositoryImpl: AgoraVoiceManager 초기화 및 이벤트 수집 시작.")
-            } else {
-                Timber.e("CallRepositoryImpl: AgoraVoiceManager 초기화 최종 실패.")
-                // 최종 실패 시 에러 이벤트 발행 (UI에 알림)
-                _agoraEvents.emit(AgoraEvent.CallError(-999, "Agora 엔진 초기화 최종 실패"))
+            // agoraVoiceManager.agoraEvents.collect { event -> ... }
+            //  SharedFlow의 핵심적인 '수집(collect)' 또는 '구독(subscribe)' 연산입니다.
+            // 호출되면 SharedFlow가 종료되거나, 자신이 속한 코루틴이 취소될 때까지 계속해서 새로운 이벤트가 방출(emit)되기를 기다립니다.
+            agoraVoiceManager.agoraEvents.collect { event ->
+                Timber.d("이벤트 발생 : $event ")
+
+                _agoraEvents.emit(event)
             }
         }
     }
-
-
 
 
 }

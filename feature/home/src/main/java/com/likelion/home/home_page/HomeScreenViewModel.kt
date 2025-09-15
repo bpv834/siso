@@ -2,7 +2,6 @@ package com.likelion.home.home_page
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.likelion.domain.call.usecase.InitCallUseCase
 import com.likelion.domain.home.usecase.ChangeDialogStatusUseCase
 import com.likelion.domain.home.usecase.GetAllUsersUseCase
 import com.likelion.domain.home.usecase.GetDialogStatusUseCase

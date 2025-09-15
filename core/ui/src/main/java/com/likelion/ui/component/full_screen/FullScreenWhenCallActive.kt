@@ -151,6 +151,7 @@ fun FullScreenWhenCallActive(
             val userInterests = user.interests
             val otherUserInterests = otherUser.interests
             val commonInterests = userInterests.intersect(otherUserInterests.toSet()).toList()
+            if(!    commonInterests.isEmpty())
             CustomFlowTagRow(
                 tags = commonInterests,
                 maxLines = 2, modifier = Modifier,

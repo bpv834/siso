@@ -119,11 +119,11 @@ class CallForCallerScreenViewModel @Inject constructor(
             result
                 .onSuccess { callModel ->
                     Timber.d(" StartCallUseCase 성공적으로 실행됨: ${callModel.channelName}")
-                    evaluationUseCase.execute(
+                /*    evaluationUseCase.execute(
                         callModel = callModel,
                         isKeepGoing = true,
                         accessToken = accessToken
-                    )
+                    )*/
                     _uiState.update { it.copy(callProgressState = CallState.TryConnecting) }
 
                 }
@@ -142,9 +142,10 @@ class CallForCallerScreenViewModel @Inject constructor(
 
         // Todo 상대방에게 나갔다고 전달하기
         viewModelScope.launch {
+            _uiState.update { it.copy(callProgressState = CallState.CallEnd)}
             // 채널 탈출
             leaveChannelUseCase.execute()
-            _uiEvent.emit(CallUiEvent.NavigateUp)
+
         }
 
     }
@@ -233,9 +234,10 @@ class CallForCallerScreenViewModel @Inject constructor(
     }
 
     init {
+        Timber.d("CallForCallerScreenViewModel init 블록 실행")
         // ViewModel의 생명주기에 맞춰 코루틴을 실행합니다.
-        viewModelScope.launch {
 
+        viewModelScope.launch {
             // 토큰 Flow를 collect하여 최신 토큰을 항상 유지합니다.
             getTokenAllUseCase.invoke().collect { token ->
                 _tokenState.value = token?.accessToken
@@ -244,65 +246,61 @@ class CallForCallerScreenViewModel @Inject constructor(
                     _uiState.update { it.copy(isLoading = false) }
                 }
             }
-
-
-            observeCallEventsUseCase.execute().collect { event ->
-                when (event) {
-                    // 발신자(Caller)가 채널에 성공적으로 참여했을 때
-                    is AgoraEvent.CallerJoinedChannel -> {
-                        Timber.d("HomeScreenViewModel: CallerJoinedChannel 이벤트 수신 - 통화 시도 중")
-                        _uiState.update { currentState ->
-                            currentState.copy(callProgressState = CallState.TryConnecting) // 상태를 통화 시도로 변경
+        }
+        viewModelScope.launch {
+            try {
+                observeCallEventsUseCase.execute().collect { event ->
+                    Timber.d("이벤트 들어옴 : $event")
+                    when (event) {
+                        // 발신자(Caller)가 채널에 성공적으로 참여했을 때
+                        is AgoraEvent.CallerJoinedChannel -> {
+                            Timber.d("ViewModel: CallerJoinedChannel 이벤트 수신 - 통화 시도 중")
+                            _uiState.update { currentState ->
+                                currentState.copy(callProgressState = CallState.TryConnecting) // 상태를 통화 시도로 변경
+                            }
+                            _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시
                         }
-                        _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시
-                    }
 
-                    // 통화 중 에러가 발생했을 때
-                    is AgoraEvent.CallError -> {
-                        Timber.e("HomeScreenViewModel: CallError 이벤트 수신 - ${event.message}")
-                        _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
-                        _uiEvent.emit(NavigateUp)
-                        leaveChannelUseCase.execute()
+                        // 통화 중 에러가 발생했을 때
+                        is AgoraEvent.CallError -> {
+                            Timber.e("ViewModel: CallError 이벤트 수신 - ${event.message}")
+                            _uiEvent.emit(ShowToast("통화 에러 발생: ${event.message}")) // UI 토스트 표시
+                            leaveChannelUseCase.execute()
+                            _uiEvent.emit(NavigateUp)
 
-                        //  연결중 상태로 테스트
-                        /*  _uiState.update { currentState ->
-                              currentState.copy(callProgressState = CallForCallerState.Calling) // 상태를 통화 시도로 변경
-                          }
-                          _uiEvent.emit(ShowToast("채널에 성공적으로 입장했습니다.")) // UI 토스트 표시*/
+                        }
 
-                        //_uiState.update { it.copy(callProgressState = CallForCallerState.CallActive) } // 상태를 활성 통화로 변경
-                       // _uiEvent.emit(ShowToast("수신자가 통화에 참여했습니다.")) // UI 토스트 표시
-                    }
+                        // 발신자(Caller)가 채널에서 나갔을 때
+                        is AgoraEvent.CallerLeftChannel -> {
+                            Timber.d("ViewModel: CallerLeftChannel 이벤트 수신 - 통화 종료")
+                            leaveChannelUseCase.execute() // 채널 나가기
+                            _uiEvent.emit(ShowToast("통화를 종료했습니다.")) // UI 토스트 표시
+                        }
 
-                    // 발신자(Caller)가 채널에서 나갔을 때
-                    is AgoraEvent.CallerLeftChannel -> {
-                        Timber.d("CallerLeftChannel 이벤트 수신 - 통화 종료")
-                        leaveChannelUseCase.execute() // 채널 나가기
-                        _uiEvent.emit(ShowToast("통화를 종료했습니다.")) // UI 토스트 표시
-                        _uiEvent.emit(NavigateUp) // UI 토스트 표시
-                    }
+                        // 수신자(Receiver)가 채널에 참여했을 때
+                        is AgoraEvent.ReceiverJoinedChannel -> {
+                            Timber.d("ViewModel: ReceiverJoinedChannel 이벤트 수신 - 통화 활성 상태")
+                            _uiState.update { it.copy(callProgressState = CallState.CallActive) } // 상태를 활성 통화로 변경
+                            _uiEvent.emit(ShowToast("수신자가 통화에 참여했습니다.")) // UI 토스트 표시
+                        }
 
-                    // 수신자(Receiver)가 채널에 참여했을 때
-                    is AgoraEvent.ReceiverJoinedChannel -> {
-                        Timber.d("ReceiverJoinedChannel 이벤트 수신 - 통화 활성 상태")
-                        _uiState.update { it.copy(callProgressState = CallState.CallActive) } // 상태를 활성 통화로 변경
-                        _uiEvent.emit(ShowToast("수신자가 통화에 참여했습니다.")) // UI 토스트 표시
-                    }
+                        // 수신자(Receiver)가 채널에서 나갔을 때
+                        is AgoraEvent.ReceiverLeftChannel -> {
+                            Timber.d("ViewModel: ReceiverLeftChannel 이벤트 수신 - 통화 종료")
+                            leaveChannelUseCase.execute() // 채널 탈출
+                            _uiState.update { it.copy(callProgressState = CallState.CallEnd) } // 상태를 통화 종료로 변경
+                            _uiEvent.emit(ShowToast("수신자가 통화를 종료했습니다.")) // UI 토스트 표시
+                        }
 
-                    // 수신자(Receiver)가 채널에서 나갔을 때
-                    is AgoraEvent.ReceiverLeftChannel -> {
-                        Timber.d(" ReceiverLeftChannel 이벤트 수신 - 통화 종료")
-                        leaveChannelUseCase.execute() // 채널 탈출
-                        _uiState.update { it.copy(callProgressState = CallState.CallEnd) } // 상태를 통화 종료로 변경
-                        _uiEvent.emit(ShowToast("수신자가 통화를 종료했습니다.")) // UI 토스트 표시
-                    }
+                        AgoraEvent.CallRejected -> {
+                            Timber.d("ViewModel: CallRejected 이벤트 수신 - 수신자 통화 거절")
+                            leaveChannelUseCase.execute()
 
-                    AgoraEvent.CallRejected -> {
-                        Timber.d(" CallRejected 이벤트 수신 - 수신자 통화 거절")
-                        leaveChannelUseCase.execute()
-
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                Timber.e(e, "ViewModel: observeCallEventsUseCase.execute().collect 에러 발생")
             }
         }
     }

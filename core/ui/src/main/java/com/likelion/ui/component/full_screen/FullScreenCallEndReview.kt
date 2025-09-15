@@ -83,7 +83,7 @@ fun FullScreenCallEndReview(
                 //fillMaxWidth().height(150.dp)
             ) {
                 CommonOutlinedButtonWithIconVertical(
-                    modifier = Modifier
+                    modifier = Modifier.weight(1f)
                         .size(142.dp),
                     icon = {
                         Icon(
@@ -102,7 +102,7 @@ fun FullScreenCallEndReview(
                             contentDescription = "", tint = SisoColorTokens.Red50
                         )
                     },
-                    modifier = Modifier
+                    modifier = Modifier.weight(1f)
                         .size(142.dp),
                     text = "연락할래요",
                     onClick = {}

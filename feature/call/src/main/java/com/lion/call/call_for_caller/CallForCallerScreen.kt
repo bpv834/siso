@@ -98,7 +98,7 @@ fun CallForCallerScreen(viewModel: CallForCallerScreenViewModelType, onNavigateU
             CallState.CallEnd -> FullScreenCallEndReview(
                 caller =uiState.otherUser!!,
                 onClickReport = { viewModel.onClickReportButton() }, // 바텀시트 열기
-                onClickAnother = { viewModel.onClickEndCall() },
+                onClickAnother = { onNavigateUp()},
                 onClickKeepGoing = {}
             )
         }

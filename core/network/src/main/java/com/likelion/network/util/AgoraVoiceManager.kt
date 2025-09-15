@@ -42,11 +42,9 @@ class AgoraVoiceManager(
     // 외부에 노출되는 읽기 전용 SharedFlow
     val agoraEvents: SharedFlow<AgoraEvent> = _agoraEvents.asSharedFlow()
 
-    init {
-        initializeEngine()
-    }
+
     // Agora SDK 이벤트 핸들러
-    private val eventHandler = object : IRtcEngineEventHandler() {
+    private val myEventHandler = object : IRtcEngineEventHandler() {
         /**
          * 채널 참여 성공 콜백: 로컬 사용자(여기서는 발신자)가 채널에 성공적으로 참여했을 때 호출됩니다.
          * @param channel 참여한 채널 이름
@@ -69,6 +67,8 @@ class AgoraVoiceManager(
             Timber.d("AgoraVoiceManager: 원격 사용자 참여: $uid")
             // 코루틴 스코프 내에서 이벤트 발행
             coroutineScope.launch {
+                Timber.d("AgoraVoiceManager: 이벤트 emit 원격 사용자 참여:  uid = $uid")
+
                 _agoraEvents.emit(AgoraEvent.ReceiverJoinedChannel)
             }
         }
@@ -114,6 +114,7 @@ class AgoraVoiceManager(
      * @return 초기화 성공 여부
      */
     fun initializeEngine(): Boolean {
+        Timber.d("아고라보이스매니저 이닛")
         if (rtcEngine != null) {
             Timber.d("AgoraVoiceManager: RtcEngine is already initialized.")
             return true
@@ -122,7 +123,7 @@ class AgoraVoiceManager(
             val config = RtcEngineConfig().apply {
                 mContext = hiltContext  // 반드시 ApplicationContext
                 mAppId = myAppId
-                mEventHandler = eventHandler
+                mEventHandler = myEventHandler
                 mLogConfig = RtcEngineConfig.LogConfig().apply {
                     filePath = context.filesDir.absolutePath + "/agora.log"
                     level = Constants.LOG_FILTER_DEBUG
@@ -142,7 +143,7 @@ class AgoraVoiceManager(
                 }
             }
             Timber.d("AgoraVoiceManager: App ID = $myAppId")
-            Timber.d("AgoraVoiceManager: EventHandler attached? ${eventHandler != null}")
+            Timber.d("AgoraVoiceManager: EventHandler attached? ${myEventHandler != null}")
 
             return rtcEngine != null
 
@@ -210,5 +211,8 @@ class AgoraVoiceManager(
     fun toggleSpeaker(isSpeakerOn: Boolean) {
         rtcEngine?.setEnableSpeakerphone(isSpeakerOn)
         Timber.d("AgoraVoiceManager: 스피커 상태 변경, 스피커폰 사용 여부: $isSpeakerOn")
+    }
+    init {
+        initializeEngine()
     }
 }
